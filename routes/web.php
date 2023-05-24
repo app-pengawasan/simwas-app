@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\http\Controllers\SessionController;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,17 +16,24 @@ use App\Http\Controllers\Auth\SocialiteController;
 |
 */
 
-//Simwas here...
+/**
+ * ---------------------------------------------------------------------------
+ * Simwas here...
+ * ---------------------------------------------------------------------------
+*/
+//SSO and Auth Route
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
+Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
 //End of Simwas
 
-Route::redirect('/', '/dashboard-general-dashboard')->name('dashboard');
+Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 
 // Dashboard
-Route::get('/dashboard-general-dashboard', function () {
+Route::get('/pegawai/dashboard', function () {
     return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
-});
+})->middleware('auth')->name('dashboard');
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
 });
@@ -202,7 +211,7 @@ Route::get('/auth-forgot-password', function () {
 });
 Route::get('/auth-login', function () {
     return view('pages.auth-login', ['type_menu' => 'auth']);
-});
+})->middleware('guest')->name('login');
 Route::get('/auth-login2', function () {
     return view('pages.auth-login2', ['type_menu' => 'auth']);
 });
