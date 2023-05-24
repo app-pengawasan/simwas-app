@@ -32,7 +32,7 @@ Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 
 // Dashboard
 Route::get('/pegawai/dashboard', function () {
-    return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
+    return view('pegawai.index', ['type_menu' => 'dashboard']);
 })->middleware('auth')->name('dashboard');
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
