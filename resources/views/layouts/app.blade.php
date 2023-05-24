@@ -41,7 +41,7 @@
             @include('components.header')
 
             <!-- Sidebar -->
-            @include('components.sidebar')
+            @include('components.pegawai-sidebar')
 
             <!-- Content -->
             @yield('main')
