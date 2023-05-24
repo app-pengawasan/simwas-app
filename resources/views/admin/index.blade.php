@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Admin')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -8,18 +8,13 @@
     <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
     @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.admin-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Dashboard</h1>
+                <h1>Admin Dashboard</h1>
             </div>
             <div class="row">
             </div>

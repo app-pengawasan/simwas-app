@@ -37,13 +37,6 @@
 <body>
     <div id="app">
         <div class="main-wrapper">
-            <!-- Header -->
-            @include('components.header')
-
-            <!-- Sidebar -->
-            @yield('sidebar')
-            @include('components.pegawai-sidebar')
-
             <!-- Content -->
             @yield('main')
 

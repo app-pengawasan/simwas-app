@@ -24,7 +24,11 @@ use GuzzleHttp\Middleware;
 //SSO and Auth Route
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
+
 Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
+//Admin
+Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
 
 //End of Simwas
 

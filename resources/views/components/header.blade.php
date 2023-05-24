@@ -21,8 +21,8 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 @if (auth()->user()->is_admin)
-                    <a href="features-activities.html" class="dropdown-item has-icon">
-                        <i class="fas fa-bolt"></i> Login sebagai Admin
+                    <a href="{{ route('admin-dashboard') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-user-shield"></i> Login sebagai Admin
                     </a>
                 @endif
             </div>
