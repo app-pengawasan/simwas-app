@@ -39,11 +39,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $attributes = [
-        'nip' => '123456789910',
+        'nip' => '9999999999999999999',
         'name' => 'anonimous',
-        'pangkat' => 'IV/C',
-        'unit_kerja' => 'Bagian Umum',
-        'jabatan' => 'Staff TI',
+        'pangkat' => 'IV/a',
+        'unit_kerja' => '8010',
+        'jabatan' => '90',
         'is_aktif' => false,
         'is_admin' => false,
         'is_sekma' => false,

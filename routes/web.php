@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterPegawaiController;
 use App\http\Controllers\SessionController;
 use GuzzleHttp\Middleware;
 
@@ -29,6 +30,8 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
 
 //Admin
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
+Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
+Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
 //End of Simwas
 
@@ -38,6 +41,9 @@ Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 Route::get('/pegawai/dashboard', function () {
     return view('pegawai.index', ['type_menu' => 'dashboard']);
 })->middleware('auth')->name('dashboard');
+Route::get('/dashboard-general-dashboard', function () {
+    return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
+});
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
 });
