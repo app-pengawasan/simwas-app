@@ -80,4 +80,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class);
     }
+
+    public function sl()
+    {
+        return $this->hasMany(Sl::class);
+    }
+
+    public function suratLain()
+    {
+        return $this->hasMany(Sl::class);
+    }
+
+    public function stPp()
+    {
+        return $this->hasMany(Stp::class);
+    }
 }

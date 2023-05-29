@@ -2,7 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterPegawaiController;
 use App\http\Controllers\SessionController;
+use App\Http\Controllers\StKinerjaController;
+use App\Http\Controllers\StpController;
+use App\Http\Controllers\StpdController;
+use App\Http\Controllers\SlController;
+use App\Http\Controllers\KirimController;
+use App\Http\Controllers\EksternalController;
+use App\Http\Controllers\NomorSuratController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -29,6 +37,8 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
 
 //Admin
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
+Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
+Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
 //End of Simwas
 
@@ -38,9 +48,57 @@ Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 Route::get('/pegawai/dashboard', function () {
     return view('pegawai.index', ['type_menu' => 'dashboard']);
 })->middleware('auth')->name('dashboard');
+Route::get('/dashboard-general-dashboard', function () {
+    return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
+});
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
 });
+
+// ST Kinerja (Jangan lupa pake middleware)
+Route::get('/pegawai/st-kinerja/form', [StKinerjaController::class, 'form']);
+Route::resource('pegawai/st-kinerja', StKinerjaController::class)->names([
+    'index' => 'st-kinerja.index',
+    'show' => 'st-kinerja.show',
+]);
+
+// ST Pengembangan Profesi
+Route::get('/pegawai/st-pp/form', [StpController::class, 'form']);
+Route::resource('pegawai/st-pp', StpController::class)->names([
+    'index' => 'st-pp.index'
+]);
+
+// ST Perjalanan Dinas
+Route::get('/pegawai/st-pd/form', [StpdController::class, 'form']);
+Route::resource('pegawai/st-pd', StpdController::class)->names([
+    'index' => 'st-pd.index',
+    'show' => 'st-pd.show',
+]);
+
+// Surat Lain
+Route::get('/pegawai/surat-lain/form', [SlController::class, 'form']);
+Route::resource('pegawai/surat-lain', SlController::class)->names([
+    'index' => 'surat-lain.index',
+    'show' => 'surat-lain.show',
+    'edit' => 'surat-lain.edit'
+]);
+
+// Kirim Dokumen
+Route::get('/pegawai/kirim/form', [KirimController::class, 'form_kirim']);
+Route::resource('pegawai/kirim', KirimController::class)->names([
+    'index' => 'kirim-dokumen.index',
+    'show' => 'kirim-dokumen.show',
+]);
+
+// Surat Eksternal
+Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form_eksternal']);
+Route::resource('pegawai/eksternal', EksternalController::class)->names([
+    'index' => 'surat-eksternal.index',
+    'show' => 'surat-eksternal.show',
+]);
+
+// Usulan Nomor Surat
+Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
 
 
 // Layout
