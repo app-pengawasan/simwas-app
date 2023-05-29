@@ -9,7 +9,7 @@
 @endpush
 
 @section('main')
-    @include('components.header')
+    @include('components.admin-header')
     @include('components.admin-sidebar')
     <div class="main-content">
         <section class="section">
