@@ -19,13 +19,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            // UserSeeder::class,
-            // PpSeeder::class,
-            // NamaPpSeeder::class,
-            // JenisSuratSeeder::class,
+            UserSeeder::class,
+            PpSeeder::class,
+            NamaPpSeeder::class,
+            JenisSuratSeeder::class,
             // StKinerjaSeeder::class,
-            StpSeeder::class,
-            SlSeeder::class,
+            // StpSeeder::class,
+            // SlSeeder::class,
             // StpdSeeder::class,
             // KirimSeeder::class,
             // EksternalSeeder::class

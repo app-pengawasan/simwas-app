@@ -18,7 +18,7 @@ class SlFactory extends Factory
     {
         return [
             'tanggal' => $this->faker->date(),
-            'user_id' => '01h1kntqv1bwmtbrc6ccmx7vcm',
+            'user_id' => '01h1kvh107kbektkxdyx9hbhgz',
             'kegiatan' => $this->faker->word(),
             'subkegiatan' => $this->faker->word(),
             'jenis_surat_id' => $this->faker->numberBetween(1,5),

@@ -18,7 +18,7 @@ class StpFactory extends Factory
     {
         return [
             'tanggal' => $this->faker->date(),
-            'user_id' => '01h1kntqv1bwmtbrc6ccmx7vcm',
+            'user_id' => '01h1kvh107kbektkxdyx9hbhgz',
             'pp_id' => $this->faker->numberBetween(1, 7),
             'nama_pp' => $this->faker->word(),
             'melaksanakan' => $this->faker->sentence(),
