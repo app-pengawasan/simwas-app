@@ -80,4 +80,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class);
     }
+
+    public function masterPimpinan(){
+        return $this->hasMany(MasterPimpinan::class, "id_user");
+    }
 }

@@ -1,10 +1,11 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">Simwas</a>
+            <a href="{{ route('admin-dashboard') }}">Simwas</a>
+            <span class="badge badge-primary">Admin</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">Sm</a>
+            <a href="{{ route('admin-dashboard') }}">Sm</a>
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('admin') ? 'active' : '' }}">
@@ -34,8 +35,9 @@
                     <span>Master Pegawai</span>
                 </a>
             </li>
-            <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li
+                class="{{ Request::is('admin/master-pimpinan/*') || Request::is('admin/master-pimpinan') ? 'active' : '' }}">
+                <a class="nav-link" href="/admin/master-pimpinan">
                     <i class="fas fa-user-tie"></i>
                     <span>Kelola Pimpinan</span>
                 </a>
@@ -81,11 +83,5 @@
                 </ul>
             </li>
         </ul>
-
-        <div class="hide-sidebar-mini mt-4 mb-4 p-3">
-            <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Documentation
-            </a>
-        </div>
     </aside>
 </div>

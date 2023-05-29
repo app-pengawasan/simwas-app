@@ -10,11 +10,11 @@
 @section('main')
     <div class="card card-primary">
         <div class="card-header">
-            <h4>Login</h4>
+            <h4>SIMWAS Login</h4>
         </div>
 
         <div class="card-body">
-            <form method="POST" action="#" class="needs-validation" novalidate="">
+            {{-- <form method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email" type="email" class="form-control" name="email" tabindex="1" required
@@ -54,7 +54,7 @@
             </form>
             <div class="mt-4 mb-3 text-center">
                 <div class="text-job text-muted">Login With Social</div>
-            </div>
+            </div> --}}
             <div class="row sm-gutters">
                 <div class="col-12">
                     <a class="btn btn-block btn-social btn-google" href="/auth/google">

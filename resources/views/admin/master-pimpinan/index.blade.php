@@ -17,51 +17,15 @@
     @include('components.admin-sidebar')
 
     <div class="main-content">
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Import Data Pegawai</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form method="post" action="/admin/master-pegawai/import" enctype="multipart/form-data"
-                        class="needs-validation" novalidate="">
-                        <div class="modal-body">
-                            @csrf
-                            <div class="form-group">
-                                <label>File</label>
-                                <input type="file" class="form-control" name="file" required>
-                                <div class="invalid-feedback">
-                                    File belum ditambahkan
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-success">Impor</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <section class="section">
             <div class="section-header">
-                <h1>Master Pegawai
-                </h1>
+                <h1>Kelola Pimpinan</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">
-                                Untuk melakukan import pegawai silahkan download format <a
-                                    href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
-                                    class="link-primary fw-bold" download>disini</a>.
-                            </p>
+                            <p class="mb-0">Halaman untuk mengelola Pimpinan Inspektorat</p>
                             @if (session()->has('success'))
                                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                                     <p>{{ session('success') }}</p>
@@ -72,15 +36,15 @@
                             @endif
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
-                                    <a type="button" class="btn btn-primary" href="/admin/master-pegawai/create">
+                                    <a type="button" class="btn btn-primary" href="/admin/master-pimpinan/create">
                                         <i class="fas fa-plus-circle"></i>
                                         Tambah
                                     </a>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#staticBackdrop">
                                         <i class="fas fa-file-upload"></i>
                                         Import
-                                    </button>
+                                    </button> --}}
                                 </div>
                             </div>
                             <div class="">
@@ -91,36 +55,37 @@
                                             <th style="width: 100px;">NIP</th>
                                             <th>Nama</th>
                                             <th>Jabatan</th>
-                                            <th>Unit Kerja</th>
+                                            <th>Masa Jabatan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($users as $user)
+                                        @foreach ($pimpinan as $p)
                                             <tr>
-                                                <td>{{ $user->nip }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $jabatan["$user->jabatan"] }}</td>
-                                                <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
+                                                <td>{{ $p->user->nip }}</td>
+                                                <td>{{ $p->user->name }}</td>
+                                                <td>{{ $jabatan_pimpinan["$p->jabatan"] }}</td>
+                                                <td>{{ date('d-m-Y', strtotime($p->mulai)) }} s.d.
+                                                    {{ date('d-m-Y', strtotime($p->selesai)) }}</td>
                                                 <td>
                                                     <a class="btn btn-primary mb-2 mr-2"
-                                                        href="/admin/master-pegawai/{{ $user->id }}"
+                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-info"></i>
                                                     </a>
                                                     <a class="btn btn-warning mb-2 mr-2"
-                                                        href="/admin/master-pegawai/{{ $user->id }}/edit"
+                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}/edit"
                                                         style="width: 42px">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    @if ($user->id != auth()->user()->id)
+                                                    @if ($p->id_pimpinan != auth()->user()->id)
                                                         {{-- <a class="btn btn-danger"
                                                             onclick="deleteData('{{ $user->id }}')"
                                                             style="width: 42px">
                                                             <i class="fas fa-trash"></i>
                                                         </a> --}}
                                                         <form class="d-inline mb-2"
-                                                            action="{{ route('master-pegawai.destroy', $user->id) }}"
+                                                            action="{{ route('master-pimpinan.destroy', $p->id_pimpinan) }}"
                                                             method="post">
                                                             @csrf
                                                             @method('delete')
@@ -139,7 +104,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     </div>
 @endsection
