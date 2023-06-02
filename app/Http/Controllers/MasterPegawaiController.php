@@ -29,9 +29,9 @@ class MasterPegawaiController extends Controller
     protected $unit_kerja = [
         '8000' => 'Inspektorat Utama',
         '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Insapektorat Wilayah I',
-        '8200' => 'Insapektorat Wilayah II',
-        '8300' => 'Insapektorat Wilayah III'
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
     ];
 
     protected $jabatan = [
@@ -169,7 +169,8 @@ class MasterPegawaiController extends Controller
             'pangkat'       => $this->pangkat,
             'unit_kerja'    => $this->unit_kerja,
             'jabatan'       => $this->jabatan,
-            'role'          => $this->role])
+            'role'          => $this->role
+            ])
             ->with('user',$user);
     }
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\MasterPimpinanController;
 use App\http\Controllers\SessionController;
 use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\StpController;
@@ -27,9 +28,9 @@ use GuzzleHttp\Middleware;
 */
 
 /**
- * ---------------------------------------------------------------------------
+ * ===========================================================================
  * Simwas here...
- * ---------------------------------------------------------------------------
+ * ===========================================================================
 */
 //SSO and Auth Route
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
@@ -37,16 +38,30 @@ Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProv
 
 Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
 
-//Admin
+/**
+ * ---------------------------------------------------------------------------
+ * ADMIN
+ * ---------------------------------------------------------------------------
+ * */
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
+
+ //Master-pegawai
 Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
 Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
+//Master-pimpinan
+Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
+
+// Sekretaris-surat-lain
 Route::get('/sekretaris', function(){return view('sekretaris.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('sekretaris-dashboard');
 Route::resource('/sekretaris/usulan-surat', SlSekreController::class);
 // Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
-//End of Simwas
+/**
+ * ===========================================================================
+ * End of Simwas
+ * ===========================================================================
+ * */
 
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 
