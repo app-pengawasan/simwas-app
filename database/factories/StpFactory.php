@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Stp>
@@ -18,7 +19,7 @@ class StpFactory extends Factory
     {
         return [
             'tanggal' => $this->faker->date(),
-            'user_id' => '01h1kvh107kbektkxdyx9hbhgz',
+            'user_id' => User::pluck('id')->random(),
             'pp_id' => $this->faker->numberBetween(1, 7),
             'nama_pp' => $this->faker->word(),
             'melaksanakan' => $this->faker->sentence(),

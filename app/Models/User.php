@@ -81,11 +81,6 @@ class User extends Authenticatable
         return $this->hasMany(SocialAccount::class);
     }
 
-    public function sl()
-    {
-        return $this->hasMany(Sl::class);
-    }
-
     public function suratLain()
     {
         return $this->hasMany(Sl::class);
@@ -94,5 +89,15 @@ class User extends Authenticatable
     public function stPp()
     {
         return $this->hasMany(Stp::class);
+    }
+
+    public function kirimDokumen()
+    {
+        return $this->hasMany(Kirim::class);
+    }
+
+    public function surat()
+    {
+        return $this->hasMany(Kirim::class);
     }
 }

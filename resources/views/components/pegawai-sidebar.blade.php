@@ -28,7 +28,7 @@
             </li>
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
-            <li class="nav-item dropdown {{ $type_menu === 'surat-saya' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
                 <a href="#"
                     class="nav-link has-dropdown"
                     data-toggle="dropdown"><i class="fas fa-file"></i> <span>Surat Saya</span></a>
@@ -37,7 +37,7 @@
                         <a class="nav-link"
                             href="{{ route('st-kinerja.index') }}">ST Kinerja</a>
                     </li>
-                    <li class="{{ (Request::is('pegawai/st-pp*')) ? 'active' : '' }}">
+                    <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
                         <a class="nav-link"
                             href="{{ route('st-pp.index') }}">ST Pengembangan Profesi</a>
                     </li>
@@ -51,13 +51,13 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ Request::is('pegawai/kirim-dokumen') ? 'active' : '' }}">
+            <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
                     <i class="fas fa-paper-plane"></i>
                     <span>Kirim Dokumen</span>
                 </a>
             </li>
-            <li class="{{ Request::is('pegawai/surat-eksternal') ? 'active' : '' }}">
+            <li class="{{ Request::is('pegawai/surat-eksternal*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('surat-eksternal.index') }}">
                     <i class="fas fa-file-export"></i>
                     <span>Surat Eksternal</span>

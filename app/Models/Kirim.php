@@ -18,7 +18,7 @@ class Kirim extends Model
         });
     }
 
-    public function pegawai()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

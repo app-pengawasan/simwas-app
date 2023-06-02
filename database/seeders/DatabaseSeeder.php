@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Pp;
 use App\Models\NamaPp;
-use App\Models\JenisSurat;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -19,15 +18,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            UserSeeder::class,
-            PpSeeder::class,
-            NamaPpSeeder::class,
-            JenisSuratSeeder::class,
+            // UserSeeder::class,
+            // PpSeeder::class,
+            // NamaPpSeeder::class,
+            // KkaSeeder::class,
             // StKinerjaSeeder::class,
-            // StpSeeder::class,
-            // SlSeeder::class,
+            StpSeeder::class,
+            SlSeeder::class,
+            KirimSeeder::class,
             // StpdSeeder::class,
-            // KirimSeeder::class,
             // EksternalSeeder::class
         ]);
 

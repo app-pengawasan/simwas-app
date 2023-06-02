@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Kirim>
@@ -19,9 +20,9 @@ class KirimFactory extends Factory
         return [
             'tanggal' => $this->faker->date(),
             'no_surat' => $this->faker->bothify('?????#####'),
-            'user_id' => '1',
+            'user_id' => User::pluck('id')->random(),
             'email_tujuan' => $this->faker->email(),
-            'pesan' => $this->faker->word()
+            'pesan' => $this->faker->sentence()
         ];
     }
 }

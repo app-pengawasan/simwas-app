@@ -157,7 +157,7 @@
                                                     name="is_esign"
                                                     value="1"
                                                     class="custom-switch-input"
-                                                    {{ old('is_esign') == '0' ? 'checked' : '' }}>
+                                                    {{ old('is_esign') == '1' ? 'checked' : '' }}>
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Ya</span>
                                             </label>

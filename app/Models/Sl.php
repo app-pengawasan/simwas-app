@@ -26,8 +26,8 @@ class Sl extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function jenisSurat()
+    public function kka()
     {
-        return $this->belongsTo(JenisSurat::class);
+        return $this->belongsTo(Kka::class, 'kka_id');
     }
 }

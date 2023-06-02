@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ajukan Usulan Surat Lain')
+@section('title', 'Form Pembuatan Surat')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -24,16 +24,16 @@
 @endsection
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.sekretaris-header')
+    @include('components.sekretaris-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Form Usulan Surat Lain</h1>
+                <h1>Form Pembuatan Surat</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item active"><a href="/pegawai/surat-lain">Surat Lain</a></div>
-                    <div class="breadcrumb-item">Form Usulan</div>
+                    <div class="breadcrumb-item active"><a href="/pegawai/surat-lain">Surat</a></div>
+                    <div class="breadcrumb-item">Form Surat</div>
                 </div>
             </div>
             <div class="section-body">
@@ -41,7 +41,7 @@
                     <div class="col-12 col-md-6 col-lg-6">
                         <div class="card">
                             <div class="card-body">
-                                <form action="/pegawai/surat-lain" method="post" enctype="multipart/form-data">
+                                <form action="/sekretaris/surat" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="status" value="0">
                                     <div class="form-group">
@@ -68,14 +68,14 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="jenis_surat">Jenis Surat</label>
-                                        <select id="jenis_surat" name="jenis_surat" class="form-control select2 @error('jenis_surat') is-invalid @enderror">
+                                        <label for="jenis">Jenis Surat</label>
+                                        <select id="jenis" name="jenis" class="form-control select2 @error('jenis') is-invalid @enderror">
                                             <option value="">Pilih jenis surat</option>
-                                            <option value="Surat Dinas" {{ old('jenis_surat') == 'Surat Dinas' ? 'selected' : '' }}>Surat Dinas</option>
-                                            <option value="Nota Dinas" {{ old('jenis_surat') == 'Nota Dinas' ? 'selected' : '' }}>Nota Dinas</option>
-                                            <option value="Surat Undangan" {{ old('jenis_surat') == 'Surat Undangan' ? 'selected' : '' }}>Surat Undangan</option>
+                                            <option value="Surat Dinas" {{ old('jenis') == 'Surat Dinas' ? 'selected' : '' }}>Surat Dinas</option>
+                                            <option value="Nota Dinas" {{ old('jenis') == 'Nota Dinas' ? 'selected' : '' }}>Nota Dinas</option>
+                                            <option value="Surat Undangan" {{ old('jenis') == 'Surat Undangan' ? 'selected' : '' }}>Surat Undangan</option>
                                         </select>
-                                        @error('jenis_surat')
+                                        @error('jenis')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -97,30 +97,30 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="unit_kerja">Unit Kerja</label>
-                                        <select id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
-                                            <option value="">Pilih unit kerja</option>
-                                            <option value="8000" {{ old('unit_kerja') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
-                                            <option value="8010" {{ old('unit_kerja') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                            <option value="8100" {{ old('unit_kerja') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                            <option value="8200" {{ old('unit_kerja') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                            <option value="8300" {{ old('unit_kerja') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                        <label for="nomor_organisasi">Nomor Organisasi</label>
+                                        <select id="nomor_organisasi" name="nomor_organisasi" class="form-control select2 @error('nomor_organisasi') is-invalid @enderror">
+                                            <option value="">Pilih nomor organisasi</option>
+                                            <option value="8000" {{ old('nomor_organisasi') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
+                                            <option value="8010" {{ old('nomor_organisasi') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
+                                            <option value="8100" {{ old('nomor_organisasi') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                            <option value="8200" {{ old('nomor_organisasi') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                            <option value="8300" {{ old('nomor_organisasi') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
                                         </select>
-                                        @error('unit_kerja')
+                                        @error('nomor_organisasi')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="kka_id">KKA</label>
-                                        <select id="kka_id" name="kka_id" class="form-control select2 @error('kka_id') is-invalid @enderror">
+                                        <label for="kka">KKA</label>
+                                        <select id="kka" name="kka" class="form-control select2 @error('kka') is-invalid @enderror">
                                             <option value="">Pilih KKA</option>
-                                            @foreach ($kka as $kode)
-                                                <option value="{{ $kode->id }}" {{ old('kka_id') == $kode->id ? 'selected' : '' }}>{{ $kode->kode }}</option>
-                                            @endforeach
+                                                <option value="PW.110" {{ old('kka') == 'PW.110' ? 'selected' : '' }}>PW.110</option>
+                                                <option value="PW.120" {{ old('kka') == 'PW.120' ? 'selected' : '' }}>PW.120</option>
+                                                <option value="KP.310" {{ old('kka') == 'KP.310' ? 'selected' : '' }}>KP.310</option>
                                         </select>
-                                        @error('kka_id')
+                                        @error('kka')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>

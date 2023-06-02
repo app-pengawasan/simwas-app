@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Surat Lain')
+@section('title', 'Kirim Dokumen')
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,10 +18,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Surat Lain</h1>
+                <h1>Kirim Dokumen</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Surat Lain</div>
+                    <div class="breadcrumb-item">Kirim Dokumen</div>
                 </div>
             </div>
 
@@ -32,21 +32,14 @@
             @endif
             
             <div class="section-body">
-                <h2 class="section-title">Format surat</h2>
-                <p class="section-lead">Contoh format surat bisa dilihat <a
-                    target="blank"
-                    href="http://s.bps.go.id/templeteSURAT_ittama"
-                    class="link-primary fw-bold">di sini</a>.
-                </p>
-
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="pt-1 pb-1 m-4">
-                                    <a href="/pegawai/surat-lain/create"
+                                    <a href="/pegawai/kirim-dokumen/create"
                                         class="btn btn-primary btn-lg btn-round">
-                                        + Ajukan Usulan Surat
+                                        + Kirim dokumen
                                     </a>
                                 </div>
                                 <div class="">
@@ -55,46 +48,19 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal</th>
-                                                <th>Jenis</th>
-                                                <th>Hal</th>
                                                 <th>Nomor Surat</th>
-                                                <th>Surat</th>
+                                                <th>Penerima</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/pegawai/surat-lain/{{ $un->id }}">{{ $un->tanggal }}</a></td>
-                                                <td>{{ $un->jenis_surat }}</a></td>
-                                                <td>{{ $un->hal }}</td>
-                                                <td>
-                                                    @if($un->status == 0)
-                                                        Menunggu Persetujuan
-                                                    @elseif($un->status == 1)
-                                                    <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
-                                                    @else
-                                                        <a href="/pegawai/surat-lain/{{ $un->id }}">{{ $un->no_surat }}</a>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($un->status == 2)
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$un->surat) }}" download>Download Surat Belum TTD</a>
-                                                        </div>
-                                                        <div class="row">
-                                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $un->id]) }}">Upload Surat Sudah TTD</a>
-                                                        </div>
-                                                    </div>
-                                                    @elseif($un->status == 3)
-                                                        Menunggu Persetujuan
-                                                    @elseif($un->status == 4)
-                                                        <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
-                                                    @elseif($un->status == 5)
-                                                    <a target="blank" href="{{ asset('storage/'.$un->surat) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
-                                                    @endif
-                                                </td>
+                                                <td><a href="/pegawai/kirim-dokumen/{{ $un->id }}">{{ $un->tanggal }}</a></td>
+                                                <td>{{ $un->no_surat }}</a></td>
+                                                <td>{{ $un->email_tujuan }}</td>
+                                                <td><a href="/pegawai/kirim-dokumen/{{ $un->id }}" class="btn btn-icon btn-info"><i class="far fa-eye"></i></a></td>
                                             </tr>
                                             @endforeach
                                         </tbody>

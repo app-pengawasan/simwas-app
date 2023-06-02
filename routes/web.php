@@ -11,6 +11,8 @@ use App\Http\Controllers\SlController;
 use App\Http\Controllers\KirimController;
 use App\Http\Controllers\EksternalController;
 use App\Http\Controllers\NomorSuratController;
+use App\Http\Controllers\SlSekreController;
+use App\Http\Controllers\SuratController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -39,6 +41,10 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
 Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
 Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+
+Route::get('/sekretaris', function(){return view('sekretaris.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('sekretaris-dashboard');
+Route::resource('/sekretaris/usulan-surat', SlSekreController::class);
+// Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
 //End of Simwas
 
@@ -84,14 +90,13 @@ Route::resource('pegawai/surat-lain', SlController::class)->names([
 ]);
 
 // Kirim Dokumen
-Route::get('/pegawai/kirim/form', [KirimController::class, 'form_kirim']);
-Route::resource('pegawai/kirim', KirimController::class)->names([
+Route::resource('pegawai/kirim-dokumen', KirimController::class)->names([
     'index' => 'kirim-dokumen.index',
     'show' => 'kirim-dokumen.show',
 ]);
 
 // Surat Eksternal
-Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form_eksternal']);
+Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form']);
 Route::resource('pegawai/eksternal', EksternalController::class)->names([
     'index' => 'surat-eksternal.index',
     'show' => 'surat-eksternal.show',
@@ -99,6 +104,9 @@ Route::resource('pegawai/eksternal', EksternalController::class)->names([
 
 // Usulan Nomor Surat
 Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
+
+// Surat
+Route::resource('sekretaris/surat', SuratController::class);
 
 
 // Layout

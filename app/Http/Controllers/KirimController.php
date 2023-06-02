@@ -15,14 +15,9 @@ class KirimController extends Controller
      */
     public function index()
     {
-        $title = '';
-
-        return view('pegawai.kirim.kirim', [
-            "title" => "Surat Lain" . $title,
-            "role" => "pegawai",
-            // "usulan" => UsulanNomor::all()
-            "usulan" => Kirim::latest()->filter(request(['search']))->paginate(5)->withQueryString()
-        ]);
+        $usulan = Kirim::all()->where('user_id', auth()->user()->id);
+        return view('pegawai.kirim-dokumen.index', [
+            ])->with('usulan', $usulan);
     }
 
     /**
@@ -32,7 +27,7 @@ class KirimController extends Controller
      */
     public function create()
     {
-        //
+        return view('pegawai.kirim-dokumen.create');
     }
 
     /**

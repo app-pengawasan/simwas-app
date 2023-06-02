@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->string('no_surat');
-            $table->foreignId('user_id');
+            $table->string('user_id', 26);
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('email_tujuan');
             $table->text('pesan');
             $table->timestamps();
