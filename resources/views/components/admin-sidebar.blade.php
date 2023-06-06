@@ -14,17 +14,18 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'anggaran' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-money-bill"></i>
                     <span>Anggaran</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Master Anggaran</a>
+                    <li class="{{ Request::is('admin/master-anggaran') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Pagu Anggaran</a>
+                    <li
+                        class="{{ Request::is('admin/pagu-anggaran') || Request::is('admin/pagu-anggaran/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('pagu-anggaran.index') }}">Pagu Anggaran</a>
                     </li>
                 </ul>
             </li>

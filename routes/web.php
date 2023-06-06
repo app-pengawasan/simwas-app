@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\PaguAnggaranController;
 use App\http\Controllers\SessionController;
 use GuzzleHttp\Middleware;
 
@@ -36,7 +38,13 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
  * */
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
 
- //Master-pegawai
+//Kelola-anggaran
+//1.Master Anggaran
+Route::resource('/admin/master-anggaran', MasterAnggaranController::class)->except(['show']);
+//2.Pagu Anggaran
+Route::resource('/admin/pagu-anggaran', PaguAnggaranController::class);
+
+//Master-pegawai
 Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
 Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 

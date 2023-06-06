@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\MasterAnggaran;
+use App\Models\MasterPimpinan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,7 +18,26 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::factory(25)->create();
+        MasterPimpinan::factory(4)->create();
 
+        $master_anggaran = [
+
+            ];
+        MasterAnggaran::create([
+            'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
+            'id_kegiatan'   => '4203',
+            'kegiatan'      => '4203 Pengawasan dan Peningkatan Akuntabilitas Inspektorat I'
+        ]);
+        MasterAnggaran::create([
+            'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
+            'id_kegiatan'   => '4204',
+            'kegiatan'      => '4204 Pengawasan dan Peningkatan Akuntabilitas Inspektorat II'
+        ]);
+        MasterAnggaran::create([
+            'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
+            'id_kegiatan'   => '4205',
+            'kegiatan'      => '4205 Pengawasan dan Peningkatan Akuntabilitas Inspektorat III'
+        ]);
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
