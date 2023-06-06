@@ -70,7 +70,7 @@ class SuratController extends Controller
             $nomorNaskahPadded = str_pad($lastNomorNaskah, 3, '0', STR_PAD_LEFT);
             $bulan = date('m', strtotime($validatedData['tanggal']));
             $tahun = date('Y', strtotime($validatedData['tanggal']));
-            $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'/'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
+            $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'/0'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
 
             // Simpan data ke database
             Surat::create($validatedData);
@@ -94,7 +94,7 @@ class SuratController extends Controller
                     $nomorNaskahPadded = str_pad($validatedData['nomor_naskah'], 3, '0', STR_PAD_LEFT);
                     $bulan = date('m', strtotime($validatedData['tanggal']));
                     $tahun = date('Y', strtotime($validatedData['tanggal']));
-                    $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'.'.$validatedData['backdate'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
+                    $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'.'.$validatedData['backdate'].'/0'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
                     Surat::create($validatedData);
                     $notFound = false;
                 } else {

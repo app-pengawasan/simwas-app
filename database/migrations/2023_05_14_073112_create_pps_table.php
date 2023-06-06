@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('pps', function (Blueprint $table) {
             $table->id();
             $table->string('jenis');
+            $table->boolean('is_aktif');
             $table->timestamps();
         });
     }

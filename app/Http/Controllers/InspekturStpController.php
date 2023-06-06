@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stp;
-use App\Models\User;
-use App\Models\Pp;
-use App\Models\NamaPp;
-use App\Http\Requests\StoreStpRequest;
-use App\Http\Requests\UpdateStpRequest;
+use App\Models\Surat;
 use Illuminate\Http\Request;
 
-class StpController extends Controller
+class InspekturStpController extends Controller
 {
     protected $pangkat = [
         'II/a' =>	'Pengatur Muda',
@@ -31,9 +27,9 @@ class StpController extends Controller
     protected $unit_kerja = [
         '8000' => 'Inspektorat Utama',
         '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Inspektorat Wilayah I',
-        '8200' => 'Inspektorat Wilayah II',
-        '8300' => 'Inspektorat Wilayah III'
+        '8100' => 'Insapektorat Wilayah I',
+        '8200' => 'Insapektorat Wilayah II',
+        '8300' => 'Insapektorat Wilayah III'
     ];
 
     protected $jabatan = [
@@ -82,13 +78,13 @@ class StpController extends Controller
      */
     public function index()
     {
-        $title = '';
-
-        return view('pegawai.st-pp.index', [
-            "title" => "Surat Tugas Pengembangan Profesi" . $title,
-            "type_menu" => "surat-saya",
-            "usulan" => Stp::latest()->where('user_id', auth()->user()->id)->filter(request(['search']))->paginate(5)->withQueryString()
-        ]);
+        if ((auth()->user()->is_aktif) && auth()->user()->unit_kerja == '8000' ) {
+            $usulan = Stp::all();
+        } else {
+            $usulan = Stp::all()->where('unit_kerja', auth()->user()->unit_kerja);
+        }
+        return view('inspektur.st-pp.index', [
+        ])->with('usulan', $usulan);
     }
 
     /**
@@ -98,46 +94,18 @@ class StpController extends Controller
      */
     public function create()
     {
-        $pps = Pp::all()->where('is_aktif', true);
-        $namaPps = NamaPp::all()->where('is_aktif', true);
-        $user = User::all();
-        return view('pegawai.st-pp.create', [
-            "user" => $user,
-            "pps" => $pps,
-            "namaPps" => $namaPps
-        ]);
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreStpRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreStpRequest $request)
+    public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'is_backdate' => 'required',
-            'tanggal' => $request->input('is_backdate') === 'yes' ? 'required' : '',
-            'unit_kerja' => 'required',
-            'pp_id' => 'required',
-            'nama_pp' => 'required',
-            'melaksanakan' => 'required',
-            'mulai' => 'required',
-            'selesai' => 'required',
-            'pegawai' => 'required',
-            'penandatangan' => 'required',
-            'is_esign' => 'required',
-            'status' => 'required'
-        ], [
-            'required' => 'Wajib diisi'
-        ]);
-
-        $validatedData['user_id'] = auth()->user()->id;
-        $validatedData['pegawai'] = implode(',', $validatedData['pegawai']);
-        Stp::create($validatedData);
-
-        return redirect('pegawai/st-pp')->with('success', 'Berhasil mengajukan usulan!');
+        //
     }
 
     /**
@@ -148,9 +116,7 @@ class StpController extends Controller
      */
     public function show(Stp $st_pp)
     {
-        return view('pegawai.st-pp.show', [
-            "title" => "Detail Usulan Surat Tugas Pengembangan Profesi",
-            "type_menu" => "surat-saya",
+        return view('inspektur.st-pp.show', [
             "usulan" => $st_pp
         ]);
     }
@@ -169,13 +135,37 @@ class StpController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateStpRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Stp  $stp
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStpRequest $request, Stp $stp)
+    public function update(Request $request, Stp $stp)
     {
-        //
+        if ($request->input('status') == '2') {
+            $usulan = Stp::find($request->input('id'));
+            $data = new Request();
+            $tanggal = ($usulan->is_backdate == '0') ? date('Y-m-d') : $usulan->tanggal;
+            $data->merge([
+                'user_id' => $usulan->user_id,
+                'derajat_klasifikasi' => 'B',
+                'nomor_organisasi' => $usulan->unit_kerja,
+                'kka' => 'KP.310',
+                'tanggal' => $tanggal,
+                'jenis' => $usulan->jenis_surat,
+                'is_backdate' => $usulan->is_backdate
+            ]);
+            $buatSurat = new SuratController();
+            $buatSurat->store($data);
+            $nomorSurat = Surat::latest()->first()->nomor_surat;
+            
+            $validatedData = ([
+                'status' => '2',
+                'tanggal' => $tanggal,
+                'no_surat' => $nomorSurat
+            ]);
+            Stp::where('id', $request->input('id'))->update($validatedData);
+            return redirect('sekretaris/usulan-surat')->with('success', 'Berhasil menyetujui usulan surat!');
+        }
     }
 
     /**
@@ -188,13 +178,4 @@ class StpController extends Controller
     {
         //
     }
-
-    public function getNamaPp(Request $request)
-    {
-        $namaPp = NamaPp::where('pp_id', $request->pp_id)->get();
-        return response()->json(['namaPp' => $namaPp], 200);
-    }
-
-    
-    // {{-- <input style="display: none;" type="text" class="form-control @error('nama_pp') is-invalid @enderror" id="nama_pp_text" name="nama_pp" value="{{ old('nama_pp') }}"> --}}
 }

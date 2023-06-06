@@ -18,12 +18,15 @@ return new class extends Migration
             $table->ulid('id')->primary()->default(Ulid::generate());
             $table->string('user_id', 26);
             $table->foreign('user_id')->references('id')->on('users');
-            $table->date('tanggal');
+            $table->boolean('is_backdate');
+            $table->date('tanggal')->nullable();
+            $table->string('unit_kerja');
             $table->foreignId('pp_id');
             $table->string('nama_pp');
             $table->text('melaksanakan');
             $table->date('mulai');
             $table->date('selesai');
+            $table->text('pegawai');
             $table->smallInteger('penandatangan');
             $table->smallInteger('status');
             $table->string('no_st')->nullable();

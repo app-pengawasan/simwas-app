@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             // StKinerjaSeeder::class,
             StpSeeder::class,
             SlSeeder::class,
-            KirimSeeder::class,
+            // KirimSeeder::class,
             // StpdSeeder::class,
             // EksternalSeeder::class
         ]);

@@ -7,22 +7,28 @@
             <a href="index.html">Sm</a>
         </div>
         <ul class="sidebar-menu">
-            <li class="{{ Request::is('sekretaris') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('sekretaris-dashboard') }}">
+            <li class="{{ Request::is('inspektur') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('inspektur-dashboard') }}">
                     <i class="fab fa-stumbleupon-circle"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ Request::is('sekretaris/usulan-surat*') ? 'active' : '' }}">
-                <a class="nav-link" href="/sekretaris/usulan-surat">
-                    <i class="fas fa-file"></i>
-                    <span>Usulan Surat</span>
+            <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/st-kinerja">
+                    <i class="fas fa-wrench"></i>
+                    <span>ST Kinerja</span>
                 </a>
             </li>
-            <li class="{{ Request::is('sekretaris/surat-eksternal*') ? 'active' : '' }}">
-                <a class="nav-link" href="sekretaris/surat-eksternal">
-                    <i class="fas fa-file-export"></i>
-                    <span>Surat Eksternal</span>
+            <li class="{{ Request::is('inspektur/st-pp*') ? 'active' : '' }}">
+                <a class="nav-link" href="inspektur/st-pp">
+                    <i class="fas fa-file"></i>
+                    <span>ST Pengembangan Profesi</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('inspektur/st-pd*') ? 'active' : '' }}">
+                <a class="nav-link" href="inspektur/st-pd">
+                    <i class="fas fa-road"></i>
+                    <span>ST Perjalanan Dinas</span>
                 </a>
             </li>
         </ul>

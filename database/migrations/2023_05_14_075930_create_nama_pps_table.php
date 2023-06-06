@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pp_id');
             $table->string('nama');
+            $table->boolean('is_aktif');
             $table->timestamps();
         });
     }

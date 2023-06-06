@@ -16,25 +16,32 @@ class PpSeeder extends Seeder
     public function run()
     {
         Pp::create([
-            'jenis' => 'Sertifikasi'
+            'jenis' => 'Sertifikasi',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Diklat Penjenjangan'
+            'jenis' => 'Diklat Penjenjangan',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Diklat Subtantif'
+            'jenis' => 'Diklat Subtantif',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Pelatihan'
+            'jenis' => 'Pelatihan',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Workshop'
+            'jenis' => 'Workshop',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Seminar'
+            'jenis' => 'Seminar',
+            'is_aktif' => true
         ]);
         Pp::create([
-            'jenis' => 'Pelatihan di Kantor Sendiri'
+            'jenis' => 'Pelatihan di Kantor Sendiri',
+            'is_aktif' => true
         ]);
     }
 }

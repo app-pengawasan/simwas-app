@@ -81,9 +81,7 @@ class SlController extends Controller
     public function index()
     {
         $usulan = Sl::all()->where('user_id', auth()->user()->id);
-        return view('pegawai.surat-lain.index', [
-            'type_menu' => 'surat-saya'
-            ])->with('usulan', $usulan);
+        return view('pegawai.surat-lain.index')->with('usulan', $usulan);
     }
 
     /**

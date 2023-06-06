@@ -44,20 +44,54 @@
                             <div class="card-body">
                                 <form action="/pegawai/st-pp" method="post">
                                     @csrf
-                                    <input type="hidden" name="tanggal" value="{{ date("Y-m-d") }}">
                                     <input type="hidden" name="status" value="0">
-                                    <input type="hidden" name="no_st" value="{{ random_bytes(10) }}">
                                     <div class="form-group">
-                                        <label for="unit-kerja">Unit Kerja</label>
-                                        <select id="unit-kerja" name="unit-kerja" class="form-control select2 @error('unit-kerja') is-invalid @enderror">
+                                        <div class="control-label">Backdate</div>
+                                        <div class="custom-switches-stacked mt-2">
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="1"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_backdate') == '1' ? 'checked' : '' }}
+                                                    onchange="toggleTanggalInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Ya</span>
+                                            </label>
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="0"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_backdate') == '0' ? 'checked' : '' }}
+                                                    onchange="toggleTanggalInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Tidak</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div id="tanggalInputContainer" style="display: none;">
+                                        <div class="form-group">
+                                            <label>Tanggal</label>
+                                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
+                                            @error('tanggal')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="unit_kerja">Unit Kerja</label>
+                                        <select id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
                                             <option value="">Pilih unit kerja</option>
-                                            <option value="1" {{ old('unit-kerja') == '1' ? 'selected' : '' }}>Inspektorat Utama</option>
-                                            <option value="2" {{ old('unit-kerja') == '2' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                            <option value="3" {{ old('unit-kerja') == '3' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                            <option value="4" {{ old('unit-kerja') == '4' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
-                                            <option value="5" {{ old('unit-kerja') == '5' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
+                                            <option value="8000" {{ old('unit_kerja') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
+                                            <option value="8010" {{ old('unit_kerja') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
+                                            <option value="8100" {{ old('unit_kerja') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                            <option value="8200" {{ old('unit_kerja') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                            <option value="8300" {{ old('unit_kerja') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
                                         </select>
-                                        @error('unit-kerja')
+                                        @error('unit_kerja')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -67,13 +101,9 @@
                                         <label for="pp_id">Jenis Pengembangan Profesi</label>
                                         <select class="form-control select2 @error('pp_id') is-invalid @enderror" id="pp_id" name="pp_id">
                                             <option value="">Pilih jenis pengembangan profesi</option>
-                                            <option value="1" {{ old('pp_id') == '1' ? 'selected' : '' }}>Sertifikasi</option>
-                                            <option value="2" {{ old('pp_id') == '2' ? 'selected' : '' }}>Diklat</option>
-                                            <option value="3" {{ old('pp_id') == '3' ? 'selected' : '' }}>Diklat Subtantif</option>
-                                            <option value="4" {{ old('pp_id') == '4' ? 'selected' : '' }}>Pelatihan</option>
-                                            <option value="5" {{ old('pp_id') == '5' ? 'selected' : '' }}>Workshop</option>
-                                            <option value="6" {{ old('pp_id') == '6' ? 'selected' : '' }}>Seminar</option>
-                                            <option value="7" {{ old('pp_id') == '7' ? 'selected' : '' }}>Pelatihan di Kantor Sendiri</option>
+                                            @foreach ($pps as $pp)
+                                                <option value="{{ $pp->id }}" {{ old('pp_id') == $pp->id ? 'selected' : '' }}>{{ $pp->jenis }}</option>
+                                            @endforeach
                                         </select>
                                         @error('pp_id')
                                         <div class="invalid-feedback">
@@ -81,21 +111,8 @@
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="nama_pp">Nama Pengembangan Profesi</label>
-                                        <select class="form-control select2 @error('nama_pp') is-invalid @enderror" id="nama_pp" name="nama_pp">
-                                            <option value="">Pilih nama pengembangan profesi</option>
-                                            <option value="1" {{ old('nama_pp') == '1' ? 'selected' : '' }}>CISA</option>
-                                            <option value="2" {{ old('nama_pp') == '2' ? 'selected' : '' }}>CRMP</option>
-                                            <option value="3" {{ old('nama_pp') == '3' ? 'selected' : '' }}>QIA</option>
-                                            <option value="4" {{ old('nama_pp') == '4' ? 'selected' : '' }}>Diklat Auditor Ahli Pertama</option>
-                                            <option value="5" {{ old('nama_pp') == '5' ? 'selected' : '' }}>Audit Investigasi</option>
-                                        </select>
-                                        @error('nama_pp')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                                    <div class="form-group" id="div_nama_pp">
+                                               
                                     </div>
                                     <div class="form-group">
                                         <label for="melaksanakan">Untuk melaksanakan</label>
@@ -108,7 +125,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Waktu Mulai</label>
-                                        <input type="date" class="form-control datepicker @error('mulai') is-invalid @enderror" name="mulai" value="{{ old('mulai') }}">
+                                        <input type="date" class="form-control @error('mulai') is-invalid @enderror" name="mulai" value="{{ old('mulai') }}">
                                         @error('mulai')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -117,7 +134,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Waktu Selesai</label>
-                                        <input type="date" class="form-control datepicker @error('selesai') is-invalid @enderror" name="selesai" value="{{ old('selesai') }}">
+                                        <input type="date" class="form-control @error('selesai') is-invalid @enderror" name="selesai" value="{{ old('selesai') }}">
                                         @error('selesai')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -126,7 +143,12 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="pegawai">Pegawai</label>
-                                        <input type="text" class="form-control @error('pegawai') is-invalid @enderror" id="pegawai" name="pegawai" value="{{ old('pegawai') }}">
+                                        <select id="pegawai" name="pegawai[]" class="form-control select2 @error('pegawai') is-invalid @enderror" multiple="multiple">
+                                            <option value="">Pilih Pegawai</option>
+                                            @foreach ($user as $pegawai)
+                                                <option value="{{ $pegawai->id }}" {{ old('pegawai') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->name }}</option>
+                                            @endforeach
+                                        </select>
                                         @error('pegawai')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -191,9 +213,58 @@
     <script src="{{ asset('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
     <script src="{{ asset('library/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
     <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script>
+        function toggleTanggalInput(input) {
+            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+    
+            if (input.value === '1') {
+                tanggalInputContainer.style.display = 'block';
+            } else {
+                tanggalInputContainer.style.display = 'none';
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#pp_id").on("change", function() {
+                const ppId = $(this).val();
+                if(ppId == 1 || ppId == 2 || ppId == 3){
+                    $.ajax({
+                    url: `/get-nama-pp-by-pp`,
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        pp_id: ppId
+                    },
+                    dataType: "json",
+                    success: (data) => {
+                        $("#div_nama_pp").empty();
+                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
+                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
+                                            <option value="">Pilih nama pengembangan profesi</option>
+                                        </select>`);
+
+                        data.namaPp.forEach(element => {
+                            $("#nama_pp").append(
+                                `<option value="${element.nama}">${element.nama}</option>`
+                            );
+                        });
+                        // console.log(data);
+                    },
+                    error: function(request, status, error) {
+                        alert(request.responseText);
+                    }
+                });
+                } else {
+                    $("#div_nama_pp").empty();
+                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
+                }
+            });
+        });
+    </script>
+    <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush
