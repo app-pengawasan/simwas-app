@@ -1,13 +1,17 @@
 <?php
 
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\http\Controllers\SessionController;
+use App\Http\Controllers\SatuanKerjaController;
+use App\Http\Controllers\PaguAnggaranController;
+use App\Http\Controllers\WilayahKerjaController;
+use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
-use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterPimpinanController;
-use App\Http\Controllers\PaguAnggaranController;
-use App\http\Controllers\SessionController;
-use GuzzleHttp\Middleware;
+use App\Http\Controllers\MasterUnitKerjaController;
+use App\Http\Controllers\ObjekKegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +54,21 @@ Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'im
 
 //Master-pimpinan
 Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
+
+
+//Master Objek
+//1. Unit Kerja
+Route::resource('/admin/master-unit-kerja', MasterUnitKerjaController::class);
+Route::post('/admin/master-unit-kerja/import', [MasterUnitKerjaController::class, 'import']);
+//2. Satuan Kerja
+Route::resource('/admin/master-satuan-kerja', SatuanKerjaController::class);
+Route::post('/admin/master-satuan-kerja/import', [SatuanKerjaController::class, 'import']);
+//3. Wilayah Kerja
+Route::resource('/admin/master-wilayah-kerja', WilayahKerjaController::class);
+Route::post('/admin/master-wilayah-kerja/import', [WilayahKerjaController::class, 'import']);
+//4. Objek Kegiatan
+Route::resource('/admin/objek-kegiatan', ObjekKegiatanController::class);
+Route::get('/admin/objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);
 
 /**
  * ===========================================================================

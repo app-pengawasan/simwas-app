@@ -43,23 +43,23 @@
                     <span>Kelola Pimpinan</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'objek' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-bullseye"></i>
                     <span>Master Objek</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Unit Kerja</a>
+                    <li class="{{ Request::is('admin/master-unit-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-unit-kerja">Unit Kerja</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Satuan Kerja</a>
+                    <li class="{{ Request::is('admin/master-satuan-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-satuan-kerja">Satuan Kerja</a>
                     </li>
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Wilayah</a>
+                    <li class="{{ Request::is('admin/master-wilayah-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-wilayah-kerja">Wilayah</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Kegiatan</a>
+                    <li class="{{ Request::is('admin/objek-kegiatan') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/objek-kegiatan">Kegiatan</a>
                     </li>
                 </ul>
             </li>

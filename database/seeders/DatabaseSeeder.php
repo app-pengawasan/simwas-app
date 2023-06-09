@@ -20,9 +20,14 @@ class DatabaseSeeder extends Seeder
         User::factory(25)->create();
         MasterPimpinan::factory(4)->create();
 
-        $master_anggaran = [
+        User::create([
+            'email'     => '221911003@stis.ac.id',
+            'nip'       => '221911003',
+            'name'      => 'Gestyan Ramadhan',
+            'pangkat'   => 'IV/a',
+            'is_admin'  => 1
+        ]);
 
-            ];
         MasterAnggaran::create([
             'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
             'id_kegiatan'   => '4203',
