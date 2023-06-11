@@ -63,7 +63,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-kinerja' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-clipboard"></i>
                     <span>Rencana Kinerja</span>
@@ -72,14 +72,14 @@
                     <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('layout-default-layout') }}">Dashboard Kinerja</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Master Target</a>
+                    <li class="{{ Request::is('admin/master-tujuan') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-tujuan">Master Tujuan</a>
                     </li>
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Master Sasaran</a>
+                    <li class="{{ Request::is('admin/master-sasaran') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-sasaran">Master Sasaran</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Master IKU</a>
+                    <li class="{{ Request::is('admin/master-iku') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-iku">Master IKU</a>
                     </li>
                 </ul>
             </li>

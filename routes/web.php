@@ -9,9 +9,15 @@ use App\Http\Controllers\WilayahKerjaController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\MasterSasaranController;
+use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\ObjekKegiatanController;
+use App\Models\MasterIKU;
+use App\Models\MasterSasaran;
+use App\Models\MasterTujuan;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +76,14 @@ Route::post('/admin/master-wilayah-kerja/import', [WilayahKerjaController::class
 Route::resource('/admin/objek-kegiatan', ObjekKegiatanController::class);
 Route::get('/admin/objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);
 
+//Master Tujuan
+Route::resource('/admin/master-tujuan', MasterTujuanController::class);
+
+//Master Sasaran
+Route::resource('/admin/master-sasaran', MasterSasaranController::class);
+
+//Master IKU
+Route::resource('/admin/master-iku', MasterIKUController::class);
 /**
  * ===========================================================================
  * End of Simwas
