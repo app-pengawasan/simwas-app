@@ -9,15 +9,14 @@ use App\Http\Controllers\WilayahKerjaController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterHasilController;
 use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\ObjekKegiatanController;
-use App\Models\MasterIKU;
-use App\Models\MasterSasaran;
-use App\Models\MasterTujuan;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +83,9 @@ Route::resource('/admin/master-sasaran', MasterSasaranController::class);
 
 //Master IKU
 Route::resource('/admin/master-iku', MasterIKUController::class);
+
+//Master Hasil
+Route::resource('/admin/master-hasil', MasterHasilController::class);
 /**
  * ===========================================================================
  * End of Simwas

@@ -81,6 +81,9 @@
                     <li class="{{ Request::is('admin/master-iku') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-iku">Master IKU</a>
                     </li>
+                    <li class="{{ Request::is('admin/master-hasil') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-hasil">Master Hasil</a>
+                    </li>
                 </ul>
             </li>
         </ul>
