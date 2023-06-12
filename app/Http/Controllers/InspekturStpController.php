@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Stp;
 use App\Models\Surat;
+use App\Models\User;
+use App\Models\Pp;
+use App\Models\NamaPp;
 use Illuminate\Http\Request;
 
 class InspekturStpController extends Controller
@@ -78,7 +81,7 @@ class InspekturStpController extends Controller
      */
     public function index()
     {
-        if ((auth()->user()->is_aktif) && auth()->user()->unit_kerja == '8000' ) {
+        if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $usulan = Stp::all();
         } else {
             $usulan = Stp::all()->where('unit_kerja', auth()->user()->unit_kerja);
@@ -116,8 +119,13 @@ class InspekturStpController extends Controller
      */
     public function show(Stp $st_pp)
     {
+        $pegawaiArray = explode(', ', $st_pp->pegawai);
+        $users = \App\Models\User::whereIn('id', $pegawaiArray)->get();
+        $nama = $users->pluck('name')->toArray();
+        $pegawai = implode(', ', $nama);
         return view('inspektur.st-pp.show', [
-            "usulan" => $st_pp
+            "usulan" => $st_pp,
+            "pegawai" => $pegawai
         ]);
     }
 
@@ -127,9 +135,17 @@ class InspekturStpController extends Controller
      * @param  \App\Models\Stp  $stp
      * @return \Illuminate\Http\Response
      */
-    public function edit(Stp $stp)
+    public function edit(Stp $st_pp)
     {
-        //
+        $user = User::all();
+        $pps = Pp::all()->where('is_aktif', true);
+        $namaPps = NamaPp::all()->where('is_aktif', true);
+        return view('inspektur.st-pp.edit', [
+            "usulan" => $st_pp,
+            "user" => $user,
+            "pps" => $pps,
+            "namaPps" => $namaPps
+        ]);
     }
 
     /**
@@ -139,9 +155,40 @@ class InspekturStpController extends Controller
      * @param  \App\Models\Stp  $stp
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Stp $stp)
+    public function update(Request $request, Stp $st_pp)
     {
-        if ($request->input('status') == '2') {
+        if ($request->input('status') == '1') {
+            $validatedData = $request->validate([
+                'catatan' => 'required'
+            ],[
+                'required' => 'Wajib diisi'
+            ]);
+            $validatedData['status'] = '1';
+            Stp::where('id', $request->input('id'))->update($validatedData);
+            return redirect('inspektur/st-pp')->with('success', 'Berhasil menolak usulan surat!');
+        } elseif ($request->input('status') == '2') {
+            if ($request->has('edit')) {
+                $validatedData = $request->validate([
+                    'is_backdate' => 'required',
+                    'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
+                    'unit_kerja' => 'required',
+                    'pp_id' => 'required',
+                    'nama_pp' => 'required',
+                    'melaksanakan' => 'required',
+                    'mulai' => 'required|date',
+                    'selesai' => 'required|date|after_or_equal:mulai',
+                    'pegawai' => 'required',
+                    'penandatangan' => 'required',
+                    'is_esign' => 'required',
+                    'status' => 'required'
+                ], [
+                    'required' => 'Wajib diisi'
+                ]);
+        
+                $validatedData['user_id'] = auth()->user()->id;
+                $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
+                Stp::where('id', $request->input('id'))->update($validatedData);
+            }
             $usulan = Stp::find($request->input('id'));
             $data = new Request();
             $tanggal = ($usulan->is_backdate == '0') ? date('Y-m-d') : $usulan->tanggal;
@@ -151,7 +198,7 @@ class InspekturStpController extends Controller
                 'nomor_organisasi' => $usulan->unit_kerja,
                 'kka' => 'KP.310',
                 'tanggal' => $tanggal,
-                'jenis' => $usulan->jenis_surat,
+                'jenis' => 'ST Pengembangan Profesi',
                 'is_backdate' => $usulan->is_backdate
             ]);
             $buatSurat = new SuratController();
@@ -164,7 +211,7 @@ class InspekturStpController extends Controller
                 'no_surat' => $nomorSurat
             ]);
             Stp::where('id', $request->input('id'))->update($validatedData);
-            return redirect('sekretaris/usulan-surat')->with('success', 'Berhasil menyetujui usulan surat!');
+            return redirect('inspektur/st-pp')->with('success', 'Berhasil menyetujui usulan surat!');
         }
     }
 

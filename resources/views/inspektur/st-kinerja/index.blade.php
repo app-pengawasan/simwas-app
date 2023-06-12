@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'ST Kinerja dan Norma Hasil')
+@section('title', 'Usulan ST Kinerja dan Norma Hasil')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.inspektur-header')
+    @include('components.inspektur-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>ST Kinerja dan Norma Hasil</h1>
+                <h1>Usulan ST Kinerja dan Norma Hasil</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">ST Kinerja dan Norma Hasil</div>
+                    <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
+                    <div class="breadcrumb-item">Usulan ST Kinerja dan Norma Hasil</div>
                 </div>
             </div>
 
@@ -33,21 +33,16 @@
 
             <div class="section-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="pt-1 pb-1 m-4">
-                                    <a href="/pegawai/st-kinerja/create"
-                                        class="btn btn-primary btn-lg btn-round">
-                                        + Ajukan Usulan ST
-                                    </a>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
+                                <div class="">
+                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-inspektur">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal Usulan</th>
+                                                <th>Pemohon</th>
                                                 <th>Waktu Mulai/Selesai</th>
                                                 <th>Objek Pengawasan</th>
                                                 <th>Status ST</th>
@@ -61,14 +56,15 @@
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/pegawai/st-kinerja/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
+                                                <td><a href="/inspektur/st-kinerja/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
+                                                <td>{{ $un->user->name }}</td>
                                                 <td>{{ $un->mulai.' / '.$un->selesai }}</td>
                                                 <td>{{ $un->objek }}</td>
                                                 <td>
                                                     @if ($un->status == 0)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
                                                     @elseif ($un->status == 1)
-                                                        <a href="/pegawai/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @else
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
@@ -84,7 +80,7 @@
                                                     @elseif ($un->status == 3)
                                                         <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif ($un->status == 4)
-                                                        <a href="/pegawai/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @elseif ($un->status >= 5)
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
@@ -95,7 +91,7 @@
                                                     @elseif ($un->status == 6)
                                                         <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif ($un->status == 7)
-                                                        <a href="/pegawai/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @elseif ($un->status == 8)
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
@@ -132,19 +128,7 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-    {{-- <script>
-        $(document).ready(function() {
-            $('#table-pengelolaan-dokumen-pegawai').DataTable( {
-            "columnDefs": [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
-            });
-        });
-    </script> --}}
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+    <script src="{{ asset('js') }}/page/inspektur-pengelolaan-dokumen.js"></script>
 @endpush

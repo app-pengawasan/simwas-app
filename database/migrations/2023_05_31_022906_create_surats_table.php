@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('surats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->string('user_id', 26);
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('nomor_surat');
             $table->string('derajat_klasifikasi', 2);
             $table->integer('nomor_naskah');

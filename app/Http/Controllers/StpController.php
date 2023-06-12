@@ -82,13 +82,8 @@ class StpController extends Controller
      */
     public function index()
     {
-        $title = '';
-
-        return view('pegawai.st-pp.index', [
-            "title" => "Surat Tugas Pengembangan Profesi" . $title,
-            "type_menu" => "surat-saya",
-            "usulan" => Stp::latest()->where('user_id', auth()->user()->id)->filter(request(['search']))->paginate(5)->withQueryString()
-        ]);
+        $usulan = Stp::all()->where('user_id', auth()->user()->id);
+        return view('pegawai.st-pp.index')->with('usulan', $usulan);
     }
 
     /**
@@ -118,13 +113,13 @@ class StpController extends Controller
     {
         $validatedData = $request->validate([
             'is_backdate' => 'required',
-            'tanggal' => $request->input('is_backdate') === 'yes' ? 'required' : '',
+            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
             'unit_kerja' => 'required',
             'pp_id' => 'required',
             'nama_pp' => 'required',
             'melaksanakan' => 'required',
-            'mulai' => 'required',
-            'selesai' => 'required',
+            'mulai' => 'required|date',
+            'selesai' => 'required|date|after_or_equal:mulai',
             'pegawai' => 'required',
             'penandatangan' => 'required',
             'is_esign' => 'required',
@@ -134,7 +129,7 @@ class StpController extends Controller
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
-        $validatedData['pegawai'] = implode(',', $validatedData['pegawai']);
+        $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
         Stp::create($validatedData);
 
         return redirect('pegawai/st-pp')->with('success', 'Berhasil mengajukan usulan!');
@@ -148,10 +143,13 @@ class StpController extends Controller
      */
     public function show(Stp $st_pp)
     {
+        $pegawaiArray = explode(', ', $st_pp->pegawai);
+        $users = \App\Models\User::whereIn('id', $pegawaiArray)->get();
+        $nama = $users->pluck('name')->toArray();
+        $pegawai = implode(', ', $nama);
         return view('pegawai.st-pp.show', [
-            "title" => "Detail Usulan Surat Tugas Pengembangan Profesi",
-            "type_menu" => "surat-saya",
-            "usulan" => $st_pp
+            "usulan" => $st_pp,
+            "pegawai" => $pegawai
         ]);
     }
 
@@ -161,9 +159,17 @@ class StpController extends Controller
      * @param  \App\Models\Stp  $stp
      * @return \Illuminate\Http\Response
      */
-    public function edit(Stp $stp)
+    public function edit(Stp $st_pp)
     {
-        //
+        $user = User::all();
+        $pps = Pp::all()->where('is_aktif', true);
+        $namaPps = NamaPp::all()->where('is_aktif', true);
+        return view('pegawai.st-pp.edit', [
+            "usulan" => $st_pp,
+            "user" => $user,
+            "pps" => $pps,
+            "namaPps" => $namaPps
+        ]);
     }
 
     /**
@@ -173,9 +179,30 @@ class StpController extends Controller
      * @param  \App\Models\Stp  $stp
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStpRequest $request, Stp $stp)
+    public function update(UpdateStpRequest $request, Stp $st_pp)
     {
-        //
+        $validatedData = $request->validate([
+            'is_backdate' => 'required',
+            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
+            'unit_kerja' => 'required',
+            'pp_id' => 'required',
+            'nama_pp' => 'required',
+            'melaksanakan' => 'required',
+            'mulai' => 'required|date',
+            'selesai' => 'required|date|after_or_equal:mulai',
+            'pegawai' => 'required',
+            'penandatangan' => 'required',
+            'is_esign' => 'required',
+            'status' => 'required'
+        ], [
+            'required' => 'Wajib diisi'
+        ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
+        $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
+        Stp::where('id', $st_pp->id)->update($validatedData);
+
+        return redirect('pegawai/st-pp')->with('success', 'Pengajuan kembali usulan ST Pengembangan Profesi berhasil!');
     }
 
     /**

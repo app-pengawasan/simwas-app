@@ -34,7 +34,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                    <article>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6">
                                         <h2>Detail Usulan</h2>
                                         @if ($usulan->status == 1 || $usulan->status == 4)
                                             <div class="pt-1 pb-1 m-4">
@@ -43,40 +45,93 @@
                                                     Edit Usulan
                                                 </a>
                                             </div>
-                                            <h5>Catatan : {{ $usulan->catatan }}</h5>
-                                        @endif
-                                        <h5>Nomor Surat : @if($usulan->status == 0)
-                                            Menunggu Persetujuan
-                                        @elseif($usulan->status == 1)
-                                        <div class="badge badge-danger">Tidak Disetujui</div>
-                                        @else
-                                            {{ $usulan->no_surat }}
-                                        @endif</h5>
-                                        <h5>Tanggal : {{ $usulan->tanggal }}</h5>
-                                        <h5>Jenis Surat : {{ $usulan->jenis_surat }}</h5>
-                                        <h5>Derajat Klasifikasi : {{ $usulan->derajat_klasifikasi }}</h5>
-                                        <h5>KKA : {{ $usulan->kka->kode }}</h5>
-                                        <h5>Unit Kerja : {{ 
-                                            ($usulan->unit_kerja == "8000") ? "Inspektorat Utama" :
-                                            (($usulan->unit_kerja == "8010") ? "Bagian Umum Inspektorat Utama" :
-                                            (($usulan->unit_kerja == "8100") ? "Inspektorat Wilayah I" :
-                                            (($usulan->unit_kerja == "8200") ? "Inspektorat Wilayah II" :
-                                            "Inspektorat Wilayah III")))
-                                        }}</h5>
-                                        <h5>Hal : {{ $usulan->hal }}</h5>
-                                        <h5>Draft : <a target="blank" href="{{ asset('storage/'.$usulan->draft) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></h5>
-                                        <h5>Surat : @if($usulan->status == 2)
-                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$usulan->surat) }}" download>Download Surat Belum TTD</a>
-                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $usulan->id]) }}">Upload Surat Sudah TTD</a>
-                                                    
-                                        @elseif($usulan->status == 3)
-                                            Menunggu Persetujuan
-                                        @elseif($usulan->status == 4)
-                                            <div class="badge badge-danger">Tidak Disetujui</div>
-                                        @elseif($usulan->status == 5)
-                                        <a target="blank" href="{{ asset('storage/'.$usulan->surat) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
-                                        @endif</h5>    
-                                    </article>
+                                        @endif     
+                                            <table class="table">
+                                                @if ($usulan->status == 1 || $usulan->status == 4)
+                                                    <tr>
+                                                        <th>Catatan</th>
+                                                        <th>:</th>
+                                                        <td>{{ $usulan->catatan }}</td>
+                                                    </tr>
+                                                @endif  
+                                                <tr>
+                                                    <th>Nomor Surat</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                        @if($usulan->status == 0)
+                                                            Menunggu Persetujuan
+                                                        @elseif($usulan->status == 1)
+                                                            <div class="badge badge-danger">Tidak Disetujui</div>
+                                                        @else
+                                                            {{ $usulan->no_surat }}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tanggal</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->tanggal }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Jenis Surat</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->jenis_surat }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Derajat Klasifikasi</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->derajat_klasifikasi }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>KKA</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->kka->kode }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Unit Kerja</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                        {{
+                                                            ($usulan->unit_kerja == "8000") ? "Inspektorat Utama" :
+                                                            (($usulan->unit_kerja == "8010") ? "Bagian Umum Inspektorat Utama" :
+                                                            (($usulan->unit_kerja == "8100") ? "Inspektorat Wilayah I" :
+                                                            (($usulan->unit_kerja == "8200") ? "Inspektorat Wilayah II" :
+                                                            "Inspektorat Wilayah III")))
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Hal</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->hal }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Draft</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                        <a target="blank" href="{{ asset('storage/'.$usulan->draft) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Surat</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                        @if($usulan->status == 2)
+                                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$usulan->surat) }}" download>Download Surat Belum TTD</a>
+                                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $usulan->id]) }}">Upload Surat Sudah TTD</a>
+                                                        @elseif($usulan->status == 3)
+                                                            Menunggu Persetujuan
+                                                        @elseif($usulan->status == 4)
+                                                            <div class="badge badge-danger">Tidak Disetujui</div>
+                                                        @elseif($usulan->status == 5)
+                                                            <a target="blank" href="{{ asset('storage/'.$usulan->surat) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

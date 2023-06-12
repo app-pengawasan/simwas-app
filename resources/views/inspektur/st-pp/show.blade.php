@@ -19,6 +19,41 @@
     @include('components.inspektur-header')
     @include('components.inspektur-sidebar')
     <div class="main-content">
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Tolak usulan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/inspektur/st-pp/{{ $usulan->id }}" method="post">
+                        <div class="modal-body">
+                            @csrf
+                            @method('PUT')    
+                            <input type="hidden" name="status" value="1">
+                            <input type="hidden" name="id" value="{{ $usulan->id }}">
+                            <div class="form-group">
+                                <label for="catatan">Beri catatan</label>
+                                <input type="text" class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" value="{{ old('catatan') }}">
+                                @error('catatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Tidak Setujui Usulan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Detail Usulan ST Pengembangan Profesi</h1>
@@ -37,14 +72,13 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-md-6">
-                                    <h2>Detail Usulan</h2>       
-                                    <div class="pt-1 pb-1 m-4">
-                                        <a href="/inspektur/st-pp/edit"
-                                            class="btn btn-primary btn-lg btn-round">
-                                            Edit Usulan
-                                        </a>
-                                    </div>
+                                    <h2>Detail Usulan</h2>
                                     <table class="table">
+                                        <tr>
+                                            <th>Backdate</th>
+                                            <th>:</th>
+                                            <td>{{ $usulan->is_backdate ? 'Ya' : 'Tidak' }}</td>
+                                        </tr>
                                         <tr>
                                             <th>Nomor Surat</th>
                                             <th>:</th>
@@ -54,7 +88,7 @@
                                             @elseif ($usulan->status == 1)
                                                 <div class="badge badge-danger">Tidak Disetujui</div>
                                             @else
-                                                {{ $usulan->no_st }}
+                                                {{ $usulan->no_surat }}
                                             @endif
                                             </td>
                                         </tr>
@@ -97,6 +131,11 @@
                                         <td>{{ $usulan->mulai." - ".$usulan->selesai }}</td>
                                         </tr>
                                         <tr>
+                                            <th>Pegawai</th>
+                                            <th>:</th>
+                                            <td>{{ $pegawai }}</td>
+                                        </tr>
+                                        <tr>
                                         <th>Penandatangan</th>
                                         <th>:</th>
                                         <td><?php if ($usulan->penandatangan === 0) {
@@ -132,7 +171,7 @@
                                         <th>:</th>
                                         <td>
                                             @if ($usulan->status == 2)
-                                                <a href="#" class="btn btn-icon btn-warning"><i class="fa fa-upload"></i></a>
+                                                <div class="badge badge-light">Proses Tugas</div>
                                             @elseif ($usulan->status == 3)
                                                 Menunggu Persetujuan
                                             @elseif ($usulan->status == 4)
@@ -169,13 +208,10 @@
                                                         <input type="hidden" name="id" value="{{ $usulan->id }}">
                                                         <button type="submit" class="btn btn-success">Setujui Usulan</button>
                                                     </form>
-                                                    <form action="/inspektur/st-pp/{{ $usulan->id }}" method="post">
-                                                        @csrf
-                                                        @method('PUT')    
-                                                        <input type="hidden" name="status" value="1">
-                                                        <input type="hidden" name="id" value="{{ $usulan->id }}">
-                                                        <button type="submit" class="btn btn-danger">Tidak Setujui Usulan</button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                        data-target="#staticBackdrop">
+                                                        Tidak Setujui Usulan
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

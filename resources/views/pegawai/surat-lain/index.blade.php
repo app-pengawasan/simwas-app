@@ -49,7 +49,7 @@
                                         + Ajukan Usulan Surat
                                     </a>
                                 </div>
-                                <div class="">
+                                <div class="table-responsive">
                                     <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>

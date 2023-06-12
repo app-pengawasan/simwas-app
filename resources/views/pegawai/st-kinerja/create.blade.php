@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ajukan Usulan ST Pengembangan Profesi')
+@section('title', 'Ajukan Usulan ST Kinerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -29,10 +29,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Form Usulan ST Pengembangan Profesi</h1>
+                <h1>Form Usulan ST Kinerja</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item active"><a href="/pegawai/st-pp">ST Pengembangan Profesi</a></div>
+                    <div class="breadcrumb-item active"><a href="/pegawai/st-kinerja">ST Kinerja</a></div>
                     <div class="breadcrumb-item">Form Usulan</div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                     <div class="col-12 col-md-6 col-lg-6">
                         <div class="card">
                             <div class="card-body">
-                                <form action="/pegawai/st-pp" method="post">
+                                <form action="/pegawai/st-kinerja" method="post">
                                     @csrf
                                     <input type="hidden" name="status" value="0">
                                     <div class="form-group">
@@ -98,26 +98,36 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="pp_id">Jenis Pengembangan Profesi</label>
-                                        <select class="form-control select2 @error('pp_id') is-invalid @enderror" id="pp_id" name="pp_id">
-                                            <option value="">Pilih jenis pengembangan profesi</option>
-                                            @foreach ($pps as $pp)
-                                                <option value="{{ $pp->id }}" {{ old('pp_id') == $pp->id ? 'selected' : '' }}>{{ $pp->jenis }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('pp_id')
+                                        <label for="tim_kerja">Tim Kerja</label>
+                                        <input type="text" class="form-control @error('tim_kerja') is-invalid @enderror" id="tim_kerja" name="tim_kerja" value="{{ old('tim_kerja') }}">
+                                        @error('tim_kerja')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="form-group" id="div_nama_pp">
-                                    
+                                    <div class="form-group">
+                                        <label for="tugas">Tugas</label>
+                                        <input type="text" class="form-control @error('tugas') is-invalid @enderror" id="tugas" name="tugas" value="{{ old('tugas') }}">
+                                        @error('tugas')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="melaksanakan">Untuk melaksanakan</label>
                                         <input type="text" class="form-control @error('melaksanakan') is-invalid @enderror" id="melaksanakan" name="melaksanakan" value="{{ old('melaksanakan') }}">
                                         @error('melaksanakan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="objek">Objek</label>
+                                        <input type="text" class="form-control @error('objek') is-invalid @enderror" id="objek" name="objek" value="{{ old('objek') }}">
+                                        @error('objek')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -142,14 +152,92 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="pegawai">Pegawai</label>
-                                        <select id="pegawai" name="pegawai[]" class="form-control select2 @error('pegawai') is-invalid @enderror" multiple="multiple">
-                                            <option value="">Pilih Pegawai</option>
-                                            @foreach ($user as $pegawai)
-                                                <option value="{{ $pegawai->id }}" {{ old('pegawai') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->name }}</option>
+                                        <div class="control-label">Gugus Tugas</div>
+                                        <div class="custom-switches-stacked mt-2">
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_gugus_tugas"
+                                                    value="1"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_gugus_tugas') == '1' ? 'checked' : '' }}
+                                                    onchange="toggleGugusTugasInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Ya</span>
+                                            </label>
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_gugus_tugas"
+                                                    value="0"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_gugus_tugas') == '0' ? 'checked' : '' }}
+                                                    onchange="toggleGugusTugasInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Tidak</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="perseoranganContainer" style="display: none;">
+                                        <div class="control-label">Jenis</div>
+                                        <div class="custom-switches-stacked mt-2">
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_perseorangan"
+                                                    value="1"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_perseorangan') == '1' ? 'checked' : '' }}
+                                                    onchange="togglePerseoranganInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">1 orang</span>
+                                            </label>
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_perseorangan"
+                                                    value="0"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_perseorangan') == '0' ? 'checked' : '' }}
+                                                    onchange="togglePerseoranganInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Kolektif</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="dalnisContainer" style="display: none;">
+                                        <label for="dalnis_id">Pengendali Teknis</label>
+                                        <select id="dalnis_id" name="dalnis_id" class="form-control select2 @error('dalnis_id') is-invalid @enderror">
+                                            <option value="">Pilih pengendali teknis</option>
+                                            @foreach ($user as $dalnis)
+                                                <option value="{{ $dalnis->id }}" {{ old('dalnis_id') == $dalnis->id ? 'selected' : '' }}>{{ $dalnis->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('pegawai')
+                                        @error('dalnis_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group" id ="ketuaKoorContainer" style="display: none;">
+                                        <label for="ketua_koor_id"><div id="koordinator" style="display: none;">Koordinator</div><div id="ketua" style="display: block;">Ketua Tim</div></label>
+                                        <select id="ketua_koor_id" name="ketua_koor_id" class="form-control select2 @error('ketua_koor_id') is-invalid @enderror">
+                                            <option value="">Pilih</option>
+                                            @foreach ($user as $ketuaKoor)
+                                                <option value="{{ $ketuaKoor->id }}" {{ old('ketua_koor_id') == $ketuaKoor->id ? 'selected' : '' }}>{{ $ketuaKoor->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('ketua_koor_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group" id="anggotaContainer" style="display: none;">
+                                        <label for="anggota">Anggota</label>
+                                        <select id="anggota" name="anggota[]" class="form-control select2 @error('anggota') is-invalid @enderror" multiple="multiple">
+                                            <option value="">Pilih anggota</option>
+                                            @foreach ($user as $anggota)
+                                                <option value="{{ $anggota->id }}" {{ old('anggota') == $anggota->id ? 'selected' : '' }}>{{ $anggota->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('anggota')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -224,44 +312,51 @@
                 tanggalInputContainer.style.display = 'none';
             }
         }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#pp_id").on("change", function() {
-                const ppId = $(this).val();
-                if(ppId == 1 || ppId == 2 || ppId == 3){
-                    $.ajax({
-                    url: `/get-nama-pp-by-pp`,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        pp_id: ppId
-                    },
-                    dataType: "json",
-                    success: (data) => {
-                        $("#div_nama_pp").empty();
-                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
-                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
-                                            <option value="">Pilih nama pengembangan profesi</option>
-                                        </select>`);
-
-                        data.namaPp.forEach(element => {
-                            $("#nama_pp").append(
-                                `<option value="${element.nama}">${element.nama}</option>`
-                            );
-                        });
-                        // console.log(data);
-                    },
-                    error: function(request, status, error) {
-                        alert(request.responseText);
-                    }
-                });
-                } else {
-                    $("#div_nama_pp").empty();
-                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
-                }
-            });
-        });
+    
+        function toggleGugusTugasInput(input) {
+            var perseoranganContainer = document.getElementById('perseoranganContainer');
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+    
+            if (input.value === '1') {
+                perseoranganContainer.style.display = 'none';
+                dalnisContainer.style.display = 'block';
+                ketuaKoorContainer.style.display = 'block';
+                anggotaContainer.style.display = 'block';
+                koordinator.style.display = 'none';
+                ketua.style.display = 'block';
+            } else {
+                perseoranganContainer.style.display = 'block';
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'none';
+                anggotaContainer.style.display = 'none';
+                koordinator.style.display = 'block';
+                ketua.style.display = 'none';
+            }
+        }
+    
+        function togglePerseoranganInput(input) {
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+    
+            if (input.value === '1') {
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'none';
+                anggotaContainer.style.display = 'none';
+            } else {
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'block';
+                anggotaContainer.style.display = 'block';
+                koordinator.style.display = 'block';
+                ketua.style.display = 'none';
+            }
+        }
     </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>

@@ -31,7 +31,6 @@
             @endif
             
             <div class="section-body">
-
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -74,7 +73,7 @@
                                                     </td>
                                                 <td>
                                                 @if ($un->status != 0 && $un->status != 1)
-                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_st }}</a>
+                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
                                                 @endif
                                                 </td>
                                                 <td>

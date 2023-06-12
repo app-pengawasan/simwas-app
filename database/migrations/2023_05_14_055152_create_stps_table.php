@@ -29,7 +29,7 @@ return new class extends Migration
             $table->text('pegawai');
             $table->smallInteger('penandatangan');
             $table->smallInteger('status');
-            $table->string('no_st')->nullable();
+            $table->string('no_surat')->nullable();
             $table->date('tanggal_sertifikat')->nullable();
             $table->boolean('is_esign');
             $table->text('file')->nullable();

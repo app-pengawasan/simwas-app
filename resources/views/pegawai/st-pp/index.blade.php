@@ -4,16 +4,13 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- CSS Libraries -->
+    <link
+        href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.4/af-2.5.3/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/cr-1.6.2/date-1.4.1/fc-4.2.2/fh-3.3.2/kt-2.9.0/r-2.4.1/rg-1.3.1/rr-1.3.3/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/sr-1.2.2/datatables.min.css"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 @endpush
-
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
 
 @section('main')
     @include('components.header')
@@ -46,8 +43,7 @@
                                     </a>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table-striped table"
-                                        id="table-1">
+                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -65,7 +61,7 @@
                                         <tbody>
                                             @foreach ($usulan as $un)
                                             <tr>
-                                                <td>{{ $usulan->firstItem() + $loop->index }}</td>
+                                                <td></td>
                                                 <td><a href="/pegawai/st-pp/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
                                                 <td>{{ $un->tanggal }}</td>
                                                 <td>{{ $un->pp->jenis }}</td>
@@ -81,7 +77,7 @@
                                                     </td>
                                                 <td>
                                                 @if ($un->status != 0 && $un->status != 1)
-                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_st }}</a>
+                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
                                                 @endif
                                                 </td>
                                                 <td>
@@ -106,9 +102,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="d-flex justify-content-center">
-                                    {{ $usulan->links() }}  
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,13 +113,34 @@
 
 @push('scripts')
     <!-- JS Libraies -->
-    {{-- <script src="assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js"></script> --}}
-    <script src="{{ asset('library/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-    {{-- <script src="{{ asset() }}"></script> --}}
-    {{-- <script src="{{ asset() }}"></script> --}}
-    <script src="{{ asset('library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
-
+    {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> --}}
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/jszip/jszip.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+    {{-- <script>
+        $(document).ready(function() {
+            $('#table-pengelolaan-dokumen-pegawai').DataTable( {
+            "columnDefs": [{
+                "targets": 0,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).text(row + 1);
+                }
+            }]
+            });
+        });
+    </script> --}}
+    
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/modules-datatables.js') }}"></script>
+    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 @endpush

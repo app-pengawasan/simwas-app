@@ -18,13 +18,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            // UserSeeder::class,
-            // PpSeeder::class,
-            // NamaPpSeeder::class,
-            // KkaSeeder::class,
+            UserSeeder::class,
+            PpSeeder::class,
+            NamaPpSeeder::class,
+            KkaSeeder::class,
             // StKinerjaSeeder::class,
-            StpSeeder::class,
-            SlSeeder::class,
+            // StpSeeder::class,
+            // SlSeeder::class,
             // KirimSeeder::class,
             // StpdSeeder::class,
             // EksternalSeeder::class

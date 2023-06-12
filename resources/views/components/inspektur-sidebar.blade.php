@@ -20,13 +20,13 @@
                 </a>
             </li>
             <li class="{{ Request::is('inspektur/st-pp*') ? 'active' : '' }}">
-                <a class="nav-link" href="inspektur/st-pp">
+                <a class="nav-link" href="/inspektur/st-pp">
                     <i class="fas fa-file"></i>
                     <span>ST Pengembangan Profesi</span>
                 </a>
             </li>
             <li class="{{ Request::is('inspektur/st-pd*') ? 'active' : '' }}">
-                <a class="nav-link" href="inspektur/st-pd">
+                <a class="nav-link" href="/inspektur/st-pd">
                     <i class="fas fa-road"></i>
                     <span>ST Perjalanan Dinas</span>
                 </a>

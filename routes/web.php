@@ -15,6 +15,7 @@ use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\SlSekreController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\InspekturStpController;
+use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
 use GuzzleHttp\Middleware;
@@ -74,7 +75,10 @@ Route::resource('/sekretaris/usulan-surat', SlSekreController::class);
 Route::get('/inspektur', function(){return view('inspektur.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('inspektur-dashboard');
 
 // Inspektur-stp
-Route::resource('/inspektur/st-pp', InspekturStpController::class);
+Route::resource('inspektur/st-pp', InspekturStpController::class);
+
+// Inspektur-st-kinerja
+Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
 
 /**
  * ===========================================================================

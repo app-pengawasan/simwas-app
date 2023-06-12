@@ -60,7 +60,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td><a href="/sekretaris/usulan-surat/{{ $un->id }}">{{ $un->tanggal }}</a></td>
-                                                <td>{{ $un->user->nama }}</td>
+                                                <td>{{ $un->user->name }}</td>
                                                 <td>{{ $un->jenis_surat }}</a></td>
                                                 <td>{{ $un->hal }}</td>
                                                 <td>
