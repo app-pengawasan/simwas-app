@@ -43,6 +43,16 @@ class DatabaseSeeder extends Seeder
             'is_admin'  => 1
         ]);
 
+        User::create([
+            'email'     => '221910858@stis.ac.id',
+            'nip'       => '221910858',
+            'name'      => 'Muhamad Arya Fitra',
+            'pangkat'   => 'IV/a',
+            'is_admin'  => 1,
+            'is_aktif' => 1,
+            'is_sekma' => 1
+        ]);
+
         MasterAnggaran::create([
             'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
             'id_kegiatan'   => '4203',

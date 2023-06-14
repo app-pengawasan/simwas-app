@@ -19,12 +19,6 @@ return new class extends Migration
             $table->boolean('is_aktif');
             $table->timestamps();
         });
-
-        Schema::table('st_kinerjas', function (Blueprint $table) {
-            $table->foreign('penandatangan')
-                  ->references('id_pimpinan')
-                  ->on('master_pimpinans');
-        });
     }
 
     /**
