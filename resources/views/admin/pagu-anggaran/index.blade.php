@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Master Pegawai')
+@section('title', 'Pagu Anggaran')
 
 @push('style')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="base-url" content="{{ route('master-pegawai.destroy', ':id') }}">
     <!-- CSS Libraries -->
     <link
         href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.4/af-2.5.3/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/cr-1.6.2/date-1.4.1/fc-4.2.2/fh-3.3.2/kt-2.9.0/r-2.4.1/rg-1.3.1/rr-1.3.3/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/sr-1.2.2/datatables.min.css"
@@ -19,13 +17,13 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Kelola Pimpinan</h1>
+                <h1>Pagu Anggaran</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">Halaman untuk mengelola Pimpinan Inspektorat</p>
+                            <p class="mb-0">Halaman untuk mengelola Pagu Anggaran Inspektorat Utama</p>
                             @if (session()->has('success'))
                                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                                     <p>{{ session('success') }}</p>
@@ -36,7 +34,7 @@
                             @endif
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
-                                    <a type="button" class="btn btn-primary" href="/admin/master-pimpinan/create">
+                                    <a type="button" class="btn btn-primary" href="{{ route('pagu-anggaran.create') }}">
                                         <i class="fas fa-plus-circle"></i>
                                         Tambah
                                     </a>
@@ -48,53 +46,57 @@
                                 </div>
                             </div>
                             <div class="">
-                                <table id="table-master-pimpinan"
+                                <table id="table-pagu-anggaran"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
-                                            <th style="width: 100px;">NIP</th>
-                                            <th>Nama</th>
-                                            <th>Jabatan</th>
-                                            <th>Masa Jabatan</th>
+                                            <th>Tahun</th>
+                                            <th>Komponen</th>
+                                            <th>Akun</th>
+                                            <th>Uraian</th>
+                                            <th>Volume</th>
+                                            <th>Satuan</th>
+                                            <th>Harga</th>
+                                            <th>Pagu</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pimpinan as $p)
+                                        @foreach ($paguAnggaran as $pa)
                                             <tr>
-                                                <td>{{ $p->user->nip }}</td>
-                                                <td>{{ $p->user->name }}</td>
-                                                <td>{{ $jabatan_pimpinan["$p->jabatan"] }}</td>
-                                                <td>{{ date('d-m-Y', strtotime($p->mulai)) }} s.d.
-                                                    {{ date('d-m-Y', strtotime($p->selesai)) }}</td>
+                                                <td>{{ $pa->tahun }}</td>
+                                                <td>{{ $pa->komponen }}</td>
+                                                <td>{{ $pa->akun }}</td>
+                                                <td>{{ $pa->uraian }}</td>
+                                                <td>{{ $pa->volume }}</td>
+                                                <td>{{ $satuan["$pa->satuan"] }}</td>
+                                                <td class="rupiah">{{ $pa->harga }}</td>
+                                                <td class="rupiah">{{ $pa->pagu }}</td>
                                                 <td>
                                                     <a class="btn btn-primary mb-2 mr-2"
-                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}"
-                                                        style="width: 42px">
+                                                        href="{{ route('pagu-anggaran.show', $pa) }}" style="width: 42px">
                                                         <i class="fas fa-info"></i>
                                                     </a>
                                                     <a class="btn btn-warning mb-2 mr-2"
-                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}/edit"
-                                                        style="width: 42px">
+                                                        href="{{ route('pagu-anggaran.edit', $pa) }}" style="width: 42px">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    @if ($p->id_pimpinan != auth()->user()->id)
-                                                        {{-- <a class="btn btn-danger"
+
+                                                    {{-- <a class="btn btn-danger"
                                                             onclick="deleteData('{{ $user->id }}')"
                                                             style="width: 42px">
                                                             <i class="fas fa-trash"></i>
                                                         </a> --}}
-                                                        <form class="d-inline mb-2"
-                                                            action="{{ route('master-pimpinan.destroy', $p->id_pimpinan) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                {{-- onclick="deleteData('{{ $user->id }}')" --}} style="width: 42px">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    <form class="d-inline mb-2"
+                                                        action="{{ route('pagu-anggaran.destroy', $pa) }}" method="post">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="deleteData('{{ $pa->id_panggaran }}')"
+                                                            style="width: 42px">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -127,5 +129,6 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/master-pegawai.js"></script>
+    {{-- <script src="{{ asset('js') }}/page/master-anggaran.js"></script> --}}
+    <script src="{{ asset('js') }}/page/pagu-anggaran.js"></script>
 @endpush

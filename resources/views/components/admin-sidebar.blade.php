@@ -14,17 +14,18 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'anggaran' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-money-bill"></i>
                     <span>Anggaran</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Master Anggaran</a>
+                    <li class="{{ Request::is('admin/master-anggaran') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Pagu Anggaran</a>
+                    <li
+                        class="{{ Request::is('admin/pagu-anggaran') || Request::is('admin/pagu-anggaran/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('pagu-anggaran.index') }}">Pagu Anggaran</a>
                     </li>
                 </ul>
             </li>
@@ -42,27 +43,27 @@
                     <span>Kelola Pimpinan</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'objek' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-bullseye"></i>
                     <span>Master Objek</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Unit Kerja</a>
+                    <li class="{{ Request::is('admin/master-unit-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-unit-kerja">Unit Kerja</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Satuan Kerja</a>
+                    <li class="{{ Request::is('admin/master-satuan-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-satuan-kerja">Satuan Kerja</a>
                     </li>
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Wilayah</a>
+                    <li class="{{ Request::is('admin/master-wilayah-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-wilayah-kerja">Wilayah</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Kegiatan</a>
+                    <li class="{{ Request::is('admin/objek-kegiatan') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/objek-kegiatan">Kegiatan</a>
                     </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'layout' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-kinerja' ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-clipboard"></i>
                     <span>Rencana Kinerja</span>
@@ -71,14 +72,14 @@
                     <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('layout-default-layout') }}">Dashboard Kinerja</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Master Target</a>
+                    <li class="{{ Request::is('admin/master-tujuan') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-tujuan">Master Tujuan</a>
                     </li>
-                    <li class="{{ Request::is('layout-default-layout') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('layout-default-layout') }}">Master Sasaran</a>
+                    <li class="{{ Request::is('admin/master-sasaran') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-sasaran">Master Sasaran</a>
                     </li>
-                    <li class="{{ Request::is('transparent-sidebar') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('transparent-sidebar') }}">Master IKU</a>
+                    <li class="{{ Request::is('admin/master-iku') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-iku">Master IKU</a>
                     </li>
                 </ul>
             </li>

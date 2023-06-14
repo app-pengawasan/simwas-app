@@ -1,10 +1,16 @@
 <?php
 
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\MasterPegawaiController;
-use App\Http\Controllers\MasterPimpinanController;
 use App\http\Controllers\SessionController;
+use App\Http\Controllers\SatuanKerjaController;
+use App\Http\Controllers\PaguAnggaranController;
+use App\Http\Controllers\WilayahKerjaController;
+use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterIKUController;
+use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\StpController;
@@ -19,7 +25,13 @@ use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
-use GuzzleHttp\Middleware;
+use App\Http\Controllers\MasterSasaranController;
+use App\Http\Controllers\MasterTujuanController;
+use App\Http\Controllers\MasterUnitKerjaController;
+use App\Http\Controllers\ObjekKegiatanController;
+use App\Models\MasterIKU;
+use App\Models\MasterSasaran;
+use App\Models\MasterTujuan;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +62,13 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
  * */
 Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
 
- //Master-pegawai
+//Kelola-anggaran
+//1.Master Anggaran
+Route::resource('/admin/master-anggaran', MasterAnggaranController::class)->except(['show']);
+//2.Pagu Anggaran
+Route::resource('/admin/pagu-anggaran', PaguAnggaranController::class);
+
+//Master-pegawai
 Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
 Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
@@ -81,6 +99,29 @@ Route::resource('inspektur/st-pp', InspekturStpController::class);
 // Inspektur-st-kinerja
 Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
 
+
+//Master Objek
+//1. Unit Kerja
+Route::resource('/admin/master-unit-kerja', MasterUnitKerjaController::class);
+Route::post('/admin/master-unit-kerja/import', [MasterUnitKerjaController::class, 'import']);
+//2. Satuan Kerja
+Route::resource('/admin/master-satuan-kerja', SatuanKerjaController::class);
+Route::post('/admin/master-satuan-kerja/import', [SatuanKerjaController::class, 'import']);
+//3. Wilayah Kerja
+Route::resource('/admin/master-wilayah-kerja', WilayahKerjaController::class);
+Route::post('/admin/master-wilayah-kerja/import', [WilayahKerjaController::class, 'import']);
+//4. Objek Kegiatan
+Route::resource('/admin/objek-kegiatan', ObjekKegiatanController::class);
+Route::get('/admin/objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);
+
+//Master Tujuan
+Route::resource('/admin/master-tujuan', MasterTujuanController::class);
+
+//Master Sasaran
+Route::resource('/admin/master-sasaran', MasterSasaranController::class);
+
+//Master IKU
+Route::resource('/admin/master-iku', MasterIKUController::class);
 /**
  * ===========================================================================
  * End of Simwas
