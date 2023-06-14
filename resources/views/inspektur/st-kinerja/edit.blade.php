@@ -55,7 +55,7 @@
                                                     value="1"
                                                     class="custom-switch-input"
                                                     {{ (old('is_backdate', $usulan->is_backdate) == '1') ? 'checked' : '' }}
-                                                    onchange="toggleTanggalInput(this)">
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Ya</span>
                                             </label>
@@ -65,7 +65,7 @@
                                                     value="0"
                                                     class="custom-switch-input"
                                                     {{ (old('is_backdate', $usulan->is_backdate) == '0') ? 'checked' : '' }}
-                                                    onchange="toggleTanggalInput(this)">
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Tidak</span>
                                             </label>
@@ -245,22 +245,6 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="penandatangan">Penanda tangan</label>
-                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
-                                            <option value="">Pilih penanda tangan</option>
-                                            <option value="0" {{ old('penandatangan', $usulan->penandatangan) == '0' ? 'selected' : '' }}>Inspektur Utama</option>
-                                            <option value="1" {{ old('penandatangan', $usulan->penandatangan) == '1' ? 'selected' : '' }}>Inspektur Wilayah I</option>
-                                            <option value="2" {{ old('penandatangan', $usulan->penandatangan) == '2' ? 'selected' : '' }}>Inspektur Wilayah II</option>
-                                            <option value="3" {{ old('penandatangan', $usulan->penandatangan) == '3' ? 'selected' : '' }}>Inspektur Wilayah III</option>
-                                            <option value="4" {{ old('penandatangan', $usulan->penandatangan) == '4' ? 'selected' : '' }}>Kepala Bagian Umum Inspektorat Utama</option>
-                                        </select>
-                                        @error('penandatangan')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
                                         <div class="control-label">E-Sign</div>
                                         <div class="custom-switches-stacked mt-2">
                                             <label class="custom-switch">
@@ -282,6 +266,24 @@
                                                 <span class="custom-switch-description">Tidak</span>
                                             </label>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="penandatangan">Penanda tangan</label>
+                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
+                                            <option value="">Pilih penanda tangan</option>
+                                            @foreach ($pimpinanAktif as $pimpinan)
+                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan', $usulan->penandatangan) == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                            @endforeach
+                                            
+                                            @foreach ($pimpinanNonaktif as $pimpinan)
+                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan', $usulan->penandatangan) == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('penandatangan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                     </div>
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </form>
@@ -305,138 +307,94 @@
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     
     <script>
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // tanggalInput
-        //     var isBackdate = document.getElementsByName('is_backdate');
-        //     toggleTanggalInput(isBackdate);
-        //     isBackdate.addEventListener('change', function() {
-        //         toggleTanggalInput(isBackdate);
-        //     });
-        //     function toggleTanggalInput(input) {
-        //         var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-        
-        //         if (input.value === '1') {
-        //             tanggalInputContainer.style.display = 'block';
-        //         } else {
-        //             tanggalInputContainer.style.display = 'none';
-        //         }
-        //     }
+        document.addEventListener('DOMContentLoaded', function() {
+            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+            var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+            var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+            toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
 
-        //     // gugusTugas
-        //     var isGugusTugas = document.getElementsByName('is_gugus_tugas')[0];
-        //     toggleGugusTugasInput(isGugusTugas);
-        //     isGugusTugas.addEventListener('change', function() {
-        //         toggleGugusTugasInput(isGugusTugas);
-        //     });
-        //     function toggleGugusTugasInput(input) {
-        //         var perseoranganContainer = document.getElementById('perseoranganContainer');
-        //         var dalnisContainer = document.getElementById('dalnisContainer');
-        //         var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-        //         var anggotaContainer = document.getElementById('anggotaContainer');
-        //         var koordinator = document.getElementById('koordinator');
-        //         var ketua = document.getElementById('ketua');
-        
-        //         if (input.value === '1') {
-        //             perseoranganContainer.style.display = 'none';
-        //             dalnisContainer.style.display = 'block';
-        //             ketuaKoorContainer.style.display = 'block';
-        //             anggotaContainer.style.display = 'block';
-        //             koordinator.style.display = 'none';
-        //             ketua.style.display = 'block';
-        //         } else {
-        //             perseoranganContainer.style.display = 'block';
-        //             dalnisContainer.style.display = 'none';
-        //             ketuaKoorContainer.style.display = 'none';
-        //             anggotaContainer.style.display = 'none';
-        //             koordinator.style.display = 'block';
-        //             ketua.style.display = 'none';
-        //         }
-        //     }
+            var perseoranganContainer = document.getElementById('perseoranganContainer');
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+            var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked');
+            toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+            
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+            var isPerseoranganInput = document.querySelector('input[name="is_perseorangan"]:checked');
+            togglePerseoranganInput(isPerseoranganInput, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+        });
 
-        //     // perseorangan
-        //     var isPerseorangan = document.getElementsByName('is_perseorangan')[0];
-        //     togglePerseoranganInput(isPerseorangan);
-        //     isPerseorangan.addEventListener('change', function() {
-        //         togglePerseoranganInput(isPerseorangan);
-        //     });
-        //     function togglePerseoranganInput(input) {
-        //         var dalnisContainer = document.getElementById('dalnisContainer');
-        //         var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-        //         var anggotaContainer = document.getElementById('anggotaContainer');
-        //         var koordinator = document.getElementById('koordinator');
-        //         var ketua = document.getElementById('ketua');
-        
-        //         if (input.value === '1') {
-        //             dalnisContainer.style.display = 'none';
-        //             ketuaKoorContainer.style.display = 'none';
-        //             anggotaContainer.style.display = 'none';
-        //         } else {
-        //             dalnisContainer.style.display = 'none';
-        //             ketuaKoorContainer.style.display = 'block';
-        //             anggotaContainer.style.display = 'block';
-        //             koordinator.style.display = 'block';
-        //             ketua.style.display = 'none';
-        //         }
-        //     }
-        // })
+        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
+        var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+        var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
 
-            function toggleTanggalInput(input) {
-                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-        
-                if (input.value === '1') {
-                    tanggalInputContainer.style.display = 'block';
-                } else {
-                    tanggalInputContainer.style.display = 'none';
-                }
+        if (input.value === '1') {
+            tanggalInputContainer.style.display = 'block';
+            for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                pimpinanNonaktif[i].setAttribute("disabled", "disabled");
             }
-
-            function toggleGugusTugasInput(input) {
-                var perseoranganContainer = document.getElementById('perseoranganContainer');
-                var dalnisContainer = document.getElementById('dalnisContainer');
-                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-                var anggotaContainer = document.getElementById('anggotaContainer');
-                var koordinator = document.getElementById('koordinator');
-                var ketua = document.getElementById('ketua');
-        
-                if (input.value === '1') {
-                    perseoranganContainer.style.display = 'none';
-                    dalnisContainer.style.display = 'block';
-                    ketuaKoorContainer.style.display = 'block';
-                    anggotaContainer.style.display = 'block';
-                    koordinator.style.display = 'none';
-                    ketua.style.display = 'block';
-                } else {
-                    perseoranganContainer.style.display = 'block';
-                    dalnisContainer.style.display = 'none';
-                    ketuaKoorContainer.style.display = 'none';
-                    anggotaContainer.style.display = 'none';
-                    koordinator.style.display = 'block';
-                    ketua.style.display = 'none';
-                }
+        } else {
+            tanggalInputContainer.style.display = 'none';
+            for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                pimpinanNonaktif[i].removeAttribute("disabled");
             }
+        }
+        }
 
-            function togglePerseoranganInput(input) {
-                var dalnisContainer = document.getElementById('dalnisContainer');
-                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-                var anggotaContainer = document.getElementById('anggotaContainer');
-                var koordinator = document.getElementById('koordinator');
-                var ketua = document.getElementById('ketua');
-        
-                if (input.value === '1') {
-                    dalnisContainer.style.display = 'none';
-                    ketuaKoorContainer.style.display = 'none';
-                    anggotaContainer.style.display = 'none';
-                } else {
-                    dalnisContainer.style.display = 'none';
-                    ketuaKoorContainer.style.display = 'block';
-                    anggotaContainer.style.display = 'block';
-                    koordinator.style.display = 'block';
-                    ketua.style.display = 'none';
-                }
+        function toggleGugusTugasInput(input, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
+            var perseoranganContainer = document.getElementById('perseoranganContainer');
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+    
+            if (input.value === '1') {
+                perseoranganContainer.style.display = 'none';
+                dalnisContainer.style.display = 'block';
+                ketuaKoorContainer.style.display = 'block';
+                anggotaContainer.style.display = 'block';
+                koordinator.style.display = 'none';
+                ketua.style.display = 'block';
+            } else {
+                perseoranganContainer.style.display = 'block';
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'none';
+                anggotaContainer.style.display = 'none';
+                koordinator.style.display = 'block';
+                ketua.style.display = 'none';
             }
+        }
+
+        function togglePerseoranganInput(input) {
+            var dalnisContainer = document.getElementById('dalnisContainer');
+            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+            var anggotaContainer = document.getElementById('anggotaContainer');
+            var koordinator = document.getElementById('koordinator');
+            var ketua = document.getElementById('ketua');
+    
+            if (input.value === '1') {
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'none';
+                anggotaContainer.style.display = 'none';
+            } else {
+                dalnisContainer.style.display = 'none';
+                ketuaKoorContainer.style.display = 'block';
+                anggotaContainer.style.display = 'block';
+                koordinator.style.display = 'block';
+                ketua.style.display = 'none';
+            }
+        }
 
 
-    </script>
+</script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>

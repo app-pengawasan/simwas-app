@@ -51,8 +51,8 @@
                                                 <th>Tanggal Surat</th>
                                                 <th>Jenis PP</th>
                                                 <th>Nama PP</th>
-                                                <th>Status ST</th>
                                                 <th>Surat Tugas</th>
+                                                <th>Status ST</th>
                                                 <th>Status Sertifikat</th>
                                                 <th>Sertifikat</th>
                                                 <th>Tanggal Upload Sertifikat</th>
@@ -67,6 +67,11 @@
                                                 <td>{{ $un->pp->jenis }}</td>
                                                 <td>{{ $un->nama_pp }}</td>
                                                 <td>
+                                                @if ($un->status != 0 && $un->status != 1)
+                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
+                                                @endif
+                                                </td>
+                                                <td>
                                                     @if ($un->status == 0)
                                                         <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif ($un->status == 1)
@@ -75,11 +80,6 @@
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
                                                     </td>
-                                                <td>
-                                                @if ($un->status != 0 && $un->status != 1)
-                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
-                                                @endif
-                                                </td>
                                                 <td>
                                                     @if ($un->status == 2)
                                                         <div class="badge badge-light">Belum Upload</div>

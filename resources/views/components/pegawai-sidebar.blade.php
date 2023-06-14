@@ -37,6 +37,10 @@
                         <a class="nav-link"
                             href="{{ route('st-kinerja.index') }}">ST Kinerja</a>
                     </li>
+                    <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+                        <a class="nav-link"
+                            href="{{ route('norma-hasil.index') }}">Norma Hasil</a>
+                    </li>
                     <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
                         <a class="nav-link"
                             href="{{ route('st-pp.index') }}">ST Pengembangan Profesi</a>

@@ -80,9 +80,9 @@ class SlSekreController extends Controller
     public function index()
     {
         if (auth()->user()->is_sekma) {
-            $usulan = Sl::all();
+            $usulan = Sl::latest()->get();
         } else {
-            $usulan = Sl::all()->where('unit_kerja', auth()->user()->unit_kerja);
+            $usulan = Sl::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
         }
         return view('sekretaris.usulan-surat.index', [
         ])->with('usulan', $usulan);

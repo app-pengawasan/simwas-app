@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\MasterPimpinan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 
@@ -18,6 +19,7 @@ class StKinerjaFactory extends Factory
     public function definition()
     {
         $users = User::pluck('id')->toArray();
+        $master = MasterPimpinan::pluck('id')->toArray();
         return [
             'tanggal' => $this->faker->date(),
             'user_id' => $this->faker->randomElement($users),
@@ -37,9 +39,6 @@ class StKinerjaFactory extends Factory
             'status' => mt_rand(0,8),
             'no_surat' => $this->faker->bothify('?????#####'),
             'file' => $this->faker->url(),
-            'no_nh' => $this->faker->bothify('?????#####'),
-            'norma_hasil' => $this->faker->url(),
-            'tanggal_nh' => $this->faker->date(),
             'is_esign' => $this->faker->boolean(),
             'is_backdate' => $this->faker->boolean(),
             'catatan' => $this->faker->sentence()

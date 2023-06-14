@@ -82,9 +82,9 @@ class InspekturStpController extends Controller
     public function index()
     {
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $usulan = Stp::all();
+            $usulan = Stp::latest()->get();
         } else {
-            $usulan = Stp::all()->where('unit_kerja', auth()->user()->unit_kerja);
+            $usulan = Stp::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
         }
         return view('inspektur.st-pp.index', [
         ])->with('usulan', $usulan);

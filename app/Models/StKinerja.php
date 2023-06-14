@@ -34,4 +34,14 @@ class StKinerja extends Model
     {
         return $this->belongsTo(User::class, 'ketua_koor_id');
     }
+
+    public function stpd()
+    {
+        return $this->hasMany(Stpd::class);
+    }
+
+    public function normaHasil()
+    {
+        return $this->hasMany(NormaHasil::class);
+    }
 }

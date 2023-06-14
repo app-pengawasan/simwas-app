@@ -80,7 +80,7 @@ class SlController extends Controller
      */
     public function index()
     {
-        $usulan = Sl::all()->where('user_id', auth()->user()->id);
+        $usulan = Sl::latest()->where('user_id', auth()->user()->id)->get();
         return view('pegawai.surat-lain.index')->with('usulan', $usulan);
     }
 
@@ -108,7 +108,7 @@ class SlController extends Controller
     {
         $validatedData = $request->validate([
             'is_backdate' => 'required',
-            'tanggal' => 'required',
+            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
             'jenis_surat' => 'required',
             'derajat_klasifikasi' => 'required',
             'kka_id' => 'required',

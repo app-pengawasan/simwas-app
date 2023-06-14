@@ -10,12 +10,41 @@
         href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Upload Surat Sudah TTD</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="/pegawai/st-kinerja/{{ $usulan->id }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @method('PUT')
+                            @csrf
+                            <input type="hidden" name="status" value="3">
+                            <input type="hidden" name="id" value="{{ $usulan->id }}">
+                            <div class="form-group">
+                                <label for="draft">Upload Surat Sudah TTD</label>
+                                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" accept=".pdf" id="file" value="{{ old('file') }}">
+                                @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     @include('components.header')
     @include('components.pegawai-sidebar')
     <div class="main-content">
@@ -46,7 +75,7 @@
                                         </a>
                                     </div>
                                     @elseif ($usulan->status == 2)
-                                    <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post" class="mr-2">
+                                    {{-- <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post" class="mr-2">
                                         @csrf
                                         @method('PUT')    
                                         <input type="hidden" name="status" value="3">
@@ -56,8 +85,14 @@
                                                 Minta Nomor Norma Hasil
                                             </a>
                                         </div>
-                                    </form>
-                                    
+                                    </form> --}}
+                                        <a target="blank" href="{{ $usulan->draft }}"
+                                            class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round" download>
+                                            Download ST Belum TTD
+                                        </a>
+                                    <div data-toggle="modal" data-target="#staticBackdrop" class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round">
+                                        Upload ST Sudah TTD
+                                    </div>
                                     @endif
 
                                     <table class="table">
@@ -205,53 +240,6 @@
                                         @if ($usulan->file)
                                             <td><a target="blank" href="{{ $usulan->file }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
                                         @endif
-                                        </tr>
-                                        <tr>
-                                            <th>Status Nomor Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>
-                                                @if ($usulan->status == 2)
-                                                    <div class="badge badge-light">Proses Tugas</div>
-                                                @elseif ($usulan->status == 3)
-                                                    <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                @elseif ($usulan->status == 4)
-                                                    <div class="badge badge-danger">Tidak Disetujui</div>
-                                                @elseif ($usulan->status >= 5)
-                                                    <div class="badge badge-success">Disetujui</div>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Nomor Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->no_nh }}</td>
-                                        </tr>
-                                        <tr>
-                                        <th>Status Norma Hasil</th>
-                                        <th>:</th>
-                                        <td>
-                                            @if ($usulan->status == 5)
-                                                <div class="badge badge-light">Belum Upload</div>
-                                            @elseif ($usulan->status == 6)
-                                                <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                            @elseif ($usulan->status == 7)
-                                                <div class="badge badge-danger">Tidak Disetujui</div>
-                                            @elseif ($usulan->status == 8)
-                                                <div class="badge badge-success">Disetujui</div>
-                                            @endif
-                                        </td>
-                                        </tr>
-                                        <tr>
-                                            <th>File Norma Hasil</th>
-                                            <th>:</th>
-                                            @if ($usulan->norma_hasil)
-                                                <td><a target="blank" href="{{ $usulan->norma_hasil }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <th>Tanggal Upload Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->tanggal_nh }}</td>
                                         </tr>
                                     </table>
                                     </div>

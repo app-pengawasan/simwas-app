@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stpd;
+use App\Models\StKinerja;
+use App\Models\User;
+use App\Models\MasterPimpinan;
 use App\Http\Requests\StoreStpdRequest;
 use App\Http\Requests\UpdateStpdRequest;
+use App\Models\Pembebanan;
 
 class StpdController extends Controller
 {
@@ -15,14 +19,8 @@ class StpdController extends Controller
      */
     public function index()
     {
-        $title = '';
-
-        return view('pegawai.stpd.stpd', [
-            "title" => "Surat Tugas Perjalanan Dinas" . $title,
-            "role" => "pegawai",
-            // "usulan" => UsulanNomor::all()
-            "usulan" => Stpd::latest()->filter(request(['search']))->paginate(5)->withQueryString()
-        ]);
+        $usulan = Stpd::latest()->where('user_id', auth()->user()->id)->get();
+        return view('pegawai.st-pd.index')->with('usulan', $usulan);
     }
 
     /**
@@ -32,7 +30,18 @@ class StpdController extends Controller
      */
     public function create()
     {
-        //
+        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
+        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
+        $user = User::all();
+        $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->get();
+        $pembebanans = Pembebanan::all();
+        return view('pegawai.st-pd.create', [
+            "user" => $user,
+            "pimpinanAktif" => $pimpinanAktif,
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "stks" => $stks,
+            "pembebanans" => $pembebanans
+        ]);
     }
 
     /**
@@ -43,7 +52,31 @@ class StpdController extends Controller
      */
     public function store(StoreStpdRequest $request)
     {
-        //
+        $validatedData = $request->validate([
+            'is_backdate' => 'required',
+            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
+            'unit_kerja' => 'required',
+            'is_st_kinerja' => 'required',
+            'melaksanakan' => 'required',
+            'kota' => 'required',
+            'mulai' => 'required|date',
+            'selesai' => 'required|date|after_or_equal:mulai',
+            'pelaksana' => 'required',
+            'pembebanan' => 'required',
+            'penandatangan' => 'required',
+            'status' => 'required',
+            'is_esign' => 'required'
+        ],[
+            'after_or_equal' => 'Waktu selesai harus setelah atau sama dengan waktu mulai.',
+            'required' => 'Wajib diisi.'
+        ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
+        $validatedData['pelaksana'] = implode(', ', $validatedData['pelaksana']);
+        
+        Stpd::create($validatedData);
+
+        return redirect('/pegawai/st-pd')->with('success', 'Pengajuan ST Perjalanan Dinas berhasil!');
     }
 
     /**

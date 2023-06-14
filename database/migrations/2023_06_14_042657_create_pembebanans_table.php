@@ -13,17 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kkas', function (Blueprint $table) {
+        Schema::create('pembebanans', function (Blueprint $table) {
             $table->id();
-            $table->string('kode');
-            $table->boolean('is_aktif');
             $table->timestamps();
-        });
-
-        Schema::table('st_kinerjas', function (Blueprint $table) {
-            $table->foreign('penandatangan')
-                  ->references('id_pimpinan')
-                  ->on('master_pimpinans');
         });
     }
 
@@ -34,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kkas');
+        Schema::dropIfExists('pembebanans');
     }
 };

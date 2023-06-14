@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             PpSeeder::class,
             NamaPpSeeder::class,
             KkaSeeder::class,
-            // StKinerjaSeeder::class,
-            // StpSeeder::class,
-            // SlSeeder::class,
+            StKinerjaSeeder::class,
+            StpSeeder::class,
+            SlSeeder::class,
             // KirimSeeder::class,
             // StpdSeeder::class,
             // EksternalSeeder::class

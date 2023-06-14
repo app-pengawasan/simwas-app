@@ -45,11 +45,8 @@
                                                 <th>Pemohon</th>
                                                 <th>Waktu Mulai/Selesai</th>
                                                 <th>Objek Pengawasan</th>
-                                                <th>Status ST</th>
                                                 <th>Surat Tugas</th>
-                                                <th>Status Nomor NH</th>
-                                                <th>Status NH</th>
-                                                <th>Tanggal Upload NH</th>
+                                                <th>Status ST</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -61,6 +58,11 @@
                                                 <td>{{ $un->mulai.' / '.$un->selesai }}</td>
                                                 <td>{{ $un->objek }}</td>
                                                 <td>
+                                                @if ($un->status >= 2)
+                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
+                                                @endif
+                                                </td>
+                                                <td>
                                                     @if ($un->status == 0)
                                                         <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
                                                     @elseif ($un->status == 1)
@@ -68,35 +70,7 @@
                                                     @else
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
-                                                    </td>
-                                                <td>
-                                                @if ($un->status >= 2)
-                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
-                                                @endif
                                                 </td>
-                                                <td>
-                                                    @if ($un->status == 2)
-                                                        <div class="badge badge-light">Proses Tugas</div>
-                                                    @elseif ($un->status == 3)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                    @elseif ($un->status == 4)
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
-                                                    @elseif ($un->status >= 5)
-                                                        <div class="badge badge-success">Disetujui</div>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($un->status == 5)
-                                                        <div class="badge badge-light">Belum Upload</div>
-                                                    @elseif ($un->status == 6)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                    @elseif ($un->status == 7)
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
-                                                    @elseif ($un->status == 8)
-                                                        <div class="badge badge-success">Disetujui</div>
-                                                    @endif
-                                                </td>
-                                                <td>{{ ($un->status >= 6) ? $un->tanggal_nh : '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

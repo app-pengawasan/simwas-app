@@ -6,6 +6,7 @@ use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\http\Controllers\SessionController;
 use App\Http\Controllers\StKinerjaController;
+use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\StpController;
 use App\Http\Controllers\StpdController;
 use App\Http\Controllers\SlController;
@@ -103,10 +104,15 @@ Route::get('/dashboard-ecommerce-dashboard', function () {
 Route::get('/search', [UserController::class, 'search'])->name('search');
 
 // ST Kinerja (Jangan lupa pake middleware)
-Route::get('/pegawai/st-kinerja/form', [StKinerjaController::class, 'form']);
 Route::resource('pegawai/st-kinerja', StKinerjaController::class)->names([
     'index' => 'st-kinerja.index',
     'show' => 'st-kinerja.show',
+]);
+
+// Norma Hasil (Jangan lupa pake middleware)
+Route::resource('pegawai/norma-hasil', NormaHasilController::class)->names([
+    'index' => 'norma-hasil.index',
+    'show' => 'norma-hasil.show',
 ]);
 
 // ST Pengembangan Profesi
@@ -116,7 +122,6 @@ Route::resource('pegawai/st-pp', StpController::class)->names([
 ]);
 
 // ST Perjalanan Dinas
-Route::get('/pegawai/st-pd/form', [StpdController::class, 'form']);
 Route::resource('pegawai/st-pd', StpdController::class)->names([
     'index' => 'st-pd.index',
     'show' => 'st-pd.show',

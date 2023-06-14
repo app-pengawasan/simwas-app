@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StKinerja;
 use App\Models\Surat;
 use App\Models\User;
+use App\Models\MasterPimpinan;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -81,9 +82,9 @@ class InspekturStKinerjaController extends Controller
     public function index()
     {
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $usulan = StKinerja::all();
+            $usulan = StKinerja::latest()->get();
         } else {
-            $usulan = StKinerja::all()->where('unit_kerja', auth()->user()->unit_kerja);
+            $usulan = StKinerja::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
         }
         return view('inspektur.st-kinerja.index', [
         ])->with('usulan', $usulan);
@@ -136,10 +137,14 @@ class InspekturStKinerjaController extends Controller
      */
     public function edit(StKinerja $st_kinerja)
     {
+        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
+        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         return view('inspektur.st-kinerja.edit', [
             "usulan" => $st_kinerja,
-            "user" => $user
+            "user" => $user,
+            "pimpinanAktif" => $pimpinanAktif,
+            "pimpinanNonaktif" => $pimpinanNonaktif
         ]);
     }
 
@@ -217,67 +222,135 @@ class InspekturStKinerjaController extends Controller
 
             // Pembuatan surat
             if ($usulan->is_perseorangan) {
-                // Path ke template dokumen .docx
-                $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan.docx';
+                if ($usulan->is_esign) {
+                    // Path ke template dokumen .docx
+                    $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-esign.docx';
 
-                // Inisialisasi TemplateProcessor dengan template dokumen
-                $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
 
-                $templateProcessor->setValues([
-                    'no_surat' => $nomorSurat,
-                    'nama' => $usulan->user->name,
-                    'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                    'nip' => $usulan->user->nip,
-                    'jabatan' => $this->jabatan[$usulan->user->jabatan],
-                    'melaksanakan' => $usulan->melaksanakan,
-                    'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                    'objek' => $usulan->objek,
-                    'tanggal' => $this->konvTanggalIndo($tanggal)
-                ]);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
 
-                // Simpan dokumen hasil
-                $templateProcessor->saveAs('storage/'.$outputPath);
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+                } else {
+                    // Path ke template dokumen .docx
+                    $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
+                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $pimpinan->jabatan,
+                        'inspektur' => $pimpinan->user->name
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+                }
+                
             } else {
                 // Ambil anggota
                 $anggotaArray = explode(', ', $usulan->anggota);
                 $users = \App\Models\User::whereIn('id', $anggotaArray)->get();
 
-                // Path ke template dokumen .docx
-                $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif.docx';
-                
-                // Inisialisasi TemplateProcessor dengan template dokumen
-                $templateProcessor = new TemplateProcessor($stkKolektifPath);
-                
-                $values = [];
-                if ($usulan->is_gugus_tugas) {
-                    $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
-                    $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
-                    $counter = 3;
-                    foreach ($users as $anggota) {
-                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
-                        $counter++;
+                if ($usulan->is_esign) {
+                    // Path ke template dokumen .docx
+                    $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif-esign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkKolektifPath);
+                    
+                    $values = [];
+                    if ($usulan->is_gugus_tugas) {
+                        $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
+                        $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
+                        $counter = 3;
+                        foreach ($users as $anggota) {
+                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
+                            $counter++;
+                        }
+                        $templateProcessor->cloneRowAndSetValues('no', $values);
+                    } else {
+                        $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
+                        $counter = 2;
+                        foreach ($users as $anggota) {
+                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
+                            $counter++;
+                        }
+                        $templateProcessor->cloneRowAndSetValues('no', $values);
                     }
-                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 } else {
-                    $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Koordinator'];
-                    $counter = 2;
-                    foreach ($users as $anggota) {
-                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
-                        $counter++;
+                    // Path ke template dokumen .docx
+                    $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkKolektifPath);
+                    
+                    $values = [];
+                    if ($usulan->is_gugus_tugas) {
+                        $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
+                        $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
+                        $counter = 3;
+                        foreach ($users as $anggota) {
+                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
+                            $counter++;
+                        }
+                        $templateProcessor->cloneRowAndSetValues('no', $values);
+                    } else {
+                        $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
+                        $counter = 2;
+                        foreach ($users as $anggota) {
+                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
+                            $counter++;
+                        }
+                        $templateProcessor->cloneRowAndSetValues('no', $values);
                     }
-                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $pimpinan->jabatan,
+                        'inspektur' => $pimpinan->user->name
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
-
-                $templateProcessor->setValues([
-                    'no_surat' => $nomorSurat,
-                    'melaksanakan' => $usulan->melaksanakan,
-                    'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                    'objek' => $usulan->objek,
-                    'tanggal' => $this->konvTanggalIndo($tanggal)
-                ]);
-
-                // Simpan dokumen hasil
-                $templateProcessor->saveAs('storage/'.$outputPath);
             }
             
             // Simpan ke tabel Surat

@@ -33,13 +33,11 @@ return new class extends Migration
             $table->string('ketua_koor_id', 26)->nullable();
             $table->foreign('ketua_koor_id')->references('id')->on('users');
             $table->text('anggota')->nullable();
-            $table->smallInteger('penandatangan');
+            $table->string('penandatangan', 26)->nullable();
             $table->smallInteger('status');
             $table->string('no_surat')->nullable();
+            $table->text('draft')->nullable();
             $table->text('file')->nullable();
-            $table->string('no_nh')->nullable();
-            $table->text('norma_hasil')->nullable();
-            $table->date('tanggal_nh')->nullable();
             $table->boolean('is_esign');
             $table->boolean('is_backdate');
             $table->text('catatan')->nullable();

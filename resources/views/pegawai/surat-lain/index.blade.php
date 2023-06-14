@@ -54,7 +54,8 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal</th>
+                                                <th>Tanggal Usulan</th>
+                                                <th>Tanggal Surat</th>
                                                 <th>Jenis</th>
                                                 <th>Hal</th>
                                                 <th>Nomor Surat</th>
@@ -65,14 +66,15 @@
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/pegawai/surat-lain/{{ $un->id }}">{{ $un->tanggal }}</a></td>
+                                                <td><a href="/pegawai/surat-lain/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
+                                                <td>{{ $un->tanggal }}</td>
                                                 <td>{{ $un->jenis_surat }}</a></td>
                                                 <td>{{ $un->hal }}</td>
                                                 <td>
                                                     @if($un->status == 0)
-                                                        Menunggu Persetujuan
+                                                    <a href="/pegawai/surat-lain/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
                                                     @elseif($un->status == 1)
-                                                    <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
+                                                    <a href="/pegawai/surat-lain/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @else
                                                         <a href="/pegawai/surat-lain/{{ $un->id }}">{{ $un->no_surat }}</a>
                                                     @endif

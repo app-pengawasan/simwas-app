@@ -241,26 +241,12 @@
                                         </td>
                                         </tr>
                                         <tr>
-                                            <th>Nomor Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->no_nh }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>File Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->norma_hasil }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tanggal Upload Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->tanggal_nh }}</td>
-                                        </tr>
-                                        <tr>
                                             <th>Catatan</th>
                                             <th>:</th>
                                             <td>{{ $usulan->catatan }}</td>
                                         </tr>
                                     </table>
+                                    {{-- <canvas id="usulan_canvas"></canvas> --}}
                                     </div>
                                 </div>
                                     @if ($usulan->status == 0 || $usulan->status == 3 || $usulan->status == 6)
@@ -303,6 +289,63 @@
     {{-- <script src="{{ asset() }}"></script> --}}
     <script src="{{ asset('library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
+    {{-- PDFViewer --}}
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.7.107/build/pdf.min.js"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/modules-datatables.js') }}"></script>
+
+    {{-- <script>
+        pdfjsLib.getDocument('./' + $usulan->draft).then(doc => {
+            console.log("This file has " + doc._pdfInfo.numPages + " pages");
+        });
+
+        doc.getPage(1).then(page => {
+            var usulanCanvas = document.getElementById("usulan_canvas");
+            var context = usulanCanvas.getContext("2d");
+
+            var viewport = page.getViewport(1);
+            usulanCanvas.width = viewport.width;
+            usulanCanvas.height = viewport.height;
+            page.render({
+                canvasContext: context,
+                viewport: viewport
+            });
+        })
+    </script>
+    <script>
+        // Mendapatkan URL file PDF yang ingin ditampilkan
+        var pdfFile = "path/to/your/pdf_file.pdf";
+
+        // Memuat PDF menggunakan PDF.js
+        pdfjsLib.getDocument(pdfFile).promise.then(function (pdf) {
+            var numPages = pdf.numPages;
+
+            // Membuat elemen untuk setiap halaman PDF
+            for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+                var container = document.createElement("div");
+                container.className = "pdf-page";
+
+                // Memuat halaman PDF ke dalam elemen
+                pdf.getPage(pageNum).then(function (page) {
+                    var canvas = document.createElement("canvas");
+                    var context = canvas.getContext("2d");
+
+                    var viewport = page.getViewport({ scale: 1 });
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport,
+                    };
+
+                    page.render(renderContext).promise.then(function () {
+                        container.appendChild(canvas);
+                    });
+                });
+
+                document.getElementById("pdf-viewer").appendChild(container);
+            }
+        }); --}}
+    </script>
 @endpush

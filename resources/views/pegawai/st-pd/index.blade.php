@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Usulan ST Pengembangan Profesi')
+@section('title', 'ST Perjalanan Dinas')
 
 @push('style')
+    <!-- CSS Libraries -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
     <link
@@ -12,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.inspektur-header')
-    @include('components.inspektur-sidebar')
+    @include('components.header')
+    @include('components.pegawai-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Usulan ST Pengembangan Profesi</h1>
+                <h1>ST Perjalanan Dinas</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/sekretaris">Dashboard</a></div>
-                    <div class="breadcrumb-item">Usulan ST Pengembangan Profesi</div>
+                    <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                    <div class="breadcrumb-item">ST Perjalanan Dinas</div>
                 </div>
             </div>
 
@@ -29,39 +30,40 @@
                     {{ session('success') }}
                 </div>
             @endif
-            
+
             <div class="section-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="">
-                                    <table class="table table-bordered table-striped display responsive"
-                                        id="table-pengelolaan-dokumen-inspektur">
+                                <div class="pt-1 pb-1 m-4">
+                                    <a href="/pegawai/st-pd/create"
+                                        class="btn btn-primary btn-lg btn-round">
+                                        + Ajukan Usulan ST
+                                    </a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal Usulan</th>
-                                                <th>Pemohon</th>
                                                 <th>Tanggal Surat</th>
-                                                <th>Jenis PP</th>
-                                                <th>Nama PP</th>
                                                 <th>Surat Tugas</th>
                                                 <th>Status ST</th>
-                                                <th>Status Sertifikat</th>
-                                                <th>Sertifikat</th>
-                                                <th>Tanggal Upload Sertifikat</th>
+                                                <th>ST Kinerja</th>
+                                                <th>Pembebanan</th>
+                                                <th>Kota Tujuan</th>
+                                                <th>Status Laporan</th>
+                                                <th>Tanggal Upload Laporan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/inspektur/st-pp/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
-                                                <td>{{ $un->user->name }}</td>
+                                                <td><a href="/pegawai/st-pd/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
                                                 <td>{{ $un->tanggal }}</td>
-                                                <td>{{ $un->pp->jenis }}</td>
-                                                <td>{{ $un->nama_pp }}</td>
                                                 <td>
                                                 @if ($un->status != 0 && $un->status != 1)
                                                     <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
@@ -69,30 +71,28 @@
                                                 </td>
                                                 <td>
                                                     @if ($un->status == 0)
-                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
+                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif ($un->status == 1)
-                                                        <a href="/pegawai/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @else
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
-                                                    </td>
+                                                </td>
+                                                <td>{{ $un->stKinerja->no_surat }}</td>
+                                                <td>{{ $un->pembebanan }}</td>
+                                                <td>{{ $un->kota }}</td>
                                                 <td>
                                                     @if ($un->status == 2)
                                                         <div class="badge badge-light">Belum Upload</div>
                                                     @elseif ($un->status == 3)
                                                         <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif ($un->status == 4)
-                                                        <a href="/pegawai/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @elseif ($un->status == 5)
                                                         <div class="badge badge-success">Disetujui</div>
                                                     @endif
                                                 </td>
-                                                <td>
-                                                    @if ($un->status == 5)
-                                                        <a target="blank" href="{{ $un->sertifikat }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
-                                                    @endif
-                                                </td>
-                                                <td>{{ ($un->status == 3 || $un->status == 4 || $un->status == 5) ? $un->tanggal_sertifikat : '' }}</td>
+                                                <td>{{ ($un->status == 3 || $un->status == 4 || $un->status == 5) ? $un->tanggal_laporan : '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -124,7 +124,19 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+    {{-- <script>
+        $(document).ready(function() {
+            $('#table-pengelolaan-dokumen-pegawai').DataTable( {
+            "columnDefs": [{
+                "targets": 0,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).text(row + 1);
+                }
+            }]
+            });
+        });
+    </script> --}}
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/inspektur-pengelolaan-dokumen.js"></script>
+    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 @endpush

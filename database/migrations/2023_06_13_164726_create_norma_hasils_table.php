@@ -14,15 +14,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sls', function (Blueprint $table) {
+        Schema::create('norma_hasils', function (Blueprint $table) {
             $table->ulid('id')->primary()->default(Ulid::generate());
             $table->string('user_id', 26);
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_backdate');
             $table->date('tanggal')->nullable();
-            $table->string('jenis_surat');
-            $table->string('derajat_klasifikasi', 2);
-            $table->foreignId('kka_id');
             $table->string('unit_kerja');
             $table->text('hal');
             $table->text('draft');
@@ -41,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sls');
+        Schema::dropIfExists('norma_hasils');
     }
 };

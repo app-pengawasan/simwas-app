@@ -18,11 +18,6 @@
         href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
     @include('components.header')
     @include('components.pegawai-sidebar')
@@ -52,7 +47,8 @@
                                                     name="is_backdate"
                                                     value="1"
                                                     class="custom-switch-input"
-                                                    {{ old('is_backdate') == '1' ? 'checked' : '' }}>
+                                                    {{ old('is_backdate') == '1' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Ya</span>
                                             </label>
@@ -61,11 +57,21 @@
                                                     name="is_backdate"
                                                     value="0"
                                                     class="custom-switch-input"
-                                                    {{ old('is_backdate') == '0' ? 'checked' : '' }}>
+                                                    {{ old('is_backdate') == '0' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Tidak</span>
                                             </label>
                                         </div>
+                                    </div>
+                                    <div id="tanggalInputContainer" style="display: none;" class="form-group">
+                                        <label>Tanggal</label>
+                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
+                                        @error('tanggal')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="jenis_surat">Jenis Surat</label>
@@ -127,15 +133,6 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Tanggal</label>
-                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
-                                        @error('tanggal')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
                                         <label for="hal">Hal</label>
                                         <input type="text" class="form-control @error('hal') is-invalid @enderror" id="hal" name="hal" value="{{ old('hal') }}">
                                         @error('hal')
@@ -175,6 +172,17 @@
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
 
+    <script>
+        function toggleBackdateInput(input) {
+            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+        
+            if (input.value === '1') {
+                tanggalInputContainer.style.display = 'block';
+            } else {
+                tanggalInputContainer.style.display = 'none';
+            }
+        }        
+    </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush

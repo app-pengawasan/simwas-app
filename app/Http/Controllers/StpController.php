@@ -82,7 +82,7 @@ class StpController extends Controller
      */
     public function index()
     {
-        $usulan = Stp::all()->where('user_id', auth()->user()->id);
+        $usulan = Stp::latest()->where('user_id', auth()->user()->id)->get();
         return view('pegawai.st-pp.index')->with('usulan', $usulan);
     }
 

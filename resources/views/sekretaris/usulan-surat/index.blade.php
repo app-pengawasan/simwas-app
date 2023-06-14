@@ -47,7 +47,8 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal</th>
+                                                <th>Tanggal Usulan</th>
+                                                <th>Tanggal Surat</th>
                                                 <th>Pemohon</th>
                                                 <th>Jenis</th>
                                                 <th>Hal</th>
@@ -59,7 +60,8 @@
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/sekretaris/usulan-surat/{{ $un->id }}">{{ $un->tanggal }}</a></td>
+                                                <td><a href="/sekretaris/surat-lain/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
+                                                <td>{{ $un->tanggal }}</td>
                                                 <td>{{ $un->user->name }}</td>
                                                 <td>{{ $un->jenis_surat }}</a></td>
                                                 <td>{{ $un->hal }}</td>
