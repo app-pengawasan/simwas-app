@@ -29,7 +29,7 @@
                         <div class="modal-body">
                             @csrf
                             @method('PUT')    
-                            <input type="hidden" name="status" value="1">
+                            <input type="hidden" name="status" value="{{ $usulan->status == 0 ? '1' : '4' }}">
                             <input type="hidden" name="id" value="{{ $usulan->id }}">
                             <div class="form-group">
                                 <label for="catatan">Beri catatan</label>
@@ -96,10 +96,12 @@
                                             <th>Status ST</th>
                                             <th>:</th>
                                             <td>
-                                            @if ($usulan->status === 0)
+                                            @if ($usulan->status == 0 || $usulan->status == 3)
                                                 <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                            @elseif ($usulan->status === 1)
+                                            @elseif ($usulan->status == 1 || $usulan->status == 4)
                                                 <div class="badge badge-danger">Tidak Disetujui</div>
+                                            @elseif ($usulan->status == 2)
+                                                <div class="badge badge-light">Belum Upload ST TTD</div>
                                             @else
                                                 <div class="badge badge-success">Disetujui</div>
                                             @endif
@@ -211,36 +213,6 @@
                                         <td><a target="blank" href="{{ $usulan->file }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
                                         </tr>
                                         <tr>
-                                            <th>Status Nomor Norma Hasil</th>
-                                            <th>:</th>
-                                            <td>
-                                                @if ($usulan->status == 2)
-                                                    <div class="badge badge-light">Proses Tugas</div>
-                                                @elseif ($usulan->status == 3)
-                                                    <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                @elseif ($usulan->status == 4)
-                                                    <div class="badge badge-danger">Tidak Disetujui</div>
-                                                @elseif ($usulan->status >= 5)
-                                                    <div class="badge badge-success">Disetujui</div>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        <th>Status Norma Hasil</th>
-                                        <th>:</th>
-                                        <td>
-                                            @if ($usulan->status == 5)
-                                                <div class="badge badge-light">Belum Upload</div>
-                                            @elseif ($usulan->status == 6)
-                                                <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                            @elseif ($usulan->status == 7)
-                                                <div class="badge badge-danger">Tidak Disetujui</div>
-                                            @elseif ($usulan->status == 8)
-                                                <div class="badge badge-success">Disetujui</div>
-                                            @endif
-                                        </td>
-                                        </tr>
-                                        <tr>
                                             <th>Catatan</th>
                                             <th>:</th>
                                             <td>{{ $usulan->catatan }}</td>
@@ -249,7 +221,7 @@
                                     {{-- <canvas id="usulan_canvas"></canvas> --}}
                                     </div>
                                 </div>
-                                    @if ($usulan->status == 0 || $usulan->status == 3 || $usulan->status == 6)
+                                    @if ($usulan->status == 0)
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="pt-1 pb-1 m-4 d-flex justify-content-start">
@@ -270,6 +242,24 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    @elseif ($usulan->status == 3)
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="pt-1 pb-1 m-4 d-flex justify-content-start">
+                                                <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')    
+                                                    <input type="hidden" name="status" value="5">
+                                                    <input type="hidden" name="id" value="{{ $usulan->id }}">
+                                                    <button type="submit" class="btn btn-success">Setujui Usulan</button>
+                                                </form>
+                                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                    data-target="#staticBackdrop">
+                                                    Tidak Setujui Usulan
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endif
                             </div>
                         </div>
@@ -346,6 +336,6 @@
 
                 document.getElementById("pdf-viewer").appendChild(container);
             }
-        }); --}}
-    </script>
+        }); 
+    </script>--}}
 @endpush

@@ -38,7 +38,7 @@
                         <div class="card">
                             <div class="card-body">
                                 @php
-                                    $selectedAnggota = explode(', ', old('anggota', $usulan->anggota));
+                                    $selectedAnggota = explode(', ', $usulan->anggota);
                                 @endphp
                                 <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post">
                                     @method('PUT')
@@ -308,46 +308,60 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+                var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+                toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
+
+                var penandatanganContainer = document.getElementById('penandatanganContainer');
+                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                toggleEsignInput(isEsignInput, penandatanganContainer);
+
+                var perseoranganContainer = document.getElementById('perseoranganContainer');
+                var dalnisContainer = document.getElementById('dalnisContainer');
+                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+                var anggotaContainer = document.getElementById('anggotaContainer');
+                var koordinator = document.getElementById('koordinator');
+                var ketua = document.getElementById('ketua');
+                var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked');
+                toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+                
+                var dalnisContainer = document.getElementById('dalnisContainer');
+                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+                var anggotaContainer = document.getElementById('anggotaContainer');
+                var koordinator = document.getElementById('koordinator');
+                var ketua = document.getElementById('ketua');
+                var isPerseoranganInput = document.querySelector('input[name="is_perseorangan"]:checked');
+                togglePerseoranganInput(isPerseoranganInput, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+            });
+        
+        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
             var tanggalInputContainer = document.getElementById('tanggalInputContainer');
             var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
-            var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
-            toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
-
-            var perseoranganContainer = document.getElementById('perseoranganContainer');
-            var dalnisContainer = document.getElementById('dalnisContainer');
-            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-            var anggotaContainer = document.getElementById('anggotaContainer');
-            var koordinator = document.getElementById('koordinator');
-            var ketua = document.getElementById('ketua');
-            var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked');
-            toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
-            
-            var dalnisContainer = document.getElementById('dalnisContainer');
-            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-            var anggotaContainer = document.getElementById('anggotaContainer');
-            var koordinator = document.getElementById('koordinator');
-            var ketua = document.getElementById('ketua');
-            var isPerseoranganInput = document.querySelector('input[name="is_perseorangan"]:checked');
-            togglePerseoranganInput(isPerseoranganInput, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
-        });
-
-        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
-        var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-        var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
-
-        if (input.value === '1') {
-            tanggalInputContainer.style.display = 'block';
-            for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                pimpinanNonaktif[i].setAttribute("disabled", "disabled");
-            }
-        } else {
-            tanggalInputContainer.style.display = 'none';
-            for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                pimpinanNonaktif[i].removeAttribute("disabled");
+    
+            if (input.value === '1') {
+                tanggalInputContainer.style.display = 'block';
+                for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                    pimpinanNonaktif[i].removeAttribute("disabled");
+                }
+            } else {
+                tanggalInputContainer.style.display = 'none';
+                for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
+                }
             }
         }
-        }
 
+        function toggleEsignInput(input, penandatanganContainer) {
+            var penandatanganContainer = document.getElementById('penandatanganContainer');
+    
+            if (input.value === '1') {
+                penandatanganContainer.style.display = 'block';
+            } else {
+                penandatanganContainer.style.display = 'none';
+            }
+        }
+    
         function toggleGugusTugasInput(input, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
             var perseoranganContainer = document.getElementById('perseoranganContainer');
             var dalnisContainer = document.getElementById('dalnisContainer');
@@ -372,8 +386,8 @@
                 ketua.style.display = 'none';
             }
         }
-
-        function togglePerseoranganInput(input) {
+    
+        function togglePerseoranganInput(input, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
             var dalnisContainer = document.getElementById('dalnisContainer');
             var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
             var anggotaContainer = document.getElementById('anggotaContainer');
@@ -392,9 +406,7 @@
                 ketua.style.display = 'none';
             }
         }
-
-
-</script>
+    </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>

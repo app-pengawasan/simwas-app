@@ -63,12 +63,14 @@
                                                 @endif
                                                 </td>
                                                 <td>
-                                                    @if ($un->status == 0)
+                                                    @if ($un->status == 0 || $un->status == 3)
                                                         <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
-                                                    @elseif ($un->status == 1)
+                                                    @elseif ($un->status == 1 || $un->status == 4)
                                                         <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                    @elseif ($un->status == 2)
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-light">Belum Upload ST TTD</a>
                                                     @else
-                                                        <div class="badge badge-success">Disetujui</div>
+                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-success">Disetujui</a>
                                                     @endif
                                                 </td>
                                             </tr>

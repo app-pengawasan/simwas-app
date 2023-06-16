@@ -273,11 +273,11 @@
                                         <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
                                             <option value="">Pilih penanda tangan</option>
                                             @foreach ($pimpinanAktif as $pimpinan)
-                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
                                             @endforeach
                                             
                                             @foreach ($pimpinanNonaktif as $pimpinan)
-                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('penandatangan')
@@ -307,24 +307,52 @@
     <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
-        function toggleBackdateInput(input) {
+        document.addEventListener('DOMContentLoaded', function() {
+                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+                var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+                toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
+
+                var penandatanganContainer = document.getElementById('penandatanganContainer');
+                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                toggleEsignInput(isEsignInput, penandatanganContainer);
+
+                var perseoranganContainer = document.getElementById('perseoranganContainer');
+                var dalnisContainer = document.getElementById('dalnisContainer');
+                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+                var anggotaContainer = document.getElementById('anggotaContainer');
+                var koordinator = document.getElementById('koordinator');
+                var ketua = document.getElementById('ketua');
+                var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked');
+                toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+                
+                var dalnisContainer = document.getElementById('dalnisContainer');
+                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
+                var anggotaContainer = document.getElementById('anggotaContainer');
+                var koordinator = document.getElementById('koordinator');
+                var ketua = document.getElementById('ketua');
+                var isPerseoranganInput = document.querySelector('input[name="is_perseorangan"]:checked');
+                togglePerseoranganInput(isPerseoranganInput, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+            });
+        
+        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
             var tanggalInputContainer = document.getElementById('tanggalInputContainer');
             var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
     
             if (input.value === '1') {
                 tanggalInputContainer.style.display = 'block';
                 for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
+                    pimpinanNonaktif[i].removeAttribute("disabled");
                 }
             } else {
                 tanggalInputContainer.style.display = 'none';
                 for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                    pimpinanNonaktif[i].removeAttribute("disabled");
+                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
                 }
             }
         }
 
-        function toggleEsignInput(input) {
+        function toggleEsignInput(input, penandatanganContainer) {
             var penandatanganContainer = document.getElementById('penandatanganContainer');
     
             if (input.value === '1') {
@@ -334,7 +362,7 @@
             }
         }
     
-        function toggleGugusTugasInput(input) {
+        function toggleGugusTugasInput(input, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
             var perseoranganContainer = document.getElementById('perseoranganContainer');
             var dalnisContainer = document.getElementById('dalnisContainer');
             var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
@@ -359,7 +387,7 @@
             }
         }
     
-        function togglePerseoranganInput(input) {
+        function togglePerseoranganInput(input, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
             var dalnisContainer = document.getElementById('dalnisContainer');
             var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
             var anggotaContainer = document.getElementById('anggotaContainer');

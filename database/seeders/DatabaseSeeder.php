@@ -23,18 +23,6 @@ class DatabaseSeeder extends Seeder
         User::factory(25)->create();
         MasterPimpinan::factory(4)->create();
         
-        $this->call([
-            PpSeeder::class,
-            NamaPpSeeder::class,
-            KkaSeeder::class,
-            StKinerjaSeeder::class,
-            StpSeeder::class,
-            SlSeeder::class,
-            // KirimSeeder::class,
-            // StpdSeeder::class,
-            // EksternalSeeder::class
-        ]);
-
         User::create([
             'email'     => '221911003@stis.ac.id',
             'nip'       => '221911003',
@@ -51,6 +39,18 @@ class DatabaseSeeder extends Seeder
             'is_admin'  => 1,
             'is_aktif' => 1,
             'is_sekma' => 1
+        ]);
+
+        $this->call([
+            PpSeeder::class,
+            NamaPpSeeder::class,
+            KkaSeeder::class,
+            StKinerjaSeeder::class,
+            StpSeeder::class,
+            SlSeeder::class,
+            // KirimSeeder::class,
+            // StpdSeeder::class,
+            // EksternalSeeder::class
         ]);
 
         MasterAnggaran::create([

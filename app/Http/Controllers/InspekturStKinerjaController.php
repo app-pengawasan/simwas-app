@@ -7,7 +7,12 @@ use App\Models\Surat;
 use App\Models\User;
 use App\Models\MasterPimpinan;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\Settings;
+use Dompdf\Dompdf;
 use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\Storage;
+use TCPDF;
 
 class InspekturStKinerjaController extends Controller
 {
@@ -155,7 +160,7 @@ class InspekturStKinerjaController extends Controller
      * @param  \App\Models\StKinerja  $stKinerja
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StKinerja $stKinerja)
+    public function update(Request $request, StKinerja $st_kinerja)
     {
         if ($request->input('status') == '1') {
             $validatedData = $request->validate([
@@ -177,7 +182,7 @@ class InspekturStKinerjaController extends Controller
                     'tugas' => 'required',
                     'melaksanakan' => 'required',
                     'objek' => 'required',
-                    'mulai' => 'required|date',
+                    'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                     'selesai' => 'required|date|after_or_equal:mulai',
                     'is_gugus_tugas' => 'required',
                     'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
@@ -188,7 +193,8 @@ class InspekturStKinerjaController extends Controller
                     'status' => 'required',
                     'is_esign' => 'required',
                 ],[
-                    'after_or_equal' => 'Waktu selesai harus setelah atau sama dengan waktu mulai.',
+                    'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+                    'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
                     'required' => 'Wajib diisi.'
                 ]);
         
@@ -218,7 +224,8 @@ class InspekturStKinerjaController extends Controller
             $nomorSurat = Surat::latest()->first()->nomor_surat;
             
             // Path untuk menyimpan hasil dokumen
-            $outputPath = '/st-kinerja'.'/'.$usulan->id.'.docx';
+            $tempFilePath = 'storage/temp/temp_file.docx';
+            $outputPath = 'st-kinerja'.'/'.$usulan->id.'-draft.pdf';
 
             // Pembuatan surat
             if ($usulan->is_perseorangan) {
@@ -242,7 +249,9 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs('storage/'.$outputPath);
+                    $templateProcessor->saveAs($tempFilePath);
+
+                    
                 } else {
                     // Path ke template dokumen .docx
                     $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-nonesign.docx';
@@ -265,13 +274,61 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs('storage/'.$outputPath);
+                    $templateProcessor->saveAs($tempFilePath);
                 }
                 
             } else {
+                $surat = Surat::where('nomor_surat', $nomorSurat)->first();
+
                 // Ambil anggota
                 $anggotaArray = explode(', ', $usulan->anggota);
                 $users = \App\Models\User::whereIn('id', $anggotaArray)->get();
+
+                $values = [];
+                if ($usulan->is_gugus_tugas) {
+                    $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
+                    if ($usulan->dalnis->id != $surat->user_id) {
+                        $newSurat = $surat->replicate();
+                        $newSurat->user_id = $usulan->dalnis->id;
+                        $newSurat->save();
+                    }
+                    
+                    $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
+                    if ($usulan->ketuaKoor->id != $surat->user_id) {
+                        $newSurat = $surat->replicate();
+                        $newSurat->user_id = $usulan->ketuaKoor->id;
+                        $newSurat->save();
+                    }
+                    
+                    $counter = 3;
+                    foreach ($users as $anggota) {
+                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
+                        if ($anggota->id != $surat->user_id) {
+                            $newSurat = $surat->replicate();
+                            $newSurat->user_id = $anggota->id;
+                            $newSurat->save();
+                        }
+                        $counter++;
+                    }
+                } else {
+                    $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
+                    if ($usulan->ketuaKoor->id != $surat->user_id) {
+                        $newSurat = $surat->replicate();
+                        $newSurat->user_id = $usulan->ketuaKoor->id;
+                        $newSurat->save();
+                    }
+                    
+                    $counter = 2;
+                    foreach ($users as $anggota) {
+                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
+                        if ($anggota->id != $surat->user_id) {
+                            $newSurat = $surat->replicate();
+                            $newSurat->user_id = $anggota->id;
+                            $newSurat->save();
+                        }
+                        $counter++;
+                    }
+                }
 
                 if ($usulan->is_esign) {
                     // Path ke template dokumen .docx
@@ -280,26 +337,8 @@ class InspekturStKinerjaController extends Controller
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkKolektifPath);
                     
-                    $values = [];
-                    if ($usulan->is_gugus_tugas) {
-                        $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
-                        $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
-                        $counter = 3;
-                        foreach ($users as $anggota) {
-                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
-                            $counter++;
-                        }
-                        $templateProcessor->cloneRowAndSetValues('no', $values);
-                    } else {
-                        $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
-                        $counter = 2;
-                        foreach ($users as $anggota) {
-                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
-                            $counter++;
-                        }
-                        $templateProcessor->cloneRowAndSetValues('no', $values);
-                    }
-
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+                    
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
                         'melaksanakan' => $usulan->melaksanakan,
@@ -309,7 +348,7 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs('storage/'.$outputPath);
+                    $templateProcessor->saveAs($tempFilePath);
                 } else {
                     // Path ke template dokumen .docx
                     $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif-nonesign.docx';
@@ -317,25 +356,7 @@ class InspekturStKinerjaController extends Controller
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkKolektifPath);
                     
-                    $values = [];
-                    if ($usulan->is_gugus_tugas) {
-                        $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
-                        $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
-                        $counter = 3;
-                        foreach ($users as $anggota) {
-                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
-                            $counter++;
-                        }
-                        $templateProcessor->cloneRowAndSetValues('no', $values);
-                    } else {
-                        $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
-                        $counter = 2;
-                        foreach ($users as $anggota) {
-                            $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
-                            $counter++;
-                        }
-                        $templateProcessor->cloneRowAndSetValues('no', $values);
-                    }
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
 
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
@@ -349,21 +370,40 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs('storage/'.$outputPath);
+                    $templateProcessor->saveAs($tempFilePath);
                 }
             }
             
-            // Simpan ke tabel Surat
-            Surat::where('nomor_surat', $nomorSurat)->update(['file' => '/storage'.'/'.$outputPath]);
+            // Simpan PDF ke dalam file
+            // $phpWord = IOFactory::load($tempFilePath);
+
+            // Settings::setPdfRendererName(Settings::PDF_RENDERER_TCPDF);
+            // Settings::setPdfRendererPath(base_path('vendor/tecnickcom/tcpdf'));
+
+            // $phpWord->save('storage/'.$outputPath, 'PDF');
+
+            $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
+
+
+            // Hapus file temporary .docx
+            unlink($tempFilePath);
+            unlink('storage/temp/file.html');
 
             // Update data di tabel StKinerja
             $validatedData = ([
                 'status' => '2',
                 'tanggal' => $tanggal,
                 'no_surat' => $nomorSurat,
-                'file' => '/storage'.'/'.$outputPath
+                'draft' => '/storage'.'/'.$outputPath
             ]);
             StKinerja::where('id', $request->input('id'))->update($validatedData);
+            return redirect('inspektur/st-kinerja')->with('success', 'Berhasil menyetujui usulan surat!');
+        } elseif ($request->input('status') == '5') {
+            $validatedData = $request->validate([
+                'status' => 'required'
+            ]);
+            StKinerja::where('id', $request->input('id'))->update($validatedData);
+            Surat::where('nomor_surat', $st_kinerja->no_surat)->update(['file' => $st_kinerja->file]);
             return redirect('inspektur/st-kinerja')->with('success', 'Berhasil menyetujui usulan surat!');
         }
     }
@@ -427,5 +467,27 @@ class InspekturStKinerjaController extends Controller
         }
 
         return $day.' '.$month.' '.$year;
+    }
+
+    public function convertToPDF($inputPath, $outputPath)
+    {
+        $dompdf = new Dompdf();
+        $docxFile = public_path($inputPath);
+        $html = $this->docxToHtml($docxFile);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $output = $dompdf->output();
+        $pdfPath = public_path($outputPath);
+        file_put_contents($pdfPath, $output);
+    }
+
+    private function docxToHtml($docxFile)
+    {
+        $phpWord = IOFactory::load($docxFile);
+        $htmlWriter = new \PhpOffice\PhpWord\Writer\HTML($phpWord);
+        $htmlWriter->save('storage/temp/file.html');
+        $html = file_get_contents('storage/temp/file.html');
+        return $html;
     }
 }

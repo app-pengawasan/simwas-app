@@ -125,10 +125,12 @@
                                             <th>Status ST</th>
                                             <th>:</th>
                                             <td>
-                                            @if ($usulan->status === 0)
+                                            @if ($usulan->status == 0 || $usulan->status == 3)
                                                 <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                            @elseif ($usulan->status === 1)
+                                            @elseif ($usulan->status == 1 || $usulan->status == 4)
                                                 <div class="badge badge-danger">Tidak Disetujui</div>
+                                            @elseif ($usulan->status == 2)
+                                                <div class="badge badge-light">Belum Upload ST TTD</div>
                                             @else
                                                 <div class="badge badge-success">Disetujui</div>
                                             @endif

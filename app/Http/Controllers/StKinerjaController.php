@@ -11,6 +11,76 @@ use Illuminate\Support\Facades\Storage;
 
 class StKinerjaController extends Controller
 {
+    protected $pangkat = [
+        'II/a' =>	'Pengatur Muda',
+        'II/b' =>	'Pengatur Muda Tingkat I',
+        'II/c' => 	'Pengatur',
+        'II/d' => 	'Pengatur Tingkat I',
+        'III/a' =>	'Penata Muda',
+        'III/b' =>	'Penata Muda Tingkat I',
+        'III/c' =>	'Penata',
+        'III/d' =>	'Penata Tingkat I',
+        'IV/a' =>	'Pembina',
+        'IV/b' =>	'Pembina Tingkat I',
+        'IV/c' =>	'Pembina Muda',
+        'IV/d' =>	'Pembina Madya',
+        'IV/e' =>	'Pembina Utama'
+    ];
+
+    protected $unit_kerja = [
+        '8000' => 'Inspektorat Utama',
+        '8010' => 'Bagian Umum Inspektorat Utama',
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
+    ];
+
+    protected $jabatan = [
+        '21' =>	'Auditor Utama',
+        '22' =>	'Auditor Madya',
+        '23' =>	'Auditor Muda',
+        '24' =>	'Auditor Pertama',
+        '25' =>	'Auditor Penyelia',
+        '26' =>	'Auditor Pelaksana Lanjutan',
+        '27' =>	'Auditor Pelaksana',
+        '31' =>	'Perencana Madya',
+        '32' =>	'Perencana Muda',
+        '33' =>	'Perencana Pertama',
+        '41' =>	'Analis Kepegawaian Madya',
+        '42' =>	'Analis Kepegawaian Muda',
+        '43' =>	'Analis Kepegawaian Pertama',
+        '51' =>	'Analis Pengelolaan Keuangan APBN Madya',
+        '52' =>	'Analis Pengelolaan Keuangan APBN Muda',
+        '53' =>	'Analis Pengelolaan Keuangan APBN Pertama',
+        '61' =>	'Pranata Komputer Madya',
+        '62' =>	'Pranata Komputer Muda',
+        '63' =>	'Pranata Komputer Pratama',
+        '71' =>	'Arsiparis Madya',
+        '72' =>	'Arsiparis Muda',
+        '73' =>	'Arsiparis Pertama',
+        '81' =>	'Analis Hukum Madya',
+        '82' =>	'Analis Hukum Muda',
+        '83' =>	'Analis Hukum Pertama',
+        '91' =>	'Penatalaksana Barang',
+        '90' =>	'Fungsional Umum'
+    ];
+
+    protected $role = [
+        'is_admin'      => 'Admin',
+        'is_sekma'      => 'Sekretaris Utama',
+        'is_sekwil'     => 'Sekretaris Wilayah',
+        'is_perencana'  => 'Perencana',
+        'is_apkapbn'    => 'APK-APBN',
+        'is_opwil'      => 'Operator Wilayah',
+        'is_analissdm'  => 'Analis SDM'
+    ];
+
+    protected $jabatan_pimpinan = [
+        'jpm000'      => 'Inspektur Utama',
+        'jpm001'      => 'Inspektur Wilayah I',
+        'jpm002'      => 'Inspektur Wilayah II',
+        'jpm003'      => 'Inspektur Wilayah III',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +105,8 @@ class StKinerjaController extends Controller
         return view('pegawai.st-kinerja.create', [
             "user" => $user,
             "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan
         ]);
     }
 
@@ -55,7 +126,7 @@ class StKinerjaController extends Controller
             'tugas' => 'required',
             'melaksanakan' => 'required',
             'objek' => 'required',
-            'mulai' => 'required|date',
+            'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
             'selesai' => 'required|date|after_or_equal:mulai',
             'is_gugus_tugas' => 'required',
             'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
@@ -66,7 +137,8 @@ class StKinerjaController extends Controller
             'status' => 'required',
             'is_esign' => 'required',
         ],[
-            'after_or_equal' => 'Waktu selesai harus setelah atau sama dengan waktu mulai.',
+            'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+            'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
             'required' => 'Wajib diisi.'
         ]);
 
@@ -139,7 +211,7 @@ class StKinerjaController extends Controller
                 'tugas' => 'required',
                 'melaksanakan' => 'required',
                 'objek' => 'required',
-                'mulai' => 'required|date',
+                'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                 'selesai' => 'required|date|after_or_equal:mulai',
                 'is_gugus_tugas' => 'required',
                 'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
@@ -150,7 +222,8 @@ class StKinerjaController extends Controller
                 'status' => 'required',
                 'is_esign' => 'required',
             ],[
-                'after_or_equal' => 'Waktu selesai harus setelah atau sama dengan waktu mulai.',
+                'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+                'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
                 'required' => 'Wajib diisi.'
             ]);
     
@@ -177,7 +250,7 @@ class StKinerjaController extends Controller
             if ($file) {
                 Storage::delete($file);
             }
-            $validatedData['file'] = $request->file('file')->store('st-kinerja');
+            $validatedData['file'] = '/storage'.'/'.$request->file('file')->store('st-kinerja');
             StKinerja::where('no_surat', $no_surat)->update($validatedData);
             return redirect('/pegawai/st-kinerja')->with('success', 'Berhasil mengunggah file!');
         }
