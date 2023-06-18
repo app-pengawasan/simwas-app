@@ -10,15 +10,45 @@
         href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
     @include('components.sekretaris-header')
     @include('components.sekretaris-sidebar')
     <div class="main-content">
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Tolak usulan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/sekretaris/usulan-surat/{{ $usulan->id }}" method="post">
+                        <div class="modal-body">
+                            @csrf
+                            @method('PUT')    
+                            <input type="hidden" name="status" value="{{ $usulan->status == 0 ? '1' : '4' }}">
+                            <input type="hidden" name="id" value="{{ $usulan->id }}">
+                            <div class="form-group">
+                                <label for="catatan">Beri catatan</label>
+                                <input type="text" class="form-control @error('catatan') is-invalid @enderror" id="catatan" name="catatan" value="{{ old('catatan') }}">
+                                @error('catatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Tidak Setujui Usulan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Detail Usulan Surat Pegawai</h1>
@@ -43,6 +73,11 @@
                                                     <th>Pemohon</th>
                                                     <th>:</th>
                                                     <td>{{ $usulan->user->name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Backdate</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->is_backdate ? 'Ya' : 'Tidak' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Tanggal</th>
@@ -94,7 +129,7 @@
                                                     <th>:</th>
                                                     <td>
                                                         @if($usulan->status == 0)
-                                                            Menunggu Persetujuan
+                                                            <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                         @elseif($usulan->status == 1)
                                                             <div class="badge badge-danger">Tidak Disetujui</div>
                                                         @else
@@ -103,18 +138,26 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <th>Status Surat</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                    @if($usulan->status == 2)
+                                                        <div class="badge badge-light">Belum Upload NH TTD</div>
+                                                    @elseif($usulan->status == 3)
+                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
+                                                    @elseif($usulan->status == 4)
+                                                        <div class="badge badge-danger">Tidak Disetujui</div>
+                                                    @elseif($usulan->status == 5)
+                                                        <div class="badge badge-success">Disetujui</div>
+                                                    @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <th>Surat</th>
                                                     <th>:</th>
                                                     <td>
-                                                        @if($usulan->status == 2)
-                                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$usulan->surat) }}" download>Download Surat Belum TTD</a>
-                                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $usulan->id]) }}">Upload Surat Sudah TTD</a>
-                                                        @elseif($usulan->status == 3)
-                                                            Menunggu Persetujuan
-                                                        @elseif($usulan->status == 4)
-                                                            <div class="badge badge-danger">Tidak Disetujui</div>
-                                                        @elseif($usulan->status == 5)
-                                                            <a target="blank" href="{{ asset('storage/'.$usulan->surat) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
+                                                        @if($usulan->status >= 3)
+                                                            <a target="blank" href="{{ asset($usulan->surat) }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -126,7 +169,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    @if ($usulan->status == 0 || $usulan->status == 3)
+                                    @if ($usulan->status == 0)
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="pt-1 pb-1 m-4 d-flex justify-content-start">
@@ -140,16 +183,31 @@
                                                         <input type="hidden" name="id" value="{{ $usulan->id }}">
                                                         <button type="submit" class="btn btn-success">Setujui Usulan</button>
                                                     </form>
-                                                    <form action="/sekretaris/usulan-surat/{{ $usulan->id }}" method="post">
-                                                        @csrf
-                                                        @method('PUT')    
-                                                        <input type="hidden" name="status" value="1">
-                                                        <input type="hidden" name="id" value="{{ $usulan->id }}">
-                                                        <button type="submit" class="btn btn-danger">Tidak Setujui Usulan</button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                        data-target="#staticBackdrop">
+                                                        Tidak Setujui Usulan
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
+                                    @elseif ($usulan->status == 3)
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="pt-1 pb-1 m-4 d-flex justify-content-start">
+                                                <form action="/sekretaris/usulan-surat/{{ $usulan->id }}" method="post" class="mr-2">
+                                                    @csrf
+                                                    @method('PUT')    
+                                                    <input type="hidden" name="status" value="5">
+                                                    <input type="hidden" name="id" value="{{ $usulan->id }}">
+                                                    <button type="submit" class="btn btn-success">Setujui Surat</button>
+                                                </form>
+                                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                    data-target="#staticBackdrop">
+                                                    Tidak Setujui Surat
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endif
                                 </div>
                             </div>

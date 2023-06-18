@@ -16,7 +16,7 @@ class NormaHasil extends Model
 
     public function stKinerja()
     {
-        return $this->belongsTo(Stk::class);
+        return $this->belongsTo(StKinerja::class);
     }
 
     public function user()

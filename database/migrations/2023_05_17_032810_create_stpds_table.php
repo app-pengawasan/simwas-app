@@ -27,14 +27,17 @@ return new class extends Migration
             $table->date('mulai');
             $table->date('selesai');
             $table->text('pelaksana');
-            $table->string('no_st')->nullable();
-            $table->foreignId('st_kinerja_id')->nullable();
-            $table->integer('pembebanan'); //pembebanan ni apa?
+            $table->string('no_surat')->nullable();
+            $table->string('st_kinerja_id', 26)->nullable();
+            $table->foreign('st_kinerja_id')->references('id')->on('st_kinerjas');
+            $table->foreignId('pembebanan_id');
             $table->string('laporan')->nullable();
             $table->date('tanggal_laporan')->nullable();
-            $table->smallInteger('penandatangan');
+            $table->string('penandatangan', 26)->nullable();
+            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans');
             $table->smallInteger('status');
             $table->boolean('is_esign');
+            $table->text('draft')->nullable();
             $table->text('file')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();

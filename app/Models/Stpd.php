@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Stpd extends Model
 {
@@ -23,11 +22,21 @@ class Stpd extends Model
 
     public function stKinerja()
     {
-        return $this->belongsTo(Stk::class);
+        return $this->belongsTo(StKinerja::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function pembebanan()
+    {
+        return $this->belongsTo(Pembebanan::class);
+    }
+
+    public function pimpinan()
+    {
+        return $this->belongsTo(MasterPimpinan::class, 'penandatangan', 'id_pimpinan');
     }
 }

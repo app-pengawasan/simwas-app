@@ -19,7 +19,7 @@
             <div class="section-header">
                 <h1>Usulan ST Pengembangan Profesi</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/sekretaris">Dashboard</a></div>
+                    <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Usulan ST Pengembangan Profesi</div>
                 </div>
             </div>
@@ -49,7 +49,6 @@
                                                 <th>Surat Tugas</th>
                                                 <th>Status ST</th>
                                                 <th>Status Sertifikat</th>
-                                                <th>Sertifikat</th>
                                                 <th>Tanggal Upload Sertifikat</th>
                                             </tr>
                                         </thead>
@@ -68,31 +67,28 @@
                                                 @endif
                                                 </td>
                                                 <td>
-                                                    @if ($un->status == 0)
+                                                    @if ($un->status == 0 || $un->status == 3)
                                                         <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
-                                                    @elseif ($un->status == 1)
-                                                        <a href="/pegawai/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                    @elseif ($un->status == 1 || $un->status == 4)
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                    @elseif ($un->status == 2)
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-light">Belum Upload ST TTD</a>
                                                     @else
-                                                        <div class="badge badge-success">Disetujui</div>
-                                                    @endif
-                                                    </td>
-                                                <td>
-                                                    @if ($un->status == 2)
-                                                        <div class="badge badge-light">Belum Upload</div>
-                                                    @elseif ($un->status == 3)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                    @elseif ($un->status == 4)
-                                                        <a href="/pegawai/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
-                                                    @elseif ($un->status == 5)
-                                                        <div class="badge badge-success">Disetujui</div>
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-success">Disetujui</a>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($un->status == 5)
-                                                        <a target="blank" href="{{ $un->sertifikat }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-light">Belum Upload</a>
+                                                    @elseif ($un->status == 6)
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
+                                                    @elseif ($un->status == 7)
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                    @elseif ($un->status == 8)
+                                                        <a href="/inspektur/st-pp/{{ $un->id }}" class="badge badge-success">Disetujui</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ ($un->status == 3 || $un->status == 4 || $un->status == 5) ? $un->tanggal_sertifikat : '' }}</td>
+                                                <td>{{ ($un->tanggal_sertifikat) ? $un->tanggal_sertifikat : '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

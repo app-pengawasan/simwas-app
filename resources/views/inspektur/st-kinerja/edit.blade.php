@@ -38,7 +38,7 @@
                         <div class="card">
                             <div class="card-body">
                                 @php
-                                    $selectedAnggota = explode(', ', $usulan->anggota);
+                                    $selectedAnggota = old('anggota', explode(', ', $usulan->anggota));
                                 @endphp
                                 <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post">
                                     @method('PUT')

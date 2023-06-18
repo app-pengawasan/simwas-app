@@ -22,6 +22,8 @@ return new class extends Migration
             $table->date('tanggal')->nullable();
             $table->string('unit_kerja');
             $table->text('hal');
+            $table->string('st_kinerja_id', 26);
+            $table->foreign('st_kinerja_id')->references('id')->on('st_kinerjas');
             $table->text('draft');
             $table->string('no_surat')->nullable();
             $table->smallInteger('status');

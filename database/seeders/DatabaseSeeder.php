@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'nip'       => '221910858',
             'name'      => 'Muhamad Arya Fitra',
             'pangkat'   => 'IV/a',
+            'unit_kerja' => '8000',
             'is_admin'  => 1,
             'is_aktif' => 1,
             'is_sekma' => 1
@@ -45,6 +46,7 @@ class DatabaseSeeder extends Seeder
             PpSeeder::class,
             NamaPpSeeder::class,
             KkaSeeder::class,
+            PembebananSeeder::class,
             StKinerjaSeeder::class,
             StpSeeder::class,
             SlSeeder::class,

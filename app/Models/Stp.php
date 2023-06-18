@@ -43,4 +43,14 @@ class Stp extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function pembebanan()
+    {
+        return $this->belongsTo(Pembebanan::class);
+    }
+
+    public function pimpinan()
+    {
+        return $this->belongsTo(MasterPimpinan::class, 'penandatangan', 'id_pimpinan');
+    }
 }

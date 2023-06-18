@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Usulan ST Pengembangan Profesi')
+@section('title', 'Edit Usulan ST Perjalanan Dinas')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -24,10 +24,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Edit Usulan ST Pengembangan Profesi</h1>
+                <h1>Edit Usulan ST Perjalanan Dinas</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item active"><a href="/pegawai/st-pp">ST Pengembangan Profesi</a></div>
+                    <div class="breadcrumb-item active"><a href="/pegawai/st-pd">ST Perjalanan Dinas</a></div>
                     <div class="breadcrumb-item">Edit Usulan</div>
                 </div>
             </div>
@@ -38,12 +38,13 @@
                         <div class="card">
                             <div class="card-body">
                                 @php
-                                    $selectedPegawai = explode(', ', old('pegawai', $usulan->pegawai));
+                                    $selectedPelaksana = explode(', ', old('pelaksana', $usulan->pelaksana));
                                 @endphp
-                                <form action="/pegawai/st-pp/{{ $usulan->id }}" method="post">
+                                <form action="/pegawai/st-pd/{{ $usulan->id }}" method="post">
                                     @method('PUT')
                                     @csrf
                                     <input type="hidden" name="status" value="0">
+                                    <input type="hidden" name="id" value="{{ $usulan->id }}">
                                     <div class="form-group">
                                         <div class="control-label">Backdate</div>
                                         <div class="custom-switches-stacked mt-2">
@@ -53,7 +54,7 @@
                                                     value="1"
                                                     class="custom-switch-input"
                                                     {{ old('is_backdate', $usulan->is_backdate) == '1' ? 'checked' : '' }}
-                                                    onchange="toggleTanggalInput(this)">
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Ya</span>
                                             </label>
@@ -63,7 +64,7 @@
                                                     value="0"
                                                     class="custom-switch-input"
                                                     {{ old('is_backdate', $usulan->is_backdate) == '0' ? 'checked' : '' }}
-                                                    onchange="toggleTanggalInput(this)">
+                                                    onchange="toggleBackdateInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Tidak</span>
                                             </label>
@@ -97,26 +98,57 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="pp_id">Jenis Pengembangan Profesi</label>
-                                        <select class="form-control select2 @error('pp_id') is-invalid @enderror" id="pp_id" name="pp_id">
-                                            <option value="">Pilih jenis pengembangan profesi</option>
-                                            @foreach ($pps as $pp)
-                                                <option value="{{ $pp->id }}" {{ old('pp_id', $usulan->pp_id) == $pp->id ? 'selected' : '' }}>{{ $pp->jenis }}</option>
+                                        <div class="control-label">Bagian dari ST Kinerja</div>
+                                        <div class="custom-switches-stacked mt-2">
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_st_kinerja"
+                                                    value="1"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_st_kinerja', $usulan->is_st_kinerja) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleStKinerjaInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Ya</span>
+                                            </label>
+                                            <label class="custom-switch">
+                                                <input type="radio"
+                                                    name="is_st_kinerja"
+                                                    value="0"
+                                                    class="custom-switch-input"
+                                                    {{ old('is_st_kinerja', $usulan->is_st_kinerja) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleStKinerjaInput(this)">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Tidak</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="stKinerjaContainer" style="display: none;">
+                                        <label for="st_kinerja_id">ST Kinerja</label>
+                                        <select class="form-control select2 @error('st_kinerja_id') is-invalid @enderror" id="st_kinerja_id" name="st_kinerja_id">
+                                            <option value="">Pilih st kinerja</option>
+                                            @foreach ($stks as $stk)
+                                                <option value="{{ $stk->id }}" {{ old('st_kinerja_id', $usulan->st_kinerja_id) == $stk->id ? 'selected' : '' }}>{{ $stk->no_surat }}</option>
                                             @endforeach
                                         </select>
-                                        @error('pp_id')
+                                        @error('st_kinerja_id')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="form-group" id="div_nama_pp">
-                                    
-                                    </div>
                                     <div class="form-group">
                                         <label for="melaksanakan">Untuk melaksanakan</label>
                                         <input type="text" class="form-control @error('melaksanakan') is-invalid @enderror" id="melaksanakan" name="melaksanakan" value="{{ old('melaksanakan', $usulan->melaksanakan) }}">
                                         @error('melaksanakan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="kota">Kota tujuan</label>
+                                        <input type="text" class="form-control @error('kota') is-invalid @enderror" id="kota" name="kota" value="{{ old('kota', $usulan->kota) }}">
+                                        @error('kota')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -141,30 +173,28 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="pegawai">Pegawai</label>
-                                        <select id="pegawai" name="pegawai[]" class="form-control select2 @error('pegawai') is-invalid @enderror" multiple="multiple">
-                                            <option value="">Pilih Pegawai</option>
-                                            @foreach ($user as $pegawai)
-                                                <option value="{{ $pegawai->id }}" {{ in_array($pegawai->id, $selectedPegawai) ? 'selected' : '' }}>{{ $pegawai->name }}</option>
+                                        <label for="pelaksana">Pelaksana</label>
+                                        <select id="pelaksana" name="pelaksana[]" class="form-control select2 @error('pelaksana') is-invalid @enderror" multiple="multiple">
+                                            <option value="">Pilih pelaksana</option>
+                                            @foreach ($user as $pelaksana)
+                                                <option value="{{ $pelaksana->id }}" {{ in_array($pelaksana->id, $selectedPelaksana) ? 'selected' : '' }}>{{ $pelaksana->name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('pegawai')
+                                        @error('pelaksana')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="penandatangan">Penanda tangan</label>
-                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
-                                            <option value="">Pilih penanda tangan</option>
-                                            <option value="0" {{ old('penandatangan', $usulan->penandatangan) == '0' ? 'selected' : '' }}>Inspektur Utama</option>
-                                            <option value="1" {{ old('penandatangan', $usulan->penandatangan) == '1' ? 'selected' : '' }}>Inspektur Wilayah I</option>
-                                            <option value="2" {{ old('penandatangan', $usulan->penandatangan) == '2' ? 'selected' : '' }}>Inspektur Wilayah II</option>
-                                            <option value="3" {{ old('penandatangan', $usulan->penandatangan) == '3' ? 'selected' : '' }}>Inspektur Wilayah III</option>
-                                            <option value="4" {{ old('penandatangan', $usulan->penandatangan) == '4' ? 'selected' : '' }}>Kepala Bagian Umum Inspektorat Utama</option>
+                                        <label for="pembebanan_id">Sumber Anggaran</label>
+                                        <select class="form-control select2 @error('pembebanan_id') is-invalid @enderror" id="pembebanan_id" name="pembebanan_id">
+                                            <option value="">Pilih sumber anggaran</option>
+                                            @foreach ($pembebanans as $pembebanan)
+                                                <option value="{{ $pembebanan->id }}" {{ old('pembebanan_id', $usulan->pembebanan_id) == $pembebanan->id ? 'selected' : '' }}>{{ $pembebanan->nama }}</option>
+                                            @endforeach
                                         </select>
-                                        @error('penandatangan')
+                                        @error('pembebanan_id')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -178,7 +208,8 @@
                                                     name="is_esign"
                                                     value="1"
                                                     class="custom-switch-input"
-                                                    {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}>
+                                                    {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleEsignInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Ya</span>
                                             </label>
@@ -187,11 +218,30 @@
                                                     name="is_esign"
                                                     value="0"
                                                     class="custom-switch-input"
-                                                    {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}>
+                                                    {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleEsignInput(this)">
                                                 <span class="custom-switch-indicator"></span>
                                                 <span class="custom-switch-description">Tidak</span>
                                             </label>
                                         </div>
+                                    </div>
+                                    <div id="penandatanganContainer" style="display: none;" class="form-group">
+                                        <label for="penandatangan">Penanda tangan</label>
+                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
+                                            <option value="">Pilih penanda tangan</option>
+                                            @foreach ($pimpinanAktif as $pimpinan)
+                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan', $usulan->penandatangan) == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
+                                            @endforeach
+                                            
+                                            @foreach ($pimpinanNonaktif as $pimpinan)
+                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan', $usulan->penandatangan) == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('penandatangan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                     </div>
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </form>
@@ -214,53 +264,57 @@
     <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
-        function toggleTanggalInput(input) {
+        document.addEventListener('DOMContentLoaded', function() {
+                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+                var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+                toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
+
+                var penandatanganContainer = document.getElementById('penandatanganContainer');
+                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                toggleEsignInput(isEsignInput, penandatanganContainer);
+        
+                var stKinerjaContainer = document.getElementById('stKinerjaContainer');
+                var isStKinerjaInput = document.querySelector('input[name="is_st_kinerja"]:checked');
+                toggleStKinerjaInput(isStKinerjaInput, stKinerjaContainer);
+        });
+
+        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
             var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+            var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
     
             if (input.value === '1') {
                 tanggalInputContainer.style.display = 'block';
+                for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                    pimpinanNonaktif[i].removeAttribute("disabled");
+                }
             } else {
                 tanggalInputContainer.style.display = 'none';
+                for (var i = 0; i < pimpinanNonaktif.length; i++) {
+                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
+                }
             }
         }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#pp_id").on("change", function() {
-                const ppId = $(this).val();
-                if(ppId == 1 || ppId == 2 || ppId == 3){
-                    $.ajax({
-                    url: `/get-nama-pp-by-pp`,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        pp_id: ppId
-                    },
-                    dataType: "json",
-                    success: (data) => {
-                        $("#div_nama_pp").empty();
-                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
-                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
-                                            <option value="">Pilih nama pengembangan profesi</option>
-                                        </select>`);
 
-                        data.namaPp.forEach(element => {
-                            $("#nama_pp").append(
-                                `<option value="${element.nama}">${element.nama}</option>`
-                            );
-                        });
-                        // console.log(data);
-                    },
-                    error: function(request, status, error) {
-                        alert(request.responseText);
-                    }
-                });
-                } else {
-                    $("#div_nama_pp").empty();
-                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
-                }
-            });
-        });
+        function toggleEsignInput(input, penandatanganContainer) {
+            var penandatanganContainer = document.getElementById('penandatanganContainer');
+    
+            if (input.value === '1') {
+                penandatanganContainer.style.display = 'block';
+            } else {
+                penandatanganContainer.style.display = 'none';
+            }
+        }
+
+        function toggleStKinerjaInput(input, stKinerjaContainer) {
+            var stKinerjaContainer = document.getElementById('stKinerjaContainer');
+    
+            if (input.value === '1') {
+                stKinerjaContainer.style.display = 'block';
+            } else {
+                stKinerjaContainer.style.display = 'none';
+            }
+        }
     </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>

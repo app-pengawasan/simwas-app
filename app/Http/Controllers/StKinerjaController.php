@@ -133,7 +133,7 @@ class StKinerjaController extends Controller
             'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
             'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
             'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-            'penandatangan' => 'required',
+            'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
             'status' => 'required',
             'is_esign' => 'required',
         ],[
@@ -170,7 +170,8 @@ class StKinerjaController extends Controller
         return view('pegawai.st-kinerja.show', [
             "title" => "Detail Usulan Surat Tugas Kinerja",
             "usulan" => $stKinerja,
-            "anggota" => $anggota
+            "anggota" => $anggota,
+            "jabatan_pimpinan" =>$this->jabatan_pimpinan
         ]);
     }
 
@@ -218,7 +219,7 @@ class StKinerjaController extends Controller
                 'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
                 'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
                 'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-                'penandatangan' => 'required',
+                'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
                 'status' => 'required',
                 'is_esign' => 'required',
             ],[
@@ -246,9 +247,8 @@ class StKinerjaController extends Controller
                 'mimes' => 'File yang diupload harus bertipe .pdf'
             ]);
             $no_surat = $st_kinerja->no_surat;
-            $file = $request->input('file');
-            if ($file) {
-                Storage::delete($file);
+            if ($st_kinerja->file) {
+                unlink(substr($st_kinerja->file, 1));
             }
             $validatedData['file'] = '/storage'.'/'.$request->file('file')->store('st-kinerja');
             StKinerja::where('no_surat', $no_surat)->update($validatedData);

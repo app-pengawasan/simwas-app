@@ -6,6 +6,8 @@ use App\Models\Stp;
 use App\Models\User;
 use App\Models\Pp;
 use App\Models\NamaPp;
+use App\Models\Pembebanan;
+use App\Models\MasterPimpinan;
 use App\Http\Requests\StoreStpRequest;
 use App\Http\Requests\UpdateStpRequest;
 use Illuminate\Http\Request;
@@ -75,6 +77,13 @@ class StpController extends Controller
         'is_opwil'      => 'Operator Wilayah',
         'is_analissdm'  => 'Analis SDM'
     ];
+
+    protected $jabatan_pimpinan = [
+        'jpm000'      => 'Inspektur Utama',
+        'jpm001'      => 'Inspektur Wilayah I',
+        'jpm002'      => 'Inspektur Wilayah II',
+        'jpm003'      => 'Inspektur Wilayah III',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -93,13 +102,20 @@ class StpController extends Controller
      */
     public function create()
     {
+        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
+        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $pps = Pp::all()->where('is_aktif', true);
         $namaPps = NamaPp::all()->where('is_aktif', true);
+        $pembebanans = Pembebanan::all()->where('is_aktif', true);
         $user = User::all();
         return view('pegawai.st-pp.create', [
             "user" => $user,
+            "pimpinanAktif" => $pimpinanAktif,
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
             "pps" => $pps,
-            "namaPps" => $namaPps
+            "namaPps" => $namaPps,
+            "pembebanans" => $pembebanans
         ]);
     }
 
@@ -118,13 +134,16 @@ class StpController extends Controller
             'pp_id' => 'required',
             'nama_pp' => 'required',
             'melaksanakan' => 'required',
-            'mulai' => 'required|date',
+            'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today',
             'selesai' => 'required|date|after_or_equal:mulai',
+            'pembebanan_id' => 'required',
             'pegawai' => 'required',
-            'penandatangan' => 'required',
             'is_esign' => 'required',
+            'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
             'status' => 'required'
         ], [
+            'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+            'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
             'required' => 'Wajib diisi'
         ]);
 
@@ -149,7 +168,8 @@ class StpController extends Controller
         $pegawai = implode(', ', $nama);
         return view('pegawai.st-pp.show', [
             "usulan" => $st_pp,
-            "pegawai" => $pegawai
+            "pegawai" => $pegawai,
+            "jabatan_pimpinan" =>$this->jabatan_pimpinan
         ]);
     }
 
@@ -161,14 +181,21 @@ class StpController extends Controller
      */
     public function edit(Stp $st_pp)
     {
+        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
+        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         $pps = Pp::all()->where('is_aktif', true);
         $namaPps = NamaPp::all()->where('is_aktif', true);
+        $pembebanans = Pembebanan::all()->where('is_aktif', true);
         return view('pegawai.st-pp.edit', [
             "usulan" => $st_pp,
             "user" => $user,
+            "pimpinanAktif" => $pimpinanAktif,
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
             "pps" => $pps,
-            "namaPps" => $namaPps
+            "namaPps" => $namaPps,
+            "pembebanans" => $pembebanans
         ]);
     }
 
@@ -181,28 +208,64 @@ class StpController extends Controller
      */
     public function update(UpdateStpRequest $request, Stp $st_pp)
     {
-        $validatedData = $request->validate([
-            'is_backdate' => 'required',
-            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-            'unit_kerja' => 'required',
-            'pp_id' => 'required',
-            'nama_pp' => 'required',
-            'melaksanakan' => 'required',
-            'mulai' => 'required|date',
-            'selesai' => 'required|date|after_or_equal:mulai',
-            'pegawai' => 'required',
-            'penandatangan' => 'required',
-            'is_esign' => 'required',
-            'status' => 'required'
-        ], [
-            'required' => 'Wajib diisi'
-        ]);
+        if ($request->input('status') == 0) {
+            $validatedData = $request->validate([
+                'is_backdate' => 'required',
+                'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
+                'unit_kerja' => 'required',
+                'pp_id' => 'required',
+                'nama_pp' => 'required',
+                'melaksanakan' => 'required',
+                'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today',
+                'selesai' => 'required|date|after_or_equal:mulai',
+                'pembebanan_id' => 'required',
+                'pegawai' => 'required',
+                'is_esign' => 'required',
+                'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+                'status' => 'required'
+            ], [
+                'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+                'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
+                'required' => 'Wajib diisi'
+            ]);
 
-        $validatedData['user_id'] = auth()->user()->id;
-        $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
-        Stp::where('id', $st_pp->id)->update($validatedData);
+            $validatedData['user_id'] = auth()->user()->id;
+            $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
+            Stp::where('id', $st_pp->id)->update($validatedData);
 
-        return redirect('pegawai/st-pp')->with('success', 'Pengajuan kembali usulan ST Pengembangan Profesi berhasil!');
+            return redirect('pegawai/st-pp')->with('success', 'Pengajuan kembali usulan ST Pengembangan Profesi berhasil!');
+        } elseif ($request->input('status') == 3) {
+            $validatedData = $request->validate([
+                'status' => 'required',
+                'file' => 'required|mimes:pdf'
+            ], [
+                'required' => 'Wajib diisi',
+                'mimes' => 'File yang diupload harus bertipe .pdf'
+            ]);
+            $no_surat = $st_pp->no_surat;
+            if ($st_pp->file) {
+                unlink(substr($st_pp->file, 1));
+            }
+            $validatedData['file'] = '/storage'.'/'.$request->file('file')->store('st-pp');
+            Stp::where('no_surat', $no_surat)->update($validatedData);
+            return redirect('/pegawai/st-pp')->with('success', 'Berhasil mengunggah file!');
+        } elseif ($request->input('status') == 6) {
+            $validatedData = $request->validate([
+                'status' => 'required',
+                'sertifikat' => 'required|mimes:pdf'
+            ], [
+                'required' => 'Wajib diisi',
+                'mimes' => 'File yang diupload harus bertipe .pdf'
+            ]);
+            $no_surat = $st_pp->no_surat;
+            if ($st_pp->sertifikat) {
+                unlink(substr($st_pp->sertifikat, 1));
+            }
+            $validatedData['sertifikat'] = '/storage'.'/'.$request->file('sertifikat')->store('sertifikat');
+            $validatedData['tanggal_sertifikat'] = date('Y-m-d');
+            Stp::where('no_surat', $no_surat)->update($validatedData);
+            return redirect('/pegawai/st-pp')->with('success', 'Berhasil mengunggah sertifikat!');
+        }
     }
 
     /**

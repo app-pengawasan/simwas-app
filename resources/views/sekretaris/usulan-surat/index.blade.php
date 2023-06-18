@@ -60,32 +60,25 @@
                                             @foreach ($usulan as $un)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/sekretaris/surat-lain/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
+                                                <td><a href="/sekretaris/usulan-surat/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
                                                 <td>{{ $un->tanggal }}</td>
                                                 <td>{{ $un->user->name }}</td>
                                                 <td>{{ $un->jenis_surat }}</a></td>
                                                 <td>{{ $un->hal }}</td>
                                                 <td>
                                                     @if($un->status == 0)
-                                                    <a class="btn btn-sm btn-warning" href="/sekretaris/usulan-surat/{{ $un->id }}">Menunggu Persetujuan</a>
+                                                    <a href="/sekretaris/usulan-surat/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
                                                     @elseif($un->status == 1)
-                                                        <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
+                                                    <a href="/sekretaris/usulan-surat/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
                                                     @else
                                                         <a href="/sekretaris/usulan-surat/{{ $un->id }}">{{ $un->no_surat }}</a>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if($un->status == 2)
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$un->surat) }}" download>Download Surat Belum TTD</a>
-                                                        </div>
-                                                        <div class="row">
-                                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $un->id]) }}">Upload Surat Sudah TTD</a>
-                                                        </div>
-                                                    </div>
+                                                        <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-light">Belum Upload NH TTD</div></a>
                                                     @elseif($un->status == 3)
-                                                        Menunggu Persetujuan
+                                                    <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-warning">Menunggu Persetujuan</div></a>
                                                     @elseif($un->status == 4)
                                                         <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
                                                     @elseif($un->status == 5)

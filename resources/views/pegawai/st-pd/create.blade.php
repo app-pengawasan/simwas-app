@@ -171,7 +171,7 @@
                                     <div class="form-group">
                                         <label for="pelaksana">Pelaksana</label>
                                         <select id="pelaksana" name="pelaksana[]" class="form-control select2 @error('pelaksana') is-invalid @enderror" multiple="multiple">
-                                            <option value="">Pilih Pelaksana</option>
+                                            <option value="">Pilih pelaksana</option>
                                             @foreach ($user as $pelaksana)
                                                 <option value="{{ $pelaksana->id }}" {{ old('pelaksana') == $pelaksana->id ? 'selected' : '' }}>{{ $pelaksana->name }}</option>
                                             @endforeach
@@ -183,9 +183,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="pembebanan_id">Pembebanan</label>
+                                        <label for="pembebanan_id">Sumber Anggaran</label>
                                         <select class="form-control select2 @error('pembebanan_id') is-invalid @enderror" id="pembebanan_id" name="pembebanan_id">
-                                            <option value="">Pilih pembebanan</option>
+                                            <option value="">Pilih sumber anggaran</option>
                                             @foreach ($pembebanans as $pembebanan)
                                                 <option value="{{ $pembebanan->id }}" {{ old('pembebanan_id') == $pembebanan->id ? 'selected' : '' }}>{{ $pembebanan->nama }}</option>
                                             @endforeach
@@ -260,24 +260,39 @@
     <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
-        function toggleBackdateInput(input) {
+        document.addEventListener('DOMContentLoaded', function() {
+                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+                var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+                toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
+
+                var penandatanganContainer = document.getElementById('penandatanganContainer');
+                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                toggleEsignInput(isEsignInput, penandatanganContainer);
+
+                var stKinerjaContainer = document.getElementById('stKinerjaContainer');
+                var isStKinerjaInput = document.querySelector('input[name="is_st_kinerja"]:checked');
+                toggleStKinerjaInput(isStKinerjaInput, stKinerjaContainer);
+        });
+
+        function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
             var tanggalInputContainer = document.getElementById('tanggalInputContainer');
             var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
     
             if (input.value === '1') {
                 tanggalInputContainer.style.display = 'block';
                 for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
+                    pimpinanNonaktif[i].removeAttribute("disabled");
                 }
             } else {
                 tanggalInputContainer.style.display = 'none';
                 for (var i = 0; i < pimpinanNonaktif.length; i++) {
-                    pimpinanNonaktif[i].removeAttribute("disabled");
+                    pimpinanNonaktif[i].setAttribute("disabled", "disabled");
                 }
             }
         }
 
-        function toggleEsignInput(input) {
+        function toggleEsignInput(input, penandatanganContainer) {
             var penandatanganContainer = document.getElementById('penandatanganContainer');
     
             if (input.value === '1') {
@@ -286,44 +301,16 @@
                 penandatanganContainer.style.display = 'none';
             }
         }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#pp_id").on("change", function() {
-                const ppId = $(this).val();
-                if(ppId == 1 || ppId == 2 || ppId == 3){
-                    $.ajax({
-                    url: `/get-nama-pp-by-pp`,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        pp_id: ppId
-                    },
-                    dataType: "json",
-                    success: (data) => {
-                        $("#div_nama_pp").empty();
-                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
-                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
-                                            <option value="">Pilih nama pengembangan profesi</option>
-                                        </select>`);
 
-                        data.namaPp.forEach(element => {
-                            $("#nama_pp").append(
-                                `<option value="${element.nama}">${element.nama}</option>`
-                            );
-                        });
-                        // console.log(data);
-                    },
-                    error: function(request, status, error) {
-                        alert(request.responseText);
-                    }
-                });
-                } else {
-                    $("#div_nama_pp").empty();
-                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
-                }
-            });
-        });
+        function toggleStKinerjaInput(input, stKinerjaContainer) {
+            var stKinerjaContainer = document.getElementById('stKinerjaContainer');
+    
+            if (input.value === '1') {
+                stKinerjaContainer.style.display = 'block';
+            } else {
+                stKinerjaContainer.style.display = 'none';
+            }
+        }
     </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>

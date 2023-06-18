@@ -18,11 +18,6 @@
         href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
     @include('components.header')
     @include('components.pegawai-sidebar')
@@ -46,27 +41,31 @@
                                     @csrf
                                     <input type="hidden" name="status" value="0">
                                     <div class="form-group">
-                                        <div class="control-label">Backdate</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_backdate') == '1' ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
+                                        <label class="d-block">Backdate</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="radio"
+                                                name="is_backdate"
+                                                value="1"
+                                                {{ old('is_backdate') == '1' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_ya">
+                                            <label class="form-check-label"
+                                                for="is_backdate_ya">
+                                                Ya
                                             </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_backdate') == '0' ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="radio"
+                                                name="is_backdate"
+                                                value="0"
+                                                {{ old('is_backdate') == '0' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_tidak">
+                                            <label class="form-check-label"
+                                                for="is_backdate_tidak">
+                                                Tidak
                                             </label>
                                         </div>
                                     </div>
@@ -152,27 +151,31 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <div class="control-label">Gugus Tugas</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_gugus_tugas') == '1' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
+                                        <label class="d-block">Gugus Tugas</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="radio"
+                                                name="is_gugus_tugas"
+                                                value="1"
+                                                {{ old('is_gugus_tugas') == '1' ? 'checked' : '' }}
+                                                onchange="toggleGugusTugasInput(this)"
+                                                id="is_gugus_tugas_ya">
+                                            <label class="form-check-label"
+                                                for="is_gugus_tugas_ya">
+                                                Ya
                                             </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_gugus_tugas') == '0' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                type="radio"
+                                                name="is_gugus_tugas"
+                                                value="0"
+                                                {{ old('is_gugus_tugas') == '0' ? 'checked' : '' }}
+                                                onchange="toggleGugusTugasInput(this)"
+                                                id="is_gugus_tugas_tidak">
+                                            <label class="form-check-label"
+                                                for="is_gugus_tugas_tidak">
+                                                Tidak
                                             </label>
                                         </div>
                                     </div>

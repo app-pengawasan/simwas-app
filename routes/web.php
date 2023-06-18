@@ -20,8 +20,10 @@ use App\Http\Controllers\KirimController;
 use App\Http\Controllers\EksternalController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\SlSekreController;
+use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\InspekturStpController;
+use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
@@ -84,7 +86,10 @@ Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
 Route::get('/sekretaris', function(){return view('sekretaris.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('sekretaris-dashboard');
 
 // Sekretaris-surat-lain
-Route::resource('/sekretaris/usulan-surat', SlSekreController::class);
+Route::resource('sekretaris/usulan-surat', SlSekreController::class);
+
+// Sekretaris-norma-hasil
+Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
 
 /**
  * ---------------------------------------------------------------------------
@@ -98,6 +103,9 @@ Route::resource('inspektur/st-pp', InspekturStpController::class);
 
 // Inspektur-st-kinerja
 Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
+
+// Inspektur-st-pd
+Route::resource('inspektur/st-pd', InspekturStpdController::class);
 
 
 //Master Objek
@@ -169,11 +177,9 @@ Route::resource('pegawai/st-pd', StpdController::class)->names([
 ]);
 
 // Surat Lain
-Route::get('/pegawai/surat-lain/form', [SlController::class, 'form']);
 Route::resource('pegawai/surat-lain', SlController::class)->names([
     'index' => 'surat-lain.index',
-    'show' => 'surat-lain.show',
-    'edit' => 'surat-lain.edit'
+    'show' => 'surat-lain.show'
 ]);
 
 // Kirim Dokumen

@@ -19,11 +19,40 @@
     @include('components.header')
     @include('components.pegawai-sidebar')
     <div class="main-content">
-        <!-- Modal -->
+        {{-- Modal --}}
         <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
+                    @if ($usulan->status == 2 || $usulan->status == 4)
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Upload Surat Sudah TTD</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="/pegawai/st-pp/{{ $usulan->id }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            @method('PUT')
+                            @csrf
+                            <input type="hidden" name="status" value="3">
+                            <input type="hidden" name="id" value="{{ $usulan->id }}">
+                            <div class="form-group">
+                                <label for="draft">Upload Surat Sudah TTD</label>
+                                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" accept=".pdf" id="file" value="{{ old('file') }}">
+                                @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </div>
+                    </form>
+                    @elseif ($usulan->status == 5 || $usulan->status == 7)
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Upload Sertifikat</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -34,9 +63,11 @@
                         <div class="modal-body">
                             @method('PUT')
                             @csrf
+                            <input type="hidden" name="status" value="6">
+                            <input type="hidden" name="id" value="{{ $usulan->id }}">
                             <div class="form-group">
                                 <label for="draft">Upload Sertifikat</label>
-                                <input type="file" class="form-control @error('sertifikat') is-invalid @enderror" name="sertifikat" accept=".docx, .doc" id="sertifikat" value="{{ old('sertifikat') }}">
+                                <input type="file" class="form-control @error('sertifikat') is-invalid @enderror" name="sertifikat" accept=".pdf" id="sertifikat" value="{{ old('sertifikat') }}">
                                 @error('sertifikat')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -46,9 +77,10 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-success">Impor</button>
+                            <button type="submit" class="btn btn-success">Upload</button>
                         </div>
                     </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -71,27 +103,42 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                     <h2>Detail Usulan</h2>
-                                    @if ($usulan->status == 1 || $usulan->status == 4)
+                                    @if ($usulan->status == 1)
                                     <div class="pt-1 pb-1 m-4">
                                         <a href="/pegawai/st-pp/{{ $usulan->id }}/edit"
                                             class="btn btn-primary btn-lg btn-round">
                                             Edit Usulan
                                         </a>
                                     </div>
-                                    @elseif ($usulan->status == 2)
+                                    @elseif ($usulan->status == 2 || $usulan->status == 4)
+                                        <a target="blank" href="{{ $usulan->draft }}"
+                                            class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round" download>
+                                            Download ST Belum TTD
+                                        </a>
                                     <div data-toggle="modal" data-target="#staticBackdrop" class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round">
-                                            Upload Sertifikat
+                                        Upload ST Sudah TTD
+                                    </div>
+                                    @elseif ($usulan->status == 5 || $usulan->status == 7)
+                                    <div data-toggle="modal" data-target="#staticBackdrop" class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round">
+                                        Upload Sertifikat
                                     </div>
                                     @endif
 
                                     <table class="table">
+                                        @if ($usulan->status == 1 || $usulan->status == 4 || $usulan->status == 7)
+                                        <tr class="text-danger">
+                                            <th>Catatan</th>
+                                            <th>:</th>
+                                            <td>{{ $usulan->catatan }}</td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <th>Backdate</th>
                                             <th>:</th>
                                             <td>{{ $usulan->is_backdate ? 'Ya' : 'Tidak' }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Nomor ST</th>
+                                            <th>Nomor Surat</th>
                                             <th>:</th>
                                             <td>
                                             @if ($usulan->status == 0)
@@ -104,13 +151,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Status ST</th>
+                                            <th>Status</th>
                                             <th>:</th>
                                             <td>
-                                            @if ($usulan->status === 0)
+                                            @if ($usulan->status == 0 || $usulan->status == 3)
                                                 <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                            @elseif ($usulan->status === 1)
+                                            @elseif ($usulan->status == 1 || $usulan->status == 4)
                                                 <div class="badge badge-danger">Tidak Disetujui</div>
+                                            @elseif ($usulan->status == 2)
+                                                <div class="badge badge-light">Belum Upload ST TTD</div>
                                             @else
                                                 <div class="badge badge-success">Disetujui</div>
                                             @endif
@@ -120,19 +169,6 @@
                                         <th>Tanggal</th>
                                         <th>:</th>
                                         <td>{{ $usulan->tanggal }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Unit Kerja</th>
-                                            <th>:</th>
-                                            <td>
-                                                {{
-                                                    ($usulan->unit_kerja == "8000") ? "Inspektorat Utama" :
-                                                    (($usulan->unit_kerja == "8010") ? "Bagian Umum Inspektorat Utama" :
-                                                    (($usulan->unit_kerja == "8100") ? "Inspektorat Wilayah I" :
-                                                    (($usulan->unit_kerja == "8200") ? "Inspektorat Wilayah II" :
-                                                    "Inspektorat Wilayah III")))
-                                                }}
-                                            </td>
                                         </tr>
                                         <tr>
                                         <th>Jenis PP</th>
@@ -155,25 +191,21 @@
                                         <td>{{ $usulan->mulai." - ".$usulan->selesai }}</td>
                                         </tr>
                                         <tr>
+                                            <th>Sumber anggaran</th>
+                                            <th>:</th>
+                                            <td>{{ $usulan->pembebanan->nama }}</td>
+                                        </tr>
+                                        <tr>
                                             <th>Pegawai</th>
                                             <th>:</th>
                                             <td>{{ $pegawai }}</td>
                                         </tr>
                                         <tr>
-                                        <th>Penandatangan</th>
-                                        <th>:</th>
-                                        <td><?php if ($usulan->penandatangan === 0) {
-                                            echo "Inspektur Utama";
-                                        } elseif ($usulan->penandatangan === 1) {
-                                            echo "Inspektur Wilayah I";
-                                        } elseif ($usulan->penandatangan === 2) {
-                                            echo "Inspektur Wilayah II";
-                                        } elseif ($usulan->penandatangan === 3) {
-                                            echo "Inspektur Wilayah III";
-                                        } else {
-                                            echo "Kepala Bagian Umum";
-                                        }?>
-                                        </td>
+                                            @if ($usulan->is_esign)
+                                            <th>Penandatangan</th>
+                                            <th>:</th>
+                                            <td>[{{ $jabatan_pimpinan[$usulan->pimpinan->jabatan] }}] {{ $usulan->pimpinan->user->name }}</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                         <th>E-Sign</th>
@@ -186,34 +218,45 @@
                                         </td>
                                         </tr>
                                         <tr>
-                                        <th>File</th>
+                                            <th>Draft</th>
+                                            <th>:</th>
+                                            @if ($usulan->draft)
+                                                <td><a target="blank" href="{{ $usulan->draft }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                        <th>File ST</th>
                                         <th>:</th>
+                                        @if ($usulan->file)
                                         <td><a target="blank" href="{{ $usulan->file }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                        @endif
+                                        </tr>
+                                        <tr>
+                                            <th>Status Sertifikat</th>
+                                            <th>:</th>
+                                            <td>
+                                                @if ($usulan->status == 5)
+                                                        <div class="badge badge-light">Belum Upload</div>
+                                                    @elseif ($usulan->status == 6)
+                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
+                                                    @elseif ($usulan->status == 7)
+                                                        <div class="badge badge-danger">Tidak Disetujui</div>
+                                                    @elseif ($usulan->status == 8)
+                                                        <div class="badge badge-success">Disetujui</div>
+                                                    @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                         <th>Sertifikat</th>
                                         <th>:</th>
-                                        <td>
-                                            @if ($usulan->status == 2)
-                                                <div class="badge badge-light">Proses Tugas</div>
-                                            @elseif ($usulan->status == 3)
-                                                Menunggu Persetujuan
-                                            @elseif ($usulan->status == 4)
-                                                <div class="badge badge-danger">Tidak Disetujui</div>
-                                            @elseif ($usulan->status == 5)
-                                                <a target="blank" href="{{ $usulan->sertifikat }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a>
-                                            @endif
-                                        </td>
+                                        @if ($usulan->sertifikat)
+                                        <td><a target="blank" href="{{ $usulan->sertifikat }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                        @endif
                                         </tr>
                                         <tr>
                                         <th>Tanggal Upload Sertifikat</th>
                                         <th>:</th>
-                                        <td>{{ ($usulan->status == 3 || $usulan->status == 4 || $usulan->status == 5) ? $usulan->tanggal_sertifikat : '' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Catatan</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->catatan }}</td>
+                                        <td>{{ $usulan->tanggal_sertifikat ?? '' }}</td>
                                         </tr>
                                     </table>
                                     </div>

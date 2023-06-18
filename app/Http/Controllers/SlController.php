@@ -153,7 +153,6 @@ class SlController extends Controller
     {
         $kka = Kka::all()->where('is_aktif', true);
         return view('pegawai.surat-lain.edit', [
-            "type_menu" => "surat-saya",
             "kka" => $kka,
             "usulan" => $surat_lain
         ]);
@@ -166,31 +165,12 @@ class SlController extends Controller
      * @param  \App\Models\Sl  $sl
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSlRequest $request)
+    public function update(UpdateSlRequest $request, Sl $surat_lain)
     {
-        if ($request->input('status') == '2' || $request->input('status') == '4') {
-            $validatedData = $request->validate([
-                'status' => 'required',
-                'no_surat' => 'required',
-                'surat' => 'required|mimes:pdf'
-            ], [
-                'required' => 'Wajib diisi',
-                'mimes' => 'File yang diupload harus bertipe .pdf'
-            ]);
-            $pesan = ($request->input('status') == '2') ? 'Berhasil mengunggah file!' : 'Berhasil mengunggah ulang file!';
-            $validatedData['status'] = '3';
-            $no_surat = $request->input('no_surat');
-            $surat = $request->input('surat');
-            if ($surat) {
-                Storage::delete($surat);
-            }
-            $validatedData['surat'] = $request->file('surat')->store('surat-lain');
-            Sl::where('no_surat', $no_surat)->update($validatedData);
-            return redirect('/pegawai/surat-lain')->with('success', $pesan);
-        } elseif ($request->input('status') == '1') {
+        if ($request->input('status') == '0') {
             $validatedData = $request->validate([
                 'is_backdate' => 'required',
-                'tanggal' => 'required',
+                'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
                 'jenis_surat' => 'required',
                 'derajat_klasifikasi' => 'required',
                 'kka_id' => 'required',
@@ -202,15 +182,25 @@ class SlController extends Controller
                 'required' => 'Wajib diisi',
                 'mimes' => "File yang diupload harus bertipe .doc atau .docx"
             ]);
-            $validatedData['status'] = '0';
-            $id = $request->input('id');
-            $draft = $request->input('draft');
-            if ($draft) {
-                Storage::delete($draft);
-            }
             $validatedData['draft'] = $request->file('draft')->store('draft');
-            Sl::where('id', $id)->update($validatedData);
-            return redirect('/pegawai/surat-lain')->with('success', 'Berhasil mengedit usulan nomor surat!');
+            Sl::where('id', $surat_lain->id)->update($validatedData);
+    
+            return redirect('pegawai/surat-lain')->with('success', 'Berhasil mengajukan kembali usulan surat!');
+        } elseif ($request->input('status') == '3') {
+            $validatedData = $request->validate([
+                'status' => 'required',
+                'id' => 'required',
+                'surat' => 'required|mimes:pdf'
+            ], [
+                'required' => 'Wajib diisi',
+                'mimes' => 'File yang diupload harus bertipe .pdf'
+            ]);
+            if ($surat_lain->surat) {
+                Storage::delete($surat_lain->surat);
+            }
+            $validatedData['surat'] = '/storage'.'/'.$request->file('surat')->store('surat-lain');
+            Sl::where('id', $request->input('id'))->update($validatedData);
+            return redirect('/pegawai/surat-lain')->with('success', 'Berhasil mengunggah file!');
         }
     }
 

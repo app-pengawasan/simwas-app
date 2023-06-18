@@ -45,7 +45,7 @@
                                         @method('PUT')
                                         @csrf
                                         @php
-                                            $selectedAnggota = explode(', ', old('anggota', $usulan->anggota));
+                                            $selectedAnggota = old('anggota', explode(', ', $usulan->anggota));
                                         @endphp
                                         <input type="hidden" name="status" value="0">
                                         <div class="form-group">

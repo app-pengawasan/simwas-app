@@ -29,4 +29,19 @@ class MasterPimpinan extends Model
     public function user(){
         return $this->belongsTo(User::class, "id_user");
     }
+
+    public function stKinerja()
+    {
+        return $this->belongsTo(StKinerja::class);
+    }
+
+    public function stp()
+    {
+        return $this->belongsTo(Stp::class);
+    }
+
+    public function stpd()
+    {
+        return $this->belongsTo(Stpd::class);
+    }
 }

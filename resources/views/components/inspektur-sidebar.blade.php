@@ -2,6 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="index.html">Simwas</a>
+            <span class="badge badge-primary">Inspektur</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">Sm</a>

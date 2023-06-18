@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Stp;
 use App\Models\Surat;
 use App\Models\User;
+use App\Models\MasterPimpinan;
 use App\Models\Pp;
 use App\Models\NamaPp;
+use App\Models\Pembebanan;
 use Illuminate\Http\Request;
+use Dompdf\Dompdf;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\TemplateProcessor;
+
 
 class InspekturStpController extends Controller
 {
@@ -74,6 +80,13 @@ class InspekturStpController extends Controller
         'is_opwil'      => 'Operator Wilayah',
         'is_analissdm'  => 'Analis SDM'
     ];
+
+    protected $jabatan_pimpinan = [
+        'jpm000'      => 'Inspektur Utama',
+        'jpm001'      => 'Inspektur Wilayah I',
+        'jpm002'      => 'Inspektur Wilayah II',
+        'jpm003'      => 'Inspektur Wilayah III',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -125,7 +138,8 @@ class InspekturStpController extends Controller
         $pegawai = implode(', ', $nama);
         return view('inspektur.st-pp.show', [
             "usulan" => $st_pp,
-            "pegawai" => $pegawai
+            "pegawai" => $pegawai,
+            "jabatan_pimpinan" =>$this->jabatan_pimpinan
         ]);
     }
 
@@ -137,14 +151,21 @@ class InspekturStpController extends Controller
      */
     public function edit(Stp $st_pp)
     {
+        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
+        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         $pps = Pp::all()->where('is_aktif', true);
         $namaPps = NamaPp::all()->where('is_aktif', true);
+        $pembebanans = Pembebanan::all()->where('is_aktif', true);
         return view('inspektur.st-pp.edit', [
             "usulan" => $st_pp,
             "user" => $user,
+            "pimpinanAktif" => $pimpinanAktif,
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
             "pps" => $pps,
-            "namaPps" => $namaPps
+            "namaPps" => $namaPps,
+            "pembebanans" => $pembebanans
         ]);
     }
 
@@ -157,13 +178,13 @@ class InspekturStpController extends Controller
      */
     public function update(Request $request, Stp $st_pp)
     {
-        if ($request->input('status') == '1') {
+        if ($request->input('status') == '1' || $request->input('status') == '4' || $request->input('status') == '7') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
             ],[
                 'required' => 'Wajib diisi'
             ]);
-            $validatedData['status'] = '1';
+            $validatedData['status'] = $request->input('status');
             Stp::where('id', $request->input('id'))->update($validatedData);
             return redirect('inspektur/st-pp')->with('success', 'Berhasil menolak usulan surat!');
         } elseif ($request->input('status') == '2') {
@@ -175,17 +196,19 @@ class InspekturStpController extends Controller
                     'pp_id' => 'required',
                     'nama_pp' => 'required',
                     'melaksanakan' => 'required',
-                    'mulai' => 'required|date',
+                    'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today',
                     'selesai' => 'required|date|after_or_equal:mulai',
+                    'pembebanan_id' => 'required',
                     'pegawai' => 'required',
-                    'penandatangan' => 'required',
+                    'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
                     'is_esign' => 'required',
                     'status' => 'required'
                 ], [
+                    'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
+                    'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
                     'required' => 'Wajib diisi'
                 ]);
         
-                $validatedData['user_id'] = auth()->user()->id;
                 $validatedData['pegawai'] = implode(', ', $validatedData['pegawai']);
                 Stp::where('id', $request->input('id'))->update($validatedData);
             }
@@ -205,13 +228,150 @@ class InspekturStpController extends Controller
             $buatSurat->store($data);
             $nomorSurat = Surat::latest()->first()->nomor_surat;
             
+            // Path untuk menyimpan hasil dokumen
+            $tempFilePath = 'storage/temp/temp_file.docx';
+            $outputPath = 'st-pp'.'/'.$usulan->id.'-draft.pdf';
+
+            // Ambil pegawai
+            $pegawaiArray = explode(', ', $usulan->pegawai);
+
+            if (count($pegawaiArray) == 1) {
+                if ($usulan->is_esign) {
+                    // Path ke template dokumen .docx
+                    $stpPerseoranganPath = 'document/template-dokumen/draft-st-pp-perorangan-esign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
+
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs($tempFilePath);
+
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpPerseoranganPath = 'document/template-dokumen/draft-st-pp-perorangan-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
+                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $pimpinan->jabatan,
+                        'inspektur' => $pimpinan->user->name
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs($tempFilePath);
+                }
+                
+            } else {
+                $surat = Surat::where('nomor_surat', $nomorSurat)->first();
+
+                $users = \App\Models\User::whereIn('id', $pegawaiArray)->get();
+
+                $values = [];
+                $counter = 1;
+                foreach ($users as $anggota) {
+                    $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan]];
+                    if ($anggota->id != $surat->user_id) {
+                        $newSurat = $surat->replicate();
+                        $newSurat->user_id = $anggota->id;
+                        $newSurat->save();
+                    }
+                    $counter++;
+                }
+
+                if ($usulan->is_esign) {
+                    // Path ke template dokumen .docx
+                    $stpKolektifPath = 'document/template-dokumen/draft-st-pp-kolektif-esign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpKolektifPath);
+                    
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+                    
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs($tempFilePath);
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpKolektifPath = 'document/template-dokumen/draft-st-pp-kolektif-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpKolektifPath);
+                    
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $pimpinan->jabatan,
+                        'inspektur' => $pimpinan->user->name
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs($tempFilePath);
+                }
+            }
+
+            $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
+
+
+            // Hapus file temporary .docx
+            unlink($tempFilePath);
+            unlink('storage/temp/file.html');
+
             $validatedData = ([
                 'status' => '2',
                 'tanggal' => $tanggal,
-                'no_surat' => $nomorSurat
+                'no_surat' => $nomorSurat,
+                'draft' => '/storage'.'/'.$outputPath
             ]);
             Stp::where('id', $request->input('id'))->update($validatedData);
             return redirect('inspektur/st-pp')->with('success', 'Berhasil menyetujui usulan surat!');
+        } elseif ($request->input('status') == '5') {
+            $validatedData = $request->validate([
+                'status' => 'required'
+            ]);
+            Stp::where('id', $request->input('id'))->update($validatedData);
+            Surat::where('nomor_surat', $st_pp->no_surat)->update(['file' => $st_pp->file]);
+            return redirect('inspektur/st-pp')->with('success', 'Berhasil menyetujui usulan surat!');
+        } elseif ($request->input('status') == '8') {
+            $validatedData = $request->validate([
+                'status' => 'required'
+            ]);
+            Stp::where('id', $request->input('id'))->update($validatedData);
+            return redirect('inspektur/st-pp')->with('success', 'Berhasil menyetujui sertifikat!');
         }
     }
 
@@ -224,5 +384,77 @@ class InspekturStpController extends Controller
     public function destroy(Stp $stp)
     {
         //
+    }
+
+    public function konvTanggalIndo($date)
+    {
+        $dateComponents = date_parse($date);
+
+        $year = $dateComponents['year'];
+        $month = $dateComponents['month'];
+        $day = $dateComponents['day'];
+
+        switch ($month) {
+            case 1:
+                $month = 'Januari';
+                break;
+            case 2:
+                $month = 'Februari';
+                break;
+            case 3:
+                $month = 'Maret';
+                break;
+            case 4:
+                $month = 'April';
+                break;
+            case 5:
+                $month = 'Mei';
+                break;
+            case 6:
+                $month = 'Juni';
+                break;
+            case 7:
+                $month = 'Juli';
+                break;
+            case 8:
+                $month = 'Agustus';
+                break;
+            case 9:
+                $month = 'September';
+                break;
+            case 10:
+                $month = 'Oktober';
+                break;
+            case 11:
+                $month = 'November';
+                break;
+            case 12:
+                $month = 'Desember';
+                break;
+        }
+
+        return $day.' '.$month.' '.$year;
+    }
+
+    public function convertToPDF($inputPath, $outputPath)
+    {
+        $dompdf = new Dompdf();
+        $docxFile = public_path($inputPath);
+        $html = $this->docxToHtml($docxFile);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $output = $dompdf->output();
+        $pdfPath = public_path($outputPath);
+        file_put_contents($pdfPath, $output);
+    }
+
+    private function docxToHtml($docxFile)
+    {
+        $phpWord = IOFactory::load($docxFile);
+        $htmlWriter = new \PhpOffice\PhpWord\Writer\HTML($phpWord);
+        $htmlWriter->save('storage/temp/file.html');
+        $html = file_get_contents('storage/temp/file.html');
+        return $html;
     }
 }

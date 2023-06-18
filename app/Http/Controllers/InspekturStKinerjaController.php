@@ -79,6 +79,13 @@ class InspekturStKinerjaController extends Controller
         'is_opwil'      => 'Operator Wilayah',
         'is_analissdm'  => 'Analis SDM'
     ];
+
+    protected $jabatan_pimpinan = [
+        'jpm000'      => 'Inspektur Utama',
+        'jpm001'      => 'Inspektur Wilayah I',
+        'jpm002'      => 'Inspektur Wilayah II',
+        'jpm003'      => 'Inspektur Wilayah III',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -130,7 +137,8 @@ class InspekturStKinerjaController extends Controller
         $anggota = implode(', ', $nama);
         return view('inspektur.st-kinerja.show', [
             "usulan" => $stKinerja,
-            "anggota" => $anggota
+            "anggota" => $anggota,
+            "jabatan_pimpinan" =>$this->jabatan_pimpinan
         ]);
     }
 
@@ -162,18 +170,17 @@ class InspekturStKinerjaController extends Controller
      */
     public function update(Request $request, StKinerja $st_kinerja)
     {
-        if ($request->input('status') == '1') {
+        if ($request->input('status') == '1' || $request->input('status') == '4') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
             ],[
                 'required' => 'Wajib diisi'
             ]);
-            $validatedData['status'] = '1';
+            $validatedData['status'] = $request->input('status');
             StKinerja::where('id', $request->input('id'))->update($validatedData);
             return redirect('inspektur/st-kinerja')->with('success', 'Berhasil menolak usulan surat!');
         } elseif ($request->input('status') == '2') {
             if ($request->has('edit')) {
-                $usulan = StKinerja::find($request->input('id'));
                 $validatedData = $request->validate([
                     'is_backdate' => 'required',
                     'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
@@ -189,7 +196,7 @@ class InspekturStKinerjaController extends Controller
                     'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
                     'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
                     'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-                    'penandatangan' => 'required',
+                    'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
                     'status' => 'required',
                     'is_esign' => 'required',
                 ],[

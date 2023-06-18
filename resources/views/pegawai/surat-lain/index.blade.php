@@ -81,16 +81,9 @@
                                                 </td>
                                                 <td>
                                                     @if($un->status == 2)
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <a target="blank" class="btn btn-sm btn-primary" href="{{ asset('storage/'.$un->surat) }}" download>Download Surat Belum TTD</a>
-                                                        </div>
-                                                        <div class="row">
-                                                            <a class="btn btn-sm btn-info" href="{{ route('surat-lain.edit', ['surat_lain' => $un->id]) }}">Upload Surat Sudah TTD</a>
-                                                        </div>
-                                                    </div>
+                                                        <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-light">Belum Upload NH TTD</div></a>
                                                     @elseif($un->status == 3)
-                                                        Menunggu Persetujuan
+                                                        <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-warning">Menunggu Persetujuan</div></a>
                                                     @elseif($un->status == 4)
                                                         <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-danger">Tidak Disetujui</div></a>
                                                     @elseif($un->status == 5)

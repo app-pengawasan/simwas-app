@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('pembebanans', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->boolean('is_aktif');
             $table->timestamps();
         });
     }

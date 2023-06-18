@@ -26,12 +26,15 @@ return new class extends Migration
             $table->text('melaksanakan');
             $table->date('mulai');
             $table->date('selesai');
+            $table->foreignId('pembebanan_id');
             $table->text('pegawai');
-            $table->smallInteger('penandatangan');
+            $table->string('penandatangan', 26)->nullable();
+            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans');
             $table->smallInteger('status');
             $table->string('no_surat')->nullable();
             $table->date('tanggal_sertifikat')->nullable();
             $table->boolean('is_esign');
+            $table->text('draft')->nullable();
             $table->text('file')->nullable();
             $table->text('sertifikat')->nullable();
             $table->text('catatan')->nullable();

@@ -182,20 +182,11 @@
                                         </tr>
                                         @endif
                                         <tr>
-                                        <th>Penandatangan</th>
-                                        <th>:</th>
-                                        <td><?php if ($usulan->penandatangan === 0) {
-                                            echo "Inspektur Utama";
-                                        } elseif ($usulan->penandatangan === 1) {
-                                            echo "Inspektur Wilayah I";
-                                        } elseif ($usulan->penandatangan === 2) {
-                                            echo "Inspektur Wilayah II";
-                                        } elseif ($usulan->penandatangan === 3) {
-                                            echo "Inspektur Wilayah III";
-                                        } else {
-                                            echo "Kepala Bagian Umum";
-                                        }?>
-                                        </td>
+                                            @if ($usulan->is_esign)
+                                            <th>Penandatangan</th>
+                                            <th>:</th>
+                                            <td>[{{ $jabatan_pimpinan[$usulan->pimpinan->jabatan] }}] {{ $usulan->pimpinan->user->name }}</td>
+                                            @endif
                                         </tr>
                                         <tr>
                                         <th>E-Sign</th>
@@ -208,9 +199,18 @@
                                         </td>
                                         </tr>
                                         <tr>
+                                            <th>Draft</th>
+                                            <th>:</th>
+                                            @if ($usulan->draft)
+                                                <td><a target="blank" href="{{ $usulan->draft }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                            @endif
+                                        </tr>
+                                        <tr>
                                         <th>File ST</th>
                                         <th>:</th>
-                                        <td><a target="blank" href="{{ $usulan->file }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                        @if ($usulan->file)
+                                            <td><a target="blank" href="{{ $usulan->file }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                        @endif
                                         </tr>
                                         <tr>
                                             <th>Catatan</th>

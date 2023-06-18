@@ -11,6 +11,7 @@
 @endpush
 
 @section('main')
+        {{-- Modal --}}
         <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -67,25 +68,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                     <h2>Detail Usulan</h2>   
-                                    @if ($usulan->status == 1 || $usulan->status == 4 || $usulan->status == 7)
+                                    @if ($usulan->status == 1)
                                     <div class="pt-1 pb-1 m-4">
                                         <a href="/pegawai/st-kinerja/{{ $usulan->id }}/edit"
                                             class="btn btn-primary btn-lg btn-round">
                                             Edit Usulan
                                         </a>
                                     </div>
-                                    @elseif ($usulan->status == 2)
-                                    {{-- <form action="/inspektur/st-kinerja/{{ $usulan->id }}" method="post" class="mr-2">
-                                        @csrf
-                                        @method('PUT')    
-                                        <input type="hidden" name="status" value="3">
-                                        <input type="hidden" name="id" value="{{ $usulan->id }}">
-                                        <div class="pt-1 pb-1 m-4">
-                                            <a type="submit" class="btn btn-primary btn-lg btn-round">
-                                                Minta Nomor Norma Hasil
-                                            </a>
-                                        </div>
-                                    </form> --}}
+                                    @elseif ($usulan->status == 2 || $usulan->status == 4)
                                         <a target="blank" href="{{ $usulan->draft }}"
                                             class="pt-1 pb-1 m-4 btn btn-primary btn-lg btn-round" download>
                                             Download ST Belum TTD
@@ -96,7 +86,7 @@
                                     @endif
 
                                     <table class="table">
-                                        @if ($usulan->status == 1 || $usulan->status == 4 || $usulan->status == 7)
+                                        @if ($usulan->status == 1 || $usulan->status == 4)
                                         <tr class="text-danger">
                                             <th>Catatan</th>
                                             <th>:</th>
@@ -211,20 +201,11 @@
                                         </tr>
                                         @endif
                                         <tr>
+                                        @if ($usulan->is_esign)
                                         <th>Penandatangan</th>
                                         <th>:</th>
-                                        <td><?php if ($usulan->penandatangan === 0) {
-                                            echo "Inspektur Utama";
-                                        } elseif ($usulan->penandatangan === 1) {
-                                            echo "Inspektur Wilayah I";
-                                        } elseif ($usulan->penandatangan === 2) {
-                                            echo "Inspektur Wilayah II";
-                                        } elseif ($usulan->penandatangan === 3) {
-                                            echo "Inspektur Wilayah III";
-                                        } else {
-                                            echo "Kepala Bagian Umum";
-                                        }?>
-                                        </td>
+                                        <td>[{{ $jabatan_pimpinan[$usulan->pimpinan->jabatan] }}] {{ $usulan->pimpinan->user->name }}</td>
+                                        @endif
                                         </tr>
                                         <tr>
                                         <th>E-Sign</th>
@@ -235,6 +216,13 @@
                                             {{ "Tidak" }}
                                         @endif
                                         </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Draft</th>
+                                            <th>:</th>
+                                            @if ($usulan->draft)
+                                                <td><a target="blank" href="{{ $usulan->draft }}" class="btn btn-icon btn-primary" download><i class="fa fa-download"></i></a></td>
+                                            @endif
                                         </tr>
                                         <tr>
                                         <th>File ST</th>

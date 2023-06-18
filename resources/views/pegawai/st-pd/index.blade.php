@@ -49,11 +49,10 @@
                                                 <th>No</th>
                                                 <th>Tanggal Usulan</th>
                                                 <th>Tanggal Surat</th>
+                                                <th>ST Kinerja</th>
+                                                <th>Kota Tujuan</th>
                                                 <th>Surat Tugas</th>
                                                 <th>Status ST</th>
-                                                <th>ST Kinerja</th>
-                                                <th>Pembebanan</th>
-                                                <th>Kota Tujuan</th>
                                                 <th>Status Laporan</th>
                                                 <th>Tanggal Upload Laporan</th>
                                             </tr>
@@ -64,35 +63,36 @@
                                                 <td></td>
                                                 <td><a href="/pegawai/st-pd/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
                                                 <td>{{ $un->tanggal }}</td>
+                                                <td>{{ $un->is_st_kinerja ? $un->stKinerja->no_surat : '-' }}</td>
+                                                <td>{{ $un->kota }}</td>
                                                 <td>
                                                 @if ($un->status != 0 && $un->status != 1)
                                                     <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
                                                 @endif
                                                 </td>
                                                 <td>
-                                                    @if ($un->status == 0)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                    @elseif ($un->status == 1)
+                                                    @if ($un->status == 0 || $un->status == 3)
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
+                                                    @elseif ($un->status == 1 || $un->status == 4)
                                                         <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
+                                                    @elseif ($un->status == 2)
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-light">Belum Upload ST TTD</a>
                                                     @else
-                                                        <div class="badge badge-success">Disetujui</div>
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-success">Disetujui</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ $un->stKinerja->no_surat }}</td>
-                                                <td>{{ $un->pembebanan }}</td>
-                                                <td>{{ $un->kota }}</td>
                                                 <td>
-                                                    @if ($un->status == 2)
-                                                        <div class="badge badge-light">Belum Upload</div>
-                                                    @elseif ($un->status == 3)
-                                                        <div class="badge badge-warning">Menunggu Persetujuan</div>
-                                                    @elseif ($un->status == 4)
+                                                    @if ($un->status == 5)
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-light">Belum Upload</a>
+                                                    @elseif ($un->status == 6)
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
+                                                    @elseif ($un->status == 7)
                                                         <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
-                                                    @elseif ($un->status == 5)
-                                                        <div class="badge badge-success">Disetujui</div>
+                                                    @elseif ($un->status == 8)
+                                                        <a href="/pegawai/st-pd/{{ $un->id }}" class="badge badge-success">Disetujui</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ ($un->status == 3 || $un->status == 4 || $un->status == 5) ? $un->tanggal_laporan : '' }}</td>
+                                                <td>{{ $un->tanggal_laporan ?? '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

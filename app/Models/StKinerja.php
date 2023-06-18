@@ -44,4 +44,9 @@ class StKinerja extends Model
     {
         return $this->hasMany(NormaHasil::class);
     }
+
+    public function pimpinan()
+    {
+        return $this->belongsTo(MasterPimpinan::class, 'penandatangan', 'id_pimpinan');
+    }
 }
