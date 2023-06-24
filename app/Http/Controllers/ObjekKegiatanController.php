@@ -158,4 +158,18 @@ class ObjekKegiatanController extends Controller
                 ]
         ]);
     }
+
+    public function objekByKategori($id){
+        if($id == 4){
+            $objek = ObjekKegiatan::all();
+        }else{
+            $objek = MasterObjek::where('kategori', $id)->get();
+        }
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Daftar Objek by Kategori',
+            'data'      => $objek
+        ]);
+    }
 }

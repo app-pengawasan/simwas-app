@@ -18,4 +18,8 @@ class MasterIKU extends Model
     public function sasaran(){
         return $this->belongsTo(MasterSasaran::class, 'id_sasaran');
     }
+
+    public function timKerja(){
+        return $this->hasMany(TimKerja::class, 'id_iku');
+    }
 }

@@ -14,8 +14,8 @@
                 </a>
             </li>
             <li class="menu-header">Kinerja Pegawai</li>
-            <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="{{ Request::is('pegawai/rencana-kinerja') ? 'active' : '' }}">
+                <a class="nav-link" href="/pegawai/rencana-kinerja">
                     <i class="fas fa-pencil-ruler"></i>
                     <span>Rencana Kinerja</span>
                 </a>

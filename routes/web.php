@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\http\Controllers\SessionController;
@@ -16,7 +18,11 @@ use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\ObjekKegiatanController;
-
+use App\Http\Controllers\ObjekPengawasanController;
+use App\Http\Controllers\PegawaiRencanaKerjaController;
+use App\Http\Controllers\PegawaiTugasController;
+use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\TimKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +92,26 @@ Route::resource('/admin/master-iku', MasterIKUController::class);
 
 //Master Hasil
 Route::resource('/admin/master-hasil', MasterHasilController::class);
+Route::resource('/admin/tim-kerja', TimKerjaController::class);
+
+//Rencana Kinerja
+Route::resource('/admin/rencana-kinerja', AdminRencanaKerjaController::class);
+Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
+Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
+
+/**
+ * ---------------------------------------------------------------------------
+ * PEGAWAI
+ * ---------------------------------------------------------------------------
+ * */
+Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
+Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
+Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
+Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
+Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
+Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+
 /**
  * ===========================================================================
  * End of Simwas

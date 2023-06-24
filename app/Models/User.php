@@ -84,4 +84,8 @@ class User extends Authenticatable
     public function masterPimpinan(){
         return $this->hasMany(MasterPimpinan::class, "id_user");
     }
+
+    public function pelaksanaTugas(){
+        return $this->hasMany(PelaksanaTugas::class, "id_pegawai");
+    }
 }

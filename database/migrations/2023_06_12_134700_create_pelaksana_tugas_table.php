@@ -14,13 +14,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('objek_kegiatans', function (Blueprint $table) {
-            $table->ulid('id_okegiatan')->primary()->default(Ulid::generate());
-            $table->string('kode_unitkerja');
-            $table->string('nama_unitkerja');
-            $table->string('kode_kegiatan');
-            $table->string('nama');
-            $table->string('inactive');
+        Schema::create('pelaksana_tugas', function (Blueprint $table) {
+            $table->ulid('id_pelaksana')->primary()->default(Ulid::generate());
+            $table->string('id_rencanakerja');
+            $table->string('id_pegawai');
+            $table->string('pt_jabatan');
+            $table->string('pt_hasil');
+            $table->string('pt_realisasi')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('objek_kegiatans');
+        Schema::dropIfExists('pelaksana_tugas');
     }
 };

@@ -14,13 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('objek_kegiatans', function (Blueprint $table) {
-            $table->ulid('id_okegiatan')->primary()->default(Ulid::generate());
-            $table->string('kode_unitkerja');
-            $table->string('nama_unitkerja');
-            $table->string('kode_kegiatan');
-            $table->string('nama');
-            $table->string('inactive');
+        Schema::create('anggaran_rencana_kerjas', function (Blueprint $table) {
+            $table->ulid('id_rkanggaran')->primary()->default(Ulid::generate());
+            $table->string('id_rencanakerja');
+            $table->string('uraian');
+            $table->string('satuan');
+            $table->integer('volume');
+            $table->bigInteger('harga');
+            $table->bigInteger('total');
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('objek_kegiatans');
+        Schema::dropIfExists('anggaran_rencana_kerjas');
     }
 };
