@@ -14,6 +14,22 @@ use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterHasilController;
 use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\StKinerjaController;
+use App\Http\Controllers\NormaHasilController;
+use App\Http\Controllers\StpController;
+use App\Http\Controllers\StpdController;
+use App\Http\Controllers\SlController;
+use App\Http\Controllers\KirimController;
+use App\Http\Controllers\EksternalController;
+use App\Http\Controllers\NomorSuratController;
+use App\Http\Controllers\SlSekreController;
+use App\Http\Controllers\NormaHasilSekreController;
+use App\Http\Controllers\SuratController;
+use App\Http\Controllers\InspekturStpController;
+use App\Http\Controllers\InspekturStpdController;
+use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WordController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\MasterUnitKerjaController;
@@ -65,6 +81,36 @@ Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'im
 
 //Master-pimpinan
 Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
+// Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+
+/**
+ * ---------------------------------------------------------------------------
+ * SEKRETARIS
+ * ---------------------------------------------------------------------------
+ * */
+Route::get('/sekretaris', function(){return view('sekretaris.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('sekretaris-dashboard');
+
+// Sekretaris-surat-lain
+Route::resource('sekretaris/usulan-surat', SlSekreController::class);
+
+// Sekretaris-norma-hasil
+Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
+
+/**
+ * ---------------------------------------------------------------------------
+ * INSPEKTUR
+ * ---------------------------------------------------------------------------
+ * */
+Route::get('/inspektur', function(){return view('inspektur.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('inspektur-dashboard');
+
+// Inspektur-stp
+Route::resource('inspektur/st-pp', InspekturStpController::class);
+
+// Inspektur-st-kinerja
+Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
+
+// Inspektur-st-pd
+Route::resource('inspektur/st-pd', InspekturStpdController::class);
 
 
 //Master Objek
@@ -130,6 +176,64 @@ Route::get('/dashboard-general-dashboard', function () {
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
 });
+
+// UserController
+Route::get('/search', [UserController::class, 'search'])->name('search');
+
+// ST Kinerja (Jangan lupa pake middleware)
+Route::resource('pegawai/st-kinerja', StKinerjaController::class)->names([
+    'index' => 'st-kinerja.index',
+    'show' => 'st-kinerja.show',
+]);
+
+// Norma Hasil (Jangan lupa pake middleware)
+Route::resource('pegawai/norma-hasil', NormaHasilController::class)->names([
+    'index' => 'norma-hasil.index',
+    'show' => 'norma-hasil.show',
+]);
+
+// ST Pengembangan Profesi
+Route::post('/get-nama-pp-by-pp', [StpController::class, 'getNamaPp']);
+Route::resource('pegawai/st-pp', StpController::class)->names([
+    'index' => 'st-pp.index'
+]);
+
+// ST Perjalanan Dinas
+Route::resource('pegawai/st-pd', StpdController::class)->names([
+    'index' => 'st-pd.index',
+    'show' => 'st-pd.show',
+]);
+
+// Surat Lain
+Route::resource('pegawai/surat-lain', SlController::class)->names([
+    'index' => 'surat-lain.index',
+    'show' => 'surat-lain.show'
+]);
+
+// Kirim Dokumen
+Route::resource('pegawai/kirim-dokumen', KirimController::class)->names([
+    'index' => 'kirim-dokumen.index',
+    'show' => 'kirim-dokumen.show',
+]);
+
+// Surat Eksternal
+Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form']);
+Route::resource('pegawai/eksternal', EksternalController::class)->names([
+    'index' => 'surat-eksternal.index',
+    'show' => 'surat-eksternal.show',
+]);
+
+// Usulan Nomor Surat
+Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
+
+// Surat
+Route::resource('sekretaris/surat', SuratController::class);
+
+// Templating dokumen
+Route::get('word', function () {
+    return view('word');
+});
+Route::post('word', [WordController::class, 'index'])->name('word.index');
 
 
 // Layout

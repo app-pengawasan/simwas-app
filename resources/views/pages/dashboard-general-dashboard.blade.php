@@ -11,6 +11,7 @@
 @endpush
 
 @section('main')
+@include('components.sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">

@@ -25,6 +25,16 @@
                         <i class="fas fa-user-shield"></i> Login sebagai Admin
                     </a>
                 @endif
+                @if (auth()->user()->is_sekma || auth()->user()->is_sekwil)
+                    <a href="{{ route('sekretaris-dashboard') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
+                    </a>
+                @endif
+                @if (auth()->user()->is_aktif)
+                    <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
+                        <i class="fas fa-user-shield"></i> Login sebagai Inspektur
+                    </a>
+                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2">
