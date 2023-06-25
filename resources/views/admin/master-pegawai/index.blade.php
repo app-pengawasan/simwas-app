@@ -99,7 +99,7 @@
                                                     <a class="btn btn-primary"
                                                         href="/admin/master-pegawai/{{ $user->id }}"
                                                         style="width: 42px">
-                                                        <i class="fas fa-info"></i>
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                     <a class="btn btn-warning"
                                                         href="/admin/master-pegawai/{{ $user->id }}/edit"
