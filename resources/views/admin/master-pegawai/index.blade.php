@@ -4,7 +4,7 @@
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="base-url" content="{{ route('master-pegawai.destroy', ':id') }}">
+    {{-- <meta name="base-url" content="{{ route('master-pegawai.destroy', ':id') }}"> --}}
     <!-- CSS Libraries -->
     <link
         href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.4/af-2.5.3/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/cr-1.6.2/date-1.4.1/fc-4.2.2/fh-3.3.2/kt-2.9.0/r-2.4.1/rg-1.3.1/rr-1.3.3/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/sr-1.2.2/datatables.min.css"
@@ -34,7 +34,7 @@
                             @csrf
                             <div class="form-group">
                                 <label>File</label>
-                                <input type="file" class="form-control" name="file" required>
+                                <input type="file" class="form-control" name="file" accept=".xlsx" required>
                                 <div class="invalid-feedback">
                                     File belum ditambahkan
                                 </div>
@@ -62,14 +62,7 @@
                                     href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
                                     class="link-primary fw-bold" download>disini</a>.
                             </p>
-                            @if (session()->has('success'))
-                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                    <p>{{ session('success') }}</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                            @include('components.flash')
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="/admin/master-pegawai/create">
@@ -103,32 +96,21 @@
                                                 <td>{{ $jabatan["$user->jabatan"] }}</td>
                                                 <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary mb-2 mr-2"
+                                                    <a class="btn btn-primary"
                                                         href="/admin/master-pegawai/{{ $user->id }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-info"></i>
                                                     </a>
-                                                    <a class="btn btn-warning mb-2 mr-2"
+                                                    <a class="btn btn-warning"
                                                         href="/admin/master-pegawai/{{ $user->id }}/edit"
                                                         style="width: 42px">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     @if ($user->id != auth()->user()->id)
-                                                        {{-- <a class="btn btn-danger"
-                                                            onclick="deleteData('{{ $user->id }}')"
-                                                            style="width: 42px">
+                                                        <a href="javascript:void(0)" class="btn btn-danger delete-btn"
+                                                            style="width: 42px" data-id="{{ $user->id }}">
                                                             <i class="fas fa-trash"></i>
-                                                        </a> --}}
-                                                        <form class="d-inline mb-2"
-                                                            action="{{ route('master-pegawai.destroy', $user->id) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                {{-- onclick="deleteData('{{ $user->id }}')" --}} style="width: 42px">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
+                                                        </a>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -142,6 +124,11 @@
             </div>
         </section>
     </div>
+    <form action="/admin/master-pegawai/:id" method="post" id="form-delete">
+        @csrf
+        @method('delete')
+        <button type="submit"></button>
+    </form>
 @endsection
 
 @push('scripts')
@@ -163,5 +150,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/master-pegawai.js"></script>
+    <script src="{{ asset('js/page/admin/master-pegawai.js') }}"></script>
 @endpush

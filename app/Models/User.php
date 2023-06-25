@@ -11,7 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUlids;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use HasUlids;
 
     /**
      * The primary key associated with the table
@@ -80,10 +83,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class);
     }
-    public function masterPimpinan(){
+    public function masterPimpinan()
+    {
         return $this->hasMany(MasterPimpinan::class, "id_user");
     }
 
+    public function pelaksanaTugas()
+    {
+        return $this->hasMany(PelaksanaTugas::class, "id_pegawai");
+    }
     public function suratLain()
     {
         return $this->hasMany(Sl::class);

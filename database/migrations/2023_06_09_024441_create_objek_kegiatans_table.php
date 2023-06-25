@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('nama_unitkerja');
             $table->string('kode_kegiatan');
             $table->string('nama');
+            $table->string('inactive');
             $table->timestamps();
         });
     }

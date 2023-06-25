@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\http\Controllers\SessionController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterHasilController;
 use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\StKinerjaController;
@@ -28,15 +31,19 @@ use App\Http\Controllers\SuratController;
 use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\ObjekKegiatanController;
-use App\Models\MasterIKU;
-use App\Models\MasterSasaran;
-use App\Models\MasterTujuan;
+use App\Http\Controllers\ObjekPengawasanController;
+use App\Http\Controllers\PegawaiRencanaKerjaController;
+use App\Http\Controllers\PegawaiTugasController;
+use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
+use App\Http\Controllers\TimKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,6 +159,45 @@ Route::resource('/admin/master-sasaran', MasterSasaranController::class);
 
 //Master IKU
 Route::resource('/admin/master-iku', MasterIKUController::class);
+
+//Master Hasil
+Route::resource('/admin/master-hasil', MasterHasilController::class);
+Route::resource('/admin/tim-kerja', TimKerjaController::class);
+
+//Rencana Kinerja
+Route::resource('/admin/rencana-kinerja', AdminRencanaKerjaController::class);
+Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
+Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
+
+/**
+ * ---------------------------------------------------------------------------
+ * PIMPINAN
+ * ---------------------------------------------------------------------------
+ * */
+//Rencana Kinerja
+Route::resource('/pimpinan/rencana-kinerja', PimpinanRencanKerjaController::class);
+Route::put('/pimpinan/rencana-kinerja/accept/{id}', [PimpinanRencanKerjaController::class, 'accept']);
+Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaController::class, 'sendBackToKetuaTim']);
+
+/**
+ * ---------------------------------------------------------------------------
+ * PEGAWAI
+ * ---------------------------------------------------------------------------
+ * */
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/pegawai/dashboard', function () {
+        return view('pegawai.index', ['type_menu' => 'dashboard']);
+    })->name('dashboard');
+    Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
+    Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
+    Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
+    Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
+    Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
+    Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
+    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+});
+
 /**
  * ===========================================================================
  * End of Simwas
@@ -159,7 +205,6 @@ Route::resource('/admin/master-iku', MasterIKUController::class);
  * */
 
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
-
 // Dashboard
 Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->middleware('auth')->name('dashboard');
 Route::get('/dashboard-general-dashboard', function () {

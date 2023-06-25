@@ -18,7 +18,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->default(Ulid::generate());
             $table->date('tanggal')->nullable();
             $table->string('user_id', 26);
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('unit_kerja');
             $table->integer('tim_kerja');
             $table->integer('tugas');
@@ -29,9 +29,9 @@ return new class extends Migration
             $table->boolean('is_gugus_tugas');
             $table->boolean('is_perseorangan')->nullable();
             $table->string('dalnis_id', 26)->nullable();
-            $table->foreign('dalnis_id')->references('id')->on('users');
+            $table->foreign('dalnis_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('ketua_koor_id', 26)->nullable();
-            $table->foreign('ketua_koor_id')->references('id')->on('users');
+            $table->foreign('ketua_koor_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('anggota')->nullable();
             $table->string('penandatangan', 26)->nullable();
             $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans');

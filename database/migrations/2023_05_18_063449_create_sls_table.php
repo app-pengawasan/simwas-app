@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('sls', function (Blueprint $table) {
             $table->ulid('id')->primary()->default(Ulid::generate());
             $table->string('user_id', 26);
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->boolean('is_backdate');
             $table->date('tanggal')->nullable();
             $table->string('jenis_surat');
