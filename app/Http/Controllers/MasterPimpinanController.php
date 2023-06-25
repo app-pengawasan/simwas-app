@@ -78,6 +78,7 @@ class MasterPimpinanController extends Controller
         'jpm001'      => 'Inspektur Wilayah I',
         'jpm002'      => 'Inspektur Wilayah II',
         'jpm003'      => 'Inspektur Wilayah III',
+        'jpm004'      => 'Kepala Bagian Umum'
     ];
 
 
@@ -138,7 +139,7 @@ class MasterPimpinanController extends Controller
         // $validateData = $request->validate($rules);
 
         MasterPimpinan::create($validateData);
-        return redirect(route('master-pimpinan.index'))->with('success', 'Berhasil menambah data pimpinan.');
+        return redirect(route('master-pimpinan.index'))->with('status', 'Berhasil Menambah Pimpinan.')->with('alert-type', 'success');
     }
 
     /**
@@ -202,7 +203,7 @@ class MasterPimpinanController extends Controller
         $validateData = $request->validate($rules);
 
         MasterPimpinan::where('id_pimpinan', $id)->update($validateData);
-        return redirect(route('master-pimpinan.index'))->with('success', 'Berhasil memperbarui data pimpinan.');
+        return redirect(route('master-pimpinan.index'))->with('status', 'Berhasil Memperbarui Pimpinan.')->with('alert-type', 'success');
         // return $request;
     }
 
@@ -215,6 +216,9 @@ class MasterPimpinanController extends Controller
     public function destroy($id)
     {
         MasterPimpinan::destroy($id);
-        return back()->with('success', 'Berhasil menghapus data pimpinan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!',
+        ]);
     }
 }

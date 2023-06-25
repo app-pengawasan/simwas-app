@@ -1,4 +1,4 @@
-let table = $("#table-master-pegawai");
+let table = $("#table-master-pimpinan");
 
 $(function () {
     table
@@ -28,7 +28,7 @@ $(function () {
         })
         .buttons()
         .container()
-        .appendTo("#master-pegawai_wrapper .col-md-6:eq(0)");
+        .appendTo("#master-pimpinan_wrapper .col-md-6:eq(0)");
 });
 
 // Kembali ke Halaman sebelumnya
@@ -36,7 +36,7 @@ $("#btn-back").on("click", function (e) {
     e.preventDefault();
     Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Data pegawai belum tersimpan.",
+        text: "Data pimpinan belum tersimpan.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#394eea",
@@ -45,8 +45,7 @@ $("#btn-back").on("click", function (e) {
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
-            // window.location.href("admin/master-pegawai");
-            window.location.href = "/admin/master-pegawai";
+            window.location.href = "/admin/master-pimpinan";
         }
     });
 });
@@ -69,12 +68,8 @@ $(".delete-btn").on("click", function (e) {
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
-            // let formDelete = $("#form-delete");
-            // formDelete[0].action = formDelete[0].action.replace(":id", dataId);
-            // formDelete[0].submit();
-            // console.log(formDelete.button);
             $.ajax({
-                url: `/admin/master-pegawai/${dataId}`,
+                url: `/admin/master-pimpinan/${dataId}`,
                 method: "DELETE",
                 cache: false,
                 data: {
