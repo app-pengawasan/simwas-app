@@ -164,7 +164,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                {{-- Admin --}}
                 @if (Request::is('admin/rencana-kinerja/*'))
                     <button class="btn btn-danger" id="btn-admin-send-back">
                         <i class="fas fa-undo"></i>
@@ -177,23 +176,9 @@
                         </button>
                     @endif
                 @endif
-                {{-- Ketua Tim --}}
-                @if (Request::is('ketua-tim/rencana-kinerja/*'))
+                @if (Request::is('pegawai/rencana-kinerja/*'))
                     @if ($timKerja->status < 2)
                         <button class="btn btn-success"><i class="far fa-paper-plane"></i> Ajukan </button>
-                    @endif
-                @endif
-                {{-- Pimpinan --}}
-                @if (Request::is('pimpinan/rencana-kinerja/*'))
-                    @if ($timKerja->status == 5)
-                        <button class="btn btn-danger" id="btn-pimpinan-send-back">
-                            <i class="fas fa-undo"></i>
-                            Kembalikan
-                        </button>
-                        <button class="btn btn-success" id="btn-pimpinan-submit-rk">
-                            <i class="far fa-check-circle"></i>
-                            Terima
-                        </button>
                     @endif
                 @endif
             </div>

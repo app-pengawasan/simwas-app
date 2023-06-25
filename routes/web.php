@@ -28,6 +28,7 @@ use App\Http\Controllers\SuratController;
 use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
 use App\Http\Controllers\MasterSasaranController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PegawaiTugasController;
 use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\TimKerjaController;
 
 /*
@@ -147,10 +149,21 @@ Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::c
 
 /**
  * ---------------------------------------------------------------------------
+ * PIMPINAN
+ * ---------------------------------------------------------------------------
+ * */
+//Rencana Kinerja
+Route::resource('/pimpinan/rencana-kinerja', PimpinanRencanKerjaController::class);
+Route::put('/pimpinan/rencana-kinerja/accept/{id}', [PimpinanRencanKerjaController::class, 'accept']);
+Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaController::class, 'sendBackToKetuaTim']);
+
+/**
+ * ---------------------------------------------------------------------------
  * PEGAWAI
  * ---------------------------------------------------------------------------
  * */
 Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
 Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
 Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
 Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
