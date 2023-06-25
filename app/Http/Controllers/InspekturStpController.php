@@ -94,6 +94,7 @@ class InspekturStpController extends Controller
      */
     public function index()
     {
+        $this->authorize('inspektur');
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $usulan = Stp::latest()->get();
         } else {
@@ -132,6 +133,7 @@ class InspekturStpController extends Controller
      */
     public function show(Stp $st_pp)
     {
+        $this->authorize('inspektur');
         $pegawaiArray = explode(', ', $st_pp->pegawai);
         $users = \App\Models\User::whereIn('id', $pegawaiArray)->get();
         $nama = $users->pluck('name')->toArray();
@@ -151,6 +153,7 @@ class InspekturStpController extends Controller
      */
     public function edit(Stp $st_pp)
     {
+        $this->authorize('inspektur');
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
@@ -178,6 +181,7 @@ class InspekturStpController extends Controller
      */
     public function update(Request $request, Stp $st_pp)
     {
+        $this->authorize('inspektur');
         if ($request->input('status') == '1' || $request->input('status') == '4' || $request->input('status') == '7') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
@@ -230,7 +234,7 @@ class InspekturStpController extends Controller
             
             // Path untuk menyimpan hasil dokumen
             $tempFilePath = 'storage/temp/temp_file.docx';
-            $outputPath = 'st-pp'.'/'.$usulan->id.'-draft.pdf';
+            $outputPath = 'st-pp'.'/'.$usulan->id.'-draft.docx';
 
             // Ambil pegawai
             $pegawaiArray = explode(', ', $usulan->pegawai);
@@ -242,29 +246,8 @@ class InspekturStpController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
-
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'nama' => $usulan->user->name,
-                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                        'nip' => $usulan->user->nip,
-                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'pembebanan' => $usulan->pembebanan->nama,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-
-                } else {
-                    // Path ke template dokumen .docx
-                    $stpPerseoranganPath = 'document/template-dokumen/draft-st-pp-perorangan-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
                         'nama' => $usulan->user->name,
@@ -280,7 +263,28 @@ class InspekturStpController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpPerseoranganPath = 'document/template-dokumen/draft-st-pp-perorangan-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
                 
             } else {
@@ -309,25 +313,6 @@ class InspekturStpController extends Controller
                     
                     $templateProcessor->cloneRowAndSetValues('no', $values);
                     
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'pembebanan' => $usulan->pembebanan->nama,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-                } else {
-                    // Path ke template dokumen .docx
-                    $stpKolektifPath = 'document/template-dokumen/draft-st-pp-kolektif-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stpKolektifPath);
-                    
-                    $templateProcessor->cloneRowAndSetValues('no', $values);
-
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -340,16 +325,35 @@ class InspekturStpController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpKolektifPath = 'document/template-dokumen/draft-st-pp-kolektif-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpKolektifPath);
+                    
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
             }
 
-            $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
+            //$this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
 
 
             // Hapus file temporary .docx
-            unlink($tempFilePath);
-            unlink('storage/temp/file.html');
+            // unlink($tempFilePath);
+            // unlink('storage/temp/file.html');
 
             $validatedData = ([
                 'status' => '2',

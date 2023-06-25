@@ -80,6 +80,7 @@ class SlSekreController extends Controller
      */
     public function index()
     {
+        $this->authorize('sekretaris');
         if (auth()->user()->is_sekma) {
             $usulan = Sl::latest()->get();
         } else {
@@ -118,6 +119,7 @@ class SlSekreController extends Controller
      */
     public function show(Sl $usulan_surat)
     {
+        $this->authorize('sekretaris');
         return view('sekretaris.usulan-surat.show', [
             "usulan" => $usulan_surat
         ]);
@@ -131,6 +133,7 @@ class SlSekreController extends Controller
      */
     public function edit(Sl $usulan_surat)
     {
+        $this->authorize('sekretaris');
         $kka = Kka::all()->where('is_aktif', true);
         return view('sekretaris.usulan-surat.edit', [
             "kka" => $kka,
@@ -147,6 +150,7 @@ class SlSekreController extends Controller
      */
     public function update(Request $request, Sl $usulan_surat)
     {
+        $this->authorize('sekretaris');
         if ($request->input('status') == '1' || $request->input('status') == '4') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
@@ -184,7 +188,7 @@ class SlSekreController extends Controller
                 'derajat_klasifikasi' => $usulan->derajat_klasifikasi,
                 'nomor_organisasi' => $usulan->unit_kerja,
                 'kka' => $usulan->kka->kode,
-                'tanggal' => $usulan->tanggal,
+                'tanggal' => $tanggal,
                 'jenis' => $usulan->jenis_surat,
                 'is_backdate' => $usulan->is_backdate
             ]);

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Usulan ST Kinerja dan Norma Hasil')
+@section('title', 'Detail Usulan ST Kinerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -51,10 +51,10 @@
         </div>
         <section class="section">
             <div class="section-header">
-                <h1>Detail Usulan ST Kinerja dan Norma Hasil</h1>
+                <h1>Detail Usulan ST Kinerja</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item active"><a href="/inspektur/st-kinerja">ST Kinerja dan Norma Hasil</a></div>
+                    <div class="breadcrumb-item active"><a href="/inspektur/st-kinerja">ST Kinerja</a></div>
                     <div class="breadcrumb-item">Detail</div>
                 </div>
             </div>

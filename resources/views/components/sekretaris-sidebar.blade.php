@@ -16,7 +16,7 @@
             </li>
             <li class="{{ Request::is('sekretaris/norma-hasil*') ? 'active' : '' }}">
                 <a class="nav-link" href="/sekretaris/norma-hasil">
-                    <i class="fas fa-file"></i>
+                    <i class="fas fa-check"></i>
                     <span>Norma Hasil</span>
                 </a>
             </li>
@@ -26,18 +26,12 @@
                     <span>Usulan Surat</span>
                 </a>
             </li>
-            <li class="{{ Request::is('sekretaris/surat-eksternal*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('sekretaris/surat-eksternal*') ? 'active' : '' }}">
                 <a class="nav-link" href="sekretaris/surat-eksternal">
                     <i class="fas fa-file-export"></i>
                     <span>Surat Eksternal</span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
-
-        <div class="hide-sidebar-mini mt-4 mb-4 p-3">
-            <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Documentation
-            </a>
-        </div>
     </aside>
 </div>

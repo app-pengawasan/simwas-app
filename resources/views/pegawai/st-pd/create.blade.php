@@ -41,28 +41,28 @@
                                     @csrf
                                     <input type="hidden" name="status" value="0">
                                     <div class="form-group">
-                                        <div class="control-label">Backdate</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_backdate') == '1' ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_backdate') == '0' ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <label class="d-block">Backdate</label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_backdate"
+                                                value="1"
+                                                {{ old('is_backdate') == '1' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_backdate_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_backdate"
+                                                value="0"
+                                                {{ old('is_backdate') == '0' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_backdate_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div id="tanggalInputContainer" style="display: none;">
@@ -94,30 +94,29 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="control-label">Bagian dari ST Kinerja</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_st_kinerja"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_st_kinerja') == '1' ? 'checked' : '' }}
-                                                    onchange="toggleStKinerjaInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_st_kinerja"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_st_kinerja') == '0' ? 'checked' : '' }}
-                                                    onchange="toggleStKinerjaInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_st_kinerja"
+                                                value="1"
+                                                {{ old('is_st_kinerja') == '1' ? 'checked' : '' }}
+                                                onchange="toggleStKinerjaInput(this)"
+                                                id="is_st_kinerja_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_st_kinerja_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_st_kinerja"
+                                                value="0"
+                                                {{ old('is_st_kinerja') == '0' ? 'checked' : '' }}
+                                                onchange="toggleStKinerjaInput(this)"
+                                                id="is_st_kinerja_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_st_kinerja_tidak">Tidak</label>
                                         </div>
                                     </div>
-                                    
                                     <div class="form-group" id="stKinerjaContainer" style="display: none;">
                                         <label for="st_kinerja_id">ST Kinerja</label>
                                         <select class="form-control select2 @error('st_kinerja_id') is-invalid @enderror" id="st_kinerja_id" name="st_kinerja_id">
@@ -198,27 +197,27 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="control-label">E-Sign</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_esign"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_esign') == '1' ? 'checked' : '' }}
-                                                    onchange="toggleEsignInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_esign"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_esign') == '0' ? 'checked' : '' }}
-                                                    onchange="toggleEsignInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_esign"
+                                                value="1"
+                                                {{ old('is_esign') == '1' ? 'checked' : '' }}
+                                                onchange="toggleEsignInput(this)"
+                                                id="is_esign_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_esign_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_esign"
+                                                value="0"
+                                                {{ old('is_esign') == '0' ? 'checked' : '' }}
+                                                onchange="toggleEsignInput(this)"
+                                                id="is_esign_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_esign_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div id="penandatanganContainer" style="display: none;" class="form-group">

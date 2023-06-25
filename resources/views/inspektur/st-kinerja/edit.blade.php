@@ -47,28 +47,28 @@
                                     <input type="hidden" name="edit" value="1">
                                     <input type="hidden" name="id" value="{{ $usulan->id }}">
                                     <div class="form-group">
-                                        <div class="control-label">Backdate</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ (old('is_backdate', $usulan->is_backdate) == '1') ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_backdate"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ (old('is_backdate', $usulan->is_backdate) == '0') ? 'checked' : '' }}
-                                                    onchange="toggleBackdateInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <label class="d-block">Backdate</label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_backdate"
+                                                value="1"
+                                                {{ old('is_backdate', $usulan->is_backdate) == '1' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_backdate_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_backdate"
+                                                value="0"
+                                                {{ old('is_backdate', $usulan->is_backdate) == '0' ? 'checked' : '' }}
+                                                onchange="toggleBackdateInput(this)"
+                                                id="is_backdate_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_backdate_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div id="tanggalInputContainer" style="display: none;">
@@ -153,53 +153,53 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <div class="control-label">Gugus Tugas</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '1' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '0' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <label class="d-block">Gugus Tugas</label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_gugus_tugas"
+                                                value="1"
+                                                {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '1' ? 'checked' : '' }}
+                                                onchange="toggleGugusTugasInput(this)"
+                                                id="is_gugus_tugas_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_gugus_tugas_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_gugus_tugas"
+                                                value="0"
+                                                {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '0' ? 'checked' : '' }}
+                                                onchange="toggleGugusTugasInput(this)"
+                                                id="is_gugus_tugas_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_gugus_tugas_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div class="form-group" id="perseoranganContainer" style="display: none;">
                                         <div class="control-label">Jenis</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_perseorangan"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '1' ? 'checked' : '' }}
-                                                    onchange="togglePerseoranganInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">1 orang</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_perseorangan"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '0' ? 'checked' : '' }}
-                                                    onchange="togglePerseoranganInput(this)">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Kolektif</span>
-                                            </label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_perseorangan"
+                                                value="1"
+                                                {{ old('is_perseorangan', $usulan->is_perseorangan) == '1' ? 'checked' : '' }}
+                                                onchange="togglePerseoranganInput(this)"
+                                                id="is_perseorangan_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_perseorangan_ya">1 orang</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_perseorangan"
+                                                value="0"
+                                                {{ old('is_perseorangan', $usulan->is_perseorangan) == '0' ? 'checked' : '' }}
+                                                onchange="togglePerseoranganInput(this)"
+                                                id="is_perseorangan_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_perseorangan_tidak">Kolektif</label>
                                         </div>
                                     </div>
                                     <div class="form-group" id="dalnisContainer" style="display: none;">
@@ -246,25 +246,27 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="control-label">E-Sign</div>
-                                        <div class="custom-switches-stacked mt-2">
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_esign"
-                                                    value="1"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}>
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Ya</span>
-                                            </label>
-                                            <label class="custom-switch">
-                                                <input type="radio"
-                                                    name="is_esign"
-                                                    value="0"
-                                                    class="custom-switch-input"
-                                                    {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}>
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Tidak</span>
-                                            </label>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_esign"
+                                                value="1"
+                                                {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}
+                                                onchange="toggleEsignInput(this)"
+                                                id="is_esign_ya"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_esign_ya">Ya</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio"
+                                                name="is_esign"
+                                                value="0"
+                                                {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}
+                                                onchange="toggleEsignInput(this)"
+                                                id="is_esign_tidak"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label"
+                                                for="is_esign_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div class="form-group">

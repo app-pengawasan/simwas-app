@@ -43,7 +43,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-sekretaris">
+                                    <table class="table table-bordered table-striped display responsive" id="table-sekretaris-usulan-surat">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -76,7 +76,7 @@
                                                 </td>
                                                 <td>
                                                     @if($un->status == 2)
-                                                        <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-light">Belum Upload NH TTD</div></a>
+                                                        <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-light">Belum Upload Surat TTD</div></a>
                                                     @elseif($un->status == 3)
                                                     <a href="/sekretaris/usulan-surat/{{ $un->id }}"><div class="badge badge-warning">Menunggu Persetujuan</div></a>
                                                     @elseif($un->status == 4)
@@ -118,5 +118,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/sekretaris-pengelolaan-dokumen.js"></script>
+    <script src="{{ asset('js') }}/page/sekretaris-usulan-surat.js"></script>
 @endpush

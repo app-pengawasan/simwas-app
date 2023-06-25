@@ -38,7 +38,7 @@
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped display responsive"
-                                        id="table-pengelolaan-dokumen-inspektur">
+                                        id="table-inspektur-perjalanan-dinas">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -123,5 +123,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/inspektur-pengelolaan-dokumen.js"></script>
+    <script src="{{ asset('js') }}/page/inspektur-st-perjalanan-dinas.js"></script>
 @endpush

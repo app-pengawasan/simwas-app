@@ -37,28 +37,28 @@
                                         <input type="hidden" name="status" value="2">
                                         <input type="hidden" name="edit" value="1">
                                         <div class="form-group">
-                                            <div class="control-label">Backdate</div>
-                                            <div class="custom-switches-stacked mt-2">
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_backdate"
-                                                        value="1"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_backdate', $usulan->is_backdate) == '1' ? 'checked' : '' }}
-                                                        onchange="toggleBackdateInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Ya</span>
-                                                </label>
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_backdate"
-                                                        value="0"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_backdate', $usulan->is_backdate) == '0' ? 'checked' : '' }}
-                                                        onchange="toggleBackdateInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Tidak</span>
-                                                </label>
+                                            <label class="d-block">Backdate</label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="1"
+                                                    {{ old('is_backdate', $usulan->is_backdate) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)"
+                                                    id="is_backdate_ya"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_backdate_ya">Ya</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="0"
+                                                    {{ old('is_backdate', $usulan->is_backdate) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)"
+                                                    id="is_backdate_tidak"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_backdate_tidak">Tidak</label>
                                             </div>
                                         </div>
                                         <div id="tanggalInputContainer" style="display: none;" class="form-group">

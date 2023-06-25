@@ -36,7 +36,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-sekretaris">
+                                    <table class="table table-bordered table-striped display responsive" id="table-sekretaris-norma-hasil">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -112,5 +112,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/sekretaris-pengelolaan-dokumen.js"></script>
+    <script src="{{ asset('js') }}/page/sekretaris-norma-hasil.js"></script>
 @endpush

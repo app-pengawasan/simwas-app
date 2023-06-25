@@ -160,7 +160,7 @@ aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                     <th>:</th>
                                                     <td>
                                                     @if($usulan->status == 2)
-                                                        <div class="badge badge-light">Belum Upload NH TTD</div>
+                                                        <div class="badge badge-light">Belum Upload Surat TTD</div>
                                                     @elseif($usulan->status == 3)
                                                         <div class="badge badge-warning">Menunggu Persetujuan</div>
                                                     @elseif($usulan->status == 4)

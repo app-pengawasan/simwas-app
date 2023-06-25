@@ -33,6 +33,11 @@
                         <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
                     </a>
                 @endif
+                @if (auth()->user()->is_analissdm)
+                <a href="{{ route('analis-sdm-pp') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
+                </a>
+                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2">

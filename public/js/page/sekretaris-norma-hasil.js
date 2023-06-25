@@ -1,6 +1,6 @@
 // const { concat } = require("lodash");
 
-let table = $("#table-pengelolaan-dokumen-inspektur");
+let table = $("#table-sekretaris-norma-hasil");
 let base_url = $("meta[name='base-url']").attr("content");
 let token = $("meta[name='csrf-token']").attr("content");
 
@@ -16,7 +16,7 @@ $(function () {
                     extend: "excel",
                     className: "btn-success",
                     exportOptions: {
-                        columns: [0, 1, 2, 3],
+                        columns: [1, 2, 3, 4, 5, 6, 7],
                     },
                 }
             ],
@@ -29,7 +29,7 @@ $(function () {
         })
         .buttons()
         .container()
-        .appendTo("#table-pengelolaan-dokumen-inspektur_wrapper .col-md-6:eq(0)");
+        .appendTo("#table-sekretaris-norma-hasil_wrapper .col-md-6:eq(0)");
 });
 
 let deleteData = (id) => {

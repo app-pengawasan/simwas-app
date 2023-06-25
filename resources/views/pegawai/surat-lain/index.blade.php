@@ -81,7 +81,7 @@
                                                 </td>
                                                 <td>
                                                     @if($un->status == 2)
-                                                        <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-light">Belum Upload NH TTD</div></a>
+                                                        <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-light">Belum Upload Surat TTD</div></a>
                                                     @elseif($un->status == 3)
                                                         <a href="/pegawai/surat-lain/{{ $un->id }}"><div class="badge badge-warning">Menunggu Persetujuan</div></a>
                                                     @elseif($un->status == 4)

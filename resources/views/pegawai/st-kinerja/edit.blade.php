@@ -49,28 +49,28 @@
                                         @endphp
                                         <input type="hidden" name="status" value="0">
                                         <div class="form-group">
-                                            <div class="control-label">Backdate</div>
-                                            <div class="custom-switches-stacked mt-2">
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_backdate"
-                                                        value="1"
-                                                        class="custom-switch-input"
-                                                        {{ (old('is_backdate', $usulan->is_backdate) == '1') ? 'checked' : '' }}
-                                                        onchange="toggleBackdateInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Ya</span>
-                                                </label>
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_backdate"
-                                                        value="0"
-                                                        class="custom-switch-input"
-                                                        {{ (old('is_backdate', $usulan->is_backdate) == '0') ? 'checked' : '' }}
-                                                        onchange="toggleBackdateInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Tidak</span>
-                                                </label>
+                                            <label class="d-block">Backdate</label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="1"
+                                                    {{ old('is_backdate', $usulan->is_backdate) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)"
+                                                    id="is_backdate_ya"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_backdate_ya">Ya</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_backdate"
+                                                    value="0"
+                                                    {{ old('is_backdate', $usulan->is_backdate) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleBackdateInput(this)"
+                                                    id="is_backdate_tidak"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_backdate_tidak">Tidak</label>
                                             </div>
                                         </div>
                                         <div id="tanggalInputContainer" style="display: none;">
@@ -155,53 +155,53 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <div class="control-label">Gugus Tugas</div>
-                                            <div class="custom-switches-stacked mt-2">
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_gugus_tugas"
-                                                        value="1"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '1' ? 'checked' : '' }}
-                                                        onchange="toggleGugusTugasInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Ya</span>
-                                                </label>
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_gugus_tugas"
-                                                        value="0"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '0' ? 'checked' : '' }}
-                                                        onchange="toggleGugusTugasInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Tidak</span>
-                                                </label>
+                                            <label class="d-block">Gugus Tugas</label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_gugus_tugas"
+                                                    value="1"
+                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleGugusTugasInput(this)"
+                                                    id="is_gugus_tugas_ya"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_gugus_tugas_ya">Ya</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_gugus_tugas"
+                                                    value="0"
+                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleGugusTugasInput(this)"
+                                                    id="is_gugus_tugas_tidak"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_gugus_tugas_tidak">Tidak</label>
                                             </div>
                                         </div>
                                         <div class="form-group" id="perseoranganContainer" style="display: none;">
                                             <div class="control-label">Jenis</div>
-                                            <div class="custom-switches-stacked mt-2">
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_perseorangan"
-                                                        value="1"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_perseorangan', $usulan->is_perseorangan) == '1' ? 'checked' : '' }}
-                                                        onchange="togglePerseoranganInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">1 orang</span>
-                                                </label>
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_perseorangan"
-                                                        value="0"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_perseorangan', $usulan->is_perseorangan) == '0' ? 'checked' : '' }}
-                                                        onchange="togglePerseoranganInput(this)">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Kolektif</span>
-                                                </label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_perseorangan"
+                                                    value="1"
+                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '1' ? 'checked' : '' }}
+                                                    onchange="togglePerseoranganInput(this)"
+                                                    id="is_perseorangan_ya"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_perseorangan_ya">1 orang</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_perseorangan"
+                                                    value="0"
+                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '0' ? 'checked' : '' }}
+                                                    onchange="togglePerseoranganInput(this)"
+                                                    id="is_perseorangan_tidak"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_perseorangan_tidak">Kolektif</label>
                                             </div>
                                         </div>
                                         <div class="form-group" id="dalnisContainer" style="display: none;">
@@ -248,28 +248,30 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="control-label">E-Sign</div>
-                                            <div class="custom-switches-stacked mt-2">
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_esign"
-                                                        value="1"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}>
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Ya</span>
-                                                </label>
-                                                <label class="custom-switch">
-                                                    <input type="radio"
-                                                        name="is_esign"
-                                                        value="0"
-                                                        class="custom-switch-input"
-                                                        {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}>
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">Tidak</span>
-                                                </label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_esign"
+                                                    value="1"
+                                                    {{ old('is_esign', $usulan->is_esign) == '1' ? 'checked' : '' }}
+                                                    onchange="toggleEsignInput(this)"
+                                                    id="is_esign_ya"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_esign_ya">Ya</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio"
+                                                    name="is_esign"
+                                                    value="0"
+                                                    {{ old('is_esign', $usulan->is_esign) == '0' ? 'checked' : '' }}
+                                                    onchange="toggleEsignInput(this)"
+                                                    id="is_esign_tidak"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label"
+                                                    for="is_esign_tidak">Tidak</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group"  id="penandatanganContainer" style="display: none;">
                                             <label for="penandatangan">Penanda tangan</label>
                                             <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
                                                 <option value="">Pilih penanda tangan</option>
@@ -310,14 +312,18 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+                console.log("Baris 1");
                 var tanggalInputContainer = document.getElementById('tanggalInputContainer');
                 var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
                 var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
                 toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
-
+                
                 var penandatanganContainer = document.getElementById('penandatanganContainer');
                 var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
                 toggleEsignInput(isEsignInput, penandatanganContainer);
+                console.log(isEsignInput)
+
+                console.log("Baris 2");
 
                 var perseoranganContainer = document.getElementById('perseoranganContainer');
                 var dalnisContainer = document.getElementById('dalnisContainer');
@@ -325,8 +331,14 @@
                 var anggotaContainer = document.getElementById('anggotaContainer');
                 var koordinator = document.getElementById('koordinator');
                 var ketua = document.getElementById('ketua');
-                var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked');
+                var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked')
+                console.log("Gugus Tugas", isGugusTugasInput);
                 toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
+                
+                
+
+                console.log("Baris 3");
+
                 
                 var dalnisContainer = document.getElementById('dalnisContainer');
                 var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
@@ -396,16 +408,18 @@
             var koordinator = document.getElementById('koordinator');
             var ketua = document.getElementById('ketua');
     
-            if (input.value === '1') {
-                dalnisContainer.style.display = 'none';
-                ketuaKoorContainer.style.display = 'none';
-                anggotaContainer.style.display = 'none';
-            } else {
-                dalnisContainer.style.display = 'none';
-                ketuaKoorContainer.style.display = 'block';
-                anggotaContainer.style.display = 'block';
-                koordinator.style.display = 'block';
-                ketua.style.display = 'none';
+            if (input) {
+                if (input.value === '1') {
+                    dalnisContainer.style.display = 'none';
+                    ketuaKoorContainer.style.display = 'none';
+                    anggotaContainer.style.display = 'none';
+                } else {
+                    dalnisContainer.style.display = 'none';
+                    ketuaKoorContainer.style.display = 'block';
+                    anggotaContainer.style.display = 'block';
+                    koordinator.style.display = 'block';
+                    ketua.style.display = 'none';
+                }
             }
         }
     </script>

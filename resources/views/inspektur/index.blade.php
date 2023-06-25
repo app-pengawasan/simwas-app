@@ -17,6 +17,52 @@
                 <h1>Inspektur Dashboard</h1>
             </div>
             <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-primary">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Usulan ST Kinerja</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $stk }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-danger">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Usulan ST Pengembangan Profesi</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $stp }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-warning">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Usulan ST Perjalanan Dinas</h4>
+                            </div>
+                            <div class="card-body">
+                                {{ $stpd }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
             </div>
         </section>
     </div>

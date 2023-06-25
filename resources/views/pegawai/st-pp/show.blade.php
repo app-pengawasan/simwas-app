@@ -10,11 +10,6 @@
         href="{{ asset('library/datatables/media/css/jquery.dataTables.min.css') }}">
 @endpush
 
-@section('header-app')
-@endsection
-@section('sidebar')
-@endsection
-
 @section('main')
     @include('components.header')
     @include('components.pegawai-sidebar')

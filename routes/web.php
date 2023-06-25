@@ -7,6 +7,7 @@ use App\Http\Controllers\SatuanKerjaController;
 use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\WilayahKerjaController;
 use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterIKUController;
@@ -21,6 +22,8 @@ use App\Http\Controllers\EksternalController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\SlSekreController;
 use App\Http\Controllers\NormaHasilSekreController;
+use App\Http\Controllers\PpController;
+use App\Http\Controllers\NamaPpController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\InspekturStpdController;
@@ -83,7 +86,8 @@ Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
  * SEKRETARIS
  * ---------------------------------------------------------------------------
  * */
-Route::get('/sekretaris', function(){return view('sekretaris.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('sekretaris-dashboard');
+
+Route::get('/sekretaris', [DashboardController::class, 'sekretaris'])->middleware('auth')->name('sekretaris-dashboard');
 
 // Sekretaris-surat-lain
 Route::resource('sekretaris/usulan-surat', SlSekreController::class);
@@ -93,10 +97,24 @@ Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
 
 /**
  * ---------------------------------------------------------------------------
+ * ANALIS SDM
+ * ---------------------------------------------------------------------------
+ * */
+Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
+
+Route::resource('analis-sdm/pp', PpController::class)->names([
+    'index' => 'analis-sdm-pp',
+    'show' => 'st-kinerja.show',
+]);
+
+Route::resource('analis-sdm/namaPp', NamaPpController::class);
+
+/**
+ * ---------------------------------------------------------------------------
  * INSPEKTUR
  * ---------------------------------------------------------------------------
  * */
-Route::get('/inspektur', function(){return view('inspektur.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('inspektur-dashboard');
+Route::get('/inspektur', [DashboardController::class, 'inspektur'])->middleware('auth')->name('inspektur-dashboard');
 
 // Inspektur-stp
 Route::resource('inspektur/st-pp', InspekturStpController::class);
@@ -106,6 +124,10 @@ Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
 
 // Inspektur-st-pd
 Route::resource('inspektur/st-pd', InspekturStpdController::class);
+
+Route::get('cetak-spd', function () {
+    return view('cetak-spd', ['type_menu' => 'dashboard']);
+});
 
 
 //Master Objek
@@ -139,9 +161,7 @@ Route::resource('/admin/master-iku', MasterIKUController::class);
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 
 // Dashboard
-Route::get('/pegawai/dashboard', function () {
-    return view('pegawai.index', ['type_menu' => 'dashboard']);
-})->middleware('auth')->name('dashboard');
+Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->middleware('auth')->name('dashboard');
 Route::get('/dashboard-general-dashboard', function () {
     return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
 });

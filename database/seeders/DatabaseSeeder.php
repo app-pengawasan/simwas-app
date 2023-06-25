@@ -39,7 +39,8 @@ class DatabaseSeeder extends Seeder
             'unit_kerja' => '8000',
             'is_admin'  => 1,
             'is_aktif' => 1,
-            'is_sekma' => 1
+            'is_sekma' => 1,
+            'is_analissdm' => 1
         ]);
 
         $this->call([

@@ -93,6 +93,7 @@ class InspekturStKinerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('inspektur');
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $usulan = StKinerja::latest()->get();
         } else {
@@ -131,6 +132,7 @@ class InspekturStKinerjaController extends Controller
      */
     public function show(StKinerja $stKinerja)
     {
+        $this->authorize('inspektur');
         $anggotaArray = explode(', ', $stKinerja->anggota);
         $users = \App\Models\User::whereIn('id', $anggotaArray)->get();
         $nama = $users->pluck('name')->toArray();
@@ -150,6 +152,7 @@ class InspekturStKinerjaController extends Controller
      */
     public function edit(StKinerja $st_kinerja)
     {
+        $this->authorize('inspektur');
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
@@ -170,6 +173,7 @@ class InspekturStKinerjaController extends Controller
      */
     public function update(Request $request, StKinerja $st_kinerja)
     {
+        $this->authorize('inspektur');
         if ($request->input('status') == '1' || $request->input('status') == '4') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
@@ -232,7 +236,7 @@ class InspekturStKinerjaController extends Controller
             
             // Path untuk menyimpan hasil dokumen
             $tempFilePath = 'storage/temp/temp_file.docx';
-            $outputPath = 'st-kinerja'.'/'.$usulan->id.'-draft.pdf';
+            $outputPath = 'st-kinerja'.'/'.$usulan->id.'-draft.docx';
 
             // Pembuatan surat
             if ($usulan->is_perseorangan) {
@@ -242,30 +246,8 @@ class InspekturStKinerjaController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
-
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'nama' => $usulan->user->name,
-                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                        'nip' => $usulan->user->nip,
-                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-
-                    
-                } else {
-                    // Path ke template dokumen .docx
-                    $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
+
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
                         'nama' => $usulan->user->name,
@@ -281,7 +263,29 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+
+                    
+                } else {
+                    // Path ke template dokumen .docx
+                    $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
                 
             } else {
@@ -346,25 +350,6 @@ class InspekturStKinerjaController extends Controller
                     
                     $templateProcessor->cloneRowAndSetValues('no', $values);
                     
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-                } else {
-                    // Path ke template dokumen .docx
-                    $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stkKolektifPath);
-                    
-                    $templateProcessor->cloneRowAndSetValues('no', $values);
-
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -377,7 +362,26 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+                } else {
+                    // Path ke template dokumen .docx
+                    $stkKolektifPath = 'document/template-dokumen/draft-st-kinerja-kolektif-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stkKolektifPath);
+                    
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'objek' => $usulan->objek,
+                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
             }
             
@@ -389,12 +393,12 @@ class InspekturStKinerjaController extends Controller
 
             // $phpWord->save('storage/'.$outputPath, 'PDF');
 
-            $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
+            //$this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
 
 
             // Hapus file temporary .docx
-            unlink($tempFilePath);
-            unlink('storage/temp/file.html');
+            // unlink($tempFilePath);
+            // unlink('storage/temp/file.html');
 
             // Update data di tabel StKinerja
             $validatedData = ([

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Usulan ST Kinerja')
+@section('title', 'Master Pengembangan Profesi')
 
 @push('style')
-    <!-- CSS Libraries -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
     <link
@@ -13,15 +12,15 @@
 @endpush
 
 @section('main')
-    @include('components.inspektur-header')
-    @include('components.inspektur-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Usulan ST Kinerja</h1>
+                <h1>Master Pengembangan Profesi</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Usulan ST Kinerja</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Master Pengembangan Profesi</div>
                 </div>
             </div>
 
@@ -30,48 +29,41 @@
                     {{ session('success') }}
                 </div>
             @endif
-
+            
             <div class="section-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-inspektur-kinerja">
+                                    <a href="{{ route('analis-sdm-pp') }}" class="btn btn-primary">Aktif</a>
+                                    <div class="btn btn-primary disabled">Nonaktif</div>
+                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal Usulan</th>
-                                                <th>Pemohon</th>
-                                                <th>Waktu Mulai/Selesai</th>
-                                                <th>Objek Pengawasan</th>
-                                                <th>Surat Tugas</th>
-                                                <th>Status ST</th>
+                                                <th>Jenis Pengembangan Profesi</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($usulan as $un)
+                                            @foreach ($pps as $pp)
                                             <tr>
                                                 <td></td>
-                                                <td><a href="/inspektur/st-kinerja/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
-                                                <td>{{ $un->user->name }}</td>
-                                                <td>{{ $un->mulai.' / '.$un->selesai }}</td>
-                                                <td>{{ $un->objek }}</td>
+                                                <td><a href="/analis-sdm/pp/{{ $pp->id }}">{{ $pp->jenis }}</a></td>
                                                 <td>
-                                                @if ($un->status >= 2)
-                                                    <a target="blank" href="{{ $un->file }}" download>{{ $un->no_surat }}</a>
+                                                @if ($pp->id > 3)
+                                                    <form method="post" action="/analis-sdm/pp/{{ $pp->id }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="aktifkan" value="1">
+                                                        <input type="hidden" name="is_aktif" value="1">
+                                                        <input type="hidden" name="id" value="{{ $pp->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-info">Aktifkan</button>
+                                                    </form>
+                                                @else
+                                                    -
                                                 @endif
-                                                </td>
-                                                <td>
-                                                    @if ($un->status == 0 || $un->status == 3)
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-warning">Menunggu Persetujuan</a>
-                                                    @elseif ($un->status == 1 || $un->status == 4)
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-danger">Tidak Disetujui</a>
-                                                    @elseif ($un->status == 2)
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-light">Belum Upload ST TTD</a>
-                                                    @else
-                                                        <a href="/inspektur/st-kinerja/{{ $un->id }}" class="badge badge-success">Disetujui</a>
-                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -106,5 +98,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script>
+    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 @endpush

@@ -20,6 +20,9 @@
                     <i class="far fa-user"></i> Profile
                 </a>
                 <div class="dropdown-divider"></div>
+                <a href="/pegawai/dashboard" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Pegawai
+                </a>
                 @if (auth()->user()->is_admin)
                     <a href="{{ route('admin-dashboard') }}" class="dropdown-item has-icon">
                         <i class="fas fa-user-shield"></i> Login sebagai Admin
@@ -34,11 +37,6 @@
                     <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
                         <i class="fas fa-user-shield"></i> Login sebagai Inspektur
                     </a>
-                @endif
-                @if (auth()->user()->is_analissdm)
-                <a href="{{ route('analis-sdm-pp') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
-                </a>
                 @endif
             </div>
         </li>

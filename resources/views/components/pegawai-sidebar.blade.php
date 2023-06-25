@@ -2,6 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="index.html">Simwas</a>
+            <span class="badge badge-primary">Pegawai</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">Sm</a>
@@ -28,7 +29,7 @@
             </li>
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
-            <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+            {{-- <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
                 <a href="#"
                     class="nav-link has-dropdown"
                     data-toggle="dropdown"><i class="fas fa-file"></i> <span>Surat Saya</span></a>
@@ -54,8 +55,38 @@
                             href="{{ route('surat-lain.index') }}">Surat Lain</a>
                     </li>
                 </ul>
+            </li> --}}
+            <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-kinerja.index') }}">
+                    <i class="fas fa-wrench"></i>
+                    <span>ST Kinerja</span>
+                </a>
             </li>
-            <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
+            <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('norma-hasil.index') }}">
+                    <i class="fas fa-check"></i>
+                    <span>Norma Hasil</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-pp.index') }}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>ST Pengembangan Profesi</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('pegawai/st-pd*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-pd.index') }}">
+                    <i class="fas fa-road"></i>
+                    <span>ST Perjalanan Dinas</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('surat-lain.index') }}">
+                    <i class="fas fa-file"></i>
+                    <span>Surat Lain</span>
+                </a>
+            </li>
+            {{-- <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
                     <i class="fas fa-paper-plane"></i>
                     <span>Kirim Dokumen</span>
@@ -66,14 +97,9 @@
                     <i class="fas fa-file-export"></i>
                     <span>Surat Eksternal</span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
-
-        <div class="hide-sidebar-mini mt-4 mb-4 p-3">
-            <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Documentation
-            </a>
-        </div>
+        
         <div class="hide-sidebar-mini mt-4 mb-4 p-3">
             <a href="/dashboard-general-dashboard" class="btn btn-primary btn-lg btn-block btn-icon-split">
                 <i class="fas fa-rocket"></i> Dashboard Lama

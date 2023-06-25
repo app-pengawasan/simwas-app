@@ -92,6 +92,7 @@ class InspekturStpdController extends Controller
      */
     public function index()
     {
+        $this->authorize('inspektur');
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $usulan = Stpd::latest()->get();
         } else {
@@ -130,6 +131,7 @@ class InspekturStpdController extends Controller
      */
     public function show(Stpd $st_pd)
     {
+        $this->authorize('inspektur');
         $pelaksanaArray = explode(', ', $st_pd->pelaksana);
         $users = \App\Models\User::whereIn('id', $pelaksanaArray)->get();
         $nama = $users->pluck('name')->toArray();
@@ -149,6 +151,7 @@ class InspekturStpdController extends Controller
      */
     public function edit(Stpd $st_pd)
     {
+        $this->authorize('inspektur');
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
@@ -174,6 +177,7 @@ class InspekturStpdController extends Controller
      */
     public function update(Request $request, Stpd $st_pd)
     {
+        $this->authorize('inspektur');
         if ($request->input('status') == '1' || $request->input('status') == '4' || $request->input('status') == '7') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
@@ -218,7 +222,7 @@ class InspekturStpdController extends Controller
                 'nomor_organisasi' => $usulan->unit_kerja,
                 'kka' => 'PW.110',
                 'tanggal' => $tanggal,
-                'jenis' => 'ST Peerjalanan Dinas',
+                'jenis' => 'ST Perjalanan Dinas',
                 'is_backdate' => $usulan->is_backdate
             ]);
             $buatSurat = new SuratController();
@@ -227,7 +231,7 @@ class InspekturStpdController extends Controller
             
             // Path untuk menyimpan hasil dokumen
             $tempFilePath = 'storage/temp/temp_file.docx';
-            $outputPath = 'st-pd'.'/'.$usulan->id.'-draft.pdf';
+            $outputPath = 'st-pd'.'/'.$usulan->id.'-draft.docx';
 
             // Ambil pegawai
             $pelaksanaArray = explode(', ', $usulan->pelaksana);
@@ -240,28 +244,6 @@ class InspekturStpdController extends Controller
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stpdPerseoranganPath);
 
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'nama' => $usulan->user->name,
-                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                        'nip' => $usulan->user->nip,
-                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'pembebanan' => $usulan->pembebanan->nama,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'kota' => $usulan->kota
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-
-                } else {
-                    // Path ke template dokumen .docx
-                    $stpdPerseoranganPath = 'document/template-dokumen/draft-st-pd-perorangan-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stpdPerseoranganPath);
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -279,7 +261,29 @@ class InspekturStpdController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpdPerseoranganPath = 'document/template-dokumen/draft-st-pd-perorangan-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpdPerseoranganPath);
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'nama' => $usulan->user->name,
+                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
+                        'nip' => $usulan->user->nip,
+                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'kota' => $usulan->kota
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
                 
             } else {
@@ -308,26 +312,6 @@ class InspekturStpdController extends Controller
                     
                     $templateProcessor->cloneRowAndSetValues('no', $values);
                     
-                    $templateProcessor->setValues([
-                        'no_surat' => $nomorSurat,
-                        'melaksanakan' => $usulan->melaksanakan,
-                        'pembebanan' => $usulan->pembebanan->nama,
-                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'kota' => $usulan->kota
-                    ]);
-
-                    // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
-                } else {
-                    // Path ke template dokumen .docx
-                    $stpdKolektifPath = 'document/template-dokumen/draft-st-pd-kolektif-nonesign.docx';
-
-                    // Inisialisasi TemplateProcessor dengan template dokumen
-                    $templateProcessor = new TemplateProcessor($stpdKolektifPath);
-                    
-                    $templateProcessor->cloneRowAndSetValues('no', $values);
-
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -341,16 +325,36 @@ class InspekturStpdController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs($tempFilePath);
+                    $templateProcessor->saveAs('storage/'.$outputPath);
+                } else {
+                    // Path ke template dokumen .docx
+                    $stpdKolektifPath = 'document/template-dokumen/draft-st-pd-kolektif-nonesign.docx';
+
+                    // Inisialisasi TemplateProcessor dengan template dokumen
+                    $templateProcessor = new TemplateProcessor($stpdKolektifPath);
+                    
+                    $templateProcessor->cloneRowAndSetValues('no', $values);
+
+                    $templateProcessor->setValues([
+                        'no_surat' => $nomorSurat,
+                        'melaksanakan' => $usulan->melaksanakan,
+                        'pembebanan' => $usulan->pembebanan->nama,
+                        'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'kota' => $usulan->kota
+                    ]);
+
+                    // Simpan dokumen hasil
+                    $templateProcessor->saveAs('storage/'.$outputPath);
                 }
             }
 
-            $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
+            // $this->convertToPDF($tempFilePath, 'storage/'.$outputPath);
 
 
             // Hapus file temporary .docx
-            unlink($tempFilePath);
-            unlink('storage/temp/file.html');
+            // unlink($tempFilePath);
+            // unlink('storage/temp/file.html');
 
             $validatedData = ([
                 'status' => '2',

@@ -16,6 +16,7 @@ class NormaHasilSekreController extends Controller
      */
     public function index()
     {
+        $this->authorize('sekretaris');
         if (auth()->user()->is_sekma) {
             $usulan = NormaHasil::latest()->get();
         } else {
@@ -54,6 +55,7 @@ class NormaHasilSekreController extends Controller
      */
     public function show(NormaHasil $norma_hasil)
     {
+        $this->authorize('sekretaris');
         return view('sekretaris.norma-hasil.show', [
             "usulan" => $norma_hasil
         ]);
@@ -67,6 +69,7 @@ class NormaHasilSekreController extends Controller
      */
     public function edit(NormaHasil $norma_hasil)
     {
+        $this->authorize('sekretaris');
         $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
         return view('sekretaris.norma-hasil.edit', [
             "usulan" => $norma_hasil,
@@ -83,6 +86,7 @@ class NormaHasilSekreController extends Controller
      */
     public function update(Request $request, NormaHasil $norma_hasil)
     {
+        $this->authorize('sekretaris');
         if ($request->input('status') == '1' || $request->input('status') == '4') {
             $validatedData = $request->validate([
                 'catatan' => 'required'
