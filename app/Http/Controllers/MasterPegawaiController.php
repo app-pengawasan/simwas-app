@@ -7,6 +7,8 @@ use App\Imports\UserImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\HeadingRowImport;
+use Illuminate\Support\Facades\Validator;
 
 class MasterPegawaiController extends Controller
 {
@@ -137,7 +139,6 @@ class MasterPegawaiController extends Controller
         $validateData = $request->validate([
             'name'          => 'required',
             'email'         => 'required|unique:users|max:255',
-            'password'      => 'required',
             'nip'           => 'required|max:18',
             'pangkat'       => 'required',
             'unit_kerja'    => 'required',
@@ -156,7 +157,9 @@ class MasterPegawaiController extends Controller
 
         User::create($validateData);
 
-        return redirect('/admin/master-pegawai')->with('success', 'Berhasil menambahkan data pegawai.');
+        return redirect('/admin/master-pegawai')
+            ->with('status', 'Berhasil menambahkan data pegawai.')
+            ->with('alert-type', 'success');
     }
 
     /**
@@ -251,9 +254,13 @@ class MasterPegawaiController extends Controller
      */
     public function destroy($id)
     {
-        // $user = User::findOrfail($id);
-        User::destroy($id);
-        return back()->with('success', 'Berhasil menghapus data pegawai.');
+        $user = User::where('id', $id)->first();
+        $user->stPp()->delete();
+        $user->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!',
+        ]);
     }
 
     /**
@@ -265,11 +272,42 @@ class MasterPegawaiController extends Controller
             'file' => 'required|mimes::xls,xlsx'
         ]);
 
+
         $file = $request->file('file');
         $file_name = rand().$file->getClientOriginalName();
         $file->move('document/upload', $file_name);
 
+        // $array = Excel::toArray(new UserImport,'/document/upload/'.$file_name, );
+
+        // $array = (new UserImport)->import('/document/upload/'.$file_name, null, \Maatwebsite\Excel\Excel::XLSX);
+
+        // return $array;
+
+        $heading = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $rules = [
+            'name'              => 'required',
+            'email'             => 'required',
+            'nip'               => 'required',
+            'kode_pangkat'      => 'required',
+            'kode_unitkerja'    => 'required',
+            'kode_jabatan'      => 'required',
+            'admin'             => 'required',
+            'sekretaris_utama'  => 'required',
+            'sekretaris_wilayah'=> 'required',
+            'perencana'         => 'required',
+            'apkapbn'           => 'required',
+            'operator_wilayah'  => 'required',
+            'analissdm'         => 'required',
+        ];
+
+        foreach($heading[0][0] as $header){
+            if(!isset($rules[$header])){
+                return back()
+                    ->with('status', 'Gagal mengimpor data, format file tidak sesuai.')
+                    ->with('alert-type', 'danger');
+            }
+        }
         Excel::import(new UserImport, public_path('/document/upload/'.$file_name));
-        return back()->with('success', 'Berhasil mengimpor data pegawai.');
+        return back()->with('status', 'Berhasil mengimpor data pegawai.')->with('alert-type', 'success');
     }
 }

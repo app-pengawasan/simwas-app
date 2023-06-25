@@ -162,14 +162,19 @@ Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaControll
  * PEGAWAI
  * ---------------------------------------------------------------------------
  * */
-Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
-Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
-Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
-Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
-Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
-Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
-Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
-Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+Route::group(['middleware'=>'auth'], function(){
+    Route::get('/pegawai/dashboard', function () {
+        return view('pegawai.index', ['type_menu' => 'dashboard']);
+    })->name('dashboard');
+    Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
+    Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
+    Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
+    Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
+    Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
+    Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
+    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+});
 
 /**
  * ===========================================================================
@@ -178,11 +183,7 @@ Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController:
  * */
 
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
-
 // Dashboard
-Route::get('/pegawai/dashboard', function () {
-    return view('pegawai.index', ['type_menu' => 'dashboard']);
-})->middleware('auth')->name('dashboard');
 Route::get('/dashboard-general-dashboard', function () {
     return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
 });
