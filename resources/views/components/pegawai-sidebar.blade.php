@@ -1,3 +1,6 @@
+@if (!isset($type_menu))
+    <?php $type_menu = ''; ?>
+@endif
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">

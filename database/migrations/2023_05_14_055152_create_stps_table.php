@@ -29,7 +29,7 @@ return new class extends Migration
             $table->foreignId('pembebanan_id');
             $table->text('pegawai');
             $table->string('penandatangan', 26)->nullable();
-            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans');
+            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans')->onDelete('cascade');
             $table->smallInteger('status');
             $table->string('no_surat')->nullable();
             $table->date('tanggal_sertifikat')->nullable();

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nama_unitkerja');
             $table->string('kode_kegiatan');
             $table->string('nama');
-            $table->string('inactive');
+            $table->string('is_active')->default(1);
             $table->timestamps();
         });
     }

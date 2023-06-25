@@ -79,18 +79,13 @@
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     @if ($p->id_pimpinan != auth()->user()->id)
-                                                        {{-- <a class="btn btn-danger"
-                                                            onclick="deleteData('{{ $user->id }}')"
-                                                            style="width: 42px">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a> --}}
                                                         <form class="d-inline mb-2"
                                                             action="{{ route('master-pimpinan.destroy', $p->id_pimpinan) }}"
                                                             method="post">
                                                             @csrf
                                                             @method('delete')
                                                             <button type="submit" class="btn btn-danger"
-                                                                {{-- onclick="deleteData('{{ $user->id }}')" --}} style="width: 42px">
+                                                                style="width: 42px">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>

@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreign('ketua_koor_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('anggota')->nullable();
             $table->string('penandatangan', 26)->nullable();
-            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans');
+            $table->foreign('penandatangan')->references('id_pimpinan')->on('master_pimpinans')->onDelete('cascade');
             $table->smallInteger('status');
             $table->string('no_surat')->nullable();
             $table->text('draft')->nullable();
