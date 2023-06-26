@@ -118,8 +118,12 @@ class MasterAnggaranController extends Controller
      * @param  \App\Models\MasterAnggaran  $masterAnggaran
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MasterAnggaran $masterAnggaran)
+    public function destroy($id)
     {
-
+        MasterAnggaran::destroy($id);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!',
+        ]);
     }
 }

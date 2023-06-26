@@ -4,6 +4,7 @@
 
 @push('style')
     <!-- CSS Libraries -->
+    <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
 @endpush
 
 @section('main')
@@ -18,6 +19,13 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="row mb-4 pb-0">
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="javascript(0);" id="btn-back">
+                                        <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
+                                    </a>
+                                </div>
+                            </div>
                             <form method="POST" action="{{ route('master-anggaran.store') }}" class="needs-validation"
                                 novalidate="">
                                 @csrf
@@ -34,6 +42,11 @@
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="id_kegiatan"
                                                 value="{{ old('id_kegiatan') }}">
+                                            @error('id_kegiatan')
+                                                <small class="text-danger">
+                                                    Id Kegiatan Telah digunakan
+                                                </small>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -45,7 +58,10 @@
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
-                                    <button class="btn btn-primary">Submit</button>
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-save mr-1"></i>
+                                        Simpan
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -58,6 +74,8 @@
 
 @push('scripts')
     <!-- JS Libraies -->
+    <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
+    <script src="{{ asset('js/page/admin/master-anggaran.js') }}"></script>
 @endpush
