@@ -53,7 +53,7 @@
                                                 <td>
                                                     <a href="/pimpinan/rencana-kinerja/{{ $tim->id_timkerja }}"
                                                         class="btn btn-primary" style="width: 42px">
-                                                        <i class="fas fa-search"></i>
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
                                             </tr>

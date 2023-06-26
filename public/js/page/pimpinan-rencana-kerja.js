@@ -11,6 +11,7 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -18,6 +19,7 @@ $(function () {
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -226,7 +228,7 @@ $("#btn-pimpinan-submit-rk").on("click", function (e) {
                         timer: 3000,
                     });
                     setTimeout(
-                        window.location.href("pimpinan/rencana-kinerja"),
+                        (window.location.href = "/pimpinan/rencana-kinerja"),
                         1000
                     );
                 },

@@ -26,7 +26,8 @@
                 <ul class="dropdown-menu">
                     {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, II', 'Kabag Umum'] --}}
                     @if (in_array(auth()->user()->jabatan, [11, 12, 13, 14]))
-                        <li class="{{ Request::is('pimpinan/rencana-kinerja') ? 'active' : '' }}">
+                        <li
+                            class="{{ Request::is('pimpinan/rencana-kinerja') || Request::is('pimpinan/rencana-kinerja/*') ? 'active' : '' }}">
                             <a class="nav-link" href="/pimpinan/rencana-kinerja">
                                 <span>Persetujuan</span>
                             </a>

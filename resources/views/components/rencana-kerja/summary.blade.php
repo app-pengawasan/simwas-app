@@ -192,7 +192,7 @@
                         </button>
                         <button class="btn btn-success" id="btn-pimpinan-submit-rk">
                             <i class="far fa-check-circle"></i>
-                            Terima
+                            Setujui
                         </button>
                     @endif
                 @endif
