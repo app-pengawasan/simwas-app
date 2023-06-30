@@ -97,7 +97,10 @@ class PaguAnggaranController extends Controller
 
         PaguAnggaran::create($validateData);
 
-        return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil menambah data pagu anggaran.');
+        // return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil menambah data pagu anggaran.');
+        return redirect(route('pagu-anggaran.index'))
+            ->with('status', 'Berhasil menambahkan pagu anggaran.')
+            ->with('alert-type', 'success');
         // return $validateData;
     }
 
@@ -165,7 +168,10 @@ class PaguAnggaranController extends Controller
         $validateData["pagu"] = preg_replace($pattern, "" ,$request->pagu);
 
         PaguAnggaran::where('id_panggaran', $paguAnggaran->id_panggaran)->update($validateData);
-        return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil update data pagu anggaran.');
+        // return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil update data pagu anggaran.');
+        return redirect(route('pagu-anggaran.index'))
+            ->with('status', 'Berhasil memperbarui pagu anggaran.')
+            ->with('alert-type', 'success');
     }
 
     /**
@@ -177,6 +183,9 @@ class PaguAnggaranController extends Controller
     public function destroy(PaguAnggaran $paguAnggaran)
     {
         PaguAnggaran::destroy($paguAnggaran->id_panggaran);
-        return back()->with('success', 'Berhasil menghapus pagu anggaran.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!',
+        ]);
     }
 }
