@@ -4,10 +4,10 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">Simwas</a>
+            <img src="{{ asset('img/simwas-text-nobg.svg') }}" alt="brand" style="width: 120px">
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">Sm</a>
+            <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('pegawai/dashboard') ? 'active' : '' }}">
@@ -33,14 +33,15 @@
                             </a>
                         </li>
                     @endif
-                    <li class="{{ Request::is('ketua-tim/rencana-kinerja') ? 'active' : '' }}">
+                    <li
+                        class="{{ Request::is('ketua-tim/rencana-kinerja') || Request::is('ketua-tim/rencana-kinerja/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/ketua-tim/rencana-kinerja">
                             <span>Ketua Tim</span>
                         </a>
                     </li>
                     <li
-                        class="{{ Request::is('admin/pagu-anggaran') || Request::is('admin/pagu-anggaran/*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('pagu-anggaran.index') }}">Anggota Tim</a>
+                        class="{{ Request::is('pegawai/rencana-kinerja') || Request::is('pegawai/rencana-kinerja/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/rencana-kinerja">Tugas Saya</a>
                     </li>
                 </ul>
             </li>

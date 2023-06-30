@@ -15,34 +15,42 @@
                         <table class="mb-4">
                             <tr>
                                 <th style="min-width: 94pt">Tujuan</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->iku->sasaran->tujuan->tujuan }}</td>
                             </tr>
                             <tr>
                                 <th>Sasaran</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->iku->sasaran->sasaran }}</td>
                             </tr>
                             <tr>
                                 <th>IKU</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->iku->iku }}</td>
                             </tr>
                             <tr>
                                 <th>Kegiatan</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->nama }}</td>
                             </tr>
                             <tr>
                                 <th>Unit Kerja</th>
+                                <td>:</td>
                                 <td>{{ $unitKerja[$timKerja->unitkerja] }}</td>
                             </tr>
                             <tr>
                                 <th>Ketua</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->ketua->name }}</td>
                             </tr>
                             <tr>
                                 <th>Tahun</th>
+                                <td>:</td>
                                 <td>{{ $timKerja->tahun }}</td>
                             </tr>
                             <tr>
                                 <th>Total Anggaran</th>
+                                <td>:</td>
                                 <td class="rupiah">
                                     <?php $totalAnggaran = 0; ?>
                                     @foreach ($timKerja->rencanaKerja as $rk)
@@ -53,6 +61,7 @@
                             </tr>
                             <tr>
                                 <th>Status</th>
+                                <td>:</td>
                                 <td>{{ $statusTim[$timKerja->status] }}</td>
                             </tr>
                         </table>
@@ -68,9 +77,10 @@
                                 <li class="font-weight-bold mt-4">
                                     <p>{{ $tugas->tugas }}</p>
                                 </li>
-                                <table>
+                                <table class="">
                                     <tr>
                                         <th valign=top style="min-width: 64px">Objek</th>
+                                        <td>:</td>
                                         <td>
                                             @if (count($tugas->objekPengawasan) > 0)
                                                 @foreach ($tugas->objekPengawasan as $objek)
@@ -83,7 +93,8 @@
                                     </tr>
                                     <tr>
                                         <th>Waktu</th>
-                                        <td class="pl-4">
+                                        <td>:</td>
+                                        <td class="">
                                             {{ strftime('%A, %d %B %Y', strtotime($tugas->mulai)) }} -
                                             {{ strftime('%A, %d %B %Y', strtotime($tugas->selesai)) }}
                                         </td>
@@ -151,7 +162,6 @@
                                         <tr>
                                             <th colspan="4">Total Anggaran</th>
                                             <th class="rupiah">{{ $totalAnggaran }}</th>
-                                            <th></th>
                                         </tr>
                                     </table>
                                 @else

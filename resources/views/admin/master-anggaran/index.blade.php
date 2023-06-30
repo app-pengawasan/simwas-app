@@ -25,14 +25,15 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="mb-0">Halaman untuk mengelola Master Anggaran Inspektorat</p>
-                            @if (session()->has('success'))
+                            {{-- @if (session()->has('success'))
                                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                                     <p>{{ session('success') }}</p>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                            @endif
+                            @endif --}}
+                            @include('components.flash')
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="{{ route('master-anggaran.create') }}">
@@ -57,7 +58,7 @@
                                             <tr>
                                                 <td>{{ $ma->program }}</td>
                                                 <td>{{ $ma->id_kegiatan }}</td>
-                                                <td>{{ $ma->kegiatan }}</td>
+                                                <td>{{ $ma->id_kegiatan . ' ' . $ma->kegiatan }}</td>
                                                 <td>
                                                     <a class="btn btn-warning"
                                                         href="{{ route('master-anggaran.edit', $ma) }}">

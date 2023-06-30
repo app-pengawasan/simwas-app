@@ -1,11 +1,13 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('admin-dashboard') }}">Simwas</a>
+            <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
             <span class="badge badge-primary">Admin</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ route('admin-dashboard') }}">Sm</a>
+            <a href="{{ route('admin-dashboard') }}">
+                <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
+            </a>
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('admin') ? 'active' : '' }}">
@@ -20,7 +22,8 @@
                     <span>Anggaran</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('admin/master-anggaran') ? 'active' : '' }}">
+                    <li
+                        class="{{ Request::is('admin/master-anggaran') || Request::is('admin/master-anggaran/*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
                     </li>
                     <li

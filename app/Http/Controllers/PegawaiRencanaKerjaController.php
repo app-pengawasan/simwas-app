@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
 use App\Http\Controllers\Controller;
 use App\Models\MasterHasil;
+use App\Models\PelaksanaTugas;
 use App\Models\RencanaKerja;
+use Illuminate\Database\Eloquent\Builder;
 
 class PegawaiRencanaKerjaController extends Controller
 {
@@ -40,6 +42,13 @@ class PegawaiRencanaKerjaController extends Controller
         4   => 'warning',
         5   => 'primary',
         6   => 'success',
+    ];
+
+    protected $statusTugas = [
+        0   => 'Belum dikerjakan',
+        1   => 'Sedang dikerjakan',
+        2   => 'Selesai',
+        99  => 'Dibatalkan'
     ];
 
     protected $unsur = [
@@ -96,16 +105,26 @@ class PegawaiRencanaKerjaController extends Controller
 
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
-        return view('pegawai.rencana-kinerja.index', [
+
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
+            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+                $query->where('status', 6);
+            })->get();
+
+        // return [$tugasSaya, $id_pegawai];
+        return view('pegawai.rencana-kinerja.saya.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
             'masterTujuan' => $masterTujuan,
             'masterSasaran' => $masterSasaran,
             'masterIku' => $masterIku,
+            'hasilKerja'    => $this->hasilKerja,
             'pegawai'   => $pegawai,
             'timKerja'  => $timKerja,
+            'tugasSaya' => $tugasSaya,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'statusTugas'   => $this->statusTugas,
         ]);
 
         // return $id_pegawai;
@@ -137,8 +156,6 @@ class PegawaiRencanaKerjaController extends Controller
             'selesai' => 'required',
         ];
 
-        // $idhasilkerja = $request->id_hasilkerja;
-
         $validateData = request()->validate($rules);
         $hasil = MasterHasil::where('id_master_hasil', $request->id_hasilkerja)->get();
 
@@ -149,9 +166,7 @@ class PegawaiRencanaKerjaController extends Controller
         TimKerja::where('id_timkerja', $request->id_timkerja)
         ->update(['status' => 1]);
 
-        // return $hasil;
-
-        return redirect('/pegawai/rencana-kinerja/'.$request->id_timkerja)->with('success', 'Berhasil menambah Tugas.');;
+        return redirect('/pegawai/rencana-kinerja/'.$request->id_timkerja)->with('success', 'Berhasil menambah Tugas.');
     }
 
     /**
@@ -162,28 +177,29 @@ class PegawaiRencanaKerjaController extends Controller
      */
     public function show($id)
     {
-        $timKerja = TimKerja::where('id_timkerja', $id)->get();
+        // $timKerja = TimKerja::where('id_timkerja', $id)->get();
 
-        $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
-        $masterIku = MasterIKU::all();
-        $masterHasil = MasterHasil::all();
+        // $masterTujuan = MasterTujuan::all();
+        // $masterSasaran = MasterSasaran::all();
+        // $masterIku = MasterIKU::all();
+        // $masterHasil = MasterHasil::all();
 
-        $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
+        $rencanaKerja = RencanaKerja::where('id_rencanakerja', $id)->first();
 
 
-        return view('pegawai.rencana-kinerja.show', [
+        return view('pegawai.rencana-kinerja.saya.show', [
             'type_menu'     => 'rencana-kinerja',
             'unitKerja'     => $this->unitkerja,
-            'masterTujuan'  => $masterTujuan,
-            'masterSasaran' => $masterSasaran,
-            'masterIku'     => $masterIku,
-            'masterHasil'   => $masterHasil,
+            // 'masterTujuan'  => $masterTujuan,
+            // 'masterSasaran' => $masterSasaran,
+            // 'masterIku'     => $masterIku,
+            // 'masterHasil'   => $masterHasil,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,
             'satuan'        => $this->satuan,
             'pelaksanaTugas'=> $this->pelaksanaTugas,
-            'timKerja'      => $timKerja[0],
+            'statusTugas'   => $this->statusTugas,
+            // 'timKerja'      => $timKerja,
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'rencanaKerja'  => $rencanaKerja

@@ -167,13 +167,14 @@ Route::group(['middleware'=>'auth'], function(){
         return view('pegawai.index', ['type_menu' => 'dashboard']);
     })->name('dashboard');
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
     Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
+    Route::put('/ketua-tim/rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
     Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
-    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
 });
 
 /**

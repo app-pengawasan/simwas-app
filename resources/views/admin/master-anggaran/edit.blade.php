@@ -42,10 +42,10 @@
                                         <label class="col-sm-2 col-form-label" for="id_kegiatan">Id Kegiatan</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="id_kegiatan"
-                                                value="{{ old('id_kegiatan', $masterAnggaran->id_kegiatan) }}">
+                                                value="{{ old('id_kegiatan', $masterAnggaran->id_kegiatan) }}" required>
                                             @error('id_kegiatan')
                                                 <small class="text-danger">
-                                                    Id Kegiatan Telah digunakan
+                                                    {{ $message }}
                                                 </small>
                                             @enderror
                                         </div>
@@ -54,7 +54,12 @@
                                         <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" name="kegiatan"
-                                                value="{{ old('kegiatan', $masterAnggaran->kegiatan) }}">
+                                                value="{{ old('kegiatan', $masterAnggaran->kegiatan) }}" required>
+                                            @error('kegiatan')
+                                                <small class="text-danger">
+                                                    {{ $message }}
+                                                </small>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>

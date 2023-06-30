@@ -16,8 +16,6 @@
     @include('components.pegawai-sidebar')
     <div class="main-content">
         <!-- Modal -->
-        {{-- @include('components.tim-kerja.create');
-        @include('components.tim-kerja.edit'); --}}
         <section class="section">
             <div class="section-header">
                 <h1>Kelola Rencana Kinerja</h1>
@@ -26,7 +24,7 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">Kelola Rencana Kinerja yang Didelegasikan.</p>
+                            <p class="mb-3">Halaman untuk mengelola rencana kinerja yang didelegasikan.</p>
                             <div class="">
                                 <table id="tim-kerja" class="table table-bordered display responsive">
                                     <thead>
@@ -52,9 +50,9 @@
                                                     {{ $statusTim[$tim->status] }}
                                                 </td>
                                                 <td>
-                                                    <a href="/pegawai/rencana-kinerja/{{ $tim->id_timkerja }}"
+                                                    <a href="/ketua-tim/rencana-kinerja/{{ $tim->id_timkerja }}"
                                                         class="btn btn-primary" style="width: 42px">
-                                                        <i class="fas fa-info"></i>
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -87,5 +85,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-rencana-kerja.js"></script>
+    <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
 @endpush

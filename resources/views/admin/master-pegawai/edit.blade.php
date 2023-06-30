@@ -132,7 +132,7 @@
                                     @endforeach
                                     <div class="card-footer text-right">
                                         <button class="btn btn-primary">
-                                            <i class="fas fa-save mr-1"></i>
+                                            <i class="fas fa-save"></i>
                                             Simpan
                                         </button>
                                     </div>
