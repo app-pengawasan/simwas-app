@@ -14,7 +14,7 @@ $(function () {
                     className: "btn-success",
                     text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     },
                 },
                 {
@@ -22,7 +22,7 @@ $(function () {
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     },
                 },
             ],
