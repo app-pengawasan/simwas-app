@@ -137,15 +137,7 @@ $(".delete-btn").on("click", function () {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    $(`#index_${dataId}`).remove();
+                    location.reload();
                 },
             });
         }

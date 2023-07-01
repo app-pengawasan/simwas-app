@@ -7,6 +7,7 @@ use App\Models\WilayahKerja;
 use Illuminate\Http\Request;
 use App\Imports\WilayahKerjaImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use Illuminate\Support\Facades\Validator;
 
 class WilayahKerjaController extends Controller
@@ -47,14 +48,27 @@ class WilayahKerjaController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'kode_wilayah'      => 'required|max:4',
+            'kode_wilayah'      => 'required|unique:master_objeks,kode_wilayah|size:4',
             'nama'              => 'required',
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = $request->validate($rules);
         $validateData['kategori'] = 3;
         MasterObjek::create($validateData);
-        return redirect(route('master-wilayah-kerja.index'))->with('success', 'Berhasil Menambah Data Wilayah Kerja.');
+
+        $request->session()->put('status', 'Berhasil menambahkan data Wilayah Kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah data Wilayah Kerja',
+        ]);
     }
 
     /**
@@ -94,18 +108,24 @@ class WilayahKerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $wilayahKerja = MasterObjek::where('id_objek', $id);
+        $wilayahKerja = MasterObjek::where('id_objek', $id)->first();
 
         $rules = [
             'kode_wilayah'      => 'required|max:4',
             'nama'              => 'required',
         ];
 
+        if($request->kode_wilayah != $wilayahKerja->kode_wilayah){
+            $rules['kode_wilayah'] = 'required|unique:master_objeks,kode_wilayah|size:4';
+        }else{
+            $rules['kode_wilayah'] = 'required|size:4';
+        }
+
         $validator = Validator::make($request->all(), $rules);
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         MasterObjek::where('id_objek', $id)
@@ -114,12 +134,12 @@ class WilayahKerjaController extends Controller
             'nama'              => $request->nama
         ]);
 
-        $wilayahKerja = MasterObjek::where('id_objek', $id)->get();
+        $request->session()->put('status', 'Berhasil memperbarui data Wilayah Kerja.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
             'message'   => 'Data Berhasil Diperbarui',
-            'data'      => $wilayahKerja
         ]);
     }
 
@@ -129,12 +149,15 @@ class WilayahKerjaController extends Controller
      * @param  \App\Models\WilayahKerja  $wilayahKerja
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterObjek::destroy($id);
+        $request->session()->put('status', 'Berhasil menghapus data Wilayah Kerja.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Data Wilayah Kerja Berhasil Dihapus!.',
+            'message' => 'Berhasil menghapus data Wilayah Kerja',
         ]);
     }
 
@@ -148,7 +171,22 @@ class WilayahKerjaController extends Controller
         $file_name = rand().$file->getClientOriginalName();
         $file->move('document/upload', $file_name);
 
+        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+
+        $rules = [
+            'kode_wilayah',
+            'nama'
+        ];
+
+        foreach($rules as $rule){
+            if(!in_array($rule, $header[0][0])){
+               return back()
+               ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
+               ->with('alert-type', 'danger');
+            }
+        }
+
         Excel::import(new WilayahKerjaImport, public_path('/document/upload/'.$file_name));
-        return back()->with('success', 'Berhasil Mengimpor Data Wilayah Kerja.');
+        return back()->with('status', 'Berhasil mengimpor data Wilayah Kerja.')->with('alert-type', 'success');
     }
 }

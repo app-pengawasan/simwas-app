@@ -150,9 +150,11 @@ class SatuanKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterObjek::destroy($id);
+        $request->session()->put('status', 'Berhasil menghapus data Satuan Kerja.');
+        $request->session()->put('alert-type', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Satuan Kerja Berhasil Dihapus!.',

@@ -12,33 +12,28 @@
                 class="needs-validation" novalidate=""> --}}
             <form enctype="multipart/form-data" class="">
                 <div class="modal-body">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-10 mx-auto">
-                            <div class="form-group">
-                                <label class="form-label" for="kode_wilayah">Kode Wilayah</label>
-                                <div class="">
-                                    <input type="text" class="form-control" name="kode_wilayah"
-                                        id="create-kode_wilayah" value="{{ old('kode_wilayah') }}" required>
-                                    <small id="error-kode_wilayah" class="text-danger"></small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="kode_unitkerja">Kode Unit Kerja</label>
-                                <div class="">
-                                    <input type="text" class="form-control" name="kode_unitkerja"
-                                        id="create-kode_unitkerja" value="{{ old('kode_unitkerja') }}" required>
-                                    <small id="error-kode_unitkerja" class="text-danger"></small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="nama">Nama</label>
-                                <div class="">
-                                    <input type="text" class="form-control" name="nama" id="create-nama"
-                                        value="{{ old('nama') }}" required>
-                                    <small id="error-nama" class="text-danger"></small>
-                                </div>
-                            </div>
+                    <div class="form-group">
+                        <label class="form-label" for="kode_wilayah">Kode Wilayah</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="kode_wilayah" id="create-kode_wilayah"
+                                value="{{ old('kode_wilayah') }}" required>
+                            <small id="error-kode_wilayah" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="kode_unitkerja">Kode Unit Kerja</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="kode_unitkerja" id="create-kode_unitkerja"
+                                value="{{ old('kode_unitkerja') }}" required>
+                            <small id="error-kode_unitkerja" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="nama">Nama</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="nama" id="create-nama"
+                                value="{{ old('nama') }}" required>
+                            <small id="error-nama" class="text-danger"></small>
                         </div>
                     </div>
                 </div>
