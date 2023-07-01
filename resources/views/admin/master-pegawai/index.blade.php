@@ -57,12 +57,13 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">
+                            @include('components.flash')
+                            <p class="mt-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
                                 Untuk melakukan import pegawai silahkan download format <a
                                     href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
-                                    class="link-primary fw-bold" download>disini</a>.
+                                    class="link-primary font-weight-bold" download>disini</a>.
                             </p>
-                            @include('components.flash')
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="/admin/master-pegawai/create">

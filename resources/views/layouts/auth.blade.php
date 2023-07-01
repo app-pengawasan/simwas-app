@@ -48,8 +48,6 @@
         <section class="section">
             <div class="container mt-5">
                 <div class="row">
-
-                    @include('components.flash')
                     <form method="POST" action="{{ route('logout') }}" class="d-none" id="logout-form">
                         @csrf
                     </form>

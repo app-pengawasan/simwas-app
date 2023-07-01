@@ -564,6 +564,9 @@
                 <p class="font-italic text-muted">Digitalkan proses pengawasan Inspektorat Utama</p>
             </div>
             <div class="col-md-7 col-lg-6 ml-auto">
+                <div class="col-lg-12 mx-auto">
+                    @include('components.flash')
+                </div>
                 <div class="form-group col-lg-12 mx-auto">
                     {{-- <h1 class="mb-3 text-primary">Login ke SIMWAS</h1> --}}
                     <a class="btn btn-primary btn-block py-2 btn-facebook" href="/auth/google">

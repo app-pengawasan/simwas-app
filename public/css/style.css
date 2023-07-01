@@ -745,29 +745,35 @@ select.form-control:not([size]):not([multiple]) {
     color: #fff;
 }
 .alert.alert-primary {
-    background-color: var(--primary);
+    background-color: hsla(211, 100%, 43%, 0.5);
+    color: #191d21;
 }
 .alert.alert-secondary {
-    background-color: #cdd3d8;
+    background-color: hsla(207, 12%, 83%, 0.5);
+    color: #191d21;
 }
 .alert.alert-success {
-    background-color: #47c363;
+    background-color: hsla(134, 51%, 52%, 0.5);
+    color: #191d21;
 }
 .alert.alert-info {
-    background-color: #3abaf4;
+    background-color: hsla(199, 89%, 59%, 0.5);
+    color: #191d21;
 }
 .alert.alert-warning {
-    background-color: #ffa426;
+    background-color: hsla(35, 100%, 57%, 0.5);
+    color: #191d21;
 }
 .alert.alert-danger {
-    background-color: #fc544b;
+    background-color: hsla(3, 97%, 64%, 0.5);
+    color: #191d21;
 }
 .alert.alert-light {
-    background-color: #e3eaef;
+    background-color: hsla(205, 27%, 91%, 0.5);
     color: #191d21;
 }
 .alert.alert-dark {
-    background-color: #191d21;
+    background-color: hsla(210, 14%, 11%, 0.5);
 }
 
 /* 3.5 Card */

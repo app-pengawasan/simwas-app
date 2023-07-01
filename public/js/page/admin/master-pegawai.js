@@ -39,8 +39,8 @@ $("#btn-back").on("click", function (e) {
         text: "Data pegawai belum tersimpan.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Yakin",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -63,8 +63,8 @@ $(".delete-btn").on("click", function (e) {
         text: "Data yang dihapus tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {

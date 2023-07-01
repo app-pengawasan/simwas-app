@@ -3,6 +3,7 @@
 /public/hot
 /public/storage
 /public/document/upload
+!/public/document/upload/.gitkeep
 /storage/*.key
 /vendor
 .env
