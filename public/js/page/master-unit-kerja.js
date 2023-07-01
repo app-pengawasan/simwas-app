@@ -11,6 +11,7 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -18,6 +19,7 @@ $(function () {
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -27,6 +29,43 @@ $(function () {
         .buttons()
         .container()
         .appendTo("#master-unit-kerja_wrapper .col-md-6:eq(0)");
+});
+
+$(".submit-btn").on("click", function (e) {
+    e.preventDefault();
+
+    let token = $("meta[name='csrf-token']").attr("content");
+    let kode_wilayah = $("#create-kode_wilayah").val();
+    let kode_unitkerja = $("#create-kode_unitkerja").val();
+    let nama = $("#create-nama").val();
+    let errorKodeWilayah = $("#error-kode_wilayah");
+    let errorKodeUnitKerja = $("#error-kode_unitkerja");
+    let errorNama = $("#error-nama");
+
+    $.ajax({
+        url: `/admin/master-unit-kerja`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            kode_wilayah: kode_wilayah,
+            kode_unitkerja: kode_unitkerja,
+            nama: nama,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+            console.log(errors);
+        },
+    });
 });
 
 $(".edit-btn").on("click", function () {
@@ -52,6 +91,9 @@ $("#btn-edit-submit").on("click", function (e) {
     let kode_wilayah = $("#edit-kode-wilayah").val();
     let kode_unitkerja = $("#edit-kode-unitkerja").val();
     let nama = $("#edit-nama").val();
+    let errorKodeWilayah = $("#error-kode_wilayah");
+    let errorKodeUnitKerja = $("#error-kode_unitkerja");
+    let errorNama = $("#error-nama");
 
     $.ajax({
         url: `/admin/master-unit-kerja/${id_objek}`,
@@ -64,38 +106,16 @@ $("#btn-edit-submit").on("click", function (e) {
             nama: nama,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            let unitkerja = `
-                <tr id="index_${response.data[0].id_objek}">
-                    <td>${response.data[0].kode_unitkerja}</td>
-                    <td>${response.data[0].nama}</td>
-                    <td>
-                        <a href="javascript:void(0)" class="btn btn-warning edit-btn"
-                            data-id="${response.data[0].id_objek}" style="width: 42px"
-                            data-toggle="modal" data-target="#modal-edit-unitkerja">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="btn btn-danger delete-btn"
-                            data-id="${response.data[0].id_objek}" style="width: 42px">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            `;
-
-            $(`#index_${response.data[0].id_objek}`).replaceWith(unitkerja);
-            $("#modal-edit-unitkerja").modal("hide");
+            location.reload();
         },
         error: function (error) {
-            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-edit-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
@@ -110,8 +130,8 @@ $(".delete-btn").on("click", function () {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -124,15 +144,7 @@ $(".delete-btn").on("click", function () {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    $(`#index_${dataId}`).remove();
+                    location.reload();
                 },
             });
         }

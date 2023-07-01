@@ -289,7 +289,7 @@ select.form-control:not([size]):not([multiple]) {
 .form-group > label {
     font-weight: 600;
     color: #34395e;
-    font-size: 12px;
+    /* font-size: 12px; */
     letter-spacing: 0.5px;
 }
 .form-group.floating-addon {
@@ -1330,6 +1330,7 @@ table tr:hover .table-links {
 .modal-header {
     border-bottom: none;
     padding-bottom: 5px;
+    color: var(--secondary);
 }
 .modal-header h5 {
     font-size: 18px;
@@ -1688,8 +1689,8 @@ h6 .badge {
 .btn-success,
 .btn-success.disabled {
     box-shadow: 0 2px 6px #81d694;
-    background-color: #47c363;
-    border-color: #47c363;
+    background-color: var(--success);
+    border-color: var(--success);
     color: #fff;
 }
 .btn-success:hover,
@@ -2668,7 +2669,7 @@ ul.nav-tabs li.nav-item a.nav-link.active i {
     --primary: #0069d9;
     --primary-hover: #1385ff;
     --secondary: #34395e;
-    --success: #29e050;
+    --success: #2dac49;
     --info: #3abaf4;
     --warning: #ffa426;
     --danger: #fc544b;
