@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Return_;
 use App\Imports\SatuanKerjaImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use Illuminate\Support\Facades\Validator;
 
 class SatuanKerjaController extends Controller
@@ -49,15 +50,28 @@ class SatuanKerjaController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'kode_wilayah'      => 'required|max:2',
-            'kode_satuankerja'  => 'required|unique:master_objeks,kode_satuankerja|max:4',
+            'kode_wilayah'      => 'required|size:2',
+            'kode_satuankerja'  => 'required|unique:master_objeks,kode_satuankerja|size:4',
             'nama'              => 'required',
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = $request->validate($rules);
         $validateData['kategori'] = 2;
         MasterObjek::create($validateData);
-        return redirect(route('master-satuan-kerja.index'))->with('success', 'Berhasil Menambah Data Satuan Kerja.');
+
+        $request->session()->put('status', 'Berhasil menambahkan data Satuan Kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah data Satuan Kerja',
+        ]);
     }
 
     /**
@@ -94,23 +108,24 @@ class SatuanKerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $satuanKerja = MasterObjek::where('id_objek', $id)->get();
+        $satuanKerja = MasterObjek::where('id_objek', $id)->first();
 
         $rules = [
-            'kode_wilayah'      => 'required|max:2',
-            'kode_satuankerja'  => 'required|max:4',
             'nama'              => 'required',
+            'kode_wilayah'      => 'required|size:2'
         ];
 
-        // if($request->kode_satuankerja != $satuanKerja->kode_satuankerja){
-        //     $rules['kode_satuankerja'] = 'required|unique:master_objeks,kode_satuankerja|max:4';
-        // }
+        if($request->kode_satuankerja != $satuanKerja->kode_satuankerja){
+            $rules['kode_satuankerja'] = 'required|unique:master_objeks,kode_satuankerja|size:4';
+        }else{
+            $rules['kode_satuankerja'] = 'required|size:4';
+        }
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(),$rules);
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $satuanKerja = MasterObjek::where('id_objek', $id)
@@ -120,7 +135,8 @@ class SatuanKerjaController extends Controller
             'nama'              => $request->nama
         ]);
 
-        $satuanKerja = MasterObjek::where('id_objek', $id)->get();
+        $request->session()->put('status', 'Berhasil memperbarui data Satuan Kerja.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
@@ -153,7 +169,22 @@ class SatuanKerjaController extends Controller
         $file_name = rand().$file->getClientOriginalName();
         $file->move('document/upload', $file_name);
 
+        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $rules = [
+            'kode_wilayah',
+            'kode_satuankerja',
+            'nama'
+        ];
+
+        foreach($rules as $rule){
+            if(!in_array($rule, $header[0][0])){
+               return back()
+               ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
+               ->with('alert-type', 'danger');
+            }
+        }
+
         Excel::import(new SatuanKerjaImport, public_path('/document/upload/'.$file_name));
-        return back()->with('success', 'Berhasil Mengimpor Data Satuan Kerja.');
+        return back()->with('status', 'Berhasil mengimpor data Satuan Kerja.')->with('alert-type', 'success');
     }
 }

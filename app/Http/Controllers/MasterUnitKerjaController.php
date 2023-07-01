@@ -123,7 +123,7 @@ class MasterUnitKerjaController extends Controller
             'kode_wilayah'      => 'required|size:2'
         ];
 
-        if($request->kode_wilayah != $unitKerja->kode_wilayah){
+        if($request->kode_unitkerja != $unitKerja->kode_unitkerja){
             $rules['kode_unitkerja'] = 'required|unique:master_objeks,kode_unitkerja|size:4';
         }else{
             $rules['kode_unitkerja'] = 'required|size:4';
