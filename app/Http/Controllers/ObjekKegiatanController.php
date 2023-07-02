@@ -19,12 +19,10 @@ class ObjekKegiatanController extends Controller
     public function index()
     {
         $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
-        $masterObjekKegiatan = ObjekKegiatan::all();
+        $masterObjekKegiatan = ObjekKegiatan::where('is_active', 1)->get();
 
         return view('admin.master-objek.objek-kegiatan', [
             'type_menu'         => 'objek',
-            // 'title_modal'       => 'Import Data Satuan Kerja BPS',
-            // 'url_modal_import'  => '/admin/master-satuan-kerja/import',
             'master_unitkerja'    => $masterUnitKerja,
             'master_objekkegiatan'  => $masterObjekKegiatan
         ]);
@@ -50,17 +48,32 @@ class ObjekKegiatanController extends Controller
     {
         $rules = [
             'nama_unitkerja'    => 'required',
-            'kode_unitkerja'    => 'required',
+            'unit_kerja'        => 'required',
             'kode_kegiatan'     => 'required|unique:objek_kegiatans,kode_kegiatan',
             'nama'              => 'required',
         ];
 
-        // return $request;
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = request()->validate($rules);
-        ObjekKegiatan::create($validateData);
+        ObjekKegiatan::create([
+            'nama_unitkerja'    => $validateData['nama_unitkerja'],
+            'kode_unitkerja'    => $validateData['unit_kerja'],
+            'kode_kegiatan'     => $validateData['kode_kegiatan'],
+            'nama'              => $validateData['nama']
+        ]);
 
-        return redirect(route('objek-kegiatan.index'))->with('success', 'Berhasil Menambah Kegiatan Unit Kerja.');
+        $request->session()->put('status', 'Berhasil menambahkan kegiatan Unit Kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah data kegiatan Unit Kerja',
+        ]);
     }
 
     /**
@@ -137,13 +150,19 @@ class ObjekKegiatanController extends Controller
      * @param  \App\Models\ObjekKegiatan  $objekKegiatan
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        ObjekKegiatan::where('kode_kegiatan', $id)->delete();
+        ObjekKegiatan::where('kode_kegiatan', $id)
+        ->update([
+            'is_active' => 0
+        ]);
+
+        $request->session()->put('status', 'Berhasil menghapus kegiatan Unit Kerja.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
-            'success' => true,
-            'message' => 'Data Objek Kegiatan Berhasil Dihapus!',
+            'success'   => true,
+            'message'   => 'Data Berhasil Dihapus',
         ]);
     }
 
