@@ -9,10 +9,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group row">
+                <div class="form-group">
                     <input type="hidden" id="edit-id_tujuan" name="id_tujuan">
-                    <label class="col-sm-2 col-form-label" for="tahun_mulai">Tahun Mulai</label>
-                    <div class="col-sm-10">
+                    <label class="form-label" for="tahun_mulai">Tahun Mulai</label>
+                    <div class="">
                         <select id="edit-tahun_mulai" class="form-control" name="tahun_mulai" required>
                             <?php $year = date('Y'); ?>
                             @for ($i = -5; $i < 8; $i++)
@@ -20,11 +20,12 @@
                                     {{ $year + $i }}</option>
                             @endfor
                         </select>
+                        <small id="error-edit-tahun_mulai" class="text-danger"></small>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="tahun_selesai">Tahun Selesai</label>
-                    <div class="col-sm-10">
+                <div class="form-group">
+                    <label class="form-label" for="tahun_selesai">Tahun Selesai</label>
+                    <div class="">
                         <select id="edit-tahun_selesai" class="form-control" name="tahun_selesai" required>
                             <?php $year = date('Y'); ?>
                             @for ($i = -1; $i < 12; $i++)
@@ -32,19 +33,25 @@
                                     {{ $year + $i }}</option>
                             @endfor
                         </select>
+                        <small id="error-edit-tahun_selesai" class="text-danger"></small>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="tujuan">Tujuan</label>
-                    <div class="col-sm-10">
+                <div class="form-group">
+                    <label class="form-label" for="tujuan">Tujuan</label>
+                    <div class="">
                         <input type="text" id="edit-tujuan" class="form-control" name="tujuan"
                             value="{{ old('nama') }}" required>
+                        <small id="error-edit-tujuan" class="text-danger"></small>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                <button type="submit" id="btn-edit-submit" class="btn btn-success">Simpan</button>
+                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                    <i class="fas fa-exclamation-triangle"></i>Batal
+                </button>
+                <button type="submit" id="btn-edit-submit" class="btn btn-icon icon-left btn-primary">
+                    <i class="fas fa-save"></i>Simpan
+                </button>
             </div>
         </div>
     </div>
