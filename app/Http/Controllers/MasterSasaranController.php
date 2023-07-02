@@ -45,14 +45,30 @@ class MasterSasaranController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'id_tujuan' => 'required',
+            'tujuan' => 'required',
             'sasaran'   => 'required',
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validatedData = $request->validate($rules);
 
-        MasterSasaran::create($validatedData);
-        return redirect(route('master-sasaran.index'))->with('success', 'Berhasil menambah sasaran Inspektorat Utama.');
+        MasterSasaran::create([
+            'id_tujuan' => $validatedData['tujuan'],
+            'sasaran'   => $validatedData['sasaran']
+        ]);
+
+        $request->session()->put('status', 'Berhasil menambahkan sasaran Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah sasaran Inspektorat Utama',
+        ]);
     }
 
     /**
@@ -94,28 +110,30 @@ class MasterSasaranController extends Controller
     {
         $rules = [
             'id_sasaran'    => 'required',
-            'id_tujuan'     => 'required',
+            'tujuan'     => 'required',
             'sasaran'       => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
+
+        $validateData = $request->validate($rules);
 
         MasterSasaran::where('id_sasaran', $id)
         ->update([
-            'id_tujuan' => $request->id_tujuan,
-            'sasaran'        => $request->sasaran,
+            'id_tujuan' => $validateData['tujuan'],
+            'sasaran'   => $validateData['sasaran']
         ]);
 
-        $sasaran = MasterSasaran::where('id_sasaran', $id)->get();
+        $request->session()->put('status', 'Berhasil memperbarui Sasaran Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
             'message'   => 'Data Berhasil Diperbarui',
-            'data'      => $sasaran
         ]);
     }
 
@@ -125,13 +143,16 @@ class MasterSasaranController extends Controller
      * @param  \App\Models\MasterSasaran  $masterSasaran
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterSasaran::where('id_sasaran', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Sasaran Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Sasaran Berhasil Dihapus!',
+            'message' => 'Berhasil menghapus Sasaran Inspektorat Utama',
         ]);
     }
 }
