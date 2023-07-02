@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             NamaPpSeeder::class,
             KkaSeeder::class,
             PembebananSeeder::class,
-            StKinerjaSeeder::class,
+            // StKinerjaSeeder::class,
             StpSeeder::class,
             SlSeeder::class,
             // KirimSeeder::class,

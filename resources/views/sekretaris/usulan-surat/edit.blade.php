@@ -26,7 +26,7 @@
 
             <div class="section-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-md-6 col-lg-6">
                         <div class="card">
                             <div class="card-body">
                                 <div class="pt-1 pb-1 m-4">

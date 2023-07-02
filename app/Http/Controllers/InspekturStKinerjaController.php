@@ -6,11 +6,13 @@ use App\Models\StKinerja;
 use App\Models\Surat;
 use App\Models\User;
 use App\Models\MasterPimpinan;
+use App\Models\ObjekPengawasan;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\Settings;
 use Dompdf\Dompdf;
 use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\IOFactory;
+use App\Models\RencanaKerja;
 use Illuminate\Support\Facades\Storage;
 use TCPDF;
 
@@ -153,14 +155,24 @@ class InspekturStKinerjaController extends Controller
     public function edit(StKinerja $st_kinerja)
     {
         $this->authorize('inspektur');
+        $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+            $query->where('status', 6);
+        })->whereHas('pelaksana', function ($query) {
+            $query->where('id_pegawai', auth()->user()->id)
+                ->whereIn('pt_jabatan', [2, 3]);
+        })->get();
+        $objPengawasan = ObjekPengawasan::all();
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         return view('inspektur.st-kinerja.edit', [
             "usulan" => $st_kinerja,
+            "rencana_kerja" => $rencana_kerja,
             "user" => $user,
             "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
+            "objPengawasan" => $objPengawasan
         ]);
     }
 
@@ -188,18 +200,10 @@ class InspekturStKinerjaController extends Controller
                 $validatedData = $request->validate([
                     'is_backdate' => 'required',
                     'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-                    'unit_kerja' => 'required',
-                    'tim_kerja' => 'required',
-                    'tugas' => 'required',
+                    'rencana_id' => 'required',
                     'melaksanakan' => 'required',
-                    'objek' => 'required',
                     'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                     'selesai' => 'required|date|after_or_equal:mulai',
-                    'is_gugus_tugas' => 'required',
-                    'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
-                    'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
-                    'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-                    'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
                     'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
                     'status' => 'required',
                     'is_esign' => 'required',
@@ -209,13 +213,6 @@ class InspekturStKinerjaController extends Controller
                     'required' => 'Wajib diisi.'
                 ]);
         
-                if (!($validatedData['is_gugus_tugas'])) {
-                    if ($validatedData['is_perseorangan'] == '0') {
-                        $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-                    }
-                } else {
-                    $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-                }
                 StKinerja::where('id', $request->input('id'))->update($validatedData);
             }
             $usulan = StKinerja::find($request->input('id'));
@@ -224,7 +221,7 @@ class InspekturStKinerjaController extends Controller
             $data->merge([
                 'user_id' => $usulan->user_id,
                 'derajat_klasifikasi' => 'B',
-                'nomor_organisasi' => $usulan->unit_kerja,
+                'nomor_organisasi' => $usulan->rencanaKerja->timkerja->unitkerja,
                 'kka' => 'PW.110',
                 'tanggal' => $tanggal,
                 'jenis' => 'ST Kinerja',
@@ -238,8 +235,18 @@ class InspekturStKinerjaController extends Controller
             $tempFilePath = 'storage/temp/temp_file.docx';
             $outputPath = 'st-kinerja'.'/'.$usulan->id.'-draft.docx';
 
+            // Ambil pelaksana dan objek
+            $objek_pengawasan = $usulan->rencanaKerja->objekPengawasan;
+            $pelaksana_tugas = $usulan->rencanaKerja->pelaksana;
+
             // Pembuatan surat
-            if ($usulan->is_perseorangan) {
+            if (count($pelaksana_tugas) == 1) {
+                $surat = Surat::where('nomor_surat', $nomorSurat)->first();
+                if ($pelaksana_tugas->id_pegawai != $surat->user_id) {
+                    $newSurat = $surat->replicate();
+                    $newSurat->user_id = $pelaksana_tugas->id_pegawai;
+                    $newSurat->save();
+                }
                 if ($usulan->is_esign) {
                     // Path ke template dokumen .docx
                     $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-esign.docx';
@@ -247,16 +254,16 @@ class InspekturStKinerjaController extends Controller
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
-
+                    
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
-                        'nama' => $usulan->user->name,
-                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                        'nip' => $usulan->user->nip,
-                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'nama' => $pelaksana_tugas->user->name,
+                        'pangkat' => $this->pangkat[$pelaksana_tugas->user->pangkat],
+                        'nip' => $pelaksana_tugas->user->nip,
+                        'jabatan' => $this->jabatan[$pelaksana_tugas->user->jabatan],
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
+                        'objek' => $objek_pengawasan->nama,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
                         'roleInspektur' => $pimpinan->jabatan,
                         'inspektur' => $pimpinan->user->name
@@ -274,13 +281,13 @@ class InspekturStKinerjaController extends Controller
                     $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
-                        'nama' => $usulan->user->name,
-                        'pangkat' => $this->pangkat[$usulan->user->pangkat],
-                        'nip' => $usulan->user->nip,
-                        'jabatan' => $this->jabatan[$usulan->user->jabatan],
+                        'nama' => $pelaksana_tugas->user->name,
+                        'pangkat' => $this->pangkat[$pelaksana_tugas->user->pangkat],
+                        'nip' => $pelaksana_tugas->user->nip,
+                        'jabatan' => $this->jabatan[$pelaksana_tugas->user->jabatan],
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
+                        'objek' => $objek_pengawasan->nama,
                         'tanggal' => $this->konvTanggalIndo($tanggal)
                     ]);
 
@@ -296,48 +303,53 @@ class InspekturStKinerjaController extends Controller
                 $users = \App\Models\User::whereIn('id', $anggotaArray)->get();
 
                 $values = [];
-                if ($usulan->is_gugus_tugas) {
-                    $values[] = ['no' => 1, 'nama' => $usulan->dalnis->name, 'pangkat' => $this->pangkat[$usulan->dalnis->pangkat], 'nip' => $usulan->dalnis->nip, 'jabatan' => $this->jabatan[$usulan->dalnis->jabatan], 'keterangan' => 'Pengendali Teknis'];
-                    if ($usulan->dalnis->id != $surat->user_id) {
-                        $newSurat = $surat->replicate();
-                        $newSurat->user_id = $usulan->dalnis->id;
-                        $newSurat->save();
-                    }
-                    
-                    $values[] = ['no' => 2, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Ketua Tim'];
-                    if ($usulan->ketuaKoor->id != $surat->user_id) {
-                        $newSurat = $surat->replicate();
-                        $newSurat->user_id = $usulan->ketuaKoor->id;
-                        $newSurat->save();
-                    }
-                    
-                    $counter = 3;
-                    foreach ($users as $anggota) {
-                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota Tim'];
-                        if ($anggota->id != $surat->user_id) {
+                $i = 0;
+                // Ambil dalnis
+                foreach ($pelaksana_tugas as $pel) {
+                    if ($pel->pt_jabatan == 1 ) {
+                        $i++;
+                        $values[] = ['no' => $i, 'nama' => $pel->user->name, 'pangkat' => $this->pangkat[$pel->user->pangkat], 'nip' => $pel->user->nip, 'jabatan' => $this->jabatan[$pel->user->jabatan], 'keterangan' => 'Pengendali Teknis'];
+                        if ($pel->id_pegawai != $surat->user_id) {
                             $newSurat = $surat->replicate();
-                            $newSurat->user_id = $anggota->id;
+                            $newSurat->user_id = $pel->id_pegawai;
                             $newSurat->save();
                         }
-                        $counter++;
-                    }
-                } else {
-                    $values[] = ['no' => 1, 'nama' => $usulan->ketuaKoor->name, 'pangkat' => $this->pangkat[$usulan->ketuaKoor->pangkat], 'nip' => $usulan->ketuaKoor->nip, 'jabatan' => $this->jabatan[$usulan->ketuaKoor->jabatan], 'keterangan' => 'Koordinator'];
-                    if ($usulan->ketuaKoor->id != $surat->user_id) {
-                        $newSurat = $surat->replicate();
-                        $newSurat->user_id = $usulan->ketuaKoor->id;
-                        $newSurat->save();
-                    }
-                    
-                    $counter = 2;
-                    foreach ($users as $anggota) {
-                        $values[] = ['no' => $counter, 'nama' => $anggota->name, 'pangkat' => $this->pangkat[$anggota->pangkat], 'nip' => $anggota->nip, 'jabatan' => $this->jabatan[$anggota->jabatan], 'keterangan' => 'Anggota'];
-                        if ($anggota->id != $surat->user_id) {
+                        break;
+                    } 
+                }
+                foreach ($pelaksana_tugas as $pel) {
+                    if ($pel->pt_jabatan == 2 ) {
+                        $i++;
+                        $values[] = ['no' => $i, 'nama' => $pel->user->name, 'pangkat' => $this->pangkat[$pel->user->pangkat], 'nip' => $pel->user->nip, 'jabatan' => $this->jabatan[$pel->user->jabatan], 'keterangan' => 'Ketua Tim'];
+                        if ($pel->id_pegawai != $surat->user_id) {
                             $newSurat = $surat->replicate();
-                            $newSurat->user_id = $anggota->id;
+                            $newSurat->user_id = $pel->id_pegawai;
                             $newSurat->save();
                         }
-                        $counter++;
+                        break;
+                    } 
+                }
+                foreach ($pelaksana_tugas as $pel) {
+                    if ($pel->pt_jabatan == 3 ) {
+                        $i++;
+                        $values[] = ['no' => $i, 'nama' => $pel->user->name, 'pangkat' => $this->pangkat[$pel->user->pangkat], 'nip' => $pel->user->nip, 'jabatan' => $this->jabatan[$pel->user->jabatan], 'keterangan' => 'PIC'];
+                        if ($pel->id_pegawai != $surat->user_id) {
+                            $newSurat = $surat->replicate();
+                            $newSurat->user_id = $pel->id_pegawai;
+                            $newSurat->save();
+                        }
+                        break;
+                    } 
+                }
+                foreach ($pelaksana_tugas as $pel) {
+                    if ($pel->pt_jabatan == 4 ) {
+                        $i++;
+                        $values[] = ['no' => $i, 'nama' => $pel->user->name, 'pangkat' => $this->pangkat[$pel->user->pangkat], 'nip' => $pel->user->nip, 'jabatan' => $this->jabatan[$pel->user->jabatan], 'keterangan' => 'Anggota'];
+                        if ($pel->id_pegawai != $surat->user_id) {
+                            $newSurat = $surat->replicate();
+                            $newSurat->user_id = $pel->id_pegawai;
+                            $newSurat->save();
+                        }
                     }
                 }
 
@@ -355,7 +367,7 @@ class InspekturStKinerjaController extends Controller
                         'no_surat' => $nomorSurat,
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
+                        'objek' => $objek_pengawasan->nama,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
                         'roleInspektur' => $pimpinan->jabatan,
                         'inspektur' => $pimpinan->user->name
@@ -376,7 +388,7 @@ class InspekturStKinerjaController extends Controller
                         'no_surat' => $nomorSurat,
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $usulan->objek,
+                        'objek' => $objek_pengawasan->nama,
                         'tanggal' => $this->konvTanggalIndo($tanggal)
                     ]);
 

@@ -60,7 +60,16 @@
                                                 <td></td>
                                                 <td><a href="/pegawai/st-kinerja/{{ $un->id }}">{{ $un->created_at->format('Y-m-d') }}</a></td>
                                                 <td>{{ $un->mulai.' / '.$un->selesai }}</td>
-                                                <td>{{ $un->objek }}</td>
+                                                <td>
+                                                    <?php
+                                                        $objek = $un->rencanaKerja->objekPengawasan;
+                                                        $objekArray = [];
+                                                        foreach ($objek as $obj) {
+                                                            $objekArray[] = $obj->nama; 
+                                                        }
+                                                        echo implode(", ", $objekArray);
+                                                    ?>
+                                                </td>
                                                 <td>
                                                 @if ($un->status >= 2)
                                                     <a target="blank" href="{{ ($un->status < 5) ? $un->draft : $un->file }}" download>{{ $un->no_surat }}</a>

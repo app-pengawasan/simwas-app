@@ -44,6 +44,7 @@ use App\Http\Controllers\PegawaiTugasController;
 use App\Http\Controllers\PelaksanaTugasController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\TugasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,53 +89,7 @@ Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'im
 Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
 // Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
-/**
- * ---------------------------------------------------------------------------
- * SEKRETARIS
- * ---------------------------------------------------------------------------
- * */
 
-Route::get('/sekretaris', [DashboardController::class, 'sekretaris'])->middleware('auth')->name('sekretaris-dashboard');
-
-// Sekretaris-surat-lain
-Route::resource('sekretaris/usulan-surat', SlSekreController::class);
-
-// Sekretaris-norma-hasil
-Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
-
-/**
- * ---------------------------------------------------------------------------
- * ANALIS SDM
- * ---------------------------------------------------------------------------
- * */
-Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
-
-Route::resource('analis-sdm/pp', PpController::class)->names([
-    'index' => 'analis-sdm-pp',
-    'show' => 'st-kinerja.show',
-]);
-
-Route::resource('analis-sdm/namaPp', NamaPpController::class);
-
-/**
- * ---------------------------------------------------------------------------
- * INSPEKTUR
- * ---------------------------------------------------------------------------
- * */
-Route::get('/inspektur', [DashboardController::class, 'inspektur'])->middleware('auth')->name('inspektur-dashboard');
-
-// Inspektur-stp
-Route::resource('inspektur/st-pp', InspekturStpController::class);
-
-// Inspektur-st-kinerja
-Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
-
-// Inspektur-st-pd
-Route::resource('inspektur/st-pd', InspekturStpdController::class);
-
-Route::get('cetak-spd', function () {
-    return view('cetak-spd', ['type_menu' => 'dashboard']);
-});
 
 
 //Master Objek
@@ -184,10 +139,61 @@ Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaControll
  * PEGAWAI
  * ---------------------------------------------------------------------------
  * */
-Route::group(['middleware'=>'auth'], function(){
-    Route::get('/pegawai/dashboard', function () {
-        return view('pegawai.index', ['type_menu' => 'dashboard']);
-    })->name('dashboard');
+Route::group(['middleware'=>'auth'], function(){// Dashboard
+    /**
+     * ---------------------------------------------------------------------------
+     * SEKRETARIS
+     * ---------------------------------------------------------------------------
+     * */
+
+    Route::get('/sekretaris', [DashboardController::class, 'sekretaris'])->name('sekretaris-dashboard');
+
+    // Sekretaris-surat-lain
+    Route::resource('sekretaris/usulan-surat', SlSekreController::class);
+
+    // Sekretaris-norma-hasil
+    Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
+
+    /**
+     * ---------------------------------------------------------------------------
+     * ANALIS SDM
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
+
+    Route::resource('analis-sdm/pp', PpController::class)->names([
+        'index' => 'analis-sdm-pp',
+        'show' => 'st-kinerja.show',
+    ]);
+
+    Route::resource('analis-sdm/namaPp', NamaPpController::class);
+
+    /**
+     * ---------------------------------------------------------------------------
+     * INSPEKTUR
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/inspektur', [DashboardController::class, 'inspektur'])->name('inspektur-dashboard');
+
+    // Inspektur-stp
+    Route::resource('inspektur/st-pp', InspekturStpController::class);
+
+    // Inspektur-st-kinerja
+    Route::resource('inspektur/st-kinerja', InspekturStKinerjaController::class);
+
+    // Inspektur-st-pd
+    Route::resource('inspektur/st-pd', InspekturStpdController::class);
+
+    Route::get('cetak-spd', function () {
+        return view('cetak-spd', ['type_menu' => 'dashboard']);
+    });
+    
+    /**
+     * ---------------------------------------------------------------------------
+     * PEGAWAI
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->name('dashboard');
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
     Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
     Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
@@ -196,6 +202,64 @@ Route::group(['middleware'=>'auth'], function(){
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+
+    // Ajax
+    Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
+
+    // ST Kinerja
+    Route::resource('pegawai/st-kinerja', StKinerjaController::class)->names([
+        'index' => 'st-kinerja.index',
+        'show' => 'st-kinerja.show',
+    ]);
+
+    // Norma Hasil
+    Route::resource('pegawai/norma-hasil', NormaHasilController::class)->names([
+        'index' => 'norma-hasil.index',
+        'show' => 'norma-hasil.show',
+    ]);
+
+    // ST Pengembangan Profesi
+    Route::post('/get-nama-pp-by-pp', [StpController::class, 'getNamaPp']);
+    Route::resource('pegawai/st-pp', StpController::class)->names([
+        'index' => 'st-pp.index'
+    ]);
+
+    // ST Perjalanan Dinas
+    Route::resource('pegawai/st-pd', StpdController::class)->names([
+        'index' => 'st-pd.index',
+        'show' => 'st-pd.show',
+    ]);
+
+    // Surat Lain
+    Route::resource('pegawai/surat-lain', SlController::class)->names([
+        'index' => 'surat-lain.index',
+        'show' => 'surat-lain.show'
+    ]);
+
+    // Kirim Dokumen
+    Route::resource('pegawai/kirim-dokumen', KirimController::class)->names([
+        'index' => 'kirim-dokumen.index',
+        'show' => 'kirim-dokumen.show',
+    ]);
+
+    // Surat Eksternal
+    Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form']);
+    Route::resource('pegawai/eksternal', EksternalController::class)->names([
+        'index' => 'surat-eksternal.index',
+        'show' => 'surat-eksternal.show',
+    ]);
+
+    // Usulan Nomor Surat
+    Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
+
+    // Surat
+    Route::resource('sekretaris/surat', SuratController::class);
+
+    // Templating dokumen
+    Route::get('word', function () {
+        return view('word');
+    });
+    Route::post('word', [WordController::class, 'index'])->name('word.index');
 });
 
 /**
@@ -205,8 +269,7 @@ Route::group(['middleware'=>'auth'], function(){
  * */
 
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
-// Dashboard
-Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->middleware('auth')->name('dashboard');
+
 Route::get('/dashboard-general-dashboard', function () {
     return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
 });
@@ -216,62 +279,6 @@ Route::get('/dashboard-ecommerce-dashboard', function () {
 
 // UserController
 Route::get('/search', [UserController::class, 'search'])->name('search');
-
-// ST Kinerja (Jangan lupa pake middleware)
-Route::resource('pegawai/st-kinerja', StKinerjaController::class)->names([
-    'index' => 'st-kinerja.index',
-    'show' => 'st-kinerja.show',
-]);
-
-// Norma Hasil (Jangan lupa pake middleware)
-Route::resource('pegawai/norma-hasil', NormaHasilController::class)->names([
-    'index' => 'norma-hasil.index',
-    'show' => 'norma-hasil.show',
-]);
-
-// ST Pengembangan Profesi
-Route::post('/get-nama-pp-by-pp', [StpController::class, 'getNamaPp']);
-Route::resource('pegawai/st-pp', StpController::class)->names([
-    'index' => 'st-pp.index'
-]);
-
-// ST Perjalanan Dinas
-Route::resource('pegawai/st-pd', StpdController::class)->names([
-    'index' => 'st-pd.index',
-    'show' => 'st-pd.show',
-]);
-
-// Surat Lain
-Route::resource('pegawai/surat-lain', SlController::class)->names([
-    'index' => 'surat-lain.index',
-    'show' => 'surat-lain.show'
-]);
-
-// Kirim Dokumen
-Route::resource('pegawai/kirim-dokumen', KirimController::class)->names([
-    'index' => 'kirim-dokumen.index',
-    'show' => 'kirim-dokumen.show',
-]);
-
-// Surat Eksternal
-Route::get('/pegawai/eksternal/form', [EksternalController::class, 'form']);
-Route::resource('pegawai/eksternal', EksternalController::class)->names([
-    'index' => 'surat-eksternal.index',
-    'show' => 'surat-eksternal.show',
-]);
-
-// Usulan Nomor Surat
-Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
-
-// Surat
-Route::resource('sekretaris/surat', SuratController::class);
-
-// Templating dokumen
-Route::get('word', function () {
-    return view('word');
-});
-Route::post('word', [WordController::class, 'index'])->name('word.index');
-
 
 // Layout
 Route::get('/layout-default-layout', function () {

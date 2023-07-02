@@ -29,7 +29,7 @@
                     <form action="/analis-sdm/pp" method="post">
                         <div class="modal-body">
                             @csrf  
-                            <input type="hidden" name="is_aktif" value="true">
+                            <input type="hidden" name="is_aktif" value="1">
                             <div class="form-group">
                                 <label for="jenis">Jenis Pengembangan Profesi</label>
                                 <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" value="{{ old('jenis') }}">
@@ -144,4 +144,12 @@
     
     <!-- Page Specific JS File -->
     <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+
+    @if ($errors->any())
+        <script>
+            $(document).ready(function() {
+                $('#staticBackdrop').modal('show');
+            });
+        </script>
+    @endif
 @endpush

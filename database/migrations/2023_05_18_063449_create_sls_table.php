@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('draft');
             $table->string('no_surat')->nullable();
             $table->smallInteger('status');
-            $table->string('surat')->nullable();
+            $table->text('surat')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

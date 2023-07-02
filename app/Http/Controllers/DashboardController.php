@@ -40,7 +40,10 @@ class DashboardController extends Controller
 
     function inspektur() {
         $this->authorize('inspektur');
-        $stk = StKinerja::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stk = StKinerja::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        $stk = StKinerja::whereHas('rencanaKerja.timkerja', function ($query) {
+            $query->where('unitkerja', auth()->user()->unit_kerja);
+        })->count();
         $stp = Stp::where('unit_kerja', auth()->user()->unit_kerja)->count();
         $stpd = Stpd::where('unit_kerja', auth()->user()->unit_kerja)->count();
 

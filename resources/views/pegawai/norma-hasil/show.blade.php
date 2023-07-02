@@ -180,4 +180,12 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/modules-datatables.js') }}"></script>
+
+    @if ($errors->any())
+        <script>
+            $(document).ready(function() {
+                $('#staticBackdrop').modal('show');
+            });
+        </script>
+    @endif
 @endpush

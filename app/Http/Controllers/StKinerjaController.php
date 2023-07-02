@@ -7,6 +7,10 @@ use App\Models\User;
 use App\Http\Requests\StoreStKinerjaRequest;
 use App\Http\Requests\UpdateStKinerjaRequest;
 use App\Models\MasterPimpinan;
+use App\Models\ObjekPengawasan;
+use App\Models\PelaksanaTugas;
+use App\Models\RencanaKerja;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StKinerjaController extends Controller
@@ -99,14 +103,23 @@ class StKinerjaController extends Controller
      */
     public function create()
     {
+        $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+                            $query->where('status', 6);
+                        })->whereHas('pelaksana', function ($query) {
+                            $query->where('id_pegawai', auth()->user()->id)
+                                ->whereIn('pt_jabatan', [2, 3]);
+                        })->get();
+        $objPengawasan = ObjekPengawasan::all();
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         return view('pegawai.st-kinerja.create', [
+            "rencana_kerja" => $rencana_kerja,
             "user" => $user,
             "pimpinanAktif" => $pimpinanAktif,
             "pimpinanNonaktif" => $pimpinanNonaktif,
-            "jabatan_pimpinan" => $this->jabatan_pimpinan
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
+            "objPengawasan" => $objPengawasan
         ]);
     }
 
@@ -121,18 +134,10 @@ class StKinerjaController extends Controller
         $validatedData = $request->validate([
             'is_backdate' => 'required',
             'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-            'unit_kerja' => 'required',
-            'tim_kerja' => 'required',
-            'tugas' => 'required',
+            'rencana_id' => 'required',
             'melaksanakan' => 'required',
-            'objek' => 'required',
             'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
             'selesai' => 'required|date|after_or_equal:mulai',
-            'is_gugus_tugas' => 'required',
-            'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
-            'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
-            'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-            'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
             'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
             'status' => 'required',
             'is_esign' => 'required',
@@ -143,13 +148,6 @@ class StKinerjaController extends Controller
         ]);
 
         $validatedData['user_id'] = auth()->user()->id;
-        if (!($validatedData['is_gugus_tugas'])) {
-            if ($validatedData['is_perseorangan'] == '0') {
-                $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-            }
-        } else {
-            $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-        }
         StKinerja::create($validatedData);
 
         return redirect('/pegawai/st-kinerja')->with('success', 'Pengajuan ST Kinerja berhasil!');
@@ -183,14 +181,24 @@ class StKinerjaController extends Controller
      */
     public function edit(StKinerja $st_kinerja)
     {
+        $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+            $query->where('status', 6);
+        })->whereHas('pelaksana', function ($query) {
+            $query->where('id_pegawai', auth()->user()->id)
+                ->whereIn('pt_jabatan', [2, 3]);
+        })->get();
+        $objPengawasan = ObjekPengawasan::all();
         $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
         $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
         $user = User::all();
         return view('pegawai.st-kinerja.edit', [
             "usulan" => $st_kinerja,
+            "rencana_kerja" => $rencana_kerja,
             "user" => $user,
             "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif
+            "pimpinanNonaktif" => $pimpinanNonaktif,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan,
+            "objPengawasan" => $objPengawasan
         ]);
     }
 
@@ -207,18 +215,10 @@ class StKinerjaController extends Controller
             $validatedData = $request->validate([
                 'is_backdate' => 'required',
                 'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-                'unit_kerja' => 'required',
-                'tim_kerja' => 'required',
-                'tugas' => 'required',
+                'rencana_id' => 'required',
                 'melaksanakan' => 'required',
-                'objek' => 'required',
                 'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                 'selesai' => 'required|date|after_or_equal:mulai',
-                'is_gugus_tugas' => 'required',
-                'is_perseorangan' => $request->input('is_gugus_tugas') === '0' ? 'required' : '',
-                'dalnis_id' => $request->input('is_gugus_tugas') === '1' ? 'required' : '',
-                'ketua_koor_id' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
-                'anggota' => ($request->input('is_gugus_tugas') === '1' || $request->input('is_perseorangan') === '0') ? 'required' : '',
                 'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
                 'status' => 'required',
                 'is_esign' => 'required',
@@ -228,13 +228,6 @@ class StKinerjaController extends Controller
                 'required' => 'Wajib diisi.'
             ]);
     
-            if (!($validatedData['is_gugus_tugas'])) {
-                if ($validatedData['is_perseorangan'] == '0') {
-                    $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-                }
-            } else {
-                $validatedData['anggota'] = implode(', ', $validatedData['anggota']);
-            }
             StKinerja::where('id', $st_kinerja->id)->update($validatedData);
     
             return redirect('/pegawai/st-kinerja')->with('success', 'Pengajuan kembali usulan ST Kinerja berhasil!');

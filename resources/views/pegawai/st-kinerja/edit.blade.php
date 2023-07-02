@@ -45,7 +45,7 @@
                                         @method('PUT')
                                         @csrf
                                         @php
-                                            $selectedAnggota = old('anggota', explode(', ', $usulan->anggota));
+                                            // $selectedObjek = old('objek') ?? explode('');
                                         @endphp
                                         <input type="hidden" name="status" value="0">
                                         <div class="form-group">
@@ -85,24 +85,8 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="unit_kerja">Unit Kerja</label>
-                                            <select id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
-                                                <option value="">Pilih unit kerja</option>
-                                                <option value="8000" {{ old('unit_kerja', $usulan->unit_kerja) == '8000'  ? 'selected' : '' }}>Inspektorat Utama</option>
-                                                <option value="8010" {{ old('unit_kerja', $usulan->unit_kerja) == '8010'  ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                                <option value="8100" {{ old('unit_kerja', $usulan->unit_kerja) == '8100'  ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                                <option value="8200" {{ old('unit_kerja', $usulan->unit_kerja) == '8200'  ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                                <option value="8300" {{ old('unit_kerja', $usulan->unit_kerja) == '8300'  ? 'selected' : '' }}>Inspektorat Wilayah III</option>
-                                            </select>
-                                            @error('unit_kerja')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
                                             <label for="tim_kerja">Tim Kerja</label>
-                                            <input type="text" class="form-control @error('tim_kerja') is-invalid @enderror" id="tim_kerja" name="tim_kerja" value="{{ old('tim_kerja', $usulan->tim_kerja) }}">
+                                            <input type="text" readonly class="form-control @error('tim_kerja') is-invalid @enderror" id="tim_kerja" name="tim_kerja" value="{{ old('tim_kerja') }}">
                                             @error('tim_kerja')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -110,9 +94,30 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="tugas">Tugas</label>
-                                            <input type="text" class="form-control @error('tugas') is-invalid @enderror" id="tugas" name="tugas" value="{{ old('tugas', $usulan->tugas) }}">
-                                            @error('tugas')
+                                            <label for="rencana_id">Tugas</label>
+                                            <select id="rencana_id" name="rencana_id" class="form-control select2 @error('rencana_id') is-invalid @enderror">
+                                                <option value="">Pilih tugas</option>
+                                                @foreach ($rencana_kerja as $rencana)
+                                                    <option value="{{ $rencana->id_rencanakerja }}" {{ old('rencana_id', $usulan->rencana_id) == $rencana->id_rencanakerja ? 'selected' : '' }}>{{ $rencana->tugas }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('rencana_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="unit_kerja">Unit Kerja</label>
+                                            <select disabled id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
+                                                <option value="">Pilih unit kerja</option>
+                                                <option value="8000" {{ old('unit_kerja') == '8000'  ? 'selected' : '' }}>Inspektorat Utama</option>
+                                                <option value="8010" {{ old('unit_kerja') == '8010'  ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
+                                                <option value="8100" {{ old('unit_kerja') == '8100'  ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                                <option value="8200" {{ old('unit_kerja') == '8200'  ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                                <option value="8300" {{ old('unit_kerja') == '8300'  ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                            </select>
+                                            @error('unit_kerja')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -129,7 +134,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="objek">Objek</label>
-                                            <input type="text" class="form-control @error('objek') is-invalid @enderror" id="objek" name="objek" value="{{ old('objek', $usulan->objek) }}">
+                                            <textarea readonly style="height: 200px;" type="text" class="form-control @error('objek') is-invalid @enderror" id="objek" name="objek" value="{{ old('objek') }}"></textarea>
                                             @error('objek')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -155,92 +160,9 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label class="d-block">Gugus Tugas</label>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="1"
-                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '1' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)"
-                                                    id="is_gugus_tugas_ya"
-                                                    class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                    for="is_gugus_tugas_ya">Ya</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio"
-                                                    name="is_gugus_tugas"
-                                                    value="0"
-                                                    {{ old('is_gugus_tugas', $usulan->is_gugus_tugas) == '0' ? 'checked' : '' }}
-                                                    onchange="toggleGugusTugasInput(this)"
-                                                    id="is_gugus_tugas_tidak"
-                                                    class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                    for="is_gugus_tugas_tidak">Tidak</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" id="perseoranganContainer" style="display: none;">
-                                            <div class="control-label">Jenis</div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio"
-                                                    name="is_perseorangan"
-                                                    value="1"
-                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '1' ? 'checked' : '' }}
-                                                    onchange="togglePerseoranganInput(this)"
-                                                    id="is_perseorangan_ya"
-                                                    class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                    for="is_perseorangan_ya">1 orang</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio"
-                                                    name="is_perseorangan"
-                                                    value="0"
-                                                    {{ old('is_perseorangan', $usulan->is_perseorangan) == '0' ? 'checked' : '' }}
-                                                    onchange="togglePerseoranganInput(this)"
-                                                    id="is_perseorangan_tidak"
-                                                    class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                    for="is_perseorangan_tidak">Kolektif</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" id="dalnisContainer" style="display: none;">
-                                            <label for="dalnis_id">Pengendali Teknis</label>
-                                            <select id="dalnis_id" name="dalnis_id" class="form-control select2 @error('dalnis_id') is-invalid @enderror">
-                                                <option value="">Pilih pengendali teknis</option>
-                                                @foreach ($user as $dalnis)
-                                                    <option value="{{ $dalnis->id }}" {{ old('dalnis_id', $usulan->dalnis_id ) == $dalnis->id ? 'selected' : '' }}>{{ $dalnis->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('dalnis_id')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group" id ="ketuaKoorContainer" style="display: none;">
-                                            <label for="ketua_koor_id"><div id="koordinator" style="display: none;">Koordinator</div><div id="ketua" style="display: block;">Ketua Tim</div></label>
-                                            <select id="ketua_koor_id" name="ketua_koor_id" class="form-control select2 @error('ketua_koor_id') is-invalid @enderror">
-                                                <option value="">Pilih</option>
-                                                @foreach ($user as $ketuaKoor)
-                                                    <option value="{{ $ketuaKoor->id }}" {{ old('ketua_koor_id', $usulan->ketua_koor_id) == $ketuaKoor->id ? 'selected' : '' }}>{{ $ketuaKoor->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('ketua_koor_id')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group" id="anggotaContainer" style="display: none;">
-                                            <label for="anggota">Anggota</label>
-                                            <select id="anggota" name="anggota[]" class="form-control select2 @error('anggota') is-invalid @enderror" multiple="multiple">
-                                                <option value="">Pilih anggota</option>
-                                                @foreach ($user as $anggota)
-                                                    <option value="{{ $anggota->id }}" {{ in_array($anggota->id, $selectedAnggota) ? 'selected' : '' }}>{{ $anggota->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('anggota')
+                                            <label for="pelaksana">Pelaksana Tugas</label>
+                                            <textarea readonly style="height: 200px;" type="text" class="form-control @error('pelaksana') is-invalid @enderror" id="pelaksana" name="pelaksana" value="{{ old('pelaksana') }}"></textarea>
+                                            @error('pelaksana')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -312,7 +234,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                console.log("Baris 1");
                 var tanggalInputContainer = document.getElementById('tanggalInputContainer');
                 var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
                 var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
@@ -321,32 +242,6 @@
                 var penandatanganContainer = document.getElementById('penandatanganContainer');
                 var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
                 toggleEsignInput(isEsignInput, penandatanganContainer);
-                console.log(isEsignInput)
-
-                console.log("Baris 2");
-
-                var perseoranganContainer = document.getElementById('perseoranganContainer');
-                var dalnisContainer = document.getElementById('dalnisContainer');
-                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-                var anggotaContainer = document.getElementById('anggotaContainer');
-                var koordinator = document.getElementById('koordinator');
-                var ketua = document.getElementById('ketua');
-                var isGugusTugasInput = document.querySelector('input[name="is_gugus_tugas"]:checked')
-                console.log("Gugus Tugas", isGugusTugasInput);
-                toggleGugusTugasInput(isGugusTugasInput, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
-                
-                
-
-                console.log("Baris 3");
-
-                
-                var dalnisContainer = document.getElementById('dalnisContainer');
-                var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-                var anggotaContainer = document.getElementById('anggotaContainer');
-                var koordinator = document.getElementById('koordinator');
-                var ketua = document.getElementById('ketua');
-                var isPerseoranganInput = document.querySelector('input[name="is_perseorangan"]:checked');
-                togglePerseoranganInput(isPerseoranganInput, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua);
             });
         
         function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
@@ -375,56 +270,68 @@
                 penandatanganContainer.style.display = 'none';
             }
         }
-    
-        function toggleGugusTugasInput(input, perseoranganContainer, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
-            var perseoranganContainer = document.getElementById('perseoranganContainer');
-            var dalnisContainer = document.getElementById('dalnisContainer');
-            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-            var anggotaContainer = document.getElementById('anggotaContainer');
-            var koordinator = document.getElementById('koordinator');
-            var ketua = document.getElementById('ketua');
-    
-            if (input.value === '1') {
-                perseoranganContainer.style.display = 'none';
-                dalnisContainer.style.display = 'block';
-                ketuaKoorContainer.style.display = 'block';
-                anggotaContainer.style.display = 'block';
-                koordinator.style.display = 'none';
-                ketua.style.display = 'block';
-            } else {
-                perseoranganContainer.style.display = 'block';
-                dalnisContainer.style.display = 'none';
-                ketuaKoorContainer.style.display = 'none';
-                anggotaContainer.style.display = 'none';
-                koordinator.style.display = 'block';
-                ketua.style.display = 'none';
-            }
-        }
-    
-        function togglePerseoranganInput(input, dalnisContainer, ketuaKoorContainer, anggotaContainer, koordinator, ketua) {
-            var dalnisContainer = document.getElementById('dalnisContainer');
-            var ketuaKoorContainer = document.getElementById('ketuaKoorContainer');
-            var anggotaContainer = document.getElementById('anggotaContainer');
-            var koordinator = document.getElementById('koordinator');
-            var ketua = document.getElementById('ketua');
-    
-            if (input) {
-                if (input.value === '1') {
-                    dalnisContainer.style.display = 'none';
-                    ketuaKoorContainer.style.display = 'none';
-                    anggotaContainer.style.display = 'none';
-                } else {
-                    dalnisContainer.style.display = 'none';
-                    ketuaKoorContainer.style.display = 'block';
-                    anggotaContainer.style.display = 'block';
-                    koordinator.style.display = 'block';
-                    ketua.style.display = 'none';
-                }
-            }
-        }
     </script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
     <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
-@endpush
+
+    <script>
+        $(document).ready(function () {
+            $('#rencana_id').change(function() {
+                var selectedRencanaKerja = $(this).val();
+                console.log(selectedRencanaKerja);
+                $.ajax({
+                    url: '/tugas',
+                    method: 'GET',
+                    data: {
+                        rencana_id: selectedRencanaKerja
+                    },
+                    success: function(response){
+                        console.log(response);
+                        var timKerja = response.tim_kerja;
+                        var objekPengawasan = response.objek_pengawasan;
+                        
+                        var objek = [];
+                        var counter = 0;
+                        objekPengawasan.forEach(element => {
+                            counter++;
+                            objek.push(counter + ". " + element.nama);
+                        });
+                        var objekJoined = objek.join('\n');
+                        
+                        var pelaksanaTugas = '';
+                        var dalnis = response.dalnis;
+                        var ketua = response.ketua;
+                        var pic = response.pic;
+                        var anggota = response.anggota;
+                        if (dalnis !== 0) {
+                            pelaksanaTugas += dalnis + '\n';
+                        }
+                        if (ketua !== 0) {
+                            pelaksanaTugas += ketua + '\n';
+                        }
+                        if (pic !== 0) {
+                            pelaksanaTugas += pic + '\n';
+                        }
+                        if (anggota !== 0) {
+                            pelaksanaTugas += anggota.join('\n');
+                        }
+                        
+
+                        $('#tim_kerja').val(timKerja.nama);
+
+                        $('#unit_kerja').val(timKerja.unitkerja);
+                        $("#unit_kerja").select2("destroy");
+                        $("#unit_kerja").select2();
+
+                        $('#objek').val(objekJoined);
+
+                        $('#pelaksana').val(pelaksanaTugas);
+                    }
+                });
+            });
+        })
+    </script>
+
+    @endpush

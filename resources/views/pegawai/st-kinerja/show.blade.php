@@ -131,27 +131,28 @@
                                         <th>:</th>
                                         <td>{{ $usulan->tanggal }}</td>
                                         </tr>
+                                        <tr>
                                             <th>Unit Kerja</th>
                                             <th>:</th>
                                             <td>
                                                 {{
-                                                    ($usulan->unit_kerja == "8000") ? "Inspektorat Utama" :
-                                                    (($usulan->unit_kerja == "8010") ? "Bagian Umum Inspektorat Utama" :
-                                                    (($usulan->unit_kerja == "8100") ? "Inspektorat Wilayah I" :
-                                                    (($usulan->unit_kerja == "8200") ? "Inspektorat Wilayah II" :
+                                                    ($usulan->rencanaKerja->timkerja->unitkerja == "8000") ? "Inspektorat Utama" :
+                                                    (($usulan->rencanaKerja->timkerja->unitkerja == "8010") ? "Bagian Umum Inspektorat Utama" :
+                                                    (($usulan->rencanaKerja->timkerja->unitkerja == "8100") ? "Inspektorat Wilayah I" :
+                                                    (($usulan->rencanaKerja->timkerja->unitkerja == "8200") ? "Inspektorat Wilayah II" :
                                                     "Inspektorat Wilayah III")))
                                                 }}
                                             </td>
-                                        <tr>
+                                        </tr>
                                         <tr>
                                             <th>Tim Kerja</th>
                                             <th>:</th>
-                                            <td>{{ $usulan->tim_kerja }}</td>
+                                            <td>{{ $usulan->rencanaKerja->timkerja->nama }}</td>
                                         </tr>
                                         <tr>
                                             <th>Tugas</th>
                                             <th>:</th>
-                                            <td>{{ $usulan->tugas }}</td>
+                                            <td>{{ $usulan->rencanaKerja->tugas }}</td>
                                         </tr>
                                         <tr>
                                             <th>Untuk Melaksanakan</th>
@@ -161,45 +162,29 @@
                                         <tr>
                                             <th>Objek Pengawasan</th>
                                             <th>:</th>
-                                            <td>{{ $usulan->objek }}</td>
+                                            <td>
+                                                <?php
+                                                    $objek = $usulan->rencanaKerja->objekPengawasan;
+                                                    $objekArray = [];
+                                                    foreach ($objek as $obj) {
+                                                        $objekArray[] = $obj->nama; 
+                                                    }
+                                                    echo implode(", ", $objekArray);
+                                                ?>
+                                            </td>
                                         </tr>
                                         <tr>
                                         <th>Mulai-Selesai</th>
                                         <th>:</th>
                                         <td>{{ $usulan->mulai." - ".$usulan->selesai }}</td>
                                         </tr>
+                                        @foreach ($usulan->rencanaKerja->pelaksana as $pelaksana)
                                         <tr>
-                                            <th>Gugus Tugas</th>
+                                            <th>{{ $pelaksana->pt_jabatan == 1 ? 'Pengendali Teknis' : ($pelaksana->pt_jabatan == 2 ? 'Ketua Tim' : ($pelaksana->pt_jabatan == 3 ? 'PIC' : 'Anggota')) }}</th>
                                             <th>:</th>
-                                            <td>{{ ($usulan->is_gugus_tugas) ? 'Ya' : 'Tidak' }}</td>
+                                            <td>[{{ $pelaksana->user->nip }}] {{ $pelaksana->user->name }}</td>
                                         </tr>
-                                        @if (!($usulan->is_gugus_tugas))
-                                        <tr>
-                                            <th>Jenis</th>
-                                            <th>:</th>
-                                            <td>{{ ($usulan->is_perseorangan) ? '1 orang' : 'Kolektif' }}</td>
-                                        </tr>
-                                        @endif
-                                        @if (!($usulan->is_perseorangan))
-                                        @if ($usulan->is_gugus_tugas)
-                                        <tr>
-                                            <th>Pengendali Teknis</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->dalnis->name }}</td>
-                                        </tr>
-                                        @endif
-                                        <tr>
-                                            <th>{{ $usulan->is_gugus_tugas ? 'Ketua Tim' : 'Koordinator' }}</th>
-                                            <th>:</th>
-                                            <td>{{ $usulan->ketuaKoor->name }}</td>
-                                        </tr>
-                                        </tr>
-                                        <tr>
-                                            <th>Anggota</th>
-                                            <th>:</th>
-                                            <td>{{ $anggota }}</td>
-                                        </tr>
-                                        @endif
+                                        @endforeach
                                         <tr>
                                         @if ($usulan->is_esign)
                                         <th>Penandatangan</th>
@@ -254,4 +239,12 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/modules-datatables.js') }}"></script>
+
+    @if ($errors->any())
+        <script>
+            $(document).ready(function() {
+                $('#staticBackdrop').modal('show');
+            });
+        </script>
+    @endif
 @endpush

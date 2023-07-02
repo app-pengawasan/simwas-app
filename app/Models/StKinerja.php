@@ -49,4 +49,9 @@ class StKinerja extends Model
     {
         return $this->belongsTo(MasterPimpinan::class, 'penandatangan', 'id_pimpinan');
     }
+
+    public function rencanaKerja()
+    {
+        return $this->belongsTo(RencanaKerja::class, 'rencana_id', 'id_rencanakerja');
+    }
 }

@@ -153,4 +153,12 @@
     
     <!-- Page Specific JS File -->
     <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+
+    @if ($errors->any())
+        <script>
+            $(document).ready(function() {
+                $('#staticBackdrop').modal('show');
+            });
+        </script>
+    @endif
 @endpush
