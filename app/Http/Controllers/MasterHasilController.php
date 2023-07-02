@@ -86,11 +86,24 @@ class MasterHasilController extends Controller
             'kategori_pelaksana'    => 'required',
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validateData = $request->validate($rules);
+
 
         MasterHasil::create($validateData);
 
-        return redirect(route('master-hasil.index'))->with('success', 'Berhasil menambah Hasil Kinerja Pegawai Inspektorat Utama.');
+        $request->session()->put('status', 'Berhasil menambahkan Master Hasil Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah Master Hasil Inspektorat Utama',
+        ]);
     }
 
     /**
@@ -141,7 +154,7 @@ class MasterHasilController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         MasterHasil::where('id_master_hasil', $id)
@@ -154,7 +167,8 @@ class MasterHasilController extends Controller
 
         ]);
 
-        // $sasaran = MasterSasaran::where('id_sasaran', $id)->get();
+        $request->session()->put('status', 'Berhasil memperbarui Master Hasil Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
@@ -168,13 +182,16 @@ class MasterHasilController extends Controller
      * @param  \App\Models\MasterHasil  $masterHasil
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterHasil::where('id_master_hasil', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Master Hasil Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
+            'message' => 'Berhasil menghapus Master Hasil Inspektorat Utama',
         ]);
     }
 }

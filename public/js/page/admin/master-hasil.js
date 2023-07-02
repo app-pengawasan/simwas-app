@@ -11,22 +11,78 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4],
                     },
                 },
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4],
                     },
                 },
             ],
         })
         .buttons()
         .container()
-        .appendTo("#master-iku_wrapper .col-md-6:eq(0)");
+        .appendTo("#master-hasil_wrapper .col-md-6:eq(0)");
+});
+
+$("#create-btn").on("click", function (e) {
+    console.log("modal open");
+    // Reset invalid message while modal open
+    $("#error-unsur").text("");
+    $("#error-subunsur1").text("");
+    $("#error-subunsur2").text("");
+    $("#error-kategori_hasilkerja").text("");
+    $("#error-kategori_pelaksana").text("");
+});
+
+$(".submit-btn").on("click", function (e) {
+    e.preventDefault();
+    // Reset error message
+    $("#error-unsur").text("");
+    $("#error-subunsur1").text("");
+    $("#error-subunsur2").text("");
+    $("#error-kategori_hasilkerja").text("");
+    $("#error-kategori_pelaksana").text("");
+
+    let token = $("meta[name='csrf-token']").attr("content");
+    let unsur = $("#create-unsur").val();
+    let subunsur1 = $("#create-subunsur1").val();
+    let subunsur2 = $("#create-subunsur2").val();
+    let kategori_hasilkerja = $("#create-kategori_hasilkerja").val();
+    let kategori_pelaksana = $("#create-kategori_pelaksana").val();
+
+    $.ajax({
+        url: `/admin/master-hasil`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            unsur: unsur,
+            subunsur1: subunsur1,
+            subunsur2: subunsur2,
+            kategori_hasilkerja: kategori_hasilkerja,
+            kategori_pelaksana: kategori_pelaksana,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+            console.log(errors);
+        },
+    });
 });
 
 $(".edit-btn").on("click", function () {
@@ -78,20 +134,20 @@ $("#btn-edit-submit").on("click", function (e) {
             kategori_pelaksana: kategori_pelaksana,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            $("#modal-edit-masterhasil").modal("hide");
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
         error: function (error) {
-            console.log(error.responseJSON);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                if (key != "id_tujuan") {
+                    let errorMessage = document.getElementById(
+                        `error-edit-${key}`
+                    );
+                    errorMessage.innerText = `${value}`;
+                }
+            });
         },
     });
 });
@@ -106,8 +162,8 @@ $(".delete-btn").on("click", function () {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -120,18 +176,7 @@ $(".delete-btn").on("click", function () {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
-                },
-                error: function (e) {
-                    console.log(e);
+                    location.reload();
                 },
             });
         }
