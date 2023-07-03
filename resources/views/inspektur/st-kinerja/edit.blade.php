@@ -275,7 +275,63 @@
     <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
+
+            var editedRencanaKerja = $('#rencana_id').val();
+            console.log(editedRencanaKerja);
+            $.ajax({
+                url: '/tugas',
+                method: 'GET',
+                data: {
+                    rencana_id: editedRencanaKerja
+                },
+                success: function(response) {
+                    console.log(response);
+                    var timKerja = response.tim_kerja;
+                    var objekPengawasan = response.objek_pengawasan;
+
+                    var objek = [];
+                    var counter = 0;
+                    objekPengawasan.forEach(element => {
+                        counter++;
+                        objek.push(counter + ". " + element.nama);
+                    });
+                    var objekJoined = objek.join('\n');
+
+                    var pelaksanaTugas = '';
+                    var dalnis = response.dalnis;
+                    var ketua = response.ketua;
+                    var pic = response.pic;
+                    var anggota = response.anggota;
+                    if (dalnis !== 0) {
+                        pelaksanaTugas += dalnis + '\n';
+                    }
+                    if (ketua !== 0) {
+                        pelaksanaTugas += ketua + '\n';
+                    }
+                    if (pic !== 0) {
+                        pelaksanaTugas += pic + '\n';
+                    }
+                    if (anggota !== 0) {
+                        pelaksanaTugas += anggota.join('\n');
+                    }
+
+
+                    $('#tim_kerja').val(timKerja.nama);
+
+                    $('#unit_kerja').val(timKerja.unitkerja);
+                    $("#unit_kerja").select2("destroy");
+                    $("#unit_kerja").select2();
+                    $('#unit_kerja1').val(timKerja.unitkerja);
+
+                    $('#objek').val(objekJoined);
+                    $('#objek1').val(objekJoined);
+
+                    $('#pelaksana').val(pelaksanaTugas);
+                    $('#pelaksana1').val(pelaksanaTugas);
+                }
+            });
+
             $('#rencana_id').change(function() {
                 var selectedRencanaKerja = $(this).val();
                 console.log(selectedRencanaKerja);
@@ -285,11 +341,11 @@
                     data: {
                         rencana_id: selectedRencanaKerja
                     },
-                    success: function(response){
+                    success: function(response) {
                         console.log(response);
                         var timKerja = response.tim_kerja;
                         var objekPengawasan = response.objek_pengawasan;
-                        
+
                         var objek = [];
                         var counter = 0;
                         objekPengawasan.forEach(element => {
@@ -297,7 +353,7 @@
                             objek.push(counter + ". " + element.nama);
                         });
                         var objekJoined = objek.join('\n');
-                        
+
                         var pelaksanaTugas = '';
                         var dalnis = response.dalnis;
                         var ketua = response.ketua;
@@ -315,17 +371,20 @@
                         if (anggota !== 0) {
                             pelaksanaTugas += anggota.join('\n');
                         }
-                        
+
 
                         $('#tim_kerja').val(timKerja.nama);
 
                         $('#unit_kerja').val(timKerja.unitkerja);
                         $("#unit_kerja").select2("destroy");
                         $("#unit_kerja").select2();
+                        $('#unit_kerja1').val(timKerja.unitkerja);
 
                         $('#objek').val(objekJoined);
+                        $('#objek1').val(objekJoined);
 
                         $('#pelaksana').val(pelaksanaTugas);
+                        $('#pelaksana1').val(pelaksanaTugas);
                     }
                 });
             });

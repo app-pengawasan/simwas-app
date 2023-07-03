@@ -4,18 +4,12 @@
 
 @push('style')
     <!-- CSS Libraries -->
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/selectric/public/selectric.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 @endpush
 
 @section('main')
@@ -43,168 +37,181 @@
                                     <div class="form-group">
                                         <label class="d-block">Backdate</label>
                                         <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_backdate"
-                                                value="1"
+                                            <input type="radio" name="is_backdate" value="1"
                                                 {{ old('is_backdate') == '1' ? 'checked' : '' }}
-                                                onchange="toggleBackdateInput(this)"
-                                                id="is_backdate_ya"
+                                                onchange="toggleBackdateInput(this)" id="is_backdate_ya"
                                                 class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_backdate_ya">Ya</label>
+                                            <label class="custom-control-label" for="is_backdate_ya">Ya</label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_backdate"
-                                                value="0"
+                                            <input type="radio" name="is_backdate" value="0"
                                                 {{ old('is_backdate') == '0' ? 'checked' : '' }}
-                                                onchange="toggleBackdateInput(this)"
-                                                id="is_backdate_tidak"
+                                                onchange="toggleBackdateInput(this)" id="is_backdate_tidak"
                                                 class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_backdate_tidak">Tidak</label>
+                                            <label class="custom-control-label" for="is_backdate_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div id="tanggalInputContainer" style="display: none;">
                                         <div class="form-group">
                                             <label>Tanggal</label>
-                                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
+                                            <input type="date"
+                                                class="form-control @error('tanggal') is-invalid @enderror" name="tanggal"
+                                                value="{{ old('tanggal') }}">
                                             @error('tanggal')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="unit_kerja">Unit Kerja</label>
-                                        <select id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
+                                        <select id="unit_kerja" name="unit_kerja"
+                                            class="form-control select2 @error('unit_kerja') is-invalid @enderror">
                                             <option value="">Pilih unit kerja</option>
-                                            <option value="8000" {{ old('unit_kerja') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
-                                            <option value="8010" {{ old('unit_kerja') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                            <option value="8100" {{ old('unit_kerja') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                            <option value="8200" {{ old('unit_kerja') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                            <option value="8300" {{ old('unit_kerja') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                            <option value="8000" {{ old('unit_kerja') == '8000' ? 'selected' : '' }}>
+                                                Inspektorat Utama</option>
+                                            <option value="8010" {{ old('unit_kerja') == '8010' ? 'selected' : '' }}>
+                                                Bagian Umum Inspektorat Utama</option>
+                                            <option value="8100" {{ old('unit_kerja') == '8100' ? 'selected' : '' }}>
+                                                Inspektorat Wilayah I</option>
+                                            <option value="8200" {{ old('unit_kerja') == '8200' ? 'selected' : '' }}>
+                                                Inspektorat Wilayah II</option>
+                                            <option value="8300" {{ old('unit_kerja') == '8300' ? 'selected' : '' }}>
+                                                Inspektorat Wilayah III</option>
                                         </select>
                                         @error('unit_kerja')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="pp_id">Jenis Pengembangan Profesi</label>
-                                        <select class="form-control select2 @error('pp_id') is-invalid @enderror" id="pp_id" name="pp_id">
+                                        <select class="form-control select2 @error('pp_id') is-invalid @enderror"
+                                            id="pp_id" name="pp_id">
                                             <option value="">Pilih jenis pengembangan profesi</option>
                                             @foreach ($pps as $pp)
-                                                <option value="{{ $pp->id }}" {{ old('pp_id') == $pp->id ? 'selected' : '' }}>{{ $pp->jenis }}</option>
+                                                <option value="{{ $pp->id }}"
+                                                    {{ old('pp_id') == $pp->id ? 'selected' : '' }}>{{ $pp->jenis }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         @error('pp_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group" id="div_nama_pp">
-                                    
+
                                     </div>
                                     <div class="form-group">
                                         <label for="melaksanakan">Untuk melaksanakan</label>
-                                        <input type="text" class="form-control @error('melaksanakan') is-invalid @enderror" id="melaksanakan" name="melaksanakan" value="{{ old('melaksanakan') }}">
+                                        <input type="text"
+                                            class="form-control @error('melaksanakan') is-invalid @enderror"
+                                            id="melaksanakan" name="melaksanakan" value="{{ old('melaksanakan') }}">
                                         @error('melaksanakan')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label>Waktu Mulai</label>
-                                        <input type="date" class="form-control @error('mulai') is-invalid @enderror" name="mulai" value="{{ old('mulai') }}">
+                                        <input type="date" class="form-control @error('mulai') is-invalid @enderror"
+                                            name="mulai" value="{{ old('mulai') }}">
                                         @error('mulai')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label>Waktu Selesai</label>
-                                        <input type="date" class="form-control @error('selesai') is-invalid @enderror" name="selesai" value="{{ old('selesai') }}">
+                                        <input type="date" class="form-control @error('selesai') is-invalid @enderror"
+                                            name="selesai" value="{{ old('selesai') }}">
                                         @error('selesai')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="pembebanan_id">Sumber Anggaran</label>
-                                        <select class="form-control select2 @error('pembebanan_id') is-invalid @enderror" id="pembebanan_id" name="pembebanan_id">
+                                        <select class="form-control select2 @error('pembebanan_id') is-invalid @enderror"
+                                            id="pembebanan_id" name="pembebanan_id">
                                             <option value="">Pilih sumber anggaran</option>
                                             @foreach ($pembebanans as $pembebanan)
-                                                <option value="{{ $pembebanan->id }}" {{ old('pembebanan_id') == $pembebanan->id ? 'selected' : '' }}>{{ $pembebanan->nama }}</option>
+                                                <option value="{{ $pembebanan->id }}"
+                                                    {{ old('pembebanan_id') == $pembebanan->id ? 'selected' : '' }}>
+                                                    {{ $pembebanan->nama }}</option>
                                             @endforeach
                                         </select>
                                         @error('pembebanan_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <label for="pegawai">Pegawai</label>
-                                        <select id="pegawai" name="pegawai[]" class="form-control select2 @error('pegawai') is-invalid @enderror" multiple="multiple">
+                                        <select id="pegawai" name="pegawai[]"
+                                            class="form-control select2 @error('pegawai') is-invalid @enderror"
+                                            multiple="multiple">
                                             <option value="">Pilih Pegawai</option>
                                             @foreach ($user as $pegawai)
-                                                <option value="{{ $pegawai->id }}" {{ old('pegawai') == $pegawai->id ? 'selected' : '' }}>{{ $pegawai->name }}</option>
+                                                <option value="{{ $pegawai->id }}"
+                                                    {{ old('pegawai') == $pegawai->id ? 'selected' : '' }}>
+                                                    {{ $pegawai->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('pegawai')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
                                         <div class="control-label">E-Sign</div>
                                         <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_esign"
-                                                value="1"
+                                            <input type="radio" name="is_esign" value="1"
                                                 {{ old('is_esign') == '1' ? 'checked' : '' }}
-                                                onchange="toggleEsignInput(this)"
-                                                id="is_esign_ya"
+                                                onchange="toggleEsignInput(this)" id="is_esign_ya"
                                                 class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_esign_ya">Ya</label>
+                                            <label class="custom-control-label" for="is_esign_ya">Ya</label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_esign"
-                                                value="0"
+                                            <input type="radio" name="is_esign" value="0"
                                                 {{ old('is_esign') == '0' ? 'checked' : '' }}
-                                                onchange="toggleEsignInput(this)"
-                                                id="is_esign_tidak"
+                                                onchange="toggleEsignInput(this)" id="is_esign_tidak"
                                                 class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_esign_tidak">Tidak</label>
+                                            <label class="custom-control-label" for="is_esign_tidak">Tidak</label>
                                         </div>
                                     </div>
                                     <div id="penandatanganContainer" style="display: none;" class="form-group">
                                         <label for="penandatangan">Penanda tangan</label>
-                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
+                                        <select class="form-control select2 @error('penandatangan') is-invalid @enderror"
+                                            id="penandatangan" name="penandatangan">
                                             <option value="">Pilih penanda tangan</option>
                                             @foreach ($pimpinanAktif as $pimpinan)
-                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
+                                                <option value="{{ $pimpinan->id_pimpinan }}"
+                                                    {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : '' }}>
+                                                    [{{ $jabatan_pimpinan[$pimpinan->jabatan] }}]
+                                                    {{ $pimpinan->user->name }}</option>
                                             @endforeach
-                                            
+
                                             @foreach ($pimpinanNonaktif as $pimpinan)
-                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
+                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}"
+                                                    {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : '' }}>
+                                                    [{{ $jabatan_pimpinan[$pimpinan->jabatan] }}]
+                                                    {{ $pimpinan->user->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('penandatangan')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
                                     </div>
                                     <button type="submit" class="btn btn-success">Submit</button>
@@ -229,20 +236,20 @@
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-                var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
-                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
-                toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
+            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
+            var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
+            var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
+            toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
 
-                var penandatanganContainer = document.getElementById('penandatanganContainer');
-                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
-                toggleEsignInput(isEsignInput, penandatanganContainer);
+            var penandatanganContainer = document.getElementById('penandatanganContainer');
+            var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+            toggleEsignInput(isEsignInput, penandatanganContainer);
         });
 
         function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
             var tanggalInputContainer = document.getElementById('tanggalInputContainer');
             var pimpinanNonaktif = document.getElementsByClassName("pimpinanNonaktif");
-    
+
             if (input.value === '1') {
                 tanggalInputContainer.style.display = 'block';
                 for (var i = 0; i < pimpinanNonaktif.length; i++) {
@@ -258,7 +265,7 @@
 
         function toggleEsignInput(input, penandatanganContainer) {
             var penandatanganContainer = document.getElementById('penandatanganContainer');
-    
+
             if (input.value === '1') {
                 penandatanganContainer.style.display = 'block';
             } else {
@@ -268,38 +275,84 @@
     </script>
     <script>
         $(document).ready(function() {
-            $("#pp_id").on("change", function() {
-                const ppId = $(this).val();
-                if(ppId == 1 || ppId == 2 || ppId == 3){
+            const ppId_awal = $("#pp_id").val();
+            if (ppId_awal) {
+                if (ppId_awal == 1 || ppId_awal == 2 || ppId_awal == 3) {
                     $.ajax({
-                    url: `/get-nama-pp-by-pp`,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        pp_id: ppId
-                    },
-                    dataType: "json",
-                    success: (data) => {
-                        $("#div_nama_pp").empty();
-                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
+                        url: `/get-nama-pp-by-pp`,
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            pp_id: ppId_awal
+                        },
+                        dataType: "json",
+                        success: (data) => {
+                            $("#div_nama_pp").empty();
+                            $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
                                         <select id="nama_pp" required class="form-control select2" name="nama_pp">
                                             <option value="">Pilih nama pengembangan profesi</option>
                                         </select>`);
 
-                        data.namaPp.forEach(element => {
-                            $("#nama_pp").append(
-                                `<option value="${element.nama}">${element.nama}</option>`
-                            );
-                        });
-                        // console.log(data);
-                    },
-                    error: function(request, status, error) {
-                        alert(request.responseText);
-                    }
-                });
+                            data.namaPp.forEach(element => {
+                                    @if (old('nama_pp'))
+                                        if (element.nama == '{{ old('nama_pp') }}') {
+                                            $("#nama_pp").append(`<option value="${element.nama}" selected>${element.nama}</option>`);
+                                        } else {
+                                            $("#nama_pp").append(`<option value="${element.nama}">${element.nama}</option>`);
+                                        }
+                                    @else
+                                        $("#nama_pp").append(`<option value="${element.nama}">${element.nama}</option>`);
+                                    @endif
+                                
+                            });
+                            // console.log(data);
+                        },
+                        error: function(request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
                 } else {
                     $("#div_nama_pp").empty();
-                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
+                    $("#div_nama_pp").append(
+                        `<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp" value="{{ old('nama_pp') }}">`
+                    );
+                }
+            }
+
+            $("#pp_id").on("change", function() {
+                const ppId = $(this).val();
+                if (ppId == 1 || ppId == 2 || ppId == 3) {
+                    $.ajax({
+                        url: `/get-nama-pp-by-pp`,
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            pp_id: ppId
+                        },
+                        dataType: "json",
+                        success: (data) => {
+                            $("#div_nama_pp").empty();
+                            $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
+                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
+                                            <option value="">Pilih nama pengembangan profesi</option>
+                                        </select>`);
+
+                            data.namaPp.forEach(element => {
+                                $("#nama_pp").append(
+                                    `<option value="${element.nama}">${element.nama}</option>`
+                                );
+                            });
+                            // console.log(data);
+                        },
+                        error: function(request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
+                } else {
+                    $("#div_nama_pp").empty();
+                    $("#div_nama_pp").append(
+                        `<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`
+                    );
                 }
             });
         });
