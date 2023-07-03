@@ -27,7 +27,9 @@ class MasterHasilController extends Controller
         'mhk010' => 'Laporan Hasil Evaluasi',
         'mhk011' => 'Laporan Hasil Pemantauan',
         'mhk012' => 'Laporan Pemberian Keterangan Ahli',
-        'mhk013' => 'Hasil Telaah',
+        'mhk013a' => 'Hasil Telaah (Pengaduan Masyarakat)',
+        'mhk013b' => 'Hasil Telaah (Permintaan Aparat)',
+        'mhk013c' => 'Hasil Telaah (Pengawasan Lainnya)',
         'mhk014' => 'Laporan Hasil Monitoring Tindak Lanjut',
         'mhk015' => 'Laporan Kegiatan Sosialisasi',
         'mhk016' => 'Laporan Kegiatan bimbingan teknis',
@@ -82,7 +84,7 @@ class MasterHasilController extends Controller
             'unsur'                 => 'required',
             'subunsur1'             => 'required',
             'subunsur2'             => 'required',
-            'kategori_hasilkerja'   => 'required',
+            'kategori_hasilkerja'   => 'required|unique:master_hasils,kategori_hasilkerja',
             'kategori_pelaksana'    => 'required',
         ];
 
@@ -144,12 +146,20 @@ class MasterHasilController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'unsur'     => 'required',
-            'subunsur1' => 'required',
-            'subunsur2' => 'required',
-            'kategori_hasilkerja' => 'required',
-            'kategori_pelaksana' => 'required',
+            'unsur'                 => 'required',
+            'subunsur1'             => 'required',
+            'subunsur2'             => 'required',
+            // 'kategori_hasilkerja'   => 'required|unique:master_hasils,kategori_hasilkerja',
+            'kategori_pelaksana'    => 'required',
         ];
+
+        $masterHasil = MasterHasil::where('id_master_hasil', $id)->first();
+
+        if($request->kategori_hasilkerja != $masterHasil->kategori_hasilkerja){
+            $rules['kategori_hasilkerja'] = 'required|unique:master_hasils,kategori_hasilkerja';
+        }else{
+            $rules['kategori_hasilkerja'] = 'required';
+        }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -192,6 +202,41 @@ class MasterHasilController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menghapus Master Hasil Inspektorat Utama',
+        ]);
+    }
+
+    public function subunsur1($id){
+        $subunsur1 = MasterHasil::where('unsur', $id)->get();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Daftar Subunsur 1',
+            'data'      => $subunsur1->unique('subunsur1')
+        ]);
+    }
+
+    public function subunsur2(Request $request, $id){
+        $subunsur2 = MasterHasil::where('unsur', $id)
+                ->where('subunsur1', $request->subunsur1)
+                ->get();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Daftar Subunsur 2',
+            'data'      => $subunsur2->unique('subunsur2')
+        ]);
+    }
+
+    public function kategoriHasil(Request $request, $id){
+        $masterHasil = MasterHasil::where('unsur', $id)
+                ->where('subunsur1', $request->subunsur1)
+                ->where('subunsur2', $request->subunsur2)
+                ->get();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Daftar Subunsur 2',
+            'data'      => $masterHasil
         ]);
     }
 }

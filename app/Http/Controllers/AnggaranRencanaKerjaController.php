@@ -45,6 +45,13 @@ class AnggaranRencanaKerjaController extends Controller
             'harga'             => 'required',
             'total'             => 'required',
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validateData = $request->validate($rules);
 
         $validateData["harga"] = preg_replace($pattern, "", $request->harga);
@@ -52,9 +59,12 @@ class AnggaranRencanaKerjaController extends Controller
 
         AnggaranRencanaKerja::create($validateData);
 
+        $request->session()->put('status', 'Berhasil menambahkan Anggaran.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Anggaran Berhasil Ditambahkan'
+            'success' => true,
+            'message' => 'Berhasil menambahkan Anggaran',
         ]);
     }
 
@@ -108,7 +118,7 @@ class AnggaranRencanaKerjaController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         AnggaranRencanaKerja::where('id_rkanggaran', $request->id_rkanggaran)
@@ -120,9 +130,12 @@ class AnggaranRencanaKerjaController extends Controller
             'total'             => preg_replace($pattern, "", $request->total),
         ]);
 
+        $request->session()->put('status', 'Berhasil memperbarui Anggaran.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Anggaran Berhasil Diperbarui',
+            'success' => true,
+            'message' => 'Berhasil memperbarui Anggaran',
         ]);
     }
 
@@ -132,13 +145,16 @@ class AnggaranRencanaKerjaController extends Controller
      * @param  \App\Models\AnggaranRencanaKerja  $anggaranRencanaKerja
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         AnggaranRencanaKerja::where('id_rkanggaran', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Anggaran.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Anggaran Berhasil Dihapus'
+            'success' => true,
+            'message' => 'Berhasil menghapus Anggaran',
         ]);
     }
 }

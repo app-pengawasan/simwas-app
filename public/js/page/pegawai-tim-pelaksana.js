@@ -1,4 +1,9 @@
 // Tambah Objek Pengawasan
+$("#btn-create-objek").on("click", function (e) {
+    $("#error-kategori_objek").text("");
+    $("#error-objek").text("");
+});
+
 $("#create-okategori").on("change", function (e) {
     e.preventDefault();
     let kategoriObjek = $("#create-okategori option:selected").val();
@@ -8,16 +13,15 @@ $("#create-okategori").on("change", function (e) {
         cache: false,
         success: function (response) {
             let objek = response.data;
-            let objekDropdown = `<select id="create-objek" class="form-control" name="create-objek">`;
+
+            $("#create-objek").removeAttr("disabled");
+            $("#create-objek").empty();
 
             objek.forEach((element) => {
-                objekDropdown += `
-                    <option value="${element.id_objek}" >${element.nama}</option>
-                `;
+                $("#create-objek").append(
+                    `<option value="${element.id_objek}" >${element.nama}</option>`
+                );
             });
-            objekDropdown += `</select>`;
-
-            $("#create-objek").replaceWith(objekDropdown);
         },
         error: function (e) {
             console.log(e);
@@ -33,6 +37,9 @@ $("#btn-submit-objek").on("click", function (e) {
     let id_objek = $("#create-objek option:selected").val();
     let nama = $("#create-objek option:selected").text();
 
+    $("#error-kategori").text("");
+    $("#error-objek").text("");
+
     $.ajax({
         url: `/objek-pengawasan`,
         type: "POST",
@@ -41,23 +48,21 @@ $("#btn-submit-objek").on("click", function (e) {
             _token: token,
             kategori_objek: kategori,
             id_rencanakerja: id_rencanakerja,
-            id_objek: id_objek,
+            objek: id_objek,
             nama: nama,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
@@ -73,8 +78,8 @@ $(".btn-delete-objek").on("click", function (e) {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -87,15 +92,7 @@ $(".btn-delete-objek").on("click", function (e) {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
+                    location.reload();
                 },
                 error: function (e) {
                     console.log(e);
@@ -149,16 +146,14 @@ $("#edit-okategori").on("change", function (e) {
         cache: false,
         success: function (response) {
             let objek = response.data;
-            let objekDropdown = `<select id="edit-objek" class="form-control" name="create-objek">`;
+
+            $("#edit-objek").empty();
 
             objek.forEach((element) => {
-                objekDropdown += `
-                    <option value="${element.id_objek}" >${element.nama}</option>
-                `;
+                $("#edit-objek").append(
+                    `<option value="${element.id_objek}" >${element.nama}</option>`
+                );
             });
-            objekDropdown += `</select>`;
-
-            $("#edit-objek").replaceWith(objekDropdown);
         },
         error: function (e) {
             console.log(e);
@@ -173,13 +168,7 @@ $("#btn-submit-edit-objek").on("click", function (e) {
     let kategori = $("#edit-okategori option:selected").val();
     let id_objek = $("#edit-objek option:selected").val();
     let nama = $("#edit-objek option:selected").text();
-    console.log([
-        { _token: token },
-        { id_objek: id_objek },
-        { kategori: kategori },
-        { id_opengawasan: id_opengawasan },
-        { nama: nama },
-    ]);
+
     $.ajax({
         url: `/objek-pengawasan/${id_opengawasan}}`,
         type: "PUT",
@@ -187,25 +176,22 @@ $("#btn-submit-edit-objek").on("click", function (e) {
         data: {
             _token: token,
             id_opengawasan: id_opengawasan,
-            kategori: kategori,
-            id_objek: id_objek,
+            kategori_objek: kategori,
+            objek: id_objek,
             nama: nama,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
-            console.log(response.data[0]);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-edit${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
@@ -220,16 +206,13 @@ let e_total = document.getElementById("edit-total");
 
 //Formating Rupiah
 volume.addEventListener("keyup", function (e) {
-    if (Number(this.value) < 0) {
-        return (volume.value = "");
-    }
-    if (Number(this.value) > 0) {
-        let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
-        let volume_number = Number(volume.value);
-        let total_number = harga_number * volume_number;
+    this.value = Number(this.value.replace(/\D/g, ""));
 
-        return (total.value = formatRupiah(total_number.toString(), "Rp. "));
-    }
+    let harga_number = Number(harga.value.replace(/\D/g, ""));
+    let volume_number = Number(volume.value);
+    let total_number = harga_number * volume_number;
+
+    return (total.value = formatRupiah(total_number.toString(), "Rp. "));
 });
 
 harga.addEventListener("keyup", function (e) {
@@ -237,7 +220,7 @@ harga.addEventListener("keyup", function (e) {
     // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
     harga.value = formatRupiah(this.value, "Rp. ");
 
-    let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
+    let harga_number = Number(harga.value.replace(/\D/g, ""));
     let volume_number = Number(volume.value);
     let total_number = harga_number * volume_number;
 
@@ -249,7 +232,7 @@ harga.onload = function (e) {
     // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
     harga.value = formatRupiah(this.value, "Rp. ");
 
-    let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
+    let harga_number = Number(harga.value.replace(/\D/g, ""));
     let volume_number = Number(volume.value);
     let total_number = harga_number * volume_number;
 
@@ -257,16 +240,12 @@ harga.onload = function (e) {
 };
 
 e_volume.addEventListener("keyup", function (e) {
-    if (Number(this.value) < 0) {
-        return (e_volume.value = "");
-    }
-    if (Number(this.value) > 0) {
-        let harga_number = Number(e_harga.value.replace(/[^,\d]/g, ""));
-        let volume_number = Number(e_volume.value);
-        let total_number = harga_number * volume_number;
+    this.value = Number(this.value.replace(/\D/g, ""));
+    let harga_number = Number(e_harga.value.replace(/\D/g, ""));
+    let volume_number = Number(e_volume.value);
+    let total_number = harga_number * volume_number;
 
-        return (e_total.value = formatRupiah(total_number.toString(), "Rp. "));
-    }
+    return (e_total.value = formatRupiah(total_number.toString(), "Rp. "));
 });
 
 e_harga.addEventListener("keyup", function (e) {
@@ -274,7 +253,7 @@ e_harga.addEventListener("keyup", function (e) {
     // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
     e_harga.value = formatRupiah(this.value, "Rp. ");
 
-    let harga_number = Number(e_harga.value.replace(/[^,\d]/g, ""));
+    let harga_number = Number(e_harga.value.replace(/\D/g, ""));
     let volume_number = Number(e_volume.value);
     let total_number = harga_number * volume_number;
 
@@ -283,7 +262,7 @@ e_harga.addEventListener("keyup", function (e) {
 
 /* Fungsi formatRupiah */
 function formatRupiah(angka, prefix) {
-    let number_string = angka.replace(/[^,\d]/g, "").toString(),
+    let number_string = angka.replace(/\D/g, "").toString(),
         split = number_string.split(","),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),
@@ -309,6 +288,12 @@ $("#btn-submit-anggaran").on("click", function (e) {
     let harga = $("#harga_satuan").val();
     let total = $("#total").val();
 
+    $("#error-uraian").text("");
+    $("#error-volume").text("");
+    $("#error-satuan").text("");
+    $("#error-harga").text("");
+    $("#error-total").text("");
+
     $.ajax({
         url: `/anggaran-rencana-kerja`,
         type: "POST",
@@ -323,25 +308,28 @@ $("#btn-submit-anggaran").on("click", function (e) {
             total: total,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
 
 $(".btn-edit-anggaran").on("click", function (e) {
     let id = $(this).data("id");
+    $("#error-edit-uraian").text("");
+    $("#error-edit-volume").text("");
+    $("#error-edit-satuan").text("");
+    $("#error-edit-harga").text("");
+    $("#error-edit-total").text("");
     $.ajax({
         url: `/anggaran-rencana-kerja/${id}`,
         method: "GET",
@@ -375,6 +363,12 @@ $("#btn-submit-edit-anggaran").on("click", function (e) {
     let harga = $("#edit-harga_satuan").val();
     let total = $("#edit-total").val();
 
+    $("#error-edit-uraian").text("");
+    $("#error-edit-volume").text("");
+    $("#error-edit-satuan").text("");
+    $("#error-edit-harga").text("");
+    $("#error-edit-total").text("");
+
     $.ajax({
         url: `/anggaran-rencana-kerja/${id_rkanggaran}`,
         type: "PUT",
@@ -389,19 +383,18 @@ $("#btn-submit-edit-anggaran").on("click", function (e) {
             total: total,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            console.log(errorResponses);
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-edit-${key}`);
+                console.log(errorMessage);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
@@ -418,8 +411,8 @@ $(".btn-delete-anggaran").on("click", function (e) {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -432,18 +425,7 @@ $(".btn-delete-anggaran").on("click", function (e) {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
-                },
-                error: function (e) {
-                    console.log(e);
+                    location.reload();
                 },
             });
         }
@@ -458,6 +440,9 @@ $(".btn-create-pelaksana").on("click", function (e) {
     let dataJabatan = $(this).data("jabatan");
     let jabatan = $("#pt-jabatan");
     let hasilkerja = $("#pt-hasil");
+
+    $("#error-hasil_kerja").text("");
+    $("#error-pelaksana").text("");
 
     jabatan.val(dataJabatan);
     hasilkerja.val(datahasilKerja);
@@ -475,6 +460,9 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     let hasil_kerja = $("#pt-hasil").val();
     let pelaksana = $("#pelaksana").val();
 
+    $("#error-hasil_kerja").text("");
+    $("#error-pelaksana").text("");
+
     $.ajax({
         url: `/pelaksana-tugas`,
         type: "POST",
@@ -483,23 +471,21 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             _token: token,
             id_rencanakerja: id_rencanakerja,
             pt_jabatan: jabatan,
-            pt_hasil: hasil_kerja,
-            id_pegawai: pelaksana,
+            hasil_kerja: hasil_kerja,
+            pelaksana: pelaksana,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
@@ -515,8 +501,8 @@ $(".btn-delete-pelaksana").on("click", function (e) {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -529,18 +515,7 @@ $(".btn-delete-pelaksana").on("click", function (e) {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
-                },
-                error: function (e) {
-                    console.log(e);
+                    location.reload();
                 },
             });
         }
@@ -553,6 +528,8 @@ $(".btn-edit-pelaksana").on("click", function (e) {
     let isDisable = $(this).data("disable");
     let id = $(this).data("id");
     let hasilkerja = $("#edit-pt-hasil");
+    $("#error-edit-hasil_kerja").text("");
+    $("#error-edit-pelaksana").text("");
 
     if (!isDisable) {
         hasilkerja.prop("disabled", false);
@@ -582,7 +559,8 @@ $("#btn-edit-pelaksana").on("click", function (e) {
     let hasil_kerja = $("#edit-pt-hasil").val();
     let pelaksana = $("#edit-pelaksana").val();
 
-    // console.log([id_pelaksana, jabatan, hasil_kerja]);
+    $("#error-hasil_kerja").text("");
+    $("#error-pelaksana").text("");
 
     $.ajax({
         url: `/pelaksana-tugas/${id_pelaksana}`,
@@ -592,30 +570,29 @@ $("#btn-edit-pelaksana").on("click", function (e) {
             _token: token,
             id_pelaksana: id_pelaksana,
             pt_jabatan: jabatan,
-            pt_hasil: hasil_kerja,
-            id_pegawai: pelaksana,
+            hasil_kerja: hasil_kerja,
+            pelaksana: pelaksana,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            setTimeout(location.reload(), 1000);
+            location.reload();
         },
-        error: function (e) {
-            console.log(e);
+        error: function (error) {
+            console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-edit-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
         },
     });
 });
 
 // Taruh dipaling bawah, Soalnya nanti ngaruh ke function yang laen
 let rupiah = document.getElementsByClassName("rupiah");
-for (i = 0; i <= rupiah.length; i++) {
-    let tmp = rupiah[i].outerHTML.toString();
+for (i = 0; i <= rupiah.length - 1; i++) {
+    console.log(rupiah[i]);
+    let tmp = rupiah[i].innerText.toString();
     rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
 }

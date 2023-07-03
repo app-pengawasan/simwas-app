@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TimKerja;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TimKerjaController extends Controller
 {
@@ -38,18 +39,34 @@ class TimKerjaController extends Controller
         $rules = [
             'nama'      => 'required',
             'unitkerja' => 'required',
-            'id_iku'    => 'required',
-            'id_ketua'  => 'required',
+            'iku'       => 'required',
+            'ketua'     => 'required',
             'tahun'     => 'required',
         ];
 
-        // return $request;
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = $request->validate($rules);
 
-        TimKerja::create($validateData);
+        TimKerja::create([
+            'nama'  => $validateData['nama'],
+            'tahun'  => $validateData['tahun'],
+            'unitkerja'  => $validateData['unitkerja'],
+            'id_iku'  => $validateData['iku'],
+            'id_ketua'  => $validateData['ketua'],
+        ]);
 
-        return redirect('/admin/rencana-kinerja')->with('success', 'Berhasil menambah Tim Kerja.');
+        $request->session()->put('status', 'Berhasil menambahkan Tim Kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah Tim Kerja',
+        ]);
     }
 
     /**
@@ -92,8 +109,16 @@ class TimKerjaController extends Controller
      * @param  \App\Models\TimKerja  $timKerja
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TimKerja $timKerja)
+    public function destroy(Request $request, $id)
     {
-        //
+        TimKerja::where('id_timkerja', $id)->delete();
+
+        $request->session()->put('status', 'Berhasil menghapus tim kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menghapus tim kerja',
+        ]);
     }
 }

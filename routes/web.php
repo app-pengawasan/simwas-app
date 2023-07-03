@@ -140,6 +140,9 @@ Route::resource('/admin/master-iku', MasterIKUController::class);
 
 //Master Hasil
 Route::resource('/admin/master-hasil', MasterHasilController::class);
+Route::get('/master-hasil/unsur/{id}',[MasterHasilController::class, 'subunsur1']);
+Route::post('/master-hasil/subunsur1/{id}',[MasterHasilController::class, 'subunsur2']);
+Route::post('/master-hasil/subunsur2/{id}',[MasterHasilController::class, 'kategoriHasil']);
 Route::resource('/admin/tim-kerja', TimKerjaController::class);
 
 //Rencana Kinerja
@@ -166,10 +169,14 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/pegawai/dashboard', function () {
         return view('pegawai.index', ['type_menu' => 'dashboard']);
     })->name('dashboard');
-    Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
-    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+    // Ketua Tim
     Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
     Route::put('/ketua-tim/rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
+    Route::put('/ketua-tim/rencana-kinerja/send/{id}', [KetuaTimRencanaKerjaController::class, 'sendToAnalis']);
+    Route::resource('/ketua-tim/tim-pelaksana', PegawaiTugasController::class);
+
+    Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
     Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);

@@ -25,9 +25,12 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-4">Menampilkan Rencana Kinerja yang telah Disusun</p>
+                            <p class="mb-4">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Menampilkan Rencana Kinerja yang telah Disusun
+                            </p>
                             <div class="">
-                                <table id="tim-kerja" class="table table-bordered display responsive">
+                                <table id="tim-kerja" class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
                                             <th>Tahun</th>

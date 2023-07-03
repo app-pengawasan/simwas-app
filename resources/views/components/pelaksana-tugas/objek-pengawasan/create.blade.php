@@ -4,15 +4,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal-create-objek-label">Form Tambah Objek Pengawasan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="text-danger close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="create-okategori">Kategori Objek</label>
-                        <div class="col-sm-10">
+                    <div class="form-group">
+                        <label class="form-label" for="create-okategori">Kategori Objek</label>
+                        <div class="">
                             <select id="create-okategori" class="form-control" name="create-okategori" required>
                                 <option value="" selected disabled></option>
                                 <option value="1">Unit Kerja</option>
@@ -20,21 +20,27 @@
                                 <option value="3">Wilayah</option>
                                 <option value="4">Kegiatan Unit Kerja</option>
                             </select>
+                            <small id="error-kategori_objek" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="create-objek">Objek</label>
-                        <div class="col-sm-10">
-                            <select id="create-objek" class="form-control" name="create-objek">
+                    <div class="form-group">
+                        <label class="form-label" for="create-objek">Objek</label>
+                        <div class="">
+                            <select id="create-objek" class="form-control" name="create-objek" disabled>
                                 <option value="" selected disabled></option>
                             </select>
+                            <small id="error-objek" class="text-danger"></small>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-success" id="btn-submit-objek">Tambah</button>
+                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                    <i class="fas fa-exclamation-triangle"></i>Batal
+                </button>
+                <button type="submit" class="btn btn-icon icon-left btn-primary" id="btn-submit-objek">
+                    <i class="fas fa-save"></i>Simpan
+                </button>
             </div>
         </div>
     </div>

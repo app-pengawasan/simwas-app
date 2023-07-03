@@ -11,6 +11,7 @@ use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class KetuaTimRencanaKerjaController extends Controller
 {
@@ -61,7 +62,9 @@ class KetuaTimRencanaKerjaController extends Controller
         'mhk010' => 'Laporan Hasil Evaluasi',
         'mhk011' => 'Laporan Hasil Pemantauan',
         'mhk012' => 'Laporan Pemberian Keterangan Ahli',
-        'mhk013' => 'Hasil Telaah',
+        'mhk013a' => 'Hasil Telaah (Pengaduan Masyarakat)',
+        'mhk013b' => 'Hasil Telaah (Permintaan Aparat)',
+        'mhk013c' => 'Hasil Telaah (Pengawasan Lainnya)',
         'mhk014' => 'Laporan Hasil Monitoring Tindak Lanjut',
         'mhk015' => 'Laporan Kegiatan Sosialisasi',
         'mhk016' => 'Laporan Kegiatan bimbingan teknis',
@@ -96,7 +99,7 @@ class KetuaTimRencanaKerjaController extends Controller
 
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
-        return view('pegawai.rencana-kinerja.ketua-tim..index', [
+        return view('pegawai.rencana-kinerja.ketua-tim.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
             'masterTujuan' => $masterTujuan,
@@ -131,27 +134,40 @@ class KetuaTimRencanaKerjaController extends Controller
     {
         $rules = [
             'id_timkerja' => 'required',
-            'id_hasilkerja' => 'required',
+            'hasilkerja' => 'required',
             'tugas' => 'required',
             'mulai' => 'required',
-            'selesai' => 'required',
+            'selesai' => 'required|after_or_equal:mulai',
         ];
 
-        // $idhasilkerja = $request->id_hasilkerja;
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = request()->validate($rules);
-        $hasil = MasterHasil::where('id_master_hasil', $request->id_hasilkerja)->get();
-
-        $validateData['kategori_pelaksanatugas'] = $hasil[0]->kategori_pelaksana;
 
 
-        RencanaKerja::create($validateData);
-        TimKerja::where('id_timkerja', $request->id_timkerja)
+        RencanaKerja::create([
+            'id_timkerja'   => $validateData['id_timkerja'],
+            'id_hasilkerja'  => $validateData['hasilkerja'],
+            'kategori_pelaksanatugas'   => $request->kategori_pelaksana,
+            'tugas'         => $validateData['tugas'],
+            'mulai'         => $validateData['mulai'],
+            'selesai'         => $validateData['selesai'],
+        ]);
+
+        TimKerja::where('id_timkerja', $validateData['id_timkerja'])
         ->update(['status' => 1]);
 
-        // return $hasil;
+        $request->session()->put('status', 'Berhasil menambahkan Tugas Tim Kerja.');
+        $request->session()->put('alert-type', 'success');
 
-        return redirect('/ketua-tim/rencana-kinerja/'.$request->id_timkerja)->with('success', 'Berhasil menambah Tugas.');;
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah Tugas Tim Kerja',
+        ]);
     }
 
     /**
@@ -219,33 +235,42 @@ class KetuaTimRencanaKerjaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         RencanaKerja::where('id_rencanakerja', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Tugas Tim Kerja.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
+            'message' => 'Berhasil menghapus Tugas Tim Kerja',
         ]);
     }
 
-    public function sendToAnalis($id){
+    public function sendToAnalis(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
         ->update(['status' => 2]);
 
+        $request->session()->put('status', 'Berhasil mengirim Rencana Kinerja.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil Mengirim Rencana Kerja!',
+            'message' => 'Berhasil mengirim Rencana Kinerja',
         ]);
     }
 
-    public function disableRencanaKerja($id){
+    public function disableRencanaKerja(Request $request, $id){
         RencanaKerja::where('id_rencanakerja', $id)
             ->update(['status_realisasi' => 99]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil Menonaktifkan Tugas!',
-        ]);
+            $request->session()->put('status', 'Berhasil membatalkan tugas.');
+            $request->session()->put('alert-type', 'success');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil membatalkan tugas',
+            ]);
     }
 }

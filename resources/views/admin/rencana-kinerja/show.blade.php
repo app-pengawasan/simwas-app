@@ -5,8 +5,6 @@
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
-    {{-- <link rel="stylesheet" href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 
@@ -27,10 +25,12 @@
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
                                     <a class="btn btn-primary" href="/admin/rencana-kinerja">
-                                        <i class="fas fa-chevron-circle-left"></i>
+                                        <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <table class="mb-4">
                                 <tr>
                                     <th style="min-width: 160pt">Tujuan</th>
@@ -62,7 +62,13 @@
                                 </tr>
                                 <tr>
                                     <th>Total Anggaran</th>
-                                    <td>Rp. - </td>
+                                    <td class="rupiah">
+                                        <?php $totalAnggaran = 0; ?>
+                                        @foreach ($timKerja->rencanaKerja as $rk)
+                                            <?php $totalAnggaran += $rk->anggaran->sum('total'); ?>
+                                        @endforeach
+                                        {{ $totalAnggaran }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Status</th>
@@ -100,5 +106,6 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-rencana-kerja.js"></script>
+    <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
+    <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
 @endpush

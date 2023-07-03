@@ -32,6 +32,8 @@
                                     </a>
                                 </div>
                             </div>
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
                             <table class="mb-4">
                                 <tr>
@@ -80,14 +82,13 @@
                             <div class="row mb-4 pb0">
                                 <div class="col-md-12">
                                     @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                        <button class="btn btn-primary" type="button" data-toggle="modal"
-                                            data-target="#modal-create-tugas">
+                                        <button id="btn-modal-create-tugas" class="btn btn-primary" type="button"
+                                            data-toggle="modal" data-target="#modal-create-tugas">
                                             <i class="fas fa-plus-circle"></i>
                                             Tugas
                                         </button>
                                     @endif
                                     @if ($timKerja->status != 0)
-
                                         <button class="btn btn-warning" data-toggle="modal" data-target="#modal-summary">
                                             <i class="fas fa-receipt"></i> Ringkasan
                                         </button>
@@ -101,15 +102,15 @@
                             </div>
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-12">
-                                    <h4>Tugas</h4>
+                                    <h5>Tugas</h5>
                                     <ol>
                                         @foreach ($rencanaKerja as $tugas)
                                             <li class="my-2">
                                                 {{ $tugas->tugas }}
                                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                    <a href="/pegawai/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
+                                                    <a href="/ketua-tim/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
                                                         class="btn btn-warning edit-btn">
-                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-edit"></i>
                                                     </a>
                                                     <a href="javascript(0)" class="btn btn-danger delete-btn"
                                                         data-id="{{ $tugas->id_rencanakerja }}">
@@ -143,5 +144,6 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-rencana-kerja.js"></script>
+    <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
+    <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
 @endpush

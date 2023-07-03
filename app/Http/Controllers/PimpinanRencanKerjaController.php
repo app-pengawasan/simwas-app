@@ -207,24 +207,30 @@ class PimpinanRencanKerjaController extends Controller
     }
 
     // Untuk acc rencana kerja
-    public function accept($id){
+    public function accept(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
         ->update(['status' => 6]);
 
+        $request->session()->put('status', 'Rencana Kinerja telah disetujui.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil Mengirim Rencana Kerja!',
+            'message' => 'Rencana Kinerja telah disetujui',
         ]);
     }
 
     // Untuk Kirim balik rencana kerja ke ketua tim
-    public function sendBackToKetuaTim($id){
+    public function sendBackToKetuaTim(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
         ->update(['status' => 3]);
 
+        $request->session()->put('status', 'Rencana Kerja telah dikembalikan.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Rencana Kerja Berhasil Dikembalikan!',
+            'message' => 'Rencana Kerja telah dikembalikan',
         ]);
     }
 }

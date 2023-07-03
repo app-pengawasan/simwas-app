@@ -24,9 +24,14 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-3">Halaman untuk mengelola rencana kinerja yang didelegasikan.</p>
-                            <div class="">
-                                <table id="tim-kerja" class="table table-bordered display responsive">
+                            <div class="d-flex my-3">
+                                <p class="">
+                                    <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                    Halaman untuk mengelola rencana kinerja yang didelegasikan.
+                                </p>
+                            </div>
+                            <div class="mt-3">
+                                <table id="tim-kerja" class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
                                             <th>Tahun</th>

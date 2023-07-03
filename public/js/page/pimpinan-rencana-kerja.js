@@ -13,7 +13,7 @@ $(function () {
                     className: "btn-success",
                     text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4],
                     },
                 },
                 {
@@ -21,7 +21,7 @@ $(function () {
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4],
                     },
                 },
             ],
@@ -89,18 +89,7 @@ $("#btn-edit-submit").on("click", function (e) {
             iku: iku,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            $("#modal-edit-masteriku").modal("hide");
-            setTimeout(location.reload(), 1000);
-            console.log(response.data[0]);
+            location.reload();
         },
         error: function (error) {
             console.log(error.responseJSON);
@@ -119,8 +108,8 @@ $(".delete-btn").on("click", function (e) {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -133,15 +122,7 @@ $(".delete-btn").on("click", function (e) {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
+                    location.reload();
                 },
                 error: function (e) {
                     console.log(e);
@@ -161,8 +142,8 @@ $("#btn-send-rencana-kerja").on("click", function (e) {
         text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Kirim",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -204,8 +185,8 @@ $("#btn-pimpinan-submit-rk").on("click", function (e) {
         text: "Rencana Kerja yang telah disetujui tidak dapat diubah kembali!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Kirim",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -219,18 +200,7 @@ $("#btn-pimpinan-submit-rk").on("click", function (e) {
                     id_timkerja: id_timkerja,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(
-                        (window.location.href = "/pimpinan/rencana-kinerja"),
-                        1000
-                    );
+                    location.reload();
                 },
                 error: function (e) {
                     console.log(e);
@@ -249,8 +219,8 @@ $("#btn-pimpinan-send-back").on("click", function (e) {
         text: "Rencana Kerja akan dikembalikan untuk direvisi!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Kirim",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -264,18 +234,7 @@ $("#btn-pimpinan-send-back").on("click", function (e) {
                     id_timkerja: id_timkerja,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(
-                        window.location.href("pimpinan/rencana-kinerja"),
-                        1000
-                    );
+                    location.reload();
                 },
                 error: function (e) {
                     console.log(e);
