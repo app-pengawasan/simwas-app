@@ -43,6 +43,11 @@ class InspekturStKinerjaController extends Controller
     ];
 
     protected $jabatan = [
+        '10' => 'Inspektur Utama',
+        '11' => 'Inspektur Wilayah I',
+        '12' => 'Inspektur wilayah II',
+        '13' => 'Inspektur wilayah III',
+        '14' => 'Kepala Bagian Umum',
         '21' =>	'Auditor Utama',
         '22' =>	'Auditor Madya',
         '23' =>	'Auditor Muda',
@@ -240,8 +245,12 @@ class InspekturStKinerjaController extends Controller
 
             // Ambil pelaksana dan objek
             $objek_pengawasan = $usulan->rencanaKerja->objekPengawasan;
+            $obj = [];
+            foreach ($objek_pengawasan as $op) {
+                $obj[] = $op->nama;
+            }
+            $objekGabung = implode(', ', $obj);
             $pelaksana_tugas = $usulan->rencanaKerja->pelaksana;
-
             // Pembuatan surat
             if (count($pelaksana_tugas) == 1) {
                 $surat = Surat::where('nomor_surat', $nomorSurat)->first();
@@ -266,7 +275,7 @@ class InspekturStKinerjaController extends Controller
                         'jabatan' => $this->jabatan[$pelaksana_tugas->user->jabatan],
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $objek_pengawasan->nama,
+                        'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
                         'roleInspektur' => $pimpinan->jabatan,
                         'inspektur' => $pimpinan->user->name
@@ -290,7 +299,7 @@ class InspekturStKinerjaController extends Controller
                         'jabatan' => $this->jabatan[$pelaksana_tugas->user->jabatan],
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $objek_pengawasan->nama,
+                        'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal)
                     ]);
 
@@ -370,7 +379,7 @@ class InspekturStKinerjaController extends Controller
                         'no_surat' => $nomorSurat,
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $objek_pengawasan->nama,
+                        'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
                         'roleInspektur' => $pimpinan->jabatan,
                         'inspektur' => $pimpinan->user->name
@@ -391,7 +400,7 @@ class InspekturStKinerjaController extends Controller
                         'no_surat' => $nomorSurat,
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'objek' => $objek_pengawasan->nama,
+                        'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal)
                     ]);
 
@@ -422,7 +431,7 @@ class InspekturStKinerjaController extends Controller
                 'no_surat' => $nomorSurat,
                 'draft' => '/storage'.'/'.$outputPath
             ]);
-            RencanaKerja::where('id_rencanakerja', $usulan->rencanaKerja->id_rencanakerja)->update(['status' => '1']);
+            RencanaKerja::where('id_rencanakerja', $usulan->rencanaKerja->id_rencanakerja)->update(['status_realisasi' => '1']);
             StKinerja::where('id', $request->input('id'))->update($validatedData);
             return redirect('inspektur/st-kinerja')->with('success', 'Berhasil menyetujui usulan surat!');
         } elseif ($request->input('status') == '5') {
