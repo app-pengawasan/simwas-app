@@ -200,9 +200,6 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
 
-    Route::get('/pegawai/dashboard', function () {
-        return view('pegawai.index', ['type_menu' => 'dashboard']);
-    })->name('dashboard');
     // Ketua Tim
     Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
     Route::put('/ketua-tim/rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
