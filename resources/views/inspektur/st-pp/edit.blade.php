@@ -274,38 +274,84 @@
     </script>
     <script>
         $(document).ready(function() {
-            $("#pp_id").on("change", function() {
-                const ppId = $(this).val();
-                if(ppId == 1 || ppId == 2 || ppId == 3){
+            const ppId_awal = $("#pp_id").val();
+            if (ppId_awal) {
+                if (ppId_awal == 1 || ppId_awal == 2 || ppId_awal == 3) {
                     $.ajax({
-                    url: `/get-nama-pp-by-pp`,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        pp_id: ppId
-                    },
-                    dataType: "json",
-                    success: (data) => {
-                        $("#div_nama_pp").empty();
-                        $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
+                        url: `/get-nama-pp-by-pp`,
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            pp_id: ppId_awal
+                        },
+                        dataType: "json",
+                        success: (data) => {
+                            $("#div_nama_pp").empty();
+                            $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
                                         <select id="nama_pp" required class="form-control select2" name="nama_pp">
                                             <option value="">Pilih nama pengembangan profesi</option>
                                         </select>`);
 
-                        data.namaPp.forEach(element => {
-                            $("#nama_pp").append(
-                                `<option value="${element.nama}">${element.nama}</option>`
-                            );
-                        });
-                        // console.log(data);
-                    },
-                    error: function(request, status, error) {
-                        alert(request.responseText);
-                    }
-                });
+                            data.namaPp.forEach(element => {
+                                    @if (old('nama_pp', $usulan->nama_pp))
+                                        if (element.nama == '{{ old('nama_pp', $usulan->nama_pp) }}') {
+                                            $("#nama_pp").append(`<option value="${element.nama}" selected>${element.nama}</option>`);
+                                        } else {
+                                            $("#nama_pp").append(`<option value="${element.nama}">${element.nama}</option>`);
+                                        }
+                                    @else
+                                        $("#nama_pp").append(`<option value="${element.nama}">${element.nama}</option>`);
+                                    @endif
+                                
+                            });
+                            // console.log(data);
+                        },
+                        error: function(request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
                 } else {
                     $("#div_nama_pp").empty();
-                    $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`);
+                    $("#div_nama_pp").append(
+                        `<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp" value="{{ old('nama_pp', $usulan->nama_pp) }}">`
+                    );
+                }
+            }
+
+            $("#pp_id").on("change", function() {
+                const ppId = $(this).val();
+                if (ppId == 1 || ppId == 2 || ppId == 3) {
+                    $.ajax({
+                        url: `/get-nama-pp-by-pp`,
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            pp_id: ppId
+                        },
+                        dataType: "json",
+                        success: (data) => {
+                            $("#div_nama_pp").empty();
+                            $("#div_nama_pp").append(`<label for="nama_pp">Nama Pengembangan Profesi</label>
+                                        <select id="nama_pp" required class="form-control select2" name="nama_pp">
+                                            <option value="">Pilih nama pengembangan profesi</option>
+                                        </select>`);
+
+                            data.namaPp.forEach(element => {
+                                $("#nama_pp").append(
+                                    `<option value="${element.nama}">${element.nama}</option>`
+                                );
+                            });
+                            // console.log(data);
+                        },
+                        error: function(request, status, error) {
+                            alert(request.responseText);
+                        }
+                    });
+                } else {
+                    $("#div_nama_pp").empty();
+                    $("#div_nama_pp").append(
+                        `<label for="nama_pp">Nama Pengembangan Profesi</label><input type="text" class="form-control" id="nama_pp_text" name="nama_pp">`
+                    );
                 }
             });
         });
