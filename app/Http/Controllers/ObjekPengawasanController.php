@@ -39,18 +39,32 @@ class ObjekPengawasanController extends Controller
     {
         $rules = [
             'id_rencanakerja'   => 'required',
-            'id_objek'          => 'required',
+            'objek'          => 'required',
             'kategori_objek'    => 'required',
             'nama'              => 'required'
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validateData = $request->validate($rules);
 
-        ObjekPengawasan::create($validateData);
+        ObjekPengawasan::create([
+            'id_rencanakerja'   => $validateData['id_rencanakerja'],
+            'id_objek'          => $validateData['objek'],
+            'kategori_objek'    => $validateData['kategori_objek'],
+            'nama'              => $validateData['nama']
+        ]);
+
+        $request->session()->put('status', 'Berhasil menambahkan Objek Pengawasan.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
-            'success'   => true,
-            'message'   => 'Objek Berhasil Ditambahkan'
+            'success' => true,
+            'message' => 'Berhasil menambahkan Objek Pengawasan',
         ]);
     }
 
@@ -86,27 +100,30 @@ class ObjekPengawasanController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'id_objek'          => 'required',
-            'kategori'          => 'required',
-            'nama'              => 'required'
+            'objek'          => 'required',
+            'kategori_objek' => 'required',
+            'nama'           => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         ObjekPengawasan::where('id_opengawasan', $request->id_opengawasan)
         ->update([
-            'id_objek'          => $request->id_objek,
-            'kategori_objek'    => $request->kategori,
+            'id_objek'          => $request->objek,
+            'kategori_objek'    => $request->kategori_objek,
             'nama'              => $request->nama
         ]);
 
+        $request->session()->put('status', 'Berhasil memperbarui Objek Pengawasan.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Objek Berhasil Diperbarui',
+            'success' => true,
+            'message' => 'Berhasil memperbarui Objek Pengawasan',
         ]);
     }
 
@@ -116,13 +133,16 @@ class ObjekPengawasanController extends Controller
      * @param  \App\Models\ObjekPengawasan  $objekPengawasan
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         ObjekPengawasan::where('id_opengawasan', $id)->delete()   ;
 
+        $request->session()->put('status', 'Berhasil menghapus Objek Pengawasan.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Objek Berhasil Dihapus'
+            'success' => true,
+            'message' => 'Berhasil menghapus Objek Pengawasan',
         ]);
     }
 }

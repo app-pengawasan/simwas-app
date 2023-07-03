@@ -24,23 +24,26 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-3">Menampilkan seluruh tugas yang telah disetujui Pimpinan.</p>
+                            <p class="mb-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Menampilkan seluruh tugas yang telah disetujui Pimpinan.
+                            </p>
                             <?php
                             $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
                             $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
                             ?>
-                            @foreach ($tugasSaya as $ts)
-                                <table id="tim-kerja" class="table table-bordered display responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>Tugas</th>
-                                            <th>Tahun</th>
-                                            <th>Jabatan</th>
-                                            <th>Hasil kerja</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
+                            <table id="tim-kerja" class="table table-bordered table-striped display responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Tugas</th>
+                                        <th>Tahun</th>
+                                        <th>Jabatan</th>
+                                        <th>Hasil kerja</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                @foreach ($tugasSaya as $ts)
                                     <tbody>
                                         <tr>
                                             <td>
@@ -54,7 +57,11 @@
                                             </td>
                                             <td>
                                                 @if ($ts->pt_jabatan == 3)
-                                                    {{ $hasilKerja[$ts->pt_hasil] }}
+                                                    @if ($ts->pt_hasil == 2)
+                                                        Kertas Kerja
+                                                    @else
+                                                        {{ $hasilKerja[$ts->pt_hasil] }}
+                                                    @endif
                                                 @elseif ($ts->pt_jabatan == 4)
                                                     Kertas Kerja
                                                 @else
@@ -81,8 +88,8 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
-                            @endforeach
+                                @endforeach
+                            </table>
                         </div>
                     </div>
                 </div>

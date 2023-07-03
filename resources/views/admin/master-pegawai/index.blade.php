@@ -60,9 +60,11 @@
                             @include('components.flash')
                             <p class="mt-3">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Untuk melakukan import pegawai silahkan download format <a
-                                    href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
-                                    class="link-primary font-weight-bold" download>disini</a>.
+                                Untuk melakukan import pegawai silahkan download format
+                                <a href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
+                                    class="link-primary font-weight-bold" download>
+                                    <i class="fas fa-download"></i> disini
+                                </a>.
                             </p>
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">

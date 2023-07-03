@@ -38,17 +38,25 @@ class PelaksanaTugasController extends Controller
     {
         $rules = [
             'id_rencanakerja'   => 'required',
-            'id_pegawai'        => 'required',
+            'pelaksana'        => 'required',
             'pt_jabatan'        => 'required',
-            'pt_hasil'          => 'required',
+            'hasil_kerja'          => 'required',
         ];
         $validateData = $request->validate($rules);
 
-        PelaksanaTugas::create($validateData);
+        PelaksanaTugas::create([
+            'id_rencanakerja'   => $validateData['id_rencanakerja'],
+            'id_pegawai'        => $validateData['pelaksana'],
+            'pt_jabatan'        => $validateData['pt_jabatan'],
+            'pt_hasil'          => $validateData['hasil_kerja']
+        ]);
+
+        $request->session()->put('status', 'Berhasil menambahkan Pelaksana Tugas.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
-            'success'   => true,
-            'message'   => 'Pelaksana Tugas Berhasil Ditambahkan'
+            'success' => true,
+            'message' => 'Berhasil menambahkan Pelaksana Tugas',
         ]);
     }
 
@@ -90,27 +98,30 @@ class PelaksanaTugasController extends Controller
     {
         $rules = [
             'id_pelaksana'      => 'required',
-            'id_pegawai'        => 'required',
+            'pelaksana'        => 'required',
             'pt_jabatan'        => 'required',
-            'pt_hasil'          => 'required',
+            'hasil_kerja'          => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         PelaksanaTugas::where('id_pelaksana', $request->id_pelaksana)
         ->update([
-            'id_pegawai'    => $request->id_pegawai,
+            'id_pegawai'    => $request->pelaksana,
             'pt_jabatan'    => $request->pt_jabatan,
-            'pt_hasil'      => $request->pt_hasil,
+            'pt_hasil'      => $request->hasil_kerja,
         ]);
 
+        $request->session()->put('status', 'Berhasil memperbarui Pelaksana Tugas.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Pelaksana Berhasil Diperbarui',
+            'success' => true,
+            'message' => 'Berhasil memperbarui Pelaksana Tugas',
         ]);
     }
 
@@ -120,13 +131,16 @@ class PelaksanaTugasController extends Controller
      * @param  \App\Models\PelaksanaTugas  $pelaksanaTugas
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         PelaksanaTugas::where('id_pelaksana', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Pelaksana.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
-            'success'   => true,
-            'message'   => 'Pelaksana Berhasil Dihapus'
+            'success' => true,
+            'message' => 'Berhasil menghapus Pelaksana',
         ]);
     }
 }

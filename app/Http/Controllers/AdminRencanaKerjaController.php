@@ -194,28 +194,34 @@ class AdminRencanaKerjaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+
     }
 
-    public function sendToInspektur($id){
+    public function sendToInspektur(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
         ->update(['status' => 5]);
 
+        $request->session()->put('status', 'Berhasil mengirim rencana kinerja ke Pimpinan.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil Mengirim Rencana Kerja!',
+            'message' => 'Berhasil mengirim rencana kinerja ke Pimpinan',
         ]);
     }
 
-    public function sendBackToKetuaTim($id){
+    public function sendBackToKetuaTim(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
         ->update(['status' => 3]);
 
+        $request->session()->put('status', 'Berhasil mengembalikan rencana kinerja.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Rencana Kerja Berhasil Dikembalikan!',
+            'message' => 'Berhasil mengembalikan rencana kinerja',
         ]);
     }
 }

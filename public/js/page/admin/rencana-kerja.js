@@ -11,29 +11,87 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4, 5],
                     },
                 },
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2, 3, 4, 5],
                     },
                 },
             ],
         })
         .buttons()
         .container()
-        .appendTo("#master-iku_wrapper .col-md-6:eq(0)");
+        .appendTo("#tim-kerja_wrapper .col-md-6:eq(0)");
 });
 
-$("#id_iku").on("change", function () {
-    let idsasaran = $("#id_iku option:selected").data("idsasaran");
-    $("#id_sasaran").val(idsasaran);
-    let idtujuan = $("#id_sasaran option:selected").data("idtujuan");
-    $("#id_tujuan").val(idtujuan);
+$("#create-btn").on("click", function () {
+    $("#error-tahun").text("");
+    $("#error-unitkerja").text("");
+    $("#error-iku").text("");
+    $("#error-nama").text("");
+    $("#error-ketua").text("");
+});
+
+$("#create-iku").on("change", function () {
+    let idsasaran = $("#create-iku option:selected").data("idsasaran");
+    $("#create-id_sasaran").val(idsasaran);
+    let idtujuan = $("#create-id_sasaran option:selected").data("idtujuan");
+    $("#create-id_tujuan").val(idtujuan);
+});
+
+$(".submit-btn").on("click", function (e) {
+    e.preventDefault();
+
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    let tahun = $("#create-tahun").val();
+    let unitkerja = $("#create-unitkerja").val();
+    let iku = $("#create-iku").val();
+    let nama = $("#create-nama").val();
+    let ketua = $("#create-ketua").val();
+
+    // Reset invalid message while modal open
+    $("#error-tahun").text("");
+    $("#error-unitkerja").text("");
+    $("#error-iku").text("");
+    $("#error-nama").text("");
+    $("#error-ketua").text("");
+
+    // return alert([tahun, unitkerja, iku, nama, ketua]);
+
+    $.ajax({
+        url: `/admin/tim-kerja`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            tahun: tahun,
+            unitkerja: unitkerja,
+            iku: iku,
+            nama: nama,
+            ketua: ketua,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+            console.log(errors);
+        },
+    });
 });
 
 $("#id_sasaran").on("change", function () {
@@ -121,29 +179,21 @@ $(".delete-btn").on("click", function () {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `/admin/master-iku/${dataId}`,
+                url: `/admin/tim-kerja/${dataId}`,
                 type: "DELETE",
                 cache: false,
                 data: {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    setTimeout(location.reload(), 1000);
+                    location.reload();
                 },
                 error: function (e) {
                     console.log(e);

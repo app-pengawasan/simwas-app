@@ -65,13 +65,13 @@
                                 <td>{{ $statusTim[$timKerja->status] }}</td>
                             </tr>
                         </table>
-                        <h4 class="mt-4">Tugas</h4>
+                        <h5 class="mt-4">Tugas</h5>
                         <ol>
                             @foreach ($rencanaKerja as $tugas)
                                 <li>{{ $tugas->tugas }}</li>
                             @endforeach
                         </ol>
-                        <h4 class="mt-4">Rincian</h4>
+                        <h5 class="mt-4">Rincian</h5>
                         <ol>
                             @foreach ($rencanaKerja as $tugas)
                                 <li class="font-weight-bold mt-4">
@@ -126,7 +126,11 @@
                                                     @elseif ($pelaksana->pt_jabatan == 4)
                                                         Kertas Kerja
                                                     @else
-                                                        {{ $hasilKerja[$pelaksana->pt_hasil] }}
+                                                        @if ($pelaksana->pt_hasil == 2)
+                                                            Kertas kerja
+                                                        @else
+                                                            {{ $hasilKerja[$pelaksana->pt_hasil] }}
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
@@ -176,11 +180,11 @@
             <div class="modal-footer">
                 {{-- Admin --}}
                 @if (Request::is('admin/rencana-kinerja/*'))
-                    <button class="btn btn-danger" id="btn-admin-send-back">
-                        <i class="fas fa-undo"></i>
-                        Kembalikan
-                    </button>
                     @if ($timKerja->status == 2)
+                        <button class="btn btn-danger" id="btn-admin-send-back">
+                            <i class="fas fa-undo"></i>
+                            Kembalikan
+                        </button>
                         <button class="btn btn-success" id="btn-admin-submit-rk">
                             <i class="far fa-paper-plane"></i>
                             Ajukan

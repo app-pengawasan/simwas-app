@@ -10,9 +10,9 @@
             </div>
             <div class="modal-body">
                 <div class="card-body">
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="pt-jabatan">Jabatan</label>
-                        <div class="col-sm-10">
+                    <div class="form-group">
+                        <label class="label" for="pt-jabatan">Jabatan</label>
+                        <div class="">
                             <select id="pt-jabatan" class="form-control" name="pt-jabatan" disabled required>
                                 <option value="1">Pengendali Teknis</option>
                                 <option value="2">Ketua Tim</option>
@@ -21,22 +21,23 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="pt-hasil">Hasil Kerja</label>
-                        <div class="col-sm-10">
+                    <div class="form-group">
+                        <label class="label" for="pt-hasil">Hasil Kerja</label>
+                        <div class="">
                             <select id="pt-hasil" class="form-control" name="pt-hasil" disabled required>
                                 @foreach ($allHasilKerja as $hasilkerja)
                                     <option value="{{ $hasilkerja->kategori_hasilkerja }}">
                                         {{ $masterHasilKerja[$hasilkerja->kategori_hasilkerja] }}
                                     </option>
                                 @endforeach
-                                <option value="2" selected>Kertas Kerja</option>
+                                <option value="2">Kertas Kerja</option>
                             </select>
+                            <small id="error-hasil_kerja" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="pelaksana">Nama</label>
-                        <div class="col-sm-10">
+                    <div class="form-group">
+                        <label class="label" for="pelaksana">Nama</label>
+                        <div class="">
                             <select id="pelaksana" class="form-control" name="pelaksana">
                                 <option value="" selected disabled></option>
                                 @foreach ($pegawai as $p)
@@ -48,13 +49,18 @@
                                     @endif
                                 @endforeach
                             </select>
+                            <small id="error-pelaksana" class="text-danger"></small>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-success" id="btn-submit-pelaksana">Tambah</button>
+                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                    <i class="fas fa-exclamation-triangle"></i>Batal
+                </button>
+                <button type="submit" class="btn btn-icon icon-left btn-primary" id="btn-submit-pelaksana">
+                    <i class="fas fa-save"></i>Simpan
+                </button>
             </div>
         </div>
     </div>

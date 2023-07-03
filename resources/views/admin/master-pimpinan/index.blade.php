@@ -25,7 +25,10 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">Halaman untuk mengelola Pimpinan Inspektorat</p>
+                            <p class="mbt-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman untuk mengelola Pimpinan Inspektorat
+                            </p>
                             @include('components.flash')
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">

@@ -27,7 +27,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Detail Tugas</h1>
+                <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">
@@ -36,28 +36,34 @@
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
                                     <a class="btn btn-primary"
-                                        href="/pegawai/rencana-kinerja/{{ $rencanaKerja->timkerja->id_timkerja }}">
-                                        <i class="fas fa-chevron-circle-left"></i>
+                                        href="/ketua-tim/rencana-kinerja/{{ $rencanaKerja->timkerja->id_timkerja }}">
+                                        <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <table class="mb-4">
                                 <input type="hidden" name="id_rencanakerja" id="id_rencanakerja"
                                     value="{{ $rencanaKerja->id_rencanakerja }}">
                                 <tr>
                                     <th style="min-width: 120pt">Kegiatan</th>
+                                    <td>: </td>
                                     <td>{{ $rencanaKerja->timkerja->nama }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tugas</th>
+                                    <td>: </td>
                                     <td>{{ $rencanaKerja->tugas }}</td>
                                 </tr>
                                 <tr>
                                     <th>Unsur</th>
+                                    <td>: </td>
                                     <td>{{ $unsur[$rencanaKerja->hasilkerja->unsur] }}</td>
                                 </tr>
                                 <tr>
                                     <th>Objek</th>
+                                    <td>: </td>
                                     <td>
                                         @if (count($rencanaKerja->objekPengawasan))
                                             <ol>
@@ -93,15 +99,18 @@
                                 </tr>
                                 <tr>
                                     <th>Kategori Pelaksana</th>
+                                    <td>: </td>
                                     <td>{{ $pelaksanaTugas[$rencanaKerja->kategori_pelaksanatugas] }}</td>
                                 </tr>
                                 <?php setlocale(LC_ALL, 'id-ID', 'id_ID'); ?>
                                 <tr>
                                     <th>Mulai</th>
+                                    <td>: </td>
                                     <td>{{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->mulai)) }}</td>
                                 </tr>
                                 <tr>
                                     <th>Selesai</th>
+                                    <td>: </td>
                                     <td>{{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->selesai)) }}</td>
                                 </tr>
                             </table>
@@ -118,7 +127,8 @@
                                             Tambah Pelaksana
                                         </button>
                                     @endif
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal-create-objek">
+                                    <button id="btn-create-objek" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#modal-create-objek">
                                         <i class="fas fa-building"></i>
                                         Tambah Objek
                                     </button>
@@ -143,7 +153,7 @@
                                         @if ($rencanaKerja->kategori_pelaksanatugas == 'gt')
                                             <?php
                                             $jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
-                                            $hasilKerja = ['Lembar Reviu', 'kertas kerja'];
+                                            $hasilKerja = ['Lembar Reviu', 'Kertas Kerja'];
                                             $jumlahPelaksana = count($rencanaKerja->pelaksana) < 3 ? 3 : count($rencanaKerja->pelaksana);
                                             ?>
                                             @for ($i = 0; $i < $jumlahPelaksana; $i++)
@@ -156,22 +166,25 @@
                                                         </td>
                                                         <td>{{ $i == 0 ? 'Lembar Reviu' : 'Kertas Kerja' }}</td>
                                                         <td>
-                                                            <button class="btn btn-primary btn-create-pelaksana"
-                                                                type="button" data-toggle="modal" data-disable=true
-                                                                data-target="#modal-create-pelaksana"
-                                                                data-hasilkerja={{ $i == 0 ? 1 : 2 }}
-                                                                data-jabatan=<?php
-                                                                if ($i == 0) {
-                                                                    echo 1;
-                                                                } elseif ($i == 1) {
-                                                                    echo 2;
-                                                                } else {
-                                                                    echo 4;
-                                                                }
-                                                                ?>>
-                                                                <i class="fas fa-plus-circle"></i>
-
-                                                            </button>
+                                                            @if ($i > 0 && !isset($rencanaKerja->pelaksana[$i - 1]))
+                                                                <i>Belum tersedia</i>
+                                                            @elseif($i == 0 || isset($rencanaKerja->pelaksana[$i - 1]))
+                                                                <button class="btn btn-primary btn-create-pelaksana"
+                                                                    type="button" data-toggle="modal" data-disable=true
+                                                                    data-target="#modal-create-pelaksana"
+                                                                    data-hasilkerja={{ $i == 0 ? 1 : 2 }}
+                                                                    data-jabatan=<?php
+                                                                    if ($i == 0) {
+                                                                        echo 1;
+                                                                    } elseif ($i == 1) {
+                                                                        echo 2;
+                                                                    } else {
+                                                                        echo 4;
+                                                                    }
+                                                                    ?>>
+                                                                    <i class="fas fa-plus-circle"></i>
+                                                                </button>
+                                                            @endif
                                                         </td>
                                                     @else
                                                         <td>
@@ -235,7 +248,7 @@
                                                                 data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
-                                                            @if ($i > 1)
+                                                            @if ($i >= 1)
                                                                 <button class="btn btn-danger btn-delete-pelaksana"
                                                                     type="button"
                                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">

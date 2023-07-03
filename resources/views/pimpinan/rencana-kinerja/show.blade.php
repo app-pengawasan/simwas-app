@@ -31,6 +31,8 @@
                                 </div>
                             </div>
                             <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <table class="mb-4">
                                 <tr>
                                     <th style="min-width: 94pt">Tujuan</th>
@@ -97,7 +99,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="row mb-4 pb-0">
+                            {{-- <div class="row mb-4 pb-0">
                                 <div class="col-md-12">
                                     <h4>Tugas</h4>
                                     <ol>
@@ -118,7 +120,7 @@
                                         @endforeach
                                     </ol>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="card-footer">
                         </div>
