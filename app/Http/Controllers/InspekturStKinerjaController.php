@@ -422,6 +422,7 @@ class InspekturStKinerjaController extends Controller
                 'no_surat' => $nomorSurat,
                 'draft' => '/storage'.'/'.$outputPath
             ]);
+            RencanaKerja::where('id_rencanakerja', $usulan->rencanaKerja->id_rencanakerja)->update(['status' => '1']);
             StKinerja::where('id', $request->input('id'))->update($validatedData);
             return redirect('inspektur/st-kinerja')->with('success', 'Berhasil menyetujui usulan surat!');
         } elseif ($request->input('status') == '5') {
