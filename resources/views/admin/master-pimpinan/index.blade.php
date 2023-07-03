@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Master Pegawai')
+@section('title', 'Master Pimpinan')
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -26,25 +26,13 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="mb-0">Halaman untuk mengelola Pimpinan Inspektorat</p>
-                            @if (session()->has('success'))
-                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                    <p>{{ session('success') }}</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                            @include('components.flash')
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="/admin/master-pimpinan/create">
                                         <i class="fas fa-plus-circle"></i>
                                         Tambah
                                     </a>
-                                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#staticBackdrop">
-                                        <i class="fas fa-file-upload"></i>
-                                        Import
-                                    </button> --}}
                                 </div>
                             </div>
                             <div class="">
@@ -68,28 +56,19 @@
                                                 <td>{{ date('d-m-Y', strtotime($p->mulai)) }} s.d.
                                                     {{ date('d-m-Y', strtotime($p->selesai)) }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary mb-2 mr-2"
+                                                    {{-- <a class="btn btn-primary"
                                                         href="/admin/master-pimpinan/{{ $p->id_pimpinan }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-info"></i>
-                                                    </a>
-                                                    <a class="btn btn-warning mb-2 mr-2"
-                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}/edit"
-                                                        style="width: 42px">
+                                                    </a> --}}
+                                                    <a class="btn btn-warning"
+                                                        href="/admin/master-pimpinan/{{ $p->id_pimpinan }}/edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    @if ($p->id_pimpinan != auth()->user()->id)
-                                                        <form class="d-inline mb-2"
-                                                            action="{{ route('master-pimpinan.destroy', $p->id_pimpinan) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                style="width: 42px">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    <a href="javascript:void(0)" class="btn btn-danger delete-btn"
+                                                        data-id="{{ $p->id_pimpinan }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -122,5 +101,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/master-pegawai.js"></script>
+    <script src="{{ asset('js/page/admin/master-pimpinan.js') }}"></script>
 @endpush

@@ -27,25 +27,15 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">Halaman kelola daftar Unit Kerja BPS, untuk melakukan import silahkan download
-                                format <a href="{{ asset('document/data-unit-kerja-bps.xlsx') }}"
-                                    class="link-primary font-weight-bold" download="">disini</a>.</p>
-                            @if (session()->has('success'))
-                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                    <p>{{ session('success') }}</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <p>Gagal menambah data Unit Kerja</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                            @include('components.flash')
+                            <p class="mt-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman kelola daftar Unit Kerja BPS, untuk melakukan import silahkan download format
+                                <a href="{{ asset('document/data-unit-kerja-bps.xlsx') }}"
+                                    class="link-primary font-weight-bold" download=""><i class="fas fa-download"></i>
+                                    disini</a>.
+                            </p>
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -61,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="">
-                                <table id="master-unit-kerja" class="table table-bordered display responsive">
+                                <table id="master-unit-kerja" class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
                                             <th>Kode Unit Kerja</th>
@@ -115,6 +105,8 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/master-unit-kerja.js"></script>
-    <script></script>
+    <script src="{{ asset('js/page/admin/master-unit-kerja.js') }}"></script>
+    <script>
+        // if ($errors - > any())
+    </script>
 @endpush

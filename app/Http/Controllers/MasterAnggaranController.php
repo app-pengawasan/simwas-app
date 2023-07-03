@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MasterAnggaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MasterAnggaranController extends Controller
 {
@@ -52,15 +53,17 @@ class MasterAnggaranController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'id_kegiatan'   => 'unique:master_anggarans|required',
-            'kegiatan'      => 'required'
+            'id_kegiatan'   => 'unique:master_anggarans|required|size:4',
+            'kegiatan'      => 'required|min:8'
         ];
 
         $validateData = $request->validate($rules);
         $validateData["program"] = $this->program_manggaran;
         MasterAnggaran::create($validateData);
 
-        return redirect(route('master-anggaran.index'))->with('success', 'Berhasil menambah data master anggaran.');
+        return redirect(route('master-anggaran.index'))
+            ->with('status', 'Berhasil menambahkan master anggaran.')
+            ->with('alert-type', 'success');
     }
 
     /**
@@ -98,11 +101,11 @@ class MasterAnggaranController extends Controller
     public function update(Request $request, MasterAnggaran $masterAnggaran)
     {
         $rules = [
-            'kegiatan'      => 'required'
+            'kegiatan'      => 'required|min:8'
         ];
 
         if($request->id_kegiatan != $masterAnggaran->id_kegiatan){
-            $rules["id_kegiatan"] = 'unique:master_anggarans|required';
+            $rules["id_kegiatan"] = 'unique:master_anggarans|required|size:4';
         }
 
         $validateData = $request->validate($rules);
@@ -118,8 +121,12 @@ class MasterAnggaranController extends Controller
      * @param  \App\Models\MasterAnggaran  $masterAnggaran
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MasterAnggaran $masterAnggaran)
+    public function destroy($id)
     {
-
+        MasterAnggaran::destroy($id);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!',
+        ]);
     }
 }

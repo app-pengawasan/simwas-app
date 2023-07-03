@@ -11,15 +11,17 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2],
                     },
                 },
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2],
                     },
                 },
             ],
@@ -29,18 +31,56 @@ $(function () {
         .appendTo("#master-objek-kegiatan_wrapper .col-md-6:eq(0)");
 });
 
-$("#kode_unitkerja").on("change", function (e) {
+$(".submit-btn").on("click", function (e) {
     e.preventDefault();
-    let kodeunitkerja = $("#kode_unitkerja").val();
+
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    let nama_unitkerja = $("#nama_unitkerja").val();
+    let kode_unitkerja = $("#unit_kerja").val();
+    let kode_kegiatan = $("#kode_kegiatan").val();
+    let nama = $("#nama").val();
+
+    $.ajax({
+        url: `/admin/objek-kegiatan`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            nama_unitkerja: nama_unitkerja,
+            unit_kerja: kode_unitkerja,
+            kode_kegiatan: kode_kegiatan,
+            nama: nama,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                if (key != "nama_unitkerja" || key != "unit_kerja") {
+                    let errorMessage = document.getElementById(`error-${key}`);
+                    errorMessage.innerText = `${value}`;
+                }
+                console.log(`error-${key}`);
+            });
+            console.log(error);
+        },
+    });
+});
+
+$("#unit_kerja").on("change", function (e) {
+    e.preventDefault();
+    let kodeunitkerja = $("#unit_kerja").val();
 
     $.ajax({
         type: "GET",
         url: `/admin/objek-kegiatan/count/${kodeunitkerja}`,
         cache: false,
         success: function (response) {
-            $("#nama_unitkerja").val(
-                $("#kode_unitkerja option:selected").text()
-            );
+            $("#nama_unitkerja").val($("#unit_kerja option:selected").text());
             let count = response.data.count;
             let kodekegiatanvalue = $("#kode_kegiatan").val();
             if (Number(count) < 10) {
@@ -144,8 +184,8 @@ $(".delete-btn").on("click", function () {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -158,18 +198,7 @@ $(".delete-btn").on("click", function () {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    $(`#index_${dataId}`).remove();
-                },
-                error: function (e) {
-                    console.log(e);
+                    location.reload();
                 },
             });
         }

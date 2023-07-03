@@ -14,15 +14,19 @@
                     @csrf
                     <div class="form-group">
                         <label>File</label>
-                        <input type="file" class="form-control" name="file" required>
+                        <input type="file" class="form-control" name="file" accept=".xlsx" required>
                         <div class="invalid-feedback">
                             File belum ditambahkan
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Impor</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <i class="fas fa-exclamation-triangle"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-file-upload"></i> Impor
+                    </button>
                 </div>
             </form>
         </div>

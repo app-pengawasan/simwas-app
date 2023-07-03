@@ -26,26 +26,15 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-0">Halaman Mengelola Hasil Kinerja Pegawai Inspektorat Utama.</p>
-                            @if (session()->has('success'))
-                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                    <p>{{ session('success') }}</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <p>Gagal menambah Indikator Kinerja Utama</p>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
+                            @include('components.flash')
+                            <p class="mt-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman Mengelola Hasil Kinerja Pegawai Inspektorat Utama.
+                            </p>
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                         data-target="#modal-create-masterhasil">
                                         <i class="fas fa-plus-circle"></i>
                                         Tambah
@@ -53,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="">
-                                <table id="master-hasil" class="table table-bordered display responsive">
+                                <table id="master-hasil" class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
                                             <th>Unsur</th>
@@ -113,5 +102,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/master-hasil.js"></script>
+    <script src="{{ asset('js/page/admin/master-hasil.js') }}"></script>
 @endpush

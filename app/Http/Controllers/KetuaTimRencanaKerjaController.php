@@ -96,7 +96,7 @@ class KetuaTimRencanaKerjaController extends Controller
 
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
-        return view('pegawai.rencana-kinerja.index', [
+        return view('pegawai.rencana-kinerja.ketua-tim..index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
             'masterTujuan' => $masterTujuan,
@@ -151,7 +151,7 @@ class KetuaTimRencanaKerjaController extends Controller
 
         // return $hasil;
 
-        return redirect('/pegawai/rencana-kinerja/'.$request->id_timkerja)->with('success', 'Berhasil menambah Tugas.');;
+        return redirect('/ketua-tim/rencana-kinerja/'.$request->id_timkerja)->with('success', 'Berhasil menambah Tugas.');;
     }
 
     /**
@@ -172,7 +172,7 @@ class KetuaTimRencanaKerjaController extends Controller
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
 
 
-        return view('pegawai.rencana-kinerja.show', [
+        return view('pegawai.rencana-kinerja.ketua-tim.show', [
             'type_menu'     => 'rencana-kinerja',
             'unitKerja'     => $this->unitkerja,
             'masterTujuan'  => $masterTujuan,
@@ -237,6 +237,15 @@ class KetuaTimRencanaKerjaController extends Controller
             'success' => true,
             'message' => 'Berhasil Mengirim Rencana Kerja!',
         ]);
+    }
 
+    public function disableRencanaKerja($id){
+        RencanaKerja::where('id_rencanakerja', $id)
+            ->update(['status_realisasi' => 99]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil Menonaktifkan Tugas!',
+        ]);
     }
 }

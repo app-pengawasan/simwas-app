@@ -5,8 +5,6 @@
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
-    {{-- <link rel="stylesheet" href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 
@@ -27,8 +25,8 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/pegawai/rencana-kinerja">
-                                        <i class="fas fa-chevron-circle-left"></i>
+                                    <a class="btn btn-primary" href="/pimpinan/rencana-kinerja">
+                                        <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
                                     </a>
                                 </div>
                             </div>
@@ -134,12 +132,6 @@
 
 @push('scripts')
     <!-- JS Libraies -->
-    {{-- <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
-    <script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-    <script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-    <script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-    <script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->

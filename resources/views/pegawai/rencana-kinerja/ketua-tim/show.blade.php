@@ -27,8 +27,8 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/pegawai/rencana-kinerja">
-                                        <i class="fas fa-chevron-circle-left"></i>
+                                    <a class="btn btn-primary" href="/ketua-tim/rencana-kinerja">
+                                        <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>

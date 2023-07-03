@@ -10,9 +10,9 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="edit-nama_unitkerja" name="nama_unitkerja">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="kode_unitkerja">Kegiatan</label>
-                    <div class="col-sm-10">
+                <div class="form-group">
+                    <label class="form-label" for="kode_unitkerja">Kegiatan</label>
+                    <div class="">
                         <select id="edit-kode_unitkerja" class="form-control" name="kode_unitkerja" required>
                             <option value="" disabled selected>Pilih Unit Kerja</option>
                             @foreach ($master_unitkerja as $unitkerja)
@@ -24,23 +24,27 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="kode_kegiatan">Kode Kegiatan</label>
-                    <div class="col-sm-10">
+                <div class="form-group">
+                    <label class="form-label" for="kode_kegiatan">Kode Kegiatan</label>
+                    <div class="">
                         <input type="text" id="edit-kode_kegiatan" class="form-control" name="kode_kegiatan" required
                             readonly>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="nama">Nama</label>
-                    <div class="col-sm-10">
+                <div class="form-group">
+                    <label class="form-label" for="nama">Nama</label>
+                    <div class="">
                         <input type="text" id="edit-nama" class="form-control" name="nama" required>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                <button type="submit" id="btn-edit-submit" class="btn btn-success">Simpan</button>
+                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                    <i class="fas fa-exclamation-triangle"></i>Batal
+                </button>
+                <button type="submit" id="btn-edit-submit" class="btn btn-icon icon-left btn-primary">
+                    <i class="fas fa-save"></i>Simpan
+                </button>
             </div>
             </form>
         </div>

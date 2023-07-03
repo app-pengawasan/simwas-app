@@ -43,14 +43,26 @@ class MasterTujuanController extends Controller
     {
         $rules = [
             'tahun_mulai'   => 'required',
-            'tahun_selesai' => 'required',
+            'tahun_selesai' => 'required|after:tahun_mulai',
             'tujuan'        => 'required',
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $validateData = $request->validate($rules);
 
         MasterTujuan::create($validateData);
-        return redirect(route('master-tujuan.index'))->with('success', 'Berhasil menambah tujuan Inspektorat Utama.');
+        $request->session()->put('status', 'Berhasil menambahkan tujuan Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah Tujuan Inspektorat Utama',
+        ]);
     }
 
     /**
@@ -92,14 +104,14 @@ class MasterTujuanController extends Controller
     {
         $rules = [
             'tahun_mulai'   => 'required',
-            'tahun_selesai' => 'required',
+            'tahun_selesai' => 'required|after:tahun_mulai',
             'tujuan'        => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         MasterTujuan::where('id_tujuan', $id)
@@ -109,12 +121,12 @@ class MasterTujuanController extends Controller
             'tujuan'        => $request->tujuan,
         ]);
 
-        $tujuan = MasterTujuan::where('id_tujuan', $id)->get();
+        $request->session()->put('status', 'Berhasil memperbarui Tujuan Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
             'message'   => 'Data Berhasil Diperbarui',
-            'data'      => $tujuan
         ]);
     }
 
@@ -124,13 +136,16 @@ class MasterTujuanController extends Controller
      * @param  \App\Models\MasterTujuan  $masterTujuan
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterTujuan::where('id_tujuan', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus Tujuan Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Tujuan Berhasil Dihapus!',
+            'message' => 'Berhasil menghapus Tujuan Inspektorat Utama',
         ]);
 
     }

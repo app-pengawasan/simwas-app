@@ -99,7 +99,10 @@ class InspekturStKinerjaController extends Controller
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $usulan = StKinerja::latest()->get();
         } else {
-            $usulan = StKinerja::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
+            // $usulan = StKinerja::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $usulan = StKinerja::latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+                $query->where('unitkerja', auth()->user()->unit_kerja);
+            })->get();
         }
         return view('inspektur.st-kinerja.index', [
         ])->with('usulan', $usulan);

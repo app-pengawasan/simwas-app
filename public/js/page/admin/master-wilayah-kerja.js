@@ -11,6 +11,7 @@ $(function () {
                 {
                     extend: "excel",
                     className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -18,6 +19,7 @@ $(function () {
                 {
                     extend: "pdf",
                     className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
                         columns: [0, 1],
                     },
@@ -29,8 +31,42 @@ $(function () {
         .appendTo("#master-wilayah-kerja_wrapper .col-md-6:eq(0)");
 });
 
+$(".submit-btn").on("click", function (e) {
+    e.preventDefault();
+
+    let token = $("meta[name='csrf-token']").attr("content");
+    let kode_wilayah = $("#create-kode_wilayah").val();
+    let nama = $("#create-nama").val();
+
+    $.ajax({
+        url: `/admin/master-wilayah-kerja`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            kode_wilayah: kode_wilayah,
+            nama: nama,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+            console.log(errors);
+        },
+    });
+});
+
 $(".edit-btn").on("click", function () {
     let dataId = $(this).attr("data-id");
+    $("#error-edit-kode_wilayah").text("");
+    $("#error-edit-nama").text("");
     $.ajax({
         url: `/admin/master-wilayah-kerja/${dataId}`,
         type: "GET",
@@ -52,7 +88,6 @@ $("#btn-edit-submit").on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     let id_objek = $("#edit-idobjek").val();
     let kode_wilayah = $("#edit-kode-wilayah").val();
-    let kode_wilayahkerja = $("#edit-kode-wilayahkerja").val();
     let nama = $("#edit-nama").val();
 
     $.ajax({
@@ -62,54 +97,20 @@ $("#btn-edit-submit").on("click", function (e) {
         data: {
             _token: token,
             kode_wilayah: kode_wilayah,
-            kode_wilayahkerja: kode_wilayahkerja,
             nama: nama,
         },
         success: function (response) {
-            Swal.fire({
-                type: "success",
-                icon: "success",
-                title: "Berhasil!",
-                text: `${response.message}`,
-                showConfirmButton: false,
-                timer: 3000,
-            });
-
-            let wilayahkerja = `
-                <tr id="index_${response.data[0].id_objek}">
-                    <td>${response.data[0].kode_wilayah}</td>
-                    <td>${response.data[0].nama}</td>
-                    <td>
-                        <a href="javascript:void(0)" class="btn btn-warning edit-btn"
-                            data-id="${response.data[0].id_objek}" style="width: 42px"
-                            data-toggle="modal" data-target="#modal-edit-wilayahkerja">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="btn btn-danger delete-btn"
-                            data-id="${response.data[0].id_objek}" style="width: 42px">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            `;
-
-            $(`#index_${response.data[0].id_objek}`).replaceWith(wilayahkerja);
-            $("#modal-edit-wilayahkerja").modal("hide");
+            location.reload();
         },
         error: function (error) {
-            // $("#modal-edit-wilayahkerja").modal("hide");
-            // if (error.responseJSON.kode_wilayahkerja[0]) {
-            //     //show alert
-            //     $("#alert-kode-wilayah-kerja-edit").removeClass("d-none");
-            //     $("#alert-kode-wilayah-kerja-edit").addClass("d-block");
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
 
-            //     //add message to alert
-            //     $("#alert-kode-wilayah-kerja-edit").html(
-            //         error.responseJSON.kode_wilayahkerja[0]
-            //     );
-            // }
-
-            console.log(error.responseJSON);
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-edit-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+            console.log(error);
         },
     });
 });
@@ -124,8 +125,8 @@ $(".delete-btn").on("click", function () {
         text: "Data tidak dapat dipulihkan!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#394eea",
-        cancelButtonColor: "#fc544b",
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
         confirmButtonText: "Hapus",
         cancelButtonText: "Batal",
     }).then((result) => {
@@ -138,15 +139,7 @@ $(".delete-btn").on("click", function () {
                     _token: token,
                 },
                 success: function (response) {
-                    Swal.fire({
-                        type: "success",
-                        icon: "success",
-                        title: "Berhasil!",
-                        text: `${response.message}`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                    });
-                    $(`#index_${dataId}`).remove();
+                    location.reload();
                 },
             });
         }

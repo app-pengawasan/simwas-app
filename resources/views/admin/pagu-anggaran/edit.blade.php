@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Master Anggaran')
+@section('title', 'Edit Pagu Anggaran')
 
 @push('style')
     <!-- CSS Libraries -->
+    <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
 @endpush
 
 @section('main')
@@ -12,12 +13,19 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Form Tambah Master Anggaran</h1>
+                <h1>Form Edit Pagu Anggaran</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="row mb-4 pb-0">
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="javascript(0);" id="btn-back">
+                                        <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
+                                    </a>
+                                </div>
+                            </div>
                             <form method="POST" action="{{ route('pagu-anggaran.update', $paguAnggaran) }}"
                                 class="needs-validation" novalidate="">
                                 @csrf
@@ -52,7 +60,7 @@
                                                 @foreach ($kegiatan as $k)
                                                     <option value="{{ $k->id_kegiatan }}"
                                                         {{ $k->id_kegiatan == old('kegiatan', $id_kegiatan) ? 'selected' : '' }}>
-                                                        {{ $k->kegiatan }}</option>
+                                                        {{ $k->id_kegiatan . ' ' . $k->kegiatan }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -88,7 +96,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="uraian">Uraian</label>
                                         <div class="col-sm-10">
-                                            <textarea name="uraian" id="uraian" rows="10" class="form-control form-control-md">{{ old('uraian', $paguAnggaran->uraian) }}</textarea>
+                                            <textarea name="uraian" id="uraian" class="form-control form-control-md" style="min-height: 120px">{{ old('uraian', $paguAnggaran->uraian) }}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -122,14 +130,20 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="pagu">Pagu Anggaran</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="pagu" id="pagu" class="form-control rupiah"
+                                            <input type="text" name="pagu" id="pagu"
+                                                class="form-control rupiah"
                                                 value="{{ old('pagu', $paguAnggaran->pagu) }}" readonly>
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="card-footer text-right">
-                                    <button class="btn btn-primary">Submit</button>
+                                    <div class="card-footer text-right">
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-save"></i>
+                                            Simpan
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -142,63 +156,9 @@
 
 @push('scripts')
     <!-- JS Libraies -->
+    <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    {{-- <script src="{{ asset('js') }}/page/pagu-anggaran.js"></script> --}}
-    <script>
-        let volume = document.getElementById("volume");
-        let harga = document.getElementById("harga_satuan");
-        let pagu = document.getElementById("pagu");
-
-        let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
-        let volume_number = Number(volume.value);
-        let pagu_number = harga_number * volume_number;
-
-        harga.value = formatRupiah(harga_number.toString(), "Rp. ");
-        pagu.value = formatRupiah(pagu_number.toString(), "Rp. ");
-
-        volume.addEventListener("keyup", function(e) {
-            if (Number(this.value) < 0) {
-                return volume.value = "";
-            }
-            if (Number(this.value) > 0) {
-                let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
-                let volume_number = Number(volume.value);
-                let pagu_number = harga_number * volume_number;
-
-                return pagu.value = formatRupiah(pagu_number.toString(), "Rp. ");
-            }
-        });
-
-        harga.addEventListener("keyup", function(e) {
-            // tambahkan 'Rp.' pada saat form di ketik
-            // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-            harga.value = formatRupiah(this.value, "Rp. ");
-
-            let harga_number = Number(harga.value.replace(/[^,\d]/g, ""));
-            let volume_number = Number(volume.value);
-            let pagu_number = harga_number * volume_number;
-
-            return pagu.value = formatRupiah(pagu_number.toString(), "Rp. ");
-        });
-
-
-        /* Fungsi formatRupiah */
-        function formatRupiah(angka, prefix) {
-            let number_string = angka.replace(/[^,\d]/g, "").toString(),
-                split = number_string.split(","),
-                sisa = split[0].length % 3,
-                harga = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? "." : "";
-                harga += separator + ribuan.join(".");
-            }
-
-            harga = split[1] != undefined ? harga + "," + split[1] : harga;
-            return prefix == undefined ? harga : harga ? "Rp. " + harga : "";
-        }
-    </script>
+    <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
+    <script src="{{ asset('js/page/admin/form-pagu-anggaran.js') }}"></script>
 @endpush

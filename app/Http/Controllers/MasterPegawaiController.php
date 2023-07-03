@@ -242,7 +242,9 @@ class MasterPegawaiController extends Controller
         $validateData = $request->validate($rules);
 
         User::where('id', $id)->update($validateData);
-        return redirect('/admin/master-pegawai')->with('success', 'Berhasil memperbarui data pegawai.');
+        return redirect('/admin/master-pegawai')
+            ->with('status', 'Berhasil memperbarui data pegawai.')
+            ->with('alert-type', 'success');
 
     }
 
@@ -277,36 +279,31 @@ class MasterPegawaiController extends Controller
         $file_name = rand().$file->getClientOriginalName();
         $file->move('document/upload', $file_name);
 
-        // $array = Excel::toArray(new UserImport,'/document/upload/'.$file_name, );
-
-        // $array = (new UserImport)->import('/document/upload/'.$file_name, null, \Maatwebsite\Excel\Excel::XLSX);
-
-        // return $array;
-
-        $heading = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
         $rules = [
-            'name'              => 'required',
-            'email'             => 'required',
-            'nip'               => 'required',
-            'kode_pangkat'      => 'required',
-            'kode_unitkerja'    => 'required',
-            'kode_jabatan'      => 'required',
-            'admin'             => 'required',
-            'sekretaris_utama'  => 'required',
-            'sekretaris_wilayah'=> 'required',
-            'perencana'         => 'required',
-            'apkapbn'           => 'required',
-            'operator_wilayah'  => 'required',
-            'analissdm'         => 'required',
+            'name',
+            'email',
+            'nip',
+            'kode_pangkat',
+            'kode_unitkerja',
+            'kode_jabatan',
+            'admin',
+            'sekretaris_utama',
+            'sekretaris_wilayah',
+            'perencana',
+            'apkapbn',
+            'operator_wilayah',
+            'analissdm',
         ];
 
-        foreach($heading[0][0] as $header){
-            if(!isset($rules[$header])){
-                return back()
-                    ->with('status', 'Gagal mengimpor data, format file tidak sesuai.')
-                    ->with('alert-type', 'danger');
+        foreach($rules as $rule){
+            if(!in_array($rule, $header[0][0])){
+               return back()
+               ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
+               ->with('alert-type', 'danger');
             }
         }
+
         Excel::import(new UserImport, public_path('/document/upload/'.$file_name));
         return back()->with('status', 'Berhasil mengimpor data pegawai.')->with('alert-type', 'success');
     }

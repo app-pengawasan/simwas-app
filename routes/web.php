@@ -195,7 +195,9 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * */
     Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->name('dashboard');
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
     Route::resource('/ketua-tim/rencana-kinerja', KetuaTimRencanaKerjaController::class);
+    Route::put('/ketua-tim/rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
     Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);

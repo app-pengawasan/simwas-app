@@ -98,6 +98,7 @@ class PimpinanRencanKerjaController extends Controller
         $id_unitkerja = auth()->user()->unit_kerja;
         $timKerja = TimKerja::where('unitkerja', $id_unitkerja)
                     ->where('status', 5)
+                    ->orWhere('status', 6)
                     ->get();
         return view('pimpinan.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',

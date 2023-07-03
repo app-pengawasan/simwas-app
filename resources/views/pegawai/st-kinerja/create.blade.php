@@ -103,6 +103,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
+                                        <input type="hidden" id="unit_kerja1" name="unit_kerja" value="{{ old('unit_kerja') }}">
                                         <label for="unit_kerja">Unit Kerja</label>
                                         <select disabled id="unit_kerja" name="unit_kerja" class="form-control select2 @error('unit_kerja') is-invalid @enderror">
                                             <option value="">Pilih unit kerja</option>
@@ -128,8 +129,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
+                                        <input type="hidden" id="objek1" name="objek" value="{{ old('objek') }}">
                                         <label for="objek">Objek</label>
-                                        <textarea readonly style="height: 200px;" type="text" class="form-control @error('objek') is-invalid @enderror" id="objek" name="objek" value="{{ old('objek') }}"></textarea>
+                                        <textarea readonly style="height: 200px;" type="text" class="form-control @error('objek') is-invalid @enderror" id="objek" name="objek">{{ old('objek') }}</textarea>
                                         @error('objek')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -155,8 +157,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
+                                        <input type="hidden" id="pelaksana1" name="pelaksana" value="{{ old('pelaksana') }}">
                                         <label for="pelaksana">Pelaksana Tugas</label>
-                                        <textarea readonly style="height: 200px;" type="text" class="form-control @error('pelaksana') is-invalid @enderror" id="pelaksana" name="pelaksana" value="{{ old('pelaksana') }}"></textarea>
+                                        <textarea readonly style="height: 200px;" type="text" class="form-control @error('pelaksana') is-invalid @enderror" id="pelaksana" name="pelaksana">{{ old('pelaksana') }}</textarea>
                                         @error('pelaksana')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -237,61 +240,7 @@
                 var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
                 toggleEsignInput(isEsignInput, penandatanganContainer);
 
-                // var rencanaId = document.getElementById('rencana_id');
                 
-                // rencanaId.addEventListener('change', function() {
-                //     var selectedRencanaKerja = this.value;
-                //     console.log(selectedRencanaKerja);
-                //     $.ajax({
-                //         url: '/tugas',
-                //         method: 'GET',
-                //         data: {
-                //             rencana_id: selectedRencanaKerja
-                //         },
-                //         success: function(response){
-                //             console.log(response);
-                //             var timKerja = response.tim_kerja;
-                //             var objekPengawasan = response.objek_pengawasan;
-                            
-                //             var objek = [];
-                //             var counter = 0;
-                //             objekPengawasan.forEach(element => {
-                //                 counter++;
-                //                 objek.push(counter + ". " + element.nama);
-                //             });
-                //             var objekJoined = objek.join('\n');
-                            
-                //             var pelaksanaTugas = '';
-                //             var dalnis = response.dalnis;
-                //             var ketua = response.ketua;
-                //             var pic = response.pic;
-                //             var anggota = response.anggota;
-                //             if (dalnis !== 0) {
-                //                 pelaksanaTugas += dalnis + '\n';
-                //             }
-                //             if (ketua !== 0) {
-                //                 pelaksanaTugas += ketua + '\n';
-                //             }
-                //             if (pic !== 0) {
-                //                 pelaksanaTugas += pic + '\n';
-                //             }
-                //             if (anggota !== 0) {
-                //                 pelaksanaTugas += anggota.join('\n');
-                //             }
-                            
-
-                //             $('#tim_kerja').val(timKerja.nama);
-
-                //             $('#unit_kerja').val(timKerja.unitkerja);
-                //             $("#unit_kerja").select2("destroy");
-                //             $("#unit_kerja").select2();
-
-                //             $('#objek').val(objekJoined);
-
-                //             $('#pelaksana').val(pelaksanaTugas);
-                //         }
-                //     });
-                // });
             });
         
         function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
@@ -374,10 +323,13 @@
                         $('#unit_kerja').val(timKerja.unitkerja);
                         $("#unit_kerja").select2("destroy");
                         $("#unit_kerja").select2();
+                        $('#unit_kerja1').val(timKerja.unitkerja);
 
                         $('#objek').val(objekJoined);
+                        $('#objek1').val(objekJoined);
 
                         $('#pelaksana').val(pelaksanaTugas);
+                        $('#pelaksana1').val(pelaksanaTugas);
                     }
                 });
             });

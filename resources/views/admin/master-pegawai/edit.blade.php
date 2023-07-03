@@ -4,6 +4,7 @@
 
 @push('style')
     <!-- CSS Libraries -->
+    <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 
 @section('main')
@@ -18,6 +19,13 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="row mb-4 pb-0">
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="javascript(0);" id="btn-back">
+                                        <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
+                                    </a>
+                                </div>
+                            </div>
                             <form method="POST" action="/admin/master-pegawai/{{ $user->id }}" class="needs-validation"
                                 novalidate="">
                                 @method('put')
@@ -42,17 +50,6 @@
                                                 value="{{ old('email', $user->email) }}">
                                         </div>
                                         @error('email')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="password">Password</label>
-                                        <div class="col-sm-10">
-                                            <input type="password" class="form-control" name="password">
-                                        </div>
-                                        @error('password')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -112,7 +109,6 @@
                                     @foreach ($role as $key => $value)
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Sebagai {{ $value }}</label>
-                                            <?php var_dump($user["$key"]); ?>
                                             <div class="col-sm-9 d-flex align-items-center">
                                                 <div class="form-check form-check-inline mr-4">
                                                     <input class="form-check-input" type="radio"
@@ -135,7 +131,10 @@
                                         </div>
                                     @endforeach
                                     <div class="card-footer text-right">
-                                        <button class="btn btn-primary">Submit</button>
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-save"></i>
+                                            Simpan
+                                        </button>
                                     </div>
                             </form>
                         </div>
@@ -148,6 +147,8 @@
 
 @push('scripts')
     <!-- JS Libraies -->
+    <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
+    <script src="{{ asset('js/page/admin/master-pegawai.js') }}"></script>
 @endpush

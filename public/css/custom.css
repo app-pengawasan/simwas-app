@@ -2,7 +2,122 @@
  *
  * You can write your CSS code here, DO NOT touch the default JavaScript file
  * because it will make it harder for you to update.
- * 
+ *
  */
 
 /*# sourceMappingURL=custom.css.map */
+
+/* Loader */
+.center-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(158, 220, 255, 0.185);
+}
+
+.loader-circle-75 {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+}
+
+.loader-circle-75:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-width: 3px 3px;
+    border-style: solid;
+    border-color: #0085dd rgba(0, 133, 221, 0.3);
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: loader-circle-75-spin 3s infinite;
+}
+
+.loader-circle-75:after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    background-color: #ff9100;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: loader-circle-75-pulse 6s infinite,
+        loader-circle-75-borderPulse 6s infinite;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes loader-circle-75-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(1080deg);
+    }
+}
+
+@keyframes loader-circle-75-pulse {
+    0% {
+        background-color: rgba(0, 133, 221, 0.2);
+    }
+
+    13% {
+        background-color: rgba(0, 133, 221, 0.2);
+    }
+
+    15% {
+        background-color: rgba(255, 174, 0, 0.9);
+    }
+
+    28% {
+        background-color: rgba(255, 174, 0, 0.9);
+    }
+
+    30% {
+        background-color: rgba(0, 133, 221, 0.2);
+    }
+
+    43% {
+        background-color: rgba(0, 133, 221, 0.2);
+    }
+
+    45% {
+        background-color: rgba(255, 173, 119, 0.9);
+    }
+
+    70% {
+        background-color: rgba(255, 174, 0, 0.9);
+    }
+
+    74% {
+        background-color: rgba(0, 133, 221, 0.2);
+    }
+
+    100% {
+        background-color: rgba(255, 174, 0, 0.9);
+    }
+}
+
+@keyframes loader-circle-75-borderPulse {
+    0% {
+        box-shadow: 0 0 0 0 #fff, 0 0 0 1px rgba(0, 133, 221, 0.8);
+    }
+
+    40% {
+        box-shadow: 0 0 0 1px #fff, 0 0 0 2px rgba(0, 133, 221, 0.8);
+    }
+
+    80% {
+        box-shadow: 0 0 0 3px #fff, 0 0 1px 3px rgba(0, 133, 221, 0.8);
+    }
+}

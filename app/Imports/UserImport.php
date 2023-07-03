@@ -19,6 +19,10 @@ class UserImport implements ToModel, WithHeadingRow
     {
 
         try{
+            $data = User::where('email', $row['email'])->first();
+            if($data){
+                return null;
+            }
             return new User([
                 'name'          => $row['name'],
                 'email'         => $row['email'],

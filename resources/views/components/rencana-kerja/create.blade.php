@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="/pegawai/rencana-kinerja" enctype="multipart/form-data"
+            <form method="post" action="/ketua-tim/rencana-kinerja" enctype="multipart/form-data"
                 class="needs-validation" novalidate="">
                 <div class="modal-body">
                     @csrf

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\UnitKerjaImport;
 use App\Models\MasterObjek;
 use App\Models\PaguAnggaran;
 use Illuminate\Http\Request;
 use App\Models\MasterUnitKerja;
+use App\Imports\UnitKerjaImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 use Illuminate\Support\Facades\Validator;
 
 class MasterUnitKerjaController extends Controller
@@ -51,15 +52,31 @@ class MasterUnitKerjaController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'kode_wilayah'      => 'required|max:2',
-            'kode_unitkerja'    => 'required|unique:master_objeks,kode_unitkerja|max:4',
+            'kode_wilayah'      => 'required|size:2',
+            'kode_unitkerja'    => 'required|unique:master_objeks,kode_unitkerja|size:4',
             'nama'              => 'required',
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validateData = $request->validate($rules);
+
+
+
         $validateData['kategori'] = 1;
         MasterObjek::create($validateData);
-        return redirect(route('master-unit-kerja.index'))->with('success', 'Berhasil menambah data unit kerja.');
+
+        $request->session()->put('status', 'Berhasil menambahkan data Unit Kerja.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah data Unit Kerja',
+        ]);
     }
 
     /**
@@ -99,15 +116,24 @@ class MasterUnitKerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),[
-            'kode_wilayah'      => 'required|max:2',
-            'kode_unitkerja'    => 'required|unique:master_objeks,kode_unitkerja|max:4',
+        $unitKerja = MasterObjek::where('id_objek', $id)->first();
+
+        $rules = [
             'nama'              => 'required',
-        ]);
+            'kode_wilayah'      => 'required|size:2'
+        ];
+
+        if($request->kode_unitkerja != $unitKerja->kode_unitkerja){
+            $rules['kode_unitkerja'] = 'required|unique:master_objeks,kode_unitkerja|size:4';
+        }else{
+            $rules['kode_unitkerja'] = 'required|size:4';
+        }
+
+        $validator = Validator::make($request->all(),$rules);
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $masterUnitKerja = MasterObjek::where('id_objek', $id)
@@ -116,6 +142,9 @@ class MasterUnitKerjaController extends Controller
             'kode_unitkerja'    => $request->kode_unitkerja,
             'nama'              => $request->nama
         ]);
+
+        $request->session()->put('status', 'Berhasil memperbarui data Unit Kerja.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
@@ -130,12 +159,15 @@ class MasterUnitKerjaController extends Controller
      * @param  \App\Models\MasterUnitKerja  $masterUnitKerja
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterObjek::destroy($id);
+        $request->session()->put('status', 'Berhasil menghapus data Unit Kerja.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Data Unit Kerja Berhasil Dihapus!.',
+            'message' => 'Berhasil menghapus data Unit Kerja',
         ]);
     }
 
@@ -152,7 +184,22 @@ class MasterUnitKerjaController extends Controller
         $file_name = rand().$file->getClientOriginalName();
         $file->move('document/upload', $file_name);
 
+        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $rules = [
+            'kode_wilayah',
+            'kode_unitkerja',
+            'nama'
+        ];
+
+        foreach($rules as $rule){
+            if(!in_array($rule, $header[0][0])){
+               return back()
+               ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
+               ->with('alert-type', 'danger');
+            }
+        }
+
         Excel::import(new UnitKerjaImport, public_path('/document/upload/'.$file_name));
-        return back()->with('success', 'Berhasil mengimpor data Unit Kerja.');
+        return back()->with('status', 'Berhasil mengimpor data Unit Kerja.')->with('alert-type', 'success');
     }
 }

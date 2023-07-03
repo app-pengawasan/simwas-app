@@ -19,10 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
+
         User::factory(25)->create();
         MasterPimpinan::factory(4)->create();
-        
+
         User::create([
             'email'     => '221911003@stis.ac.id',
             'nip'       => '221911003',
@@ -59,17 +59,17 @@ class DatabaseSeeder extends Seeder
         MasterAnggaran::create([
             'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
             'id_kegiatan'   => '4203',
-            'kegiatan'      => '4203 Pengawasan dan Peningkatan Akuntabilitas Inspektorat I'
+            'kegiatan'      => 'Pengawasan dan Peningkatan Akuntabilitas Inspektorat I'
         ]);
         MasterAnggaran::create([
             'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
             'id_kegiatan'   => '4204',
-            'kegiatan'      => '4204 Pengawasan dan Peningkatan Akuntabilitas Inspektorat II'
+            'kegiatan'      => 'Pengawasan dan Peningkatan Akuntabilitas Inspektorat II'
         ]);
         MasterAnggaran::create([
             'program'       => '054.01.WA Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya BPS',
             'id_kegiatan'   => '4205',
-            'kegiatan'      => '4205 Pengawasan dan Peningkatan Akuntabilitas Inspektorat III'
+            'kegiatan'      => 'Pengawasan dan Peningkatan Akuntabilitas Inspektorat III'
         ]);
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

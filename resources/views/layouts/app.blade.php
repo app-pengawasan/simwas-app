@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     @stack('style')
 
     <!-- Template CSS -->
@@ -36,6 +36,10 @@
 </head>
 
 <body>
+    {{-- <div class="center-body modal fade show" id="modal-loader">
+        <div class="loader-circle-75">
+        </div>
+    </div> --}}
     <div id="app">
         <div class="main-wrapper">
             <!-- Content -->

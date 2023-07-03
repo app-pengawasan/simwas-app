@@ -48,15 +48,31 @@ class MasterIKUController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'id_sasaran' => 'required',
+            'sasaran' => 'required',
             'iku'       => 'required'
         ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $validateData = $request->validate($rules);
 
-        MasterIKU::create($validateData);
+        MasterIKU::create([
+            'id_sasaran' => $validateData['sasaran'],
+            'iku'        => $validateData['iku']
+        ]);
 
-        return redirect(route('master-iku.index'))->with('success', 'Berhasil menambah Indikator Kinerja Utama Inspektorat Utama.');
+
+        $request->session()->put('status', 'Berhasil menambahkan IKU Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambah IKU Inspektorat Utama',
+        ]);
     }
 
     /**
@@ -98,23 +114,25 @@ class MasterIKUController extends Controller
     {
         $rules = [
             'id_iku'        => 'required',
-            'id_sasaran'    => 'required',
+            'sasaran'    => 'required',
             'iku'           => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         MasterIKU::where('id_iku', $id)
         ->update([
-            'id_sasaran'     => $request->id_sasaran,
+            'id_sasaran'     => $request->sasaran,
             'iku'            => $request->iku,
         ]);
 
-        // $sasaran = MasterSasaran::where('id_sasaran', $id)->get();
+
+        $request->session()->put('status', 'Berhasil memperbarui IKU Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
 
         return response()->json([
             'success'   => true,
@@ -128,13 +146,16 @@ class MasterIKUController extends Controller
      * @param  \App\Models\MasterIKU  $masterIKU
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         MasterIKU::where('id_iku', $id)->delete();
 
+        $request->session()->put('status', 'Berhasil menghapus IKU Inspektorat Utama.');
+        $request->session()->put('alert-type', 'success');
+
         return response()->json([
             'success' => true,
-            'message' => 'Indikator Berhasil Dihapus!',
+            'message' => 'Berhasil menghapus IKu Inspektorat Utama',
         ]);
     }
 }
