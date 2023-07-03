@@ -245,62 +245,6 @@
             var penandatanganContainer = document.getElementById('penandatanganContainer');
             var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
             toggleEsignInput(isEsignInput, penandatanganContainer);
-        
-            document.getElementById("rencana_id").addEventListener("change", function() {
-                    var selectedRencanaKerja = this.value;
-                    console.log(selectedRencanaKerja);
-                    $.ajax({
-                    url: '/tugas',
-                    method: 'GET',
-                    data: {
-                        rencana_id: selectedRencanaKerja
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        var timKerja = response.tim_kerja;
-                        var objekPengawasan = response.objek_pengawasan;
-
-                        var objek = [];
-                        var counter = 0;
-                        objekPengawasan.forEach(function(element) {
-                        counter++;
-                        objek.push(counter + ". " + element.nama);
-                        });
-                        var objekJoined = objek.join('\n');
-
-                        var pelaksanaTugas = '';
-                        var dalnis = response.dalnis;
-                        var ketua = response.ketua;
-                        var pic = response.pic;
-                        var anggota = response.anggota;
-                        if (dalnis !== 0) {
-                        pelaksanaTugas += dalnis + '\n';
-                        }
-                        if (ketua !== 0) {
-                        pelaksanaTugas += ketua + '\n';
-                        }
-                        if (pic !== 0) {
-                        pelaksanaTugas += pic + '\n';
-                        }
-                        if (anggota !== 0) {
-                        pelaksanaTugas += anggota.join('\n');
-                        }
-
-                        document.getElementById("tim_kerja").value = timKerja.nama;
-
-                        document.getElementById("unit_kerja").value = timKerja.unitkerja;
-                        $("#unit_kerja").select2("destroy");
-                        $("#unit_kerja").select2();
-                        document.getElementById("unit_kerja1").value = timKerja.unitkerja;
-
-                        document.getElementById("objek").value = objekJoined;
-                        document.getElementById("objek1").value = objekJoined;
-
-                        document.getElementById("pelaksana").value = pelaksanaTugas;
-                        document.getElementById("pelaksana1").value = pelaksanaTugas;
-                    }
-                });
-            });
         });
         
         function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
