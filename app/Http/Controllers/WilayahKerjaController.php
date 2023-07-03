@@ -169,9 +169,9 @@ class WilayahKerjaController extends Controller
 
         $file = $request->file('file');
         $file_name = rand().$file->getClientOriginalName();
-        $file->move('document/upload', $file_name);
+        $file->move(storage_path('/document/upload/'), $file_name);
 
-        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $header = (new HeadingRowImport)->toArray(storage_path('/document/upload/').$file_name);
 
         $rules = [
             'kode_wilayah',
@@ -186,7 +186,7 @@ class WilayahKerjaController extends Controller
             }
         }
 
-        Excel::import(new WilayahKerjaImport, public_path('/document/upload/'.$file_name));
+        Excel::import(new WilayahKerjaImport, storage_path('/document/upload/').$file_name);
         return back()->with('status', 'Berhasil mengimpor data Wilayah Kerja.')->with('alert-type', 'success');
     }
 }

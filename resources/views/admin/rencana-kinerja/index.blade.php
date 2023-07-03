@@ -70,11 +70,11 @@
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     @if ($tim->status == 0)
-                                                        <a href="javascript:void(0)" class="btn btn-warning edit-btn"
+                                                        {{-- <a href="javascript:void(0)" class="btn btn-warning edit-btn"
                                                             data-id="{{ $tim->id_timkerja }}" style="width: 42px"
                                                             data-toggle="modal" data-target="#modal-edit-masterhasil">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        </a> --}}
                                                         <a href="javascript:void(0)" class="btn btn-danger delete-btn"
                                                             data-id="{{ $tim->id_timkerja }}" style="width: 42px">
                                                             <i class="fas fa-trash"></i>

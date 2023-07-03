@@ -182,9 +182,9 @@ class MasterUnitKerjaController extends Controller
 
         $file = $request->file('file');
         $file_name = rand().$file->getClientOriginalName();
-        $file->move('document/upload', $file_name);
+        $file->move(storage_path('/document/upload/'), $file_name);
 
-        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $header = (new HeadingRowImport)->toArray(storage_path('/document/upload/').$file_name);
         $rules = [
             'kode_wilayah',
             'kode_unitkerja',
@@ -199,7 +199,7 @@ class MasterUnitKerjaController extends Controller
             }
         }
 
-        Excel::import(new UnitKerjaImport, public_path('/document/upload/'.$file_name));
+        Excel::import(new UnitKerjaImport, storage_path('/document/upload/').$file_name);
         return back()->with('status', 'Berhasil mengimpor data Unit Kerja.')->with('alert-type', 'success');
     }
 }

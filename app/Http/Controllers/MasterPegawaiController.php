@@ -277,9 +277,9 @@ class MasterPegawaiController extends Controller
 
         $file = $request->file('file');
         $file_name = rand().$file->getClientOriginalName();
-        $file->move('document/upload', $file_name);
+        $file->move(storage_path('/document/upload/'), $file_name);
 
-        $header = (new HeadingRowImport)->toArray(public_path('/document/upload/'.$file_name));
+        $header = (new HeadingRowImport)->toArray(storage_path('/document/upload/').$file_name);
         $rules = [
             'name',
             'email',
@@ -304,7 +304,7 @@ class MasterPegawaiController extends Controller
             }
         }
 
-        Excel::import(new UserImport, public_path('/document/upload/'.$file_name));
+        Excel::import(new UserImport, storage_path('/document/upload/').$file_name);
         return back()->with('status', 'Berhasil mengimpor data pegawai.')->with('alert-type', 'success');
     }
 }
