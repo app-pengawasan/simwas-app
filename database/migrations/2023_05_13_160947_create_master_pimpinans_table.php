@@ -15,9 +15,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('master_pimpinans', function (Blueprint $table) {
-            $table->ulid('id_pimpinan')->primary()->default(Ulid::generate());
+            $table->ulid('id_pimpinan')->unique()->primary()->default(Ulid::generate());
             $table->ulid('id_user');
-            $table->string('jabatan');
+            $table->string('jabatan', 6);
             $table->date('mulai');
             $table->date('selesai');
             $table->timestamps();

@@ -36,10 +36,10 @@
 </head>
 
 <body>
-    {{-- <div class="center-body modal fade show" id="modal-loader">
+    <div class="center-body modal fade show" id="modal-loader">
         <div class="loader-circle-75">
         </div>
-    </div> --}}
+    </div>
     <div id="app">
         <div class="main-wrapper">
             <!-- Content -->

@@ -15,22 +15,22 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->ulid('id')->primary()->default(Ulid::generate());
-            $table->string('email')->unique();
-            $table->string('password')->nullable();
-            $table->string('nip');
-            $table->string('name');
-            $table->string('pangkat');
-            $table->string('unit_kerja');
-            $table->string('jabatan');
-            $table->boolean('is_aktif');
-            $table->boolean('is_admin');
-            $table->boolean('is_sekma');
-            $table->boolean('is_sekwil');
-            $table->boolean('is_perencana');
-            $table->boolean('is_apkapbn');
-            $table->boolean('is_opwil');
-            $table->boolean('is_analissdm');
+            $table->ulid('id')->unique()->primary()->default(Ulid::generate());
+            $table->string('email', 64)->unique();
+            $table->string('password', 64)->nullable();
+            $table->string('nip', 18);
+            $table->string('name', 64);
+            $table->string('pangkat', 4);
+            $table->string('unit_kerja', 4);
+            $table->string('jabatan', 2);
+            $table->boolean('is_aktif')->default(1);
+            $table->boolean('is_admin')->default(0);
+            $table->boolean('is_sekma')->default(0);
+            $table->boolean('is_sekwil')->default(0);
+            $table->boolean('is_perencana')->default(0);
+            $table->boolean('is_apkapbn')->default(0);
+            $table->boolean('is_opwil')->default(0);
+            $table->boolean('is_analissdm')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

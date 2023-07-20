@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pagu_anggarans', function (Blueprint $table) {
-            $table->ulid('id_panggaran')->primary()->default(Ulid::generate());
+            $table->ulid('id_panggaran')->unique()->primary()->default(Ulid::generate());
             $table->foreignUlid('id_manggaran')->references('id_manggaran')->on('master_anggarans');
             $table->year('tahun');
             $table->string('komponen');

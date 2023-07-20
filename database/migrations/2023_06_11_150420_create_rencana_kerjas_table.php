@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('rencana_kerjas', function (Blueprint $table) {
-            $table->ulid('id_rencanakerja')->primary()->default(Ulid::generate());
+            $table->ulid('id_rencanakerja')->unique()->primary()->default(Ulid::generate());
             $table->string('id_timkerja');
             $table->string('id_hasilkerja');
             $table->string('kategori_pelaksanatugas');

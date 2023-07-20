@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('master_hasils', function (Blueprint $table) {
-            $table->ulid('id_master_hasil')->primary()->default(Ulid::generate());
+            $table->ulid('id_master_hasil')->unique()->primary()->default(Ulid::generate());
             $table->string('unsur');
             $table->string('subunsur1');
             $table->string('subunsur2');

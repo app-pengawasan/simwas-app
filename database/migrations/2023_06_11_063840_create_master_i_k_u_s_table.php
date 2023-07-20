@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('master_iku', function (Blueprint $table) {
-            $table->ulid('id_iku')->primary()->default(Ulid::generate());
+            $table->ulid('id_iku')->unique()->primary()->default(Ulid::generate());
             $table->string('id_sasaran');
             $table->string('iku');
             $table->timestamps();
