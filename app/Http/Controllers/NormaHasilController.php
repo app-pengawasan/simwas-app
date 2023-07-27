@@ -54,7 +54,7 @@ class NormaHasilController extends Controller
             'mimes' => "File yang diupload harus bertipe .doc atau .docx"
         ]);
         $stk = StKinerja::find($validatedData['st_kinerja_id']);
-        $validatedData['unit_kerja'] = $stk->unit_kerja;
+        $validatedData['unit_kerja'] = $stk->rencanaKerja->timkerja->unitkerja;
         $validatedData['user_id'] = auth()->user()->id;
         $validatedData['draft'] = $request->file('draft')->store('draft');
         NormaHasil::create($validatedData);
@@ -112,7 +112,7 @@ class NormaHasilController extends Controller
                 'mimes' => "File yang diupload harus bertipe .doc atau .docx"
             ]);
             $stk = StKinerja::find($validatedData['st_kinerja_id']);
-            $validatedData['unit_kerja'] = $stk->unit_kerja;
+            $validatedData['unit_kerja'] = $stk->rencanaKerja->timkerja->unitkerja;
             $validatedData['draft'] = $request->file('draft')->store('draft');
             NormaHasil::where('id', $norma_hasil->id)->update($validatedData);
     

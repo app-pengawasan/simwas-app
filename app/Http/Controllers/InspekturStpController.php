@@ -36,9 +36,9 @@ class InspekturStpController extends Controller
     protected $unit_kerja = [
         '8000' => 'Inspektorat Utama',
         '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Insapektorat Wilayah I',
-        '8200' => 'Insapektorat Wilayah II',
-        '8300' => 'Insapektorat Wilayah III'
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
     ];
 
     protected $jabatan = [
@@ -91,6 +91,7 @@ class InspekturStpController extends Controller
         'jpm001'      => 'Inspektur Wilayah I',
         'jpm002'      => 'Inspektur Wilayah II',
         'jpm003'      => 'Inspektur Wilayah III',
+        'jpm004'      => 'Kepala Bagian Umum'
     ];
     /**
      * Display a listing of the resource.
@@ -209,7 +210,7 @@ class InspekturStpController extends Controller
                     'selesai' => 'required|date|after_or_equal:mulai',
                     'pembebanan_id' => 'required',
                     'pegawai' => 'required',
-                    'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+                    'penandatangan' => 'required',
                     'is_esign' => 'required',
                     'status' => 'required'
                 ], [
@@ -243,6 +244,7 @@ class InspekturStpController extends Controller
 
             // Ambil pegawai
             $pegawaiArray = explode(', ', $usulan->pegawai);
+            $pimpinan = MasterPimpinan::find($usulan->penandatangan);
 
             if (count($pegawaiArray) == 1) {
                 if ($usulan->is_esign) {
@@ -251,7 +253,6 @@ class InspekturStpController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stpPerseoranganPath);
-                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
 
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -263,7 +264,7 @@ class InspekturStpController extends Controller
                         'pembebanan' => $usulan->pembebanan->nama,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'roleInspektur' => $pimpinan->jabatan,
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
                         'inspektur' => $pimpinan->user->name
                     ]);
 
@@ -285,7 +286,9 @@ class InspekturStpController extends Controller
                         'melaksanakan' => $usulan->melaksanakan,
                         'pembebanan' => $usulan->pembebanan->nama,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
+                        'inspektur' => $pimpinan->user->name
                     ]);
 
                     // Simpan dokumen hasil
@@ -325,7 +328,7 @@ class InspekturStpController extends Controller
                         'pembebanan' => $usulan->pembebanan->nama,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'roleInspektur' => $pimpinan->jabatan,
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
                         'inspektur' => $pimpinan->user->name
                     ]);
 
@@ -345,7 +348,9 @@ class InspekturStpController extends Controller
                         'melaksanakan' => $usulan->melaksanakan,
                         'pembebanan' => $usulan->pembebanan->nama,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
+                        'inspektur' => $pimpinan->user->name
                     ]);
 
                     // Simpan dokumen hasil

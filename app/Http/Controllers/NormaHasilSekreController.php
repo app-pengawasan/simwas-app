@@ -112,7 +112,7 @@ class NormaHasilSekreController extends Controller
                     'mimes' => "File yang diupload harus bertipe .doc atau .docx"
                 ]);
                 $stk = StKinerja::find($validatedData['st_kinerja_id']);
-                $validatedData['unit_kerja'] = $stk->unit_kerja;
+                $validatedData['unit_kerja'] = $stk->rencanaKerja->timkerja->unitkerja;
                 $validatedData['draft'] = $request->file('draft')->store('draft');
                 NormaHasil::where('id', $request->input('id'))->update($validatedData);
             }
@@ -136,7 +136,7 @@ class NormaHasilSekreController extends Controller
                 'no_surat' => $nomorSurat,
                 'tanggal' => $tanggal
             ]);
-            RencanaKerja::where('id_rencanakerja', $usulan->rencanaKerja->id_rencanakerja)->update(['status_realisasi' => '2']);
+            RencanaKerja::where('id_rencanakerja', $usulan->stKinerja->rencanaKerja->id_rencanakerja)->update(['status_realisasi' => '2']);
             NormaHasil::where('id', $request->input('id'))->update($validatedData);
             return redirect('sekretaris/norma-hasil')->with('success', 'Berhasil menyetujui usulan nomor surat!');
         } elseif ($request->input('status') == '5') {
