@@ -37,9 +37,9 @@ class InspekturStKinerjaController extends Controller
     protected $unit_kerja = [
         '8000' => 'Inspektorat Utama',
         '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Insapektorat Wilayah I',
-        '8200' => 'Insapektorat Wilayah II',
-        '8300' => 'Insapektorat Wilayah III'
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
     ];
 
     protected $jabatan = [
@@ -92,6 +92,7 @@ class InspekturStKinerjaController extends Controller
         'jpm001'      => 'Inspektur Wilayah I',
         'jpm002'      => 'Inspektur Wilayah II',
         'jpm003'      => 'Inspektur Wilayah III',
+        'jpm004'      => 'Kepala Bagian Umum'
     ];
     /**
      * Display a listing of the resource.
@@ -212,7 +213,7 @@ class InspekturStKinerjaController extends Controller
                     'melaksanakan' => 'required',
                     'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                     'selesai' => 'required|date|after_or_equal:mulai',
-                    'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+                    'penandatangan' => 'required',
                     'status' => 'required',
                     'is_esign' => 'required',
                 ],[
@@ -251,6 +252,7 @@ class InspekturStKinerjaController extends Controller
             }
             $objekGabung = implode(', ', $obj);
             $pelaksana_tugas = $usulan->rencanaKerja->pelaksana;
+            $pimpinan = MasterPimpinan::find($usulan->penandatangan);
             // Pembuatan surat
             if (count($pelaksana_tugas) == 1) {
                 $surat = Surat::where('nomor_surat', $nomorSurat)->first();
@@ -265,7 +267,6 @@ class InspekturStKinerjaController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
-                    $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -277,7 +278,7 @@ class InspekturStKinerjaController extends Controller
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'roleInspektur' => $pimpinan->jabatan,
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
                         'inspektur' => $pimpinan->user->name
                     ]);
 
@@ -300,7 +301,9 @@ class InspekturStKinerjaController extends Controller
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'objek' => $objekGabung,
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
+                        'inspektur' => $pimpinan->user->name
                     ]);
 
                     // Simpan dokumen hasil
@@ -381,7 +384,7 @@ class InspekturStKinerjaController extends Controller
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'objek' => $objekGabung,
                         'tanggal' => $this->konvTanggalIndo($tanggal),
-                        'roleInspektur' => $pimpinan->jabatan,
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
                         'inspektur' => $pimpinan->user->name
                     ]);
 
@@ -401,7 +404,9 @@ class InspekturStKinerjaController extends Controller
                         'melaksanakan' => $usulan->melaksanakan,
                         'mulaiSelesai' => $this->konvTanggalIndo($usulan->mulai).' - '.$this->konvTanggalIndo($usulan->selesai),
                         'objek' => $objekGabung,
-                        'tanggal' => $this->konvTanggalIndo($tanggal)
+                        'tanggal' => $this->konvTanggalIndo($tanggal),
+                        'roleInspektur' => $this->jabatan_pimpinan[$pimpinan->jabatan],
+                        'inspektur' => $pimpinan->user->name
                     ]);
 
                     // Simpan dokumen hasil

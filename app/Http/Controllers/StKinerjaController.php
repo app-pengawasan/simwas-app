@@ -89,6 +89,7 @@ class StKinerjaController extends Controller
         'jpm001'      => 'Inspektur Wilayah I',
         'jpm002'      => 'Inspektur Wilayah II',
         'jpm003'      => 'Inspektur Wilayah III',
+        'jpm004'      => 'Kepala Bagian Umum'
     ];
     /**
      * Display a listing of the resource.
@@ -143,7 +144,7 @@ class StKinerjaController extends Controller
             'melaksanakan' => 'required',
             'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
             'selesai' => 'required|date|after_or_equal:mulai',
-            'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+            'penandatangan' => 'required',
             'status' => 'required',
             'is_esign' => 'required',
         ],[
@@ -224,7 +225,7 @@ class StKinerjaController extends Controller
                 'melaksanakan' => 'required',
                 'mulai' => $request->input('is_backdate') === '1' ? 'required|date|after_or_equal:tanggal' : 'required|date|after_or_equal:today' ,
                 'selesai' => 'required|date|after_or_equal:mulai',
-                'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+                'penandatangan' => 'required',
                 'status' => 'required',
                 'is_esign' => 'required',
             ],[

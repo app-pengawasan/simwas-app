@@ -220,16 +220,16 @@
                                                 for="is_esign_tidak">Tidak</label>
                                         </div>
                                     </div>
-                                    <div id="penandatanganContainer" style="display: none;" class="form-group">
+                                    <div id="penandatanganContainer" class="form-group">
                                         <label for="penandatangan">Penanda tangan</label>
                                         <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
                                             <option value="">Pilih penanda tangan</option>
                                             @foreach ($pimpinanAktif as $pimpinan)
-                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                                <option value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
                                             @endforeach
                                             
                                             @foreach ($pimpinanNonaktif as $pimpinan)
-                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $pimpinan->jabatan }}] {{ $pimpinan->user->name }}</option>
+                                                <option class="pimpinanNonaktif" value="{{ $pimpinan->id_pimpinan }}" {{ old('penandatangan') == $pimpinan->id_pimpinan ? 'selected' : ''}}>[{{ $jabatan_pimpinan[$pimpinan->jabatan] }}] {{ $pimpinan->user->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('penandatangan')
@@ -265,9 +265,9 @@
                 var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
                 toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
 
-                var penandatanganContainer = document.getElementById('penandatanganContainer');
-                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
-                toggleEsignInput(isEsignInput, penandatanganContainer);
+                // var penandatanganContainer = document.getElementById('penandatanganContainer');
+                // var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                // toggleEsignInput(isEsignInput, penandatanganContainer);
 
                 var stKinerjaContainer = document.getElementById('stKinerjaContainer');
                 var isStKinerjaInput = document.querySelector('input[name="is_st_kinerja"]:checked');
@@ -291,15 +291,15 @@
             }
         }
 
-        function toggleEsignInput(input, penandatanganContainer) {
-            var penandatanganContainer = document.getElementById('penandatanganContainer');
+        // function toggleEsignInput(input, penandatanganContainer) {
+        //     var penandatanganContainer = document.getElementById('penandatanganContainer');
     
-            if (input.value === '1') {
-                penandatanganContainer.style.display = 'block';
-            } else {
-                penandatanganContainer.style.display = 'none';
-            }
-        }
+        //     if (input.value === '1') {
+        //         penandatanganContainer.style.display = 'block';
+        //     } else {
+        //         penandatanganContainer.style.display = 'none';
+        //     }
+        // }
 
         function toggleStKinerjaInput(input, stKinerjaContainer) {
             var stKinerjaContainer = document.getElementById('stKinerjaContainer');

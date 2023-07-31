@@ -88,6 +88,7 @@ class StpController extends Controller
         'jpm001'      => 'Inspektur Wilayah I',
         'jpm002'      => 'Inspektur Wilayah II',
         'jpm003'      => 'Inspektur Wilayah III',
+        'jpm004'      => 'Kepala Bagian Umum'
     ];
     /**
      * Display a listing of the resource.
@@ -144,7 +145,7 @@ class StpController extends Controller
             'pembebanan_id' => 'required',
             'pegawai' => 'required',
             'is_esign' => 'required',
-            'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+            'penandatangan' => 'required',
             'status' => 'required'
         ], [
             'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',
@@ -226,7 +227,7 @@ class StpController extends Controller
                 'pembebanan_id' => 'required',
                 'pegawai' => 'required',
                 'is_esign' => 'required',
-                'penandatangan' => $request->input('is_esign') === '1' ? 'required' : '',
+                'penandatangan' => 'required',
                 'status' => 'required'
             ], [
                 'selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan waktu mulai.',

@@ -193,7 +193,7 @@
                                                 for="is_esign_tidak">Tidak</label>
                                         </div>
                                     </div>
-                                    <div id="penandatanganContainer" style="display: none;" class="form-group">
+                                    <div id="penandatanganContainer" class="form-group">
                                         <label for="penandatangan">Penanda tangan</label>
                                         <select class="form-control select2 @error('penandatangan') is-invalid @enderror" id="penandatangan" name="penandatangan">
                                             <option value="">Pilih penanda tangan</option>
@@ -238,9 +238,9 @@
                 var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
                 toggleBackdateInput(isBackdateInput, tanggalInputContainer, pimpinanNonaktif);
 
-                var penandatanganContainer = document.getElementById('penandatanganContainer');
-                var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
-                toggleEsignInput(isEsignInput, penandatanganContainer);
+                // var penandatanganContainer = document.getElementById('penandatanganContainer');
+                // var isEsignInput = document.querySelector('input[name="is_esign"]:checked');
+                // toggleEsignInput(isEsignInput, penandatanganContainer);
         });
 
         function toggleBackdateInput(input, tanggalInputContainer, pimpinanNonaktif) {
@@ -260,15 +260,15 @@
             }
         }
 
-        function toggleEsignInput(input, penandatanganContainer) {
-            var penandatanganContainer = document.getElementById('penandatanganContainer');
+        // function toggleEsignInput(input, penandatanganContainer) {
+        //     var penandatanganContainer = document.getElementById('penandatanganContainer');
     
-            if (input.value === '1') {
-                penandatanganContainer.style.display = 'block';
-            } else {
-                penandatanganContainer.style.display = 'none';
-            }
-        }
+        //     if (input.value === '1') {
+        //         penandatanganContainer.style.display = 'block';
+        //     } else {
+        //         penandatanganContainer.style.display = 'none';
+        //     }
+        // }
     </script>
     <script>
         $(document).ready(function() {
