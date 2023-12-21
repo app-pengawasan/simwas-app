@@ -1,75 +1,88 @@
-<p align="center">
-  <a href="https://laravel.com/">
-    <img src="https://laravel.com/img/logomark.min.svg" alt="laravel logo" width="75" height="75">
-  </a>
-  <a href="https://getstisla.com">
-    <img src="https://avatars2.githubusercontent.com/u/45754626?s=75&v=4" alt="Stisla logo" width="75" height="75">
-  </a>
-</p>
+# Sistem Informasi Manajemen Pengawasan
 
-<h1 align="center">Laravel Stisla</h1>
+Sistem Manajemen Pengawasan adalah aplikasi berbasis web yang dibangun untuk membantu pengawasan dan manajemen kinerja pegawai. Aplikasi ini terdiri dari beberapa modul yang dirancang untuk berbagai aspek manajemen, termasuk:
 
-<span align="center">
+1. **Modul Perencanaan dan Realisasi Kinerja Pegawai**
 
-**Laravel Stisla** is a Free Bootstrap Admin Template which will help you to speed up your project and design your own dashboard UI using Laravel blade templating engine.
+   - [Deskripsi singkat tentang modul ini]
 
-</span>
+2. **Modul Pengelolaan Dokumen**
 
-<br>
+   - [Deskripsi singkat tentang modul ini]
 
-<p align="center">
-  <a href="https://getstisla.com">Homepage</a>
-  •
-  <a href="https://github.com/edikurniawan-dev/laravel-stisla#quick-start">Getting Started</a>
-  •
-  <a href="https://demo.getstisla.com" target="_new">Demo</a>
-  •
-  <a href="https://getstisla.com/docs">Documentation</a>
-  •
-  <a href="https://getstisla.com/blog">Blog</a>
-  •
-  <a href="https://github.com/edikurniawan-dev/laravel-stisla/issues">Issue</a>
-</p>
+3. **Modul Pegawai**
 
-<br>
+   - [Deskripsi singkat tentang modul ini]
 
-[![Stisla Preview](https://camo.githubusercontent.com/2135e0f6544a7286a3412cdc3df32d47fc91b045/68747470733a2f2f692e6962622e636f2f3674646d6358302f323031382d31312d31312d31352d33352d676574737469736c612d636f6d2e706e67)](https://getstisla.com)
+4. **Modul Unit Kerja**
 
-## Table of Contents
+   - [Deskripsi singkat tentang modul ini]
 
-- [Table of Contents](#table-of-contents)
-- [Quick start](#quick-start)
-- [License](#license)
-- [Supports](#supports)
+## Teknologi Stack
 
-## Quick start
+Aplikasi ini dibangun menggunakan teknologi berikut:
 
-Several quick start options are available:
+- Laravel
+- MariaDB/MySQL
+- Bootstrap
 
--   Clone the repo: `git clone https://github.com/edikurniawan-dev/laravel-stisla.git`
--   Run `cd` to the newly created `/laravel-stisla` directory
--   Run `composer install` command
--   Run `npm install` command
--   Run `npm run dev` command
--   Run `cp .env.example .env` command
--   Run `php artisan key:generate` command
--   Run `php artisan serve` command
--   Done
+## Getting Started
 
-Read the [documentation page](https://getstisla.com/docs) for more information on the framework contents, templates and examples, and more.
+Berikut adalah langkah-langkah untuk memulai development aplikasi:
 
-## License
+### Option 1 ( Docker ) - On Progress
 
-**Stisla** is licensed under the [MIT License](LICENSE)
+1. Pull image docker dari repositori docker hub.
 
-## Supports
+   ```bash
+   
+   ```
 
-Thanks to BrowserStack for their support on this open-source project!
+2. Jalankan container docker.
 
-<a href="https://www.browserstack.com">
-  <img src="https://getstisla.com/svg/Browserstack-logo.svg" alt="BrowserStack" width="250">
-</a>
+   ```bash
 
----
+   ```
 
-Stisla is created by [Nauval](http://nauv.al) ([Twitter](https://twitter.com/mhdnauvalazhar)). You can support the author by donation [here](https://www.buymeacoffee.com/mhd).
+### Option 2 ( Manual )
+
+1. Clone repositori ini ke komputer lokal Anda.
+
+   ```bash
+   git clone [url]
+   cd [folder]
+   ```
+
+2. Copy file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database dan Google Client ID.
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Jalankan script `setup.sh` untuk menginstall dependensi dan mengkonfigurasi aplikasi.
+
+    ```bash
+    ./setup.sh
+    ```
+## Kontak
+
+Untuk pertanyaan atau bantuan, silakan hubungi kami melalui [email](#)
+
+## Coding Convention
+1. Git-Flow Workflow (https://danielkummer.github.io/git-flow-cheatsheet/)
+2. Conventional Commits (https://www.conventionalcommits.org/en/v1.0.0/)
+
+
+
+## Roadmap
+
+Berikut adalah beberapa fitur yang akan dikembangkan untuk aplikasi ini :
+
+[ ] Modul Unit Kerja
+[ ] Modul Pegawai
+[ ] Dokumentasi
+[ ] Testing
+
+## Lisensi
+
+Aplikasi ini menggunakan lisensi [MIT](#)
