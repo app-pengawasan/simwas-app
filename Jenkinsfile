@@ -40,9 +40,8 @@ pipeline {
             steps {
                 script {
                     dir(APP_PATH) {
-                        sh 'php artisan config:cache'
-                        sh 'php artisan route:cache'
-                        sh 'php artisan view:cache'
+                        sh 'php artisan optimize:clear'
+                        sh 'npm install'
                     }
                 }
             }
@@ -52,7 +51,7 @@ pipeline {
             steps {
                 script {
                     // Restart Nginx service
-                    sh "systemctl reload ${NGINX_SERVICE_NAME}"
+                    sh "sudo /usr/sbin/service ${NGINX_SERVICE_NAME} restart"
                 }
             }
         }
