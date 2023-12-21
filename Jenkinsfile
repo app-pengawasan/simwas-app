@@ -4,6 +4,7 @@ pipeline {
     environment {
         APP_PATH = '/var/www/html/simwas-app'
         NGINX_SERVICE_NAME = 'nginx'
+        NPM_CONFIG_CACHE = "${WORKSPACE}/.npm"
     }
 
     stages {
