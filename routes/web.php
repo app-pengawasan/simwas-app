@@ -527,6 +527,9 @@ Route::get('/utilities-subscribe', function () {
 Route::get('/credits', function () {
     return view('pages.credits', ['type_menu' => '']);
 });
+Route::get('/testing', function () {
+    return view('welcome');
+});
 
 // if in production force redirect to https
 if (App::environment('production')) {
