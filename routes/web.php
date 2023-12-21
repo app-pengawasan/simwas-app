@@ -4,7 +4,7 @@ use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
-use App\http\Controllers\SessionController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SatuanKerjaController;
 use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\WilayahKerjaController;
@@ -190,7 +190,7 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('cetak-spd', function () {
         return view('cetak-spd', ['type_menu' => 'dashboard']);
     });
-    
+
     /**
      * ---------------------------------------------------------------------------
      * PEGAWAI
@@ -527,3 +527,8 @@ Route::get('/utilities-subscribe', function () {
 Route::get('/credits', function () {
     return view('pages.credits', ['type_menu' => '']);
 });
+
+// if in production force redirect to https
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
