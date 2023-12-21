@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     dir(APP_PATH) {
-                        sh 'git fetch origin main'
+                        sh 'git pull origin main'
                     }
                 }
             }
