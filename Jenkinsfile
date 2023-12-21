@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_PATH = '/var/www/app/html/simwas-app'
+        APP_PATH = '/var/www/html/simwas-app'
         NGINX_SERVICE_NAME = 'nginx'
     }
 
