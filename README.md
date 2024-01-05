@@ -30,21 +30,7 @@ Aplikasi ini dibangun menggunakan teknologi berikut:
 
 Berikut adalah langkah-langkah untuk memulai development aplikasi:
 
-### Option 1 ( Docker ) - On Progress
-
-1. Pull image docker dari repositori docker hub.
-
-   ```bash
-   
-   ```
-
-2. Jalankan container docker.
-
-   ```bash
-
-   ```
-
-### Option 2 ( Manual )
+### Option 1 
 
 1. Clone repositori ini ke komputer lokal Anda.
 
@@ -64,6 +50,33 @@ Berikut adalah langkah-langkah untuk memulai development aplikasi:
     ```bash
     ./setup.sh
     ```
+
+### Option 2 - Docker
+1. Clone repositori ini ke komputer lokal Anda.
+
+   ```bash
+   git clone [url]
+   cd [folder]
+   ```
+
+2. Copy file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database dan Google Client ID.
+
+   ```bash
+    cp .env.example .env
+    ```
+
+3. Jalankan docker-compose untuk membangun dan menjalankan aplikasi.
+
+    ```bash
+    docker-compose up -d
+    ```
+
+4. Jalankan script `setup.sh` untuk menginstall dependensi dan mengkonfigurasi aplikasi.
+
+    ```bash
+    ./setup.sh
+    ```
+
 ## Kontak
 
 Untuk pertanyaan atau bantuan, silakan hubungi kami melalui [email](#)
@@ -78,11 +91,11 @@ Untuk pertanyaan atau bantuan, silakan hubungi kami melalui [email](#)
 
 Berikut adalah beberapa fitur yang akan dikembangkan untuk aplikasi ini :
 
-[ ] Modul Unit Kerja
-[ ] Modul Pegawai
-[ ] Dokumentasi
-[ ] Testing
+- [ ] Modul Unit Kinerja
+- [ ] Modul Pegawai
+- [ ] Dokumentasi
+- [ ] Testing
 
 ## Lisensi
 
-Aplikasi ini menggunakan lisensi [MIT](#)
+Aplikasi ini menggunakan lisensi [MIT](/LICENSE).

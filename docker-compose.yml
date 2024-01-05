@@ -1,0 +1,97 @@
+version: "3"
+name: simwas-app
+services:
+    #PHP Web Service
+    webapp:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: simwas:1.0.0
+        container_name: webapp
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: app
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - app-network
+        depends_on:
+            - mysql
+
+    #Nginx Server Service
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "8000:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80"]
+            retries: 3
+            timeout: 5s
+
+    #MySQL Service
+    mysql:
+        image: "mysql/mysql-server:latest"
+        container_name: database-mysql
+        ports:
+            - "${FORWARD_DB_PORT:-3306}:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - "app-database:/var/lib/mysql"
+        networks:
+            - app-network
+        healthcheck:
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - "-p${DB_PASSWORD}"
+            retries: 3
+            timeout: 5s
+
+    #phpmyadmin Service
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+        networks:
+            - app-network
+        depends_on:
+            - mysql
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80"]
+            retries: 3
+            timeout: 5s
+
+#Docker Networks
+networks:
+    app-network:
+        driver: bridge
+
+#Volumes
+volumes:
+    app-database:
+        driver: local
