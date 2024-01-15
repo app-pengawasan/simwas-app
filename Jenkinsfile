@@ -21,6 +21,7 @@ pipeline {
             steps {
                 script {
                     dir(APP_PATH) {
+                        sh 'git fetch origin'
                         sh 'git reset --hard origin/main'
                     }
                 }
