@@ -1,7 +1,7 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">Simwas</a>
+            <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
             <span class="badge badge-primary">Sekretaris</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">

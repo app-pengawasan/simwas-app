@@ -16,14 +16,29 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 {{-- <div class="dropdown-title">Logged in 5 min ago</div> --}}
-                <a href="features-profile.html" class="dropdown-item has-icon">
+                <a href="#" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
                 <div class="dropdown-divider"></div>
                 @if (auth()->user()->is_admin)
-                    <a href="{{ route('dashboard') }}" class="dropdown-item has-icon">
-                        <i class="fas fa-users"></i> Login sebagai Pegawai
-                    </a>
+                <a href="{{ route('dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-users"></i> Login sebagai Pegawai
+                </a>
+                @endif
+                @if (auth()->user()->is_sekma || auth()->user()->is_sekwil)
+                <a href="{{ route('sekretaris-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
+                </a>
+                @endif
+                @if (auth()->user()->is_aktif)
+                <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Inspektur
+                </a>
+                @endif
+                @if (auth()->user()->is_analissdm)
+                <a href="{{ route('analis-sdm-pp') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
+                </a>
                 @endif
             </div>
         </li>
