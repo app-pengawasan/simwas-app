@@ -43,7 +43,7 @@ pipeline {
                 script {
                     dir(APP_PATH) {
                         sh 'php artisan optimize:clear'
-                        sh 'npm install'
+                        sh 'npm install --legacy-peer-deps'
                     }
                 }
             }
