@@ -1,11 +1,11 @@
 {
   "name": "codemirror",
-  "version": "5.65.6",
+  "version": "5.65.16",
   "main": "lib/codemirror.js",
   "style": "lib/codemirror.css",
   "author": {
     "name": "Marijn Haverbeke",
-    "email": "marijnh@gmail.com",
+    "email": "marijn@haverbeke.berlin",
     "url": "http://marijnhaverbeke.nl"
   },
   "description": "Full-featured in-browser code editor",
@@ -22,10 +22,12 @@
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
-    "blint": "^1.1.0",
+    "blint": "^1.1.2",
+    "cm5-vim": "^0.0.5",
     "node-static": "0.7.11",
     "puppeteer": "^1.20.0",
-    "rollup": "^1.26.3"
+    "rollup": "^1.26.3",
+    "rollup-plugin-copy": "^3.4.0"
   },
   "bugs": "http://github.com/codemirror/CodeMirror/issues",
   "keywords": [
@@ -43,5 +45,8 @@
     "dependencies": {},
     "devDependencies": {}
   },
-  "dependencies": {}
+  "dependencies": {},
+  "publishConfig": {
+    "tag": "version5"
+  }
 }
