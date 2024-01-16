@@ -9,5 +9,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Kode yang akan dijalankan setelah halaman selesai dimuat
     $("#modal-loader").fadeOut();
-    console.log("Halaman telah selesai dimuat");
+    // console.log("Halaman telah selesai dimuat");
 });

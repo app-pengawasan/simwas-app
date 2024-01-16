@@ -9,7 +9,7 @@
         </ul>
     </div>
     <ul class="navbar-nav navbar-right">
-        <li class="dropdown"><a href="#" data-toggle="dropdown"
+        <li class="dropdown d-flex justify-content-center align-items-center"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="{{ asset('img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
@@ -21,19 +21,19 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 @if (auth()->user()->is_admin)
-                    <a href="{{ route('admin-dashboard') }}" class="dropdown-item has-icon">
-                        <i class="fas fa-user-shield"></i> Login sebagai Admin
-                    </a>
+                <a href="{{ route('admin-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Admin
+                </a>
                 @endif
                 @if (auth()->user()->is_sekma || auth()->user()->is_sekwil)
-                    <a href="{{ route('sekretaris-dashboard') }}" class="dropdown-item has-icon">
-                        <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
-                    </a>
+                <a href="{{ route('sekretaris-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
+                </a>
                 @endif
                 @if (auth()->user()->is_aktif)
-                    <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
-                        <i class="fas fa-user-shield"></i> Login sebagai Inspektur
-                    </a>
+                <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Inspektur
+                </a>
                 @endif
                 @if (auth()->user()->is_analissdm)
                 <a href="{{ route('analis-sdm-pp') }}" class="dropdown-item has-icon">
@@ -42,7 +42,7 @@
                 @endif
             </div>
         </li>
-        <li class="dropdown mr-4 ml-2">
+        <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">
             <a class="has-icon text-white" href="#"
                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
