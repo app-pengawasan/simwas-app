@@ -47,7 +47,8 @@ class StpdController extends Controller
             "pimpinanAktif" => $pimpinanAktif,
             "pimpinanNonaktif" => $pimpinanNonaktif,
             "stks" => $stks,
-            "pembebanans" => $pembebanans
+            "pembebanans" => $pembebanans,
+            "jabatan_pimpinan" => $this->jabatan_pimpinan
         ]);
     }
 
@@ -82,7 +83,7 @@ class StpdController extends Controller
 
         $validatedData['user_id'] = auth()->user()->id;
         $validatedData['pelaksana'] = implode(', ', $validatedData['pelaksana']);
-        
+
         Stpd::create($validatedData);
 
         return redirect('/pegawai/st-pd')->with('success', 'Pengajuan ST Perjalanan Dinas berhasil!');
