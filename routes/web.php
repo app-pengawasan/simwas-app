@@ -530,6 +530,9 @@ Route::get('/credits', function () {
 Route::get('/testing', function () {
     return view('welcome');
 });
+Route::get('/testing1', function () {
+    return view('welcome');
+});
 Route::get('/testing2', function () {
     return view('welcome');
 });
