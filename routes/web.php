@@ -533,6 +533,9 @@ Route::get('/testing', function () {
 Route::get('/testing1', function () {
     return view('welcome');
 });
+Route::get('/testing2', function () {
+    return view('welcome');
+});
 
 // if in production force redirect to https
 if (App::environment('production')) {
