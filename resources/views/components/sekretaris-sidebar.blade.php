@@ -1,11 +1,15 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
+            <a href="{{ route('sekretaris-dashboard') }}">
+                <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
+            </a>
             <span class="badge badge-primary">Sekretaris</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">Sm</a>
+            <a href="{{ route('sekretaris-dashboard') }}">
+                <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
+            </a>
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('sekretaris') ? 'active' : '' }}">
@@ -27,10 +31,10 @@
                 </a>
             </li>
             {{-- <li class="{{ Request::is('sekretaris/surat-eksternal*') ? 'active' : '' }}">
-                <a class="nav-link" href="sekretaris/surat-eksternal">
-                    <i class="fas fa-file-export"></i>
-                    <span>Surat Eksternal</span>
-                </a>
+            <a class="nav-link" href="sekretaris/surat-eksternal">
+                <i class="fas fa-file-export"></i>
+                <span>Surat Eksternal</span>
+            </a>
             </li> --}}
         </ul>
     </aside>

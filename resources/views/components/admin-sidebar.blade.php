@@ -1,7 +1,9 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
+            <a href="{{ route('admin-dashboard') }}">
+                <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
+            </a>
             <span class="badge badge-primary">Admin</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
@@ -16,7 +18,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'anggaran' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'anggaran' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-money-bill"></i>
                     <span>Anggaran</span>
@@ -46,7 +48,7 @@
                     <span>Kelola Pimpinan</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'objek' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'objek' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-bullseye"></i>
                     <span>Master Objek</span>
@@ -66,7 +68,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'rencana-kinerja' ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-kinerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-clipboard"></i>
                     <span>Rencana Kinerja</span>
