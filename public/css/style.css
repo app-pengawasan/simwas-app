@@ -4177,3 +4177,61 @@ body:not(.sidebar-mini)
     }
 }
 
+.c-details span {
+    font-weight: 300;
+    font-size: 12px
+}
+
+.icon {
+    min-width: 50px;
+    height: 50px;
+    background-color: #eee;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 39px
+}
+
+
+.progress {
+    height: 10px;
+    border-radius: 10px
+}
+
+
+
+.text1 {
+    font-size: 13px;
+    font-weight: 500
+}
+
+.text2 {
+    color: #a5aec0
+}
+
+.dashboard-card a {
+    /* remove underline style a */
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid #e8eaee;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.dashboard-card a:hover {
+    background-color: #e8eaee !important;
+    padding: 10px;
+    border: 1px solid #e8eaee;
+}
+
+.dashboard-card a:active {
+    background-color: #147fdf !important;
+    /* margin-left: 20px; */
+    color: white;
+}
