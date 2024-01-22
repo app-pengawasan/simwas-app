@@ -2,7 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('analis-sdm-pp') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}" class="sidebar-brand" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Analis SDM</span>
         </div>

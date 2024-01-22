@@ -1,3 +1,5 @@
-  <div class="simple-footer">
-      Copyright &copy; Simwas 2023
-  </div>
+<div class="simple-footer">
+    <script>
+        document.write("Copyright &copy; Simwas " + new Date().getFullYear());
+    </script>
+</div>
