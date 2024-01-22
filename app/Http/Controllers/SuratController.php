@@ -43,9 +43,9 @@ class SuratController extends Controller
             'kka' => 'required',
             'tanggal' => 'required',
             'jenis' => 'required',
-            'is_backdate' => 'required'
+            'is_backdate' => 'required',
         ]);
-        
+
         $backdate = $validatedData['is_backdate'];
         unset($validatedData['is_backdate']);
 
@@ -79,14 +79,14 @@ class SuratController extends Controller
         } else {
             $notFound = true;
             $tanggal = $validatedData['tanggal'];
-            while ($notFound) {
+            // while ($notFound) {
                 $lastData = Surat::where('nomor_organisasi', $validatedData['nomor_organisasi'])
                 ->where('tanggal', $tanggal)
                 ->orderBy('created_at', 'desc')
                 ->first();
                 if ($lastData) {
                     if($lastData->backdate) {
-                        $validatedData['backdate'] += $lastData->backdate;
+                        $validatedData['backdate'] = $lastData->backdate + 1;
                     } else {
                         $validatedData['backdate'] = 1;
                     }
@@ -96,13 +96,36 @@ class SuratController extends Controller
                     $tahun = date('Y', strtotime($validatedData['tanggal']));
                     $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'.'.$validatedData['backdate'].'/0'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
                     Surat::create($validatedData);
-                    $notFound = false;
+                    // $notFound = false;
                 } else {
-                    $tanggal = date('Y-m-d', strtotime('-1 day', strtotime($tanggal)));
+                    $lastData = Surat::where('nomor_organisasi', $validatedData['nomor_organisasi'])
+                    ->where('tanggal', '<', $tanggal)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                    if ($lastData) {
+                        if($lastData->backdate) {
+                            $validatedData['backdate'] = $lastData->backdate + 1;
+                        } else {
+                            $validatedData['backdate'] = 1;
+                        }
+                        $validatedData['nomor_naskah'] = $lastData->nomor_naskah;
+                        $nomorNaskahPadded = str_pad($validatedData['nomor_naskah'], 3, '0', STR_PAD_LEFT);
+                        $bulan = date('m', strtotime($validatedData['tanggal']));
+                        $tahun = date('Y', strtotime($validatedData['tanggal']));
+                        $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'.'.$validatedData['backdate'].'/0'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
+                        Surat::create($validatedData);
+                    } else {
+                        $validatedData['backdate'] = 1;
+                        $validatedData['nomor_naskah'] = 1;
+                        $nomorNaskahPadded = str_pad($validatedData['nomor_naskah'], 3, '0', STR_PAD_LEFT);
+                        $bulan = date('m', strtotime($validatedData['tanggal']));
+                        $tahun = date('Y', strtotime($validatedData['tanggal']));
+                        $validatedData['nomor_surat'] = $validatedData['derajat_klasifikasi'].'-'.$nomorNaskahPadded.'.'.$validatedData['backdate'].'/0'.$validatedData['nomor_organisasi'].'/'.$validatedData['kka'].'/'.$bulan.'/'.$tahun;
+                        Surat::create($validatedData);
                 }
             }
         }
-        
+
     }
 
     /**
