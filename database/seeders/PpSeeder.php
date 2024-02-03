@@ -43,5 +43,9 @@ class PpSeeder extends Seeder
             'jenis' => 'Pelatihan di Kantor Sendiri',
             'is_aktif' => true
         ]);
+        Pp::create([
+            'jenis' => 'Lainnya',
+            'is_aktif' => 2
+        ]);
     }
 }

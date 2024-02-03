@@ -40,5 +40,9 @@ class NamaPpSeeder extends Seeder
             'nama' => 'Audit Investigasi',
             'is_aktif' => true
         ]);
+        NamaPp::create([
+            'nama' => 'Lainnya',
+            'is_aktif' => 2
+        ]);
     }
 }

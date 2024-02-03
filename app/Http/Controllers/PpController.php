@@ -18,7 +18,8 @@ class PpController extends Controller
         $this->authorize('analis_sdm');
         $pps = Pp::all()->where('is_aktif', true);
         return view('analis-sdm.master-pp.index', [
-            "pps" => $pps
+            "pps" => $pps,
+            "type_menu" => 'kompetensi'
         ]);
     }
 
@@ -121,7 +122,8 @@ class PpController extends Controller
         $this->authorize('analis_sdm');
         $pps = Pp::all()->where('is_aktif', false);
         return view('analis-sdm.master-pp.pp-nonaktif', [
-            "pps" => $pps
+            "pps" => $pps,
+            "type_menu" => 'kompetensi'
         ]);
     }
 }

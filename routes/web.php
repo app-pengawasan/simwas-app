@@ -1,50 +1,52 @@
 <?php
 
-use App\Http\Controllers\AdminRencanaKerjaController;
-use App\Http\Controllers\AnggaranRencanaKerjaController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\SatuanKerjaController;
-use App\Http\Controllers\PaguAnggaranController;
-use App\Http\Controllers\WilayahKerjaController;
-use App\Http\Controllers\MasterPegawaiController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\MasterAnggaranController;
-use App\Http\Controllers\MasterHasilController;
-use App\Http\Controllers\MasterIKUController;
-use App\Http\Controllers\MasterPimpinanController;
-use App\Http\Controllers\StKinerjaController;
-use App\Http\Controllers\NormaHasilController;
+use App\Http\Controllers\PpController;
+use App\Http\Controllers\SlController;
 use App\Http\Controllers\StpController;
 use App\Http\Controllers\StpdController;
-use App\Http\Controllers\SlController;
-use App\Http\Controllers\KirimController;
-use App\Http\Controllers\EksternalController;
-use App\Http\Controllers\NomorSuratController;
-use App\Http\Controllers\SlSekreController;
-use App\Http\Controllers\NormaHasilSekreController;
-use App\Http\Controllers\PpController;
-use App\Http\Controllers\NamaPpController;
-use App\Http\Controllers\SuratController;
-use App\Http\Controllers\InspekturStpController;
-use App\Http\Controllers\InspekturStpdController;
-use App\Http\Controllers\InspekturStKinerjaController;
-use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
-use App\Http\Controllers\MasterSasaranController;
-use App\Http\Controllers\MasterTujuanController;
-use App\Http\Controllers\MasterUnitKerjaController;
-use App\Http\Controllers\ObjekKegiatanController;
-use App\Http\Controllers\ObjekPengawasanController;
-use App\Http\Controllers\PegawaiRencanaKerjaController;
-use App\Http\Controllers\PegawaiTugasController;
-use App\Http\Controllers\PelaksanaTugasController;
-use App\Http\Controllers\PimpinanRencanKerjaController;
-use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\KirimController;
+use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
+use App\Http\Controllers\NamaPpController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SlSekreController;
+use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EksternalController;
+use App\Http\Controllers\MasterIKUController;
+use App\Http\Controllers\StKinerjaController;
+use App\Http\Controllers\NomorSuratController;
+use App\Http\Controllers\NormaHasilController;
+use App\Http\Controllers\MasterHasilController;
+use App\Http\Controllers\SatuanKerjaController;
+use App\Http\Controllers\InspekturStpController;
+use App\Http\Controllers\MasterTujuanController;
+use App\Http\Controllers\PaguAnggaranController;
+use App\Http\Controllers\PegawaiTugasController;
+use App\Http\Controllers\WilayahKerjaController;
+use App\Http\Controllers\InspekturStpdController;
+use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\MasterSasaranController;
+use App\Http\Controllers\ObjekKegiatanController;
+use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\MasterUnitKerjaController;
+use App\Http\Controllers\NormaHasilSekreController;
+use App\Http\Controllers\ObjekPengawasanController;
+use App\Http\Controllers\AnalisKompetensiController;
+use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\PegawaiKompetensiController;
+use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\PegawaiRencanaKerjaController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,6 +173,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 
     Route::resource('analis-sdm/namaPp', NamaPpController::class);
 
+    Route::resource('analis-sdm/kelola-kompetensi', AnalisKompetensiController::class);
+
     /**
      * ---------------------------------------------------------------------------
      * INSPEKTUR
@@ -272,6 +276,9 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
         return view('word');
     });
     Route::post('word', [WordController::class, 'index'])->name('word.index');
+
+    //Kompetensi
+    Route::resource('pegawai/kompetensi', PegawaiKompetensiController::class);
 });
 
 /**
