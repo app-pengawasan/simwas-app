@@ -6,6 +6,7 @@ var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
     initialView: 'timeGridWeek',
+    nowIndicator: true,
     eventDidMount: function(info) {
         moment.locale('id');
         let startdate = moment(info.event.start);

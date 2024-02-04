@@ -1248,7 +1248,7 @@ select.form-control:not([size]):not([multiple]) {
 th,
 td {
     vertical-align: top !important;
-    padding-top: 8px !important;
+    /* padding-top: 8px !important; */
 }
 
 .table {
