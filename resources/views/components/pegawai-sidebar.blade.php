@@ -49,12 +49,26 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-file-signature"></i>
+                    <span>Realisasi Kinerja</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li
+                        class="{{ Request::is('pegawai/aktivitas-harian') || Request::is('pegawai/aktivitas-harian/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/aktivitas-harian">
+                            <span>Aktivitas Harian</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dashboard') }}">
                     <i class="fas fa-file-signature"></i>
                     <span>Realisasi Kinerja</span>
                 </a>
-            </li>
+            </li> --}}
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
             {{-- <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">

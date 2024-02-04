@@ -32,7 +32,6 @@ class PegawaiKompetensiController extends Controller
      */
     public function index()
     {
-        
         $kompetensi = Kompetensi::all()->where('pegawai_id', auth()->user()->id);
         $pp = Pp::all()->whereNotIn('is_aktif', [0]);
         $nama_pp = NamaPp::all();

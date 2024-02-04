@@ -130,3 +130,39 @@
 .form-one-line input {
     flex: 1 !important;
 }
+
+#calendar a {
+    color: #20232a !important;
+    font-weight: normal !important;
+}
+.fc-list-event-title, .fc-dayGridMonth-view .fc-event-title {
+    text-align: left;
+}
+.fc-event {
+    cursor: pointer;
+}
+.popover {
+    z-index: 2000 !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+    max-width: 100%;
+}
+
+.popover h3 {
+    color: var(--secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.popover-header {
+    /* content: "×"; */
+    /* position: absolute; */
+    text-align: right;
+    /* cursor: pointer; */
+    color: gray !important;
+}
+
+.popover-header i {
+    font-size: 18px;
+    margin-top: 0.4rem;
+    margin-left: 1rem;
+}

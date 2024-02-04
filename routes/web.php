@@ -41,6 +41,7 @@ use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
 use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
@@ -279,6 +280,9 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 
     //Kompetensi
     Route::resource('pegawai/kompetensi', PegawaiKompetensiController::class);
+
+    //Aktivitas Harian
+    Route::resource('pegawai/aktivitas-harian', AktivitasHarianController::class);
 });
 
 /**
