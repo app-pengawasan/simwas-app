@@ -508,13 +508,13 @@ div.dataTables_wrapper div.dataTables_processing {
   border-color: #f2f2f2;
 }
 .fc-view > table tr, .fc-view > table td {
-  border-color: #f2f2f2;
+  /* border-color: #f2f2f2; */
 }
 .fc-view > table th {
-  border-color: #f2f2f2;
+  /* border-color: #f2f2f2; */
   color: #34395e !important;
   font-weight: 500;
-  padding: 10px;
+  /* padding: 10px; */
 }
 
 .fc-view-container > .fc-view {

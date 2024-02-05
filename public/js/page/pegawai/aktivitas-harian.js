@@ -7,6 +7,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
     initialView: 'timeGridWeek',
     nowIndicator: true,
+    slotDuration: '01:00:00',
     eventDidMount: function(info) {
         moment.locale('id');
         let startdate = moment(info.event.start);
@@ -31,6 +32,10 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' // user can switch between the two
     },
     events: events,
+    allDayContent:
+    { 
+        html: '<i class="fa-regular fa-clock"></i>' 
+    },
     // eventClick: function(info) {
     //     alert('Event: ' + info.event.title);
     // },

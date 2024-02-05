@@ -135,12 +135,15 @@
     color: #20232a !important;
     font-weight: normal !important;
 }
+
 .fc-list-event-title, .fc-dayGridMonth-view .fc-event-title {
     text-align: left;
 }
+
 .fc-event {
     cursor: pointer;
 }
+
 .popover {
     z-index: 2000 !important;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
@@ -170,11 +173,18 @@
 ::-webkit-scrollbar {
     width: 9px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: rgba(155, 155, 155, 0.5);
     border-radius: 20px;
     border: transparent;
+}
+
+.fc .fc-timegrid-slot {
+  border-bottom: 0px;
+  height: 3em;
 }
