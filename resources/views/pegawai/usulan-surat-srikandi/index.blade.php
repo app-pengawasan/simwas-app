@@ -16,12 +16,13 @@
 @include('components.pegawai-sidebar')
 
 <div class="main-content">
-    <!-- Modal -->
-    {{-- @include('components.kelola-kompetensi.create');
-    @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
         <div class="section-header">
             <h1>Usulan Surat Srikandi</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item">Usulan Surat Srikandi</div>
+            </div>
         </div>
         @include('components.flash')
         <div class="row">
@@ -47,7 +48,7 @@
                                         <th>Nomor Surat</th>
                                         <th>Jenis Surat</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -57,21 +58,33 @@
                                         <td>{{ $usulan->nomor_surat }}</td>
                                         <td>{{ $usulan->jenis_naskah_dinas }}</td>
                                         <td>
-                                            <span class="badge badge-light">{{ $usulan->status }}</span>
+                                            @if ($usulan->status == 'disetujui')
+                                            <span class="badge badge-success"><i
+                                                    class="fa-regular fa-circle-check mr-1"></i>Disetujui</span>
+                                            @elseif ($usulan->status == 'ditolak')
+                                            <span class="badge badge-danger" data-toggle="tooltip" data-placement="top"
+                                                title="{{ $usulan->catatan }}" style="cursor: pointer;"><i
+                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                            @else
+                                            <span class="badge badge-light" data-toggle="tooltip" data-placement="top"
+                                                title="Menunggu persetujuan sekretaris" style="cursor: pointer;"><i
+                                                    class="fa-regular fa-clock mr-1"></i>Menunggu</span>
+                                            @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('usulan-surat-srikandi.edit', $usulan->id) }}"
-                                                class="btn btn-warning btn-sm">
-                                                <i class="fas fa-edit"></i>
-                                                Edit
-                                            </a>
                                             <a href="{{ route('usulan-surat-srikandi.show', $usulan->id) }}"
                                                 class="btn btn-info btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
                                                 Detail
                                             </a>
-
+                                            @if ($usulan->status == 'disetujui')
+                                            <a href="{{ route('surat-srikandi.download', $usulan->id) }}"
+                                                class="btn btn-primary btn-sm" data-toggle="tooltip"
+                                                data-placement="top" title="Download Surat Srikandi">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                                Download
+                                                @endif
                                         </td>
                                         @endforeach
                                 </tbody>
