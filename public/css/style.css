@@ -3904,12 +3904,12 @@ body:not(.sidebar-mini) .main-sidebar .sidebar-menu li a {
     display: flex;
     align-items: center;
     /* justify-content:center; */
-    min-height: 38px;
+    min-height: 37px;
     padding: 2px 10px;
     width: 100%;
     letter-spacing: 0.3px;
     color: #70737c;
-    border-radius: 7px;
+    border-radius: 5px;
     text-decoration: none;
     line-height: 20px;
 }

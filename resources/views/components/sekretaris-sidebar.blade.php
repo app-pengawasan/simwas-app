@@ -18,18 +18,30 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ Request::is('sekretaris/norma-hasil*') ? 'active' : '' }}">
-                <a class="nav-link" href="/sekretaris/norma-hasil">
-                    <i class="fas fa-check"></i>
-                    <span>Norma Hasil</span>
+            <li class="{{ Request::is('sekretaris/surat-srikandi*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('surat-srikandi.index') }}">
+                    <i class="fab fa-regular fa-folder-open"></i>
+                    <span>Surat Srikandi</span>
                 </a>
+            </li>
+            <li class="{{ Request::is('sekretaris/arsip-surat*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('surat-srikandi.arsip') }}">
+                    <i class="fas fa-solid fa-box-archive"></i>
+                    <span>Arsip Surat</span>
+                </a>
+            </li>
+            {{-- <li class="{{ Request::is('sekretaris/norma-hasil*') ? 'active' : '' }}">
+            <a class="nav-link" href="/sekretaris/norma-hasil">
+                <i class="fas fa-check"></i>
+                <span>Norma Hasil</span>
+            </a>
             </li>
             <li class="{{ Request::is('sekretaris/usulan-surat*') ? 'active' : '' }}">
                 <a class="nav-link" href="/sekretaris/usulan-surat">
                     <i class="fas fa-file"></i>
                     <span>Usulan Surat</span>
                 </a>
-            </li>
+            </li> --}}
             {{-- <li class="{{ Request::is('sekretaris/surat-eksternal*') ? 'active' : '' }}">
             <a class="nav-link" href="sekretaris/surat-eksternal">
                 <i class="fas fa-file-export"></i>

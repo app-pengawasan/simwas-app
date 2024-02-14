@@ -124,6 +124,7 @@ class UsulanSuratSrikandiController extends Controller
             'status' => 'usulan',
             'catatan' => 'catatan',
             'user_id' => auth()->user()->id,
+            'nomor_surat' => 'belum',
         ]);
 
         return redirect()->route('usulan-surat-srikandi.index')->with('status', 'Berhasil Menambahkan Usulan Surat Srikandi!')
@@ -140,6 +141,12 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function show(UsulanSuratSrikandi $usulanSuratSrikandi)
     {
+        // left join usulan_surat_srikandi and surat_srikandi
+        $usulanSuratSrikandi = UsulanSuratSrikandi::leftJoin('surat_srikandis', 'usulan_surat_srikandis.id', '=', 'surat_srikandis.id_usulan_surat_srikandi')
+        ->select('usulan_surat_srikandis.*', 'surat_srikandis.*', 'usulan_surat_srikandis.id as id')
+        ->where('usulan_surat_srikandis.id', $usulanSuratSrikandi->id)
+        ->first();
+            // dd($usulanSuratSrikandi);
         return view('pegawai.usulan-surat-srikandi.show', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
@@ -203,6 +210,24 @@ class UsulanSuratSrikandiController extends Controller
         $usulanSuratSrikandi->delete();
         return redirect()->route('usulan-surat-srikandi.index')->with('status', 'Berhasil Menghapus Usulan Surat Srikandi!')
             ->with('alert-type', 'success');
+    }
+
+    public function acceptUsulanSurat($id)
+    {
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
+        $usulanSuratSrikandi->update([
+            'status' => 'disetujui',
+        ]);
+
+        return redirect()->route('surat-srikandi.index')
+            ->with('alert-message', 'Usulan Surat Srikandi berhasil disetujui')
+            ->with('alert-type', 'success');
+    }
+    public function downloadUsulanSurat($id)
+    {
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
+        $file = public_path('usulan-surat-srikandi/' . $usulanSuratSrikandi->directory);
+        return response()->download($file);
     }
 }
 
