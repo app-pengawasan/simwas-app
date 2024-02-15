@@ -35,7 +35,7 @@
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
                             <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
-                            <table class="mb-4">
+                            <table class="mb-4 table table-striped responsive" id="table-show">
                                 <tr>
                                     <th style="min-width: 94pt">Tujuan</th>
                                     <td>{{ $timKerja->iku->sasaran->tujuan->tujuan }}</td>

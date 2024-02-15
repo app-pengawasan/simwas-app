@@ -48,6 +48,9 @@ use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\MasterHasilKerjaController;
+use App\Http\Controllers\MasterSubUnsurController;
+use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\SuratSrikandiController;
 use App\Models\SuratSrikandi;
@@ -95,6 +98,13 @@ Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'im
 //Master-pimpinan
 Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
 // Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+
+// Master Unsur, Sub Unsur, Hasil Kerja
+Route::resource('/admin/master-unsur', MasterUnsurController::class);
+Route::resource('/admin/master-subunsur', MasterSubUnsurController::class);
+Route::resource('/admin/master-hasil-kerja', MasterHasilKerjaController::class);
+Route::get('/admin/master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
+Route::get('/admin/master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
 
 
 

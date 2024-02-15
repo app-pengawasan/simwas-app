@@ -20,7 +20,7 @@
         @include('components.master-hasil.edit');
         <section class="section">
             <div class="section-header">
-                <h1>Master Hasil Kinerja Pegawai Inspekotrat Utama</h1>
+                <h1>Master Hasil Kinerja Pegawai Inspekorat Utama</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">

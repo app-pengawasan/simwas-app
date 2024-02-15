@@ -35,10 +35,10 @@
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th>Nomor Surat</th>
                                         <th>Nama Pengaju</th>
                                         <th>Tanggal Persetujuan</th>
                                         <th>Unit Kerja</th>
-                                        <th>Nomor Surat</th>
                                         <th>Link Srikandi</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -47,11 +47,17 @@
 
                                     @foreach ($suratSrikandi as $usulan)
                                     <tr>
+                                        <td>
+                                            <span class="badge badge-success">{{ $usulan->nomor_surat_srikandi }}</span>
+                                        </td>
                                         <td>{{ $usulan->user_name }}</td>
                                         <td>{{ $usulan->tanggal_persetujuan_srikandi }}</td>
                                         <td>{{ $usulan->kepala_unit_penandatangan_srikandi }}</td>
-                                        <td>{{ $usulan->nomor_surat_srikandi }}</td>
-                                        <td>{{ $usulan->link_srikandi }}</td>
+                                        <td>
+                                            <a class="badge badge-primary" href="{{ $usulan->link_srikandi }}">
+                                                <i class="fa-solid fa-link mr-1"></i>
+                                                Buka Link Srikandi</a>
+                                        </td>
                                         <td>
                                             <a href="{{ route('surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
                                                 class="btn btn-info btn-sm">

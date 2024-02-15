@@ -1275,8 +1275,8 @@ td {
 .table:not(.table-sm):not(.table-md):not(.dataTable) td,
 .table:not(.table-sm):not(.table-md):not(.dataTable) th {
     padding: 0 25px;
-    min-height: 45px;
-    height: 45px;
+    min-height: 40px;
+    height: 40px;
     vertical-align: middle;
 }
 
