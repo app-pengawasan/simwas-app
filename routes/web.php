@@ -48,6 +48,10 @@ use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\UsulanSuratSrikandiController;
+use App\Http\Controllers\SuratSrikandiController;
+use App\Models\SuratSrikandi;
+use App\Models\UsulanSuratSrikandi;
 
 /*
 |--------------------------------------------------------------------------
@@ -219,6 +223,14 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+    Route::resource('/pegawai/usulan-surat-srikandi', UsulanSuratSrikandiController::class);
+    Route::resource('/sekretaris/surat-srikandi', SuratSrikandiController::class);
+    // add decline route to SuratSrikandiController
+    Route::put('/sekretaris/surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
+    // downloadSuratSrikandi
+    Route::get('/sekretaris/surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
+    Route::get('/pegawai/usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
+    Route::get('/sekretaris/arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
 
     // Ajax
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);

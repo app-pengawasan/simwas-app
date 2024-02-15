@@ -57,6 +57,9 @@ let plugins = [
     "izitoast",
     "weathericons",
     "gmaps",
+    "bs-stepper",
+    "bootstrap-steps",
+    "bootstrap-select",
 ];
 
 plugins.forEach((plugin) => {

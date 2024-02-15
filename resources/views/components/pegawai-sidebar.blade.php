@@ -64,10 +64,10 @@
                 </ul>
             </li>
             {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dashboard') }}">
-                    <i class="fas fa-file-signature"></i>
-                    <span>Realisasi Kinerja</span>
-                </a>
+            <a class="nav-link" href="{{ route('dashboard') }}">
+                <i class="fas fa-file-signature"></i>
+                <span>Realisasi Kinerja</span>
+            </a>
             </li> --}}
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
@@ -98,11 +98,17 @@
                     <span>ST Kinerja</span>
                 </a>
             </li>
-            <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('norma-hasil.index') }}">
-                    <i class="fas fa-check"></i>
-                    <span>Norma Hasil</span>
-                </a>
+            <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('usulan-surat-srikandi.index') }}">
+                <i class="fas fa-solid fa-envelope"></i>
+                <span>Usulan Surat</span>
+            </a>
+            </li>
+            {{-- <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('norma-hasil.index') }}">
+                <i class="fas fa-check"></i>
+                <span>Norma Hasil</span>
+            </a>
             </li>
             <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('st-pp.index') }}">
@@ -121,7 +127,7 @@
                     <i class="fas fa-file"></i>
                     <span>Surat Lain</span>
                 </a>
-            </li>
+            </li> --}}
             {{-- <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
                 <i class="fas fa-paper-plane"></i>
