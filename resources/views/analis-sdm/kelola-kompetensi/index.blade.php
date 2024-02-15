@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="">
-                                <table id="table-master-pimpinan"
+                                <table id="table-kompetensi"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
@@ -50,7 +50,8 @@
                                             <th>Sertifikat</th>
                                             <th>Catatan</th>
                                             <th>Status</th>
-                                            <th></th>
+                                            <th>Aksi</th>
+                                            <th class="never">sertifikat_link</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,17 +72,10 @@
                                                 @endif
                                                 
                                                 <td>
-                                                    {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
                                                     <a class="btn btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    {{-- @else
-                                                        <a class="btn btn-primary"
-                                                        href="{{ $k->sertifikat }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    @endif --}}
                                                 </td>
                                                 <td>{{ $k->catatan }}</td>
                                                 @if ($k->status == 1)
@@ -91,10 +85,10 @@
                                                 @endif
                                                 <td>
                                                     <div class="btn-group dropdown">
-                                                        <button type="button" class="btn btn-primary dropdown-toggle" 
+                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
                                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                                         data-id="{{ $k->id }}">
-                                                            {{-- <i class="fas fa-stamp"></i> --}}Aksi
+                                                            {{-- <i class="fas fa-stamp"></i> --}}...
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right shadow-lg">
                                                             <a href="javascript:void(0)" class="dropdown-item edit-btn"
@@ -123,6 +117,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -154,6 +149,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/admin/master-pimpinan.js') }}"></script>
     <script src="{{ asset('js/page/kompetensi.js') }}"></script>
 @endpush

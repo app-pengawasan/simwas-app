@@ -21,13 +21,14 @@ return new class extends Migration
             $table->unsignedBigInteger('pp_id');
             $table->foreign('pp_id')->references('id')->on('pps')->onDelete('cascade');
             $table->text('pp_lain')->nullable();
-            $table->unsignedBigInteger('nama_pp_id')->nullable();
+            $table->unsignedBigInteger('nama_pp_id');
             $table->foreign('nama_pp_id')->references('id')->on('nama_pps')->onDelete('cascade');
-            $table->text('nama_pp_lain');
+            $table->text('nama_pp_lain')->nullable();
             $table->text('sertifikat');
             $table->text('catatan')->nullable();
             $table->integer('status');
-            $table->string('approved_by', 26);
+            $table->string('approved_by', 26)->nullable();
+            $table->foreign('approved_by')->references('id')->on('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }

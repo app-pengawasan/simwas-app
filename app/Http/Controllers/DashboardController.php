@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kompetensi;
 use App\Models\NormaHasil;
 use App\Models\Sl;
 use App\Models\StKinerja;
 use App\Models\Stp;
 use App\Models\Stpd;
 use App\Models\Surat;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -60,6 +62,19 @@ class DashboardController extends Controller
             "stp_need_approval" => $stp_need_approval,
             "stpd_sum" => $stpd_sum,
             "stpd_need_approval" => $stpd_need_approval
+        ]);
+    }
+
+    function analis_sdm() {
+        $this->authorize('analis_sdm');
+        $pegawai = User::all();
+        $kompetensi = Kompetensi::where('status', 1)->get();
+        $count = $kompetensi->groupBy('pegawai_id')->map->countBy('pp_id');
+
+        return view('analis-sdm.index', [
+            'pegawai' => $pegawai,
+            'kompetensi' => $kompetensi,
+            'count' => $count
         ]);
     }
 }

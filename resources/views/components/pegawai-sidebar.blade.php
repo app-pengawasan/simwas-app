@@ -28,7 +28,7 @@
                     <span>Rencana Kinerja</span>
                 </a>
                 <ul class="dropdown-menu">
-                    {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, II', 'Kabag Umum'] --}}
+                    {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, III', 'Kabag Umum'] --}}
                     @if (in_array(auth()->user()->jabatan, [11, 12, 13, 14]))
                     <li
                         class="{{ Request::is('pimpinan/rencana-kinerja') || Request::is('pimpinan/rencana-kinerja/*') ? 'active' : '' }}">
@@ -56,9 +56,21 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li
+                        class="{{ Request::is('pegawai/realisasi') || Request::is('pegawai/realisasi/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/realisasi">
+                            <span>Isi Realisasi</span>
+                        </a>
+                    </li>
+                    <li
                         class="{{ Request::is('pegawai/aktivitas-harian') || Request::is('pegawai/aktivitas-harian/*')  ? 'active' : '' }}">
                         <a class="nav-link" href="/pegawai/aktivitas-harian">
                             <span>Aktivitas Harian</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/nilai-berjenjang') || Request::is('pegawai/nilai-berjenjang/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/nilai-berjenjang">
+                            <span>Nilai Hasil Kerja</span>
                         </a>
                     </li>
                 </ul>

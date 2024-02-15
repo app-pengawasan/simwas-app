@@ -15,7 +15,7 @@
                         <label class="form-label" for="edit-tugas">Tugas</label>
                         <select class="form-control" name="edit-tugas" id="edit-tugas" required disabled>
                             @foreach ($tugasSaya as $ts)
-                                <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
+                                <option value="{{ $ts->id_pelaksana }}">{{ $ts->rencanaKerja->tugas }}</option>
                             @endforeach
                         </select>
                     </div>

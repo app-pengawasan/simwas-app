@@ -60,7 +60,7 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script> --}}
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="{{ asset('library') }}/clockpicker/jquery-clockpicker.min.js"></script>
+    <script src="{{ asset('library') }}/clockpicker/jquery-clockpicker.js"></script>
     {{-- <script type="module" src="{{ asset('library') }}/tooltip.js/dist/tooltip.min.js"></script> --}}
 
     <!-- Page Specific JS File -->

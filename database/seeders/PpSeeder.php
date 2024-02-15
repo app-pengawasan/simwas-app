@@ -44,6 +44,7 @@ class PpSeeder extends Seeder
             'is_aktif' => true
         ]);
         Pp::create([
+            'id' => 999,
             'jenis' => 'Lainnya',
             'is_aktif' => 2
         ]);

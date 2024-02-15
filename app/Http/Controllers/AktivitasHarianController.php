@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Event;
-use App\Models\TimKerja;
-use App\Models\MasterHasil;
-use Illuminate\Support\Arr;
-use App\Models\RencanaKerja;
-use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
-use App\Models\ObjekPengawasan;
-use App\Models\AnggaranRencanaKerja;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,14 +19,19 @@ class AktivitasHarianController extends Controller
      */
     public function index()
     {
-        $events = Event::with('rencanaKerja')->get();
+        $events = Event::whereRelation('pelaksana', function (Builder $query){
+                        $query->where('id_pegawai', auth()->user()->id);
+                  })->get();
+
         foreach ($events as $event) {
-            $event->title = $event->rencanaKerja->tugas;
+            $event->title = $event->pelaksana->rencanaKerja->tugas;
         }
+
         $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
                     ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
                         $query->where('status', 6);
                     })->get();
+                    
         return view('pegawai.aktivitas-harian.index',[
             'type_menu'     => 'realisasi-kinerja',
             'tugasSaya'     => $tugasSaya
@@ -56,24 +56,51 @@ class AktivitasHarianController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        $start = $request->tgl.' '.$request->start;
+        $end = $request->tgl.' '.$request->end;
+        $duplicateStart = Event::where('start', '<=', $start)->where('end', '>', $start)->count();
+        $duplicateEnd = Event::where('start', '<=', $end)->where('end', '>', $end)->count();
         
         $rules = [
-            'id_rencanakerja'   => 'required',
-            'start'             => 'required|date_format:H:i|before:end',
-            'end'               => 'required|date_format:H:i|after:start',
+            'id_pelaksana'   => 'required',
+            'start'             => [
+                                        'required',
+                                        'date_format:H:i',
+                                        'before:end',
+                                        Rule::when($duplicateStart != 0 , ['boolean'])
+                                   ],
+            'end'               => [
+                                        'required',
+                                        'date_format:H:i',
+                                        'after:start',
+                                        Rule::when($duplicateStart != 0 && $duplicateEnd != 0, ['boolean'])
+                                    ],
             'aktivitas'         => 'required',
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $customMessages = [
+            'boolean' => 'Sudah ada aktivitas pada jam ini',
+            'required' => ':attribute harus diisi',
+            'date_format' => 'Format jam harus JJ:MM',
+            'before' => 'Jam mulai harus sebelum jam selesai',
+            'after' => 'Jam selesai harus setelah jam mulai',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $customMessages)
+                    ->setAttributeNames(
+                        [
+                            'id_pelaksana' => 'Tugas',
+                            'aktivitas' => 'Aktivitas',
+                        ], // Your field name and alias
+                    );
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $validateData = $request->validate($rules);
-        $validateData['start'] = $request->tgl.' '.$request->start;
-        $validateData['end'] = $request->tgl.' '.$request->end;
+        $validateData['start'] = $start;
+        $validateData['end'] = $end;
 
         Event::create($validateData);
         $request->session()->put('status', 'Berhasil menambahkan aktivitas.');

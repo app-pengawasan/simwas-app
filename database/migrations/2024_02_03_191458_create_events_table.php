@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->ulid('id')->primary()->default(Ulid::generate());
-            $table->string('id_rencanakerja', 26);
-            $table->foreign('id_rencanakerja')->references('id_rencanakerja')->on('rencana_kerjas')->onDelete('cascade');
+            $table->string('id_pelaksana', 26);
+            $table->foreign('id_pelaksana')->references('id_pelaksana')->on('pelaksana_tugas')->onDelete('cascade');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->text('aktivitas');

@@ -40,8 +40,8 @@
                 @endif
             </div>
         </li>
-        <li class="dropdown mr-4 ml-2">
-            <a class="has-icon text-white d-flex justify-content-center align-items-center" href="#"
+        <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">
+            <a class="has-icon text-white" href="#"
                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>

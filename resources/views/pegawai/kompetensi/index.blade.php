@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="">
-                                <table id="table-master-pimpinan"
+                                <table id="table-kompetensi"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
@@ -50,6 +50,7 @@
                                             <th>Catatan</th>
                                             <th>Status</th>
                                             <th style="width: 15%">Aksi</th>
+                                            <th class="never">Link Sertifikat</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,6 +99,7 @@
                                                         <i class="fas fa-trash mr-2"></i>
                                                     </a>
                                                 </td>
+                                                <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -129,6 +131,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/admin/master-pimpinan.js') }}"></script>
     <script src="{{ asset('js/page/kompetensi.js') }}"></script>
 @endpush

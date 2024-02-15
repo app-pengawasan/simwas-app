@@ -1,36 +1,97 @@
-// let table = $("#tim-kerja");
+let table = $("#table-kompetensi");
 
-// $(function () {
-//     table
-//         .DataTable({
-//             dom: "Bfrtip",
-//             responsive: true,
-//             lengthChange: false,
-//             autoWidth: false,
-//             buttons: [
-//                 {
-//                     extend: "excel",
-//                     className: "btn-success",
-//                     text: '<i class="fas fa-file-excel"></i> Excel',
-//                     exportOptions: {
-//                         columns: [0, 1, 2, 3, 4, 5],
-//                     },
-//                 },
-//                 {
-//                     extend: "pdf",
-//                     className: "btn-danger",
-//                     text: '<i class="fas fa-file-pdf"></i> PDF',
-//                     exportOptions: {
-//                         columns: [0, 1, 2, 3, 4, 5],
-//                     },
-//                 },
-//             ],
-//         })
-//         .buttons()
-//         .container()
-//         .appendTo("#tim-kerja_wrapper .col-md-6:eq(0)");
-// });
+table
+    .DataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 7, 4, 5],
+                },
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> Pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 7, 4, 5],
+                },
+            },
+        ],
+    })
+    .buttons()
+    .container()
+    .appendTo("#master-pimpinan_wrapper .col-md-6:eq(0)");
 
+let tabled = $("#table-dashboard-analis").dataTable({
+    dom: "Bfrtip",
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    buttons: [
+        {
+            extend: "excel",
+            className: "btn-success",
+            text: '<i class="fas fa-file-excel"></i> Excel',
+            exportOptions: {
+                columns: [0, 1, 4],
+            },
+            messageTop: function () {
+                return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
+            },
+        },
+        {
+            extend: "pdf",
+            className: "btn-danger",
+            text: '<i class="fas fa-file-pdf"></i> PDF',
+            exportOptions: {
+                columns: [0, 1, 4],
+            },
+            messageTop: function () {
+                return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
+            },
+        },
+    ],
+}).api()
+
+$('#filterPegawai').on("change", function () {
+    $('#sertifikasi').html(0);
+    $('#jenjang').html(0);
+    $('#teknis').html(0);
+
+    let countArr = count[$(this).val()];
+
+    $('#sertifikasi').html(countArr['1']);
+    $('#jenjang').html(countArr['2']);
+    $('#teknis').html(countArr['3']);
+
+    tabled.draw();
+});
+
+let allowFilter = ['table-dashboard-analis'];
+
+$.fn.dataTableExt.afnFiltering.push(
+    function (setting, data, index) {
+        // check if current table is part of the allow list
+        if ( $.inArray( setting.nTable.getAttribute('id'), allowFilter ) == -1 ) {
+            // if not table should be ignored
+            return true;
+        }
+        
+        var selected = $('select#filterPegawai option:selected').val();
+        if (data[3] == selected) return true;
+        else return false;
+    }
+);
+
+tabled.draw();
+    
 const clearError = () => {
     $("#error-pegawai").text("");
     $("#error-pp").text("");
@@ -108,7 +169,6 @@ $("#create-btn").on("click", function () {
 
 $(".pp_id").on("change", function () {
     let pp = $(this).val();
-    console.log(pp);
 
     if (pp === "1" || pp === "2" || pp === "3") {
         enableNamapp(pp);
@@ -145,7 +205,7 @@ $(".submit-btn").on("click", function (e) {
     data.append('_token', token);
 
     let url;
-    if ($('#role') == 'analis sdm') url = `/analis-sdm/kelola-kompetensi`;
+    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi`;
     else url = `/pegawai/kompetensi`;
 
     // Reset invalid message while modal open
@@ -178,7 +238,7 @@ $(".edit-btn").on("click", function () {
     clearError();
     let dataId = $(this).attr("data-id");
     let url;
-    if ($('#role') == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${dataId}`;
+    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${dataId}`;
     else url = `/pegawai/kompetensi/${dataId}`;
     $.ajax({
         url: url,
@@ -226,7 +286,7 @@ $("#btn-edit-submit").on("click", function (e) {
     let id = $("#edit-id").val();
 
     let url;
-    if ($('#role') == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${id}`;
+    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${id}`;
     else url = `/pegawai/kompetensi/${id}`;
 
     if (!data.get("edit-nama_pp")) data.append('edit-nama_pp', $("#edit-nama_pp").val());
@@ -262,7 +322,7 @@ $(".delete-btn").on("click", function () {
     let token = $("meta[name='csrf-token']").attr("content");
     let url;
 
-    if ($('#role') == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${dataId}`;
+    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${dataId}`;
     else url = `/pegawai/kompetensi/${dataId}`;
 
     Swal.fire({

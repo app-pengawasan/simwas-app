@@ -34,7 +34,7 @@
                     </a>
                 @endif
                 @if (auth()->user()->is_analissdm)
-                <a href="{{ route('analis-sdm-pp') }}" class="dropdown-item has-icon">
+                <a href="{{ route('analis-sdm-dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
                 </a>
                 @endif

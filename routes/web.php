@@ -18,6 +18,7 @@ use App\Http\Controllers\TimKerjaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EksternalController;
 use App\Http\Controllers\MasterIKUController;
+use App\Http\Controllers\RealisasiController;
 use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\NormaHasilController;
@@ -36,17 +37,18 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
 use App\Http\Controllers\AdminRencanaKerjaController;
-use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\MasterSubUnsurController;
@@ -55,6 +57,7 @@ use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\SuratSrikandiController;
 use App\Models\SuratSrikandi;
 use App\Models\UsulanSuratSrikandi;
+use App\Http\Controllers\PenilaianBerjenjangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,6 +182,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * ANALIS SDM
      * ---------------------------------------------------------------------------
      * */
+    Route::get('/analis-sdm', [DashboardController::class, 'analis_sdm'])->name('analis-sdm-dashboard');
+    
     Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
 
     Route::resource('analis-sdm/pp', PpController::class)->names([
@@ -209,6 +214,12 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('cetak-spd', function () {
         return view('cetak-spd', ['type_menu' => 'dashboard']);
     });
+
+    //Rencana Jam Kerja
+    Route::get('/inspektur/rencana-jam-kerja/rekap', [InspekturRencanaJamKerjaController::class, 'rekap']);
+    Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
+    Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
+    Route::get('/inspektur/rencana-kinerja/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
 
     /**
      * ---------------------------------------------------------------------------
@@ -305,6 +316,15 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 
     //Aktivitas Harian
     Route::resource('pegawai/aktivitas-harian', AktivitasHarianController::class);
+
+    //Isi Realisasi
+    Route::resource('pegawai/realisasi', RealisasiController::class);
+
+    //Penilaian Berjenjang
+    Route::resource('pegawai/nilai-berjenjang', PenilaianBerjenjangController::class);
+    Route::get('pegawai/nilai-berjenjang/nilai/{id}', [PenilaianBerjenjangController::class, 'getNilai']);
+    Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
+    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}', [PenilaianBerjenjangController::class, 'show']);
 });
 
 /**

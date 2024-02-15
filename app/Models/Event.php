@@ -14,8 +14,8 @@ class Event extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
 
-    public function rencanaKerja(): BelongsTo
+    public function pelaksana(): BelongsTo
     {
-        return $this->belongsTo(RencanaKerja::class, "id_rencanakerja","id_rencanakerja");
+        return $this->belongsTo(PelaksanaTugas::class, "id_pelaksana","id_pelaksana");
     }
 }

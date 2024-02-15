@@ -15,6 +15,12 @@
             </a>
         </div>
         <ul class="sidebar-menu">
+            <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('analis-sdm-dashboard') }}">
+                    <i class="fab fa-stumbleupon-circle"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
             <li class="nav-item dropdown {{ $type_menu === 'kompetensi' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fab fa-stumbleupon-circle"></i>
