@@ -58,6 +58,7 @@ class TimKerjaController extends Controller
             'unitkerja'  => $validateData['unitkerja'],
             'id_iku'  => $validateData['iku'],
             'id_ketua'  => $validateData['ketua'],
+            'id_operator'  => $request->operator,
         ]);
 
         $request->session()->put('status', 'Berhasil menambahkan Tim Kerja.');
@@ -100,7 +101,28 @@ class TimKerjaController extends Controller
      */
     public function update(Request $request, TimKerja $timKerja)
     {
-        //
+        try {
+            $rules = [
+                'uraian_tugas'  => 'required',
+                'rk_ketua'      => 'required',
+                'iki_ketua'     => 'required',
+            ];
+
+            $timKerja->update([
+                'uraian_tugas'  => $request->uraian_tugas,
+                'renca_kerja_ketua' => $request->rk_ketua,
+                'iki_ketua'     => $request->iki_ketua,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mengubah Tim Kerja',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengubah Tim Kerja',
+            ]);
+        }
     }
 
     /**

@@ -317,6 +317,61 @@ $("#btn-admin-send-back").on("click", function (e) {
     });
 });
 
+$("#btn-edit-tim").on("click", function () {
+    let id_timkerja = $("#id_timkerja").val();
+    let token = $("meta[name='csrf-token']").attr("content");
+    let uraian_tugas = $("#edit-uraian_tugas").val();
+    let rk_ketua = $("#edit-rk_ketua").val();
+    let iki_ketua = $("#edit-iki_ketua").val();
+    console.log(uraian_tugas, rk_ketua, iki_ketua);
+
+    $.ajax({
+        url: `/admin/tim-kerja/${id_timkerja}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            id_timkerja: id_timkerja,
+            uraian_tugas: uraian_tugas,
+            rk_ketua: rk_ketua,
+            iki_ketua: iki_ketua,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+
+$("#btn-create-proyek").on("click", function () {
+    let id_timkerja = $("#id_timkerja").val();
+    let nama_proyek = $("#create-nama_proyek").val();
+    let rk_anggota = $("#create-rk_anggota").val();
+    let iki_anggota = $("#create-iki_anggota").val();
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    $.ajax({
+        url: `/ketua-tim/rencana-kinerja/proyek`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            id_timkerja: id_timkerja,
+            nama_proyek: nama_proyek,
+            rk_anggota: rk_anggota,
+            iki_anggota: iki_anggota,
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+
 // Taruh dipaling bawah, Soalnya nanti ngaruh ke function yang laen
 let rupiah = document.getElementsByClassName("rupiah");
 for (i = 0; i <= rupiah.length - 1; i++) {

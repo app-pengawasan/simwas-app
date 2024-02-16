@@ -56,6 +56,7 @@ $(".submit-btn").on("click", function (e) {
     let iku = $("#create-iku").val();
     let nama = $("#create-nama").val();
     let ketua = $("#create-ketua").val();
+    let operator = $("#create-operator").val();
 
     // Reset invalid message while modal open
     $("#error-tahun").text("");
@@ -77,6 +78,7 @@ $(".submit-btn").on("click", function (e) {
             iku: iku,
             nama: nama,
             ketua: ketua,
+            operator: operator,
         },
         success: function (response) {
             location.reload();

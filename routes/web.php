@@ -58,6 +58,7 @@ use App\Http\Controllers\SuratSrikandiController;
 use App\Models\SuratSrikandi;
 use App\Models\UsulanSuratSrikandi;
 use App\Http\Controllers\PenilaianBerjenjangController;
+use App\Http\Controllers\ProyekController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +147,7 @@ Route::resource('/admin/tim-kerja', TimKerjaController::class);
 Route::resource('/admin/rencana-kinerja', AdminRencanaKerjaController::class);
 Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
 Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
+Route::resource('/ketua-tim/rencana-kinerja/proyek', ProyekController::class);
 
 /**
  * ---------------------------------------------------------------------------
@@ -183,7 +185,7 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * ---------------------------------------------------------------------------
      * */
     Route::get('/analis-sdm', [DashboardController::class, 'analis_sdm'])->name('analis-sdm-dashboard');
-    
+
     Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
 
     Route::resource('analis-sdm/pp', PpController::class)->names([
