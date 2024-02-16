@@ -121,3 +121,97 @@
         box-shadow: 0 0 0 3px #fff, 0 0 1px 3px rgba(0, 133, 221, 0.8);
     }
 }
+
+.form-one-line {
+    flex: 1;
+    display: flex !important;
+}
+
+.form-one-line input {
+    flex: 1 !important;
+}
+
+#calendar a {
+    color: #20232a !important;
+    font-weight: normal !important;
+}
+
+.fc-list-event-title, .fc-dayGridMonth-view .fc-event-title {
+    text-align: left;
+}
+
+.fc-event {
+    cursor: pointer;
+}
+
+.popover {
+    z-index: 2000 !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+    max-width: 100%;
+    white-space: pre-wrap;
+}
+
+.popover h3 {
+    color: var(--secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.popover-header {
+    /* content: "×"; */
+    /* position: absolute; */
+    text-align: right;
+    /* cursor: pointer; */
+    color: gray !important;
+}
+
+.popover-header i {
+    font-size: 18px;
+    margin-top: 0.4rem;
+    margin-left: 1rem;
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
+}
+
+.fc .fc-timegrid-slot {
+  border-bottom: 0px;
+  height: 3em;
+}
+
+/* @media screen and (max-width:767px) { 
+    .fc-toolbar.fc-header-toolbar {
+        font-size: 60%
+    }
+} */
+
+/* @media screen and (max-width: 767px) {
+    .fc-toolbar.fc-header-toolbar {
+      flex-direction: column;
+      order: 2;
+    }
+    .fc-toolbar-chunk {
+      display: table-row;
+      text-align: center;
+      padding: 5px 0;
+    }
+} */
+
+.no-arrow::after {
+    display:none;
+}
+
+.fc-toolbar-chunk {
+    /* padding-left: 6rem; */
+}

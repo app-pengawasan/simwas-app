@@ -28,7 +28,7 @@
                     <span>Rencana Kinerja</span>
                 </a>
                 <ul class="dropdown-menu">
-                    {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, II', 'Kabag Umum'] --}}
+                    {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, III', 'Kabag Umum'] --}}
                     @if (in_array(auth()->user()->jabatan, [11, 12, 13, 14]))
                     <li
                         class="{{ Request::is('pimpinan/rencana-kinerja') || Request::is('pimpinan/rencana-kinerja/*') ? 'active' : '' }}">
@@ -49,12 +49,38 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dashboard') }}">
+            <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-file-signature"></i>
                     <span>Realisasi Kinerja</span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li
+                        class="{{ Request::is('pegawai/realisasi') || Request::is('pegawai/realisasi/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/realisasi">
+                            <span>Isi Realisasi</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/aktivitas-harian') || Request::is('pegawai/aktivitas-harian/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/aktivitas-harian">
+                            <span>Aktivitas Harian</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/nilai-berjenjang') || Request::is('pegawai/nilai-berjenjang/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/nilai-berjenjang">
+                            <span>Nilai Hasil Kerja</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+            {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('dashboard') }}">
+                <i class="fas fa-file-signature"></i>
+                <span>Realisasi Kinerja</span>
+            </a>
+            </li> --}}
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
             {{-- <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
@@ -84,11 +110,17 @@
                     <span>ST Kinerja</span>
                 </a>
             </li>
-            <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('norma-hasil.index') }}">
-                    <i class="fas fa-check"></i>
-                    <span>Norma Hasil</span>
-                </a>
+            <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('usulan-surat-srikandi.index') }}">
+                <i class="fas fa-solid fa-envelope"></i>
+                <span>Usulan Surat</span>
+            </a>
+            </li>
+            {{-- <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('norma-hasil.index') }}">
+                <i class="fas fa-check"></i>
+                <span>Norma Hasil</span>
+            </a>
             </li>
             <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('st-pp.index') }}">
@@ -107,7 +139,7 @@
                     <i class="fas fa-file"></i>
                     <span>Surat Lain</span>
                 </a>
-            </li>
+            </li> --}}
             {{-- <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
                 <i class="fas fa-paper-plane"></i>
@@ -120,6 +152,13 @@
                     <span>Surat Eksternal</span>
                 </a>
             </li> --}}
+            <li class="menu-header">Kelola Kompetensi</li>
+            <li class="{{ Request::is('pegawai/kompetensi*') ? 'active' : '' }}">
+                <a class="nav-link" href="/pegawai/kompetensi">
+                    <i class="fas fa-file"></i>
+                    <span>Pengembangan Kompetensi</span>
+                </a>
+            </li>
         </ul>
 
         {{-- <div class="hide-sidebar-mini mt-4 mb-4 p-3">

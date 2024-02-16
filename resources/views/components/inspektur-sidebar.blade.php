@@ -1,3 +1,6 @@
+@if (!isset($type_menu))
+<?php $type_menu = ''; ?>
+@endif
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -35,6 +38,26 @@
                     <i class="fas fa-road"></i>
                     <span>ST Perjalanan Dinas</span>
                 </a>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-clock"></i>
+                    <span>Rencana Jam Kerja</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li
+                        class="{{ Request::is('inspektur/rencana-jam-kerja/rekap')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/inspektur/rencana-jam-kerja/rekap">
+                            <span>Rekap Hari Kerja</span>
+                        </a>
+                    </li>
+                    <li
+                    class="{{ Request::is('inspektur/rencana-jam-kerja/pool*') || Request::is('inspektur/rencana-kinerja*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/inspektur/rencana-jam-kerja/pool">
+                            <span>Pool Jam Kerja</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </aside>

@@ -1,50 +1,63 @@
 <?php
 
-use App\Http\Controllers\AdminRencanaKerjaController;
-use App\Http\Controllers\AnggaranRencanaKerjaController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\SatuanKerjaController;
-use App\Http\Controllers\PaguAnggaranController;
-use App\Http\Controllers\WilayahKerjaController;
-use App\Http\Controllers\MasterPegawaiController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\SocialiteController;
-use App\Http\Controllers\MasterAnggaranController;
-use App\Http\Controllers\MasterHasilController;
-use App\Http\Controllers\MasterIKUController;
-use App\Http\Controllers\MasterPimpinanController;
-use App\Http\Controllers\StKinerjaController;
-use App\Http\Controllers\NormaHasilController;
+use App\Http\Controllers\PpController;
+use App\Http\Controllers\SlController;
 use App\Http\Controllers\StpController;
 use App\Http\Controllers\StpdController;
-use App\Http\Controllers\SlController;
-use App\Http\Controllers\KirimController;
-use App\Http\Controllers\EksternalController;
-use App\Http\Controllers\NomorSuratController;
-use App\Http\Controllers\SlSekreController;
-use App\Http\Controllers\NormaHasilSekreController;
-use App\Http\Controllers\PpController;
-use App\Http\Controllers\NamaPpController;
-use App\Http\Controllers\SuratController;
-use App\Http\Controllers\InspekturStpController;
-use App\Http\Controllers\InspekturStpdController;
-use App\Http\Controllers\InspekturStKinerjaController;
-use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
-use App\Http\Controllers\MasterSasaranController;
-use App\Http\Controllers\MasterTujuanController;
-use App\Http\Controllers\MasterUnitKerjaController;
-use App\Http\Controllers\ObjekKegiatanController;
-use App\Http\Controllers\ObjekPengawasanController;
-use App\Http\Controllers\PegawaiRencanaKerjaController;
-use App\Http\Controllers\PegawaiTugasController;
-use App\Http\Controllers\PelaksanaTugasController;
-use App\Http\Controllers\PimpinanRencanKerjaController;
-use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\KirimController;
+use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
+use App\Http\Controllers\NamaPpController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SlSekreController;
+use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EksternalController;
+use App\Http\Controllers\MasterIKUController;
+use App\Http\Controllers\RealisasiController;
+use App\Http\Controllers\StKinerjaController;
+use App\Http\Controllers\NomorSuratController;
+use App\Http\Controllers\NormaHasilController;
+use App\Http\Controllers\MasterHasilController;
+use App\Http\Controllers\SatuanKerjaController;
+use App\Http\Controllers\InspekturStpController;
+use App\Http\Controllers\MasterTujuanController;
+use App\Http\Controllers\PaguAnggaranController;
+use App\Http\Controllers\PegawaiTugasController;
+use App\Http\Controllers\WilayahKerjaController;
+use App\Http\Controllers\InspekturStpdController;
+use App\Http\Controllers\MasterPegawaiController;
+use App\Http\Controllers\MasterSasaranController;
+use App\Http\Controllers\ObjekKegiatanController;
+use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\MasterAnggaranController;
+use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\AktivitasHarianController;
+use App\Http\Controllers\MasterUnitKerjaController;
+use App\Http\Controllers\NormaHasilSekreController;
+use App\Http\Controllers\ObjekPengawasanController;
+use App\Http\Controllers\AnalisKompetensiController;
+use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\PegawaiKompetensiController;
+use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\PegawaiRencanaKerjaController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\InspekturRencanaJamKerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\MasterHasilKerjaController;
+use App\Http\Controllers\MasterSubUnsurController;
+use App\Http\Controllers\MasterUnsurController;
+use App\Http\Controllers\UsulanSuratSrikandiController;
+use App\Http\Controllers\SuratSrikandiController;
+use App\Models\SuratSrikandi;
+use App\Models\UsulanSuratSrikandi;
+use App\Http\Controllers\PenilaianBerjenjangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +101,13 @@ Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'im
 //Master-pimpinan
 Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
 // Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+
+// Master Unsur, Sub Unsur, Hasil Kerja
+Route::resource('/admin/master-unsur', MasterUnsurController::class);
+Route::resource('/admin/master-subunsur', MasterSubUnsurController::class);
+Route::resource('/admin/master-hasil-kerja', MasterHasilKerjaController::class);
+Route::get('/admin/master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
+Route::get('/admin/master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
 
 
 
@@ -162,6 +182,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * ANALIS SDM
      * ---------------------------------------------------------------------------
      * */
+    Route::get('/analis-sdm', [DashboardController::class, 'analis_sdm'])->name('analis-sdm-dashboard');
+    
     Route::get('analis-sdm/pp-nonaktif', [PpController::class, 'ppNonaktif']);
 
     Route::resource('analis-sdm/pp', PpController::class)->names([
@@ -170,6 +192,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     ]);
 
     Route::resource('analis-sdm/namaPp', NamaPpController::class);
+
+    Route::resource('analis-sdm/kelola-kompetensi', AnalisKompetensiController::class);
 
     /**
      * ---------------------------------------------------------------------------
@@ -190,6 +214,12 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('cetak-spd', function () {
         return view('cetak-spd', ['type_menu' => 'dashboard']);
     });
+
+    //Rencana Jam Kerja
+    Route::get('/inspektur/rencana-jam-kerja/rekap', [InspekturRencanaJamKerjaController::class, 'rekap']);
+    Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
+    Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
+    Route::get('/inspektur/rencana-kinerja/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
 
     /**
      * ---------------------------------------------------------------------------
@@ -214,6 +244,14 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+    Route::resource('/pegawai/usulan-surat-srikandi', UsulanSuratSrikandiController::class);
+    Route::resource('/sekretaris/surat-srikandi', SuratSrikandiController::class);
+    // add decline route to SuratSrikandiController
+    Route::put('/sekretaris/surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
+    // downloadSuratSrikandi
+    Route::get('/sekretaris/surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
+    Route::get('/pegawai/usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
+    Route::get('/sekretaris/arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
 
     // Ajax
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
@@ -272,6 +310,21 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
         return view('word');
     });
     Route::post('word', [WordController::class, 'index'])->name('word.index');
+
+    //Kompetensi
+    Route::resource('pegawai/kompetensi', PegawaiKompetensiController::class);
+
+    //Aktivitas Harian
+    Route::resource('pegawai/aktivitas-harian', AktivitasHarianController::class);
+
+    //Isi Realisasi
+    Route::resource('pegawai/realisasi', RealisasiController::class);
+
+    //Penilaian Berjenjang
+    Route::resource('pegawai/nilai-berjenjang', PenilaianBerjenjangController::class);
+    Route::get('pegawai/nilai-berjenjang/nilai/{id}', [PenilaianBerjenjangController::class, 'getNilai']);
+    Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
+    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}', [PenilaianBerjenjangController::class, 'show']);
 });
 
 /**

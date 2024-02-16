@@ -24,23 +24,71 @@ class DatabaseSeeder extends Seeder
         MasterPimpinan::factory(4)->create();
 
         User::create([
-            'email'     => '221911003@stis.ac.id',
-            'nip'       => '221911003',
-            'name'      => 'Gestyan Ramadhan',
+            'email'     => '222011617@stis.ac.id',
+            'nip'       => '222011617',
+            'name'      => 'Rarisza Nabila',
             'pangkat'   => 'IV/a',
-            'is_admin'  => 1
-        ]);
-
-        User::create([
-            'email'     => '221910858@stis.ac.id',
-            'nip'       => '221910858',
-            'name'      => 'Muhamad Arya Fitra',
-            'pangkat'   => 'IV/a',
-            'unit_kerja' => '8000',
+            'unit_kerja' => '8100',
+            'jabatan'   => 11,
             'is_admin'  => 1,
             'is_aktif' => 1,
             'is_sekma' => 1,
-            'is_analissdm' => 1
+            'is_analissdm' => 1,
+            'is_sekwil' => 1,
+            'is_perencana' => 1,
+            'is_apkapbn' => 1,
+            'is_opwil' => 1,
+        ]);
+
+        User::create([
+            'email'     => '222011395@stis.ac.id',
+            'nip'       => '222011395',
+            'name'      => 'Hendra Kusuma',
+            'pangkat'   => 'IV/a',
+            'unit_kerja' => '8200',
+            'jabatan'   => 12,
+            'is_admin'  => 1,
+            'is_aktif' => 1,
+            'is_sekma' => 1,
+            'is_analissdm' => 1,
+            'is_sekwil' => 1,
+            'is_perencana' => 1,
+            'is_apkapbn' => 1,
+            'is_opwil' => 1,
+        ]);
+
+        User::create([
+            'email'     => 'vony.bps4@gmail.com',
+            'nip'       => '123456789',
+            'name'      => 'Vony Wahyunurani',
+            'pangkat'   => 'IV/a',
+            'unit_kerja' => '8010',
+            'jabatan'   => 14,
+            'is_admin'  => 1,
+            'is_aktif' => 1,
+            'is_sekma' => 1,
+            'is_analissdm' => 1,
+            'is_sekwil' => 1,
+            'is_perencana' => 1,
+            'is_apkapbn' => 1,
+            'is_opwil' => 1,
+        ]);
+
+        User::create([
+            'email'     => 'putuhadi2808@gmail.com',
+            'nip'       => '987654321',
+            'name'      => 'Putu Hadi Purnama Jati',
+            'pangkat'   => 'IV/a',
+            'unit_kerja' => '8300',
+            'jabatan'   => 13,
+            'is_admin'  => 1,
+            'is_aktif' => 1,
+            'is_sekma' => 1,
+            'is_analissdm' => 1,
+            'is_sekwil' => 1,
+            'is_perencana' => 1,
+            'is_apkapbn' => 1,
+            'is_opwil' => 1,
         ]);
 
         $this->call([

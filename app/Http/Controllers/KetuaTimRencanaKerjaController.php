@@ -186,7 +186,7 @@ class KetuaTimRencanaKerjaController extends Controller
         $masterHasil = MasterHasil::all();
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
-
+        dd($timKerja[0]);
 
         return view('pegawai.rencana-kinerja.ketua-tim.show', [
             'type_menu'     => 'rencana-kinerja',

@@ -2,7 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('admin-dashboard') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}"  alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Admin</span>
         </div>
@@ -88,6 +88,15 @@
                     </li>
                     <li class="{{ Request::is('admin/master-hasil') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-hasil">Master Hasil</a>
+                    </li>
+                    <li class="{{ Request::is('admin/master-unsur') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('master-unsur.index') }}">Master Unsur</a>
+                    </li>
+                    <li class="{{ Request::is('admin/master-subunsur') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('master-subunsur.index') }}">Master Subunsur</a>
+                    </li>
+                    <li class="{{ Request::is('admin/master-hasil-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('master-hasil-kerja.index') }}">Master Hasil Kerja</a>
                     </li>
                 </ul>
             </li>

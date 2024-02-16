@@ -410,7 +410,7 @@ class InspekturStKinerjaController extends Controller
                     ]);
 
                     // Simpan dokumen hasil
-                    $templateProcessor->saveAs('storage/'.$outputPath);
+                    $templateProcessor->saveAs(public_path().'/document/storage/'.$outputPath);
                 }
             }
             

@@ -34,7 +34,7 @@
                         <div class="mt-4">
                             <div class="progress">
                                 <div class="progress-bar
-                                    @if(($stk_sum - $stk_need_approval) / $stk_sum < 0.5)
+                                    @if($stk_sum == 0 || ($stk_sum - $stk_need_approval) / $stk_sum < 0.5)
                                         bg-danger
                                     @elseif(($stk_sum - $stk_need_approval) / $stk_sum < 0.75)
                                         bg-warning
@@ -43,7 +43,7 @@
                                     @else
                                         bg-success
                                     @endif" role="progressbar"
-                                    style="width: {{ (($stk_sum - $stk_need_approval) / $stk_sum) * 100 }}%"
+                                    style="width: {{ ($stk_sum == 0 ? 0 : (($stk_sum - $stk_need_approval) / $stk_sum)) * 100 }}%"
                                     aria-valuenow="{{ (($stk_sum - $stk_need_approval)) * 100 }}" aria-valuemin="0"
                                     aria-valuemax="32"></div>
                             </div>
@@ -71,7 +71,7 @@
                         <div class="mt-4">
                             <div class="progress">
                                 <div class="progress-bar
-                                    @if(($stp_sum - $stp_need_approval) / $stp_sum < 0.5)
+                                    @if($stp_sum == 0 || ($stp_sum - $stp_need_approval) / $stp_sum < 0.5)
                                         bg-danger
                                     @elseif(($stp_sum - $stp_need_approval) / $stp_sum < 0.75)
                                         bg-warning
@@ -80,7 +80,7 @@
                                     @else
                                         bg-success
                                     @endif" role="progressbar"
-                                    style="width: {{ (($stp_sum - $stp_need_approval) / $stp_sum) * 100 }}%"
+                                    style="width: {{ ($stp_sum == 0 ? 0 : (($stp_sum - $stp_need_approval) / $stp_sum)) * 100 }}%"
                                     aria-valuenow="{{ (($stp_sum - $stp_need_approval)) * 100 }}" aria-valuemin="0"
                                     aria-valuemax="32"></div>
                             </div>
@@ -108,7 +108,7 @@
                         <div class="mt-4">
                             <div class="progress">
                                 <div class="progress-bar
-                                    @if(($stpd_sum - $stpd_need_approval) / $stpd_sum < 0.5)
+                                    @if($stpd_sum == 0 || ($stpd_sum - $stpd_need_approval) / $stpd_sum < 0.5)
                                         bg-danger
                                     @elseif(($stpd_sum - $stpd_need_approval) / $stpd_sum < 0.75)
                                         bg-warning
@@ -117,8 +117,8 @@
                                     @else
                                         bg-success
                                     @endif" role="progressbar"
-                                    style="width: {{ (($stpd_sum - $stpd_need_approval )/ $stpd_sum) * 100 }}%"
-                                    aria-valuenow="{{ (($stpd_sum - $stpd_need_approval / $stpd_sum)) * 100 }}"
+                                    style="width: {{ ($stpd_sum == 0 ? 0 : (($stpd_sum - $stpd_need_approval ) / $stpd_sum)) * 100 }}%"
+                                    aria-valuenow="{{ ($stpd_sum == 0 ? 0 : (($stpd_sum - $stpd_need_approval ) / $stpd_sum)) * 100 }}"
                                     aria-valuemin="0" aria-valuemax="32"></div>
                             </div>
                             <div class="mt-3"> <span class="text1">{{ $stpd_need_approval }} <span class="text2">Dari

@@ -111,4 +111,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Kirim::class);
     }
+    public function usulanSuratSrikandi()
+    {
+        return $this->hasMany(UsulanSuratSrikandi::class);
+    }
+    public function suratSrikandi()
+    {
+        return $this->hasMany(SuratSrikandi::class);
+    }
 }

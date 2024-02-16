@@ -1,3 +1,6 @@
+@if (!isset($type_menu))
+<?php $type_menu = ''; ?>
+@endif
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -12,11 +15,30 @@
             </a>
         </div>
         <ul class="sidebar-menu">
-            <li class="{{ Request::is('analis-sdm/pp*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('analis-sdm-pp') }}">
+            <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('analis-sdm-dashboard') }}">
                     <i class="fab fa-stumbleupon-circle"></i>
-                    <span>Master Pengembangan Profesi</span>
+                    <span>Dashboard</span>
                 </a>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'kompetensi' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fab fa-stumbleupon-circle"></i>
+                    <span>Kompetensi Pegawai</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('analis-sdm/pp*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('analis-sdm-pp') }}">
+                            <span>Master Pengembangan Profesi</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('analis-sdm/kelola-kompetensi') || Request::is('analis-sdm/kelola-kompetensi/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/kelola-kompetensi">
+                            <span>Kelola Kompetensi</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </aside>
