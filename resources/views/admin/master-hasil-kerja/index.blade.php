@@ -59,7 +59,7 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>{{ $hasilKerja->nama_hasil_kerja }}</td>
-                                        <td>{{ $hasilKerja->masterSubUnsurName }}</td>
+                                        <td>{{ $hasilKerja->masterSubUnsur->nama_sub_unsur}}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <button type="button"

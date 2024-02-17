@@ -4278,3 +4278,25 @@ body:not(.sidebar-mini)
     border-bottom: 1px solid #cbccd0;
     padding-bottom: 7px;
 }
+#month-wrap{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+/* < 1200px */
+@media (max-width: 1200px) {
+    #month-wrap{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+}
+/* <600px */
+@media (max-width: 600px) {
+    #month-wrap{
+        display: block;
+    }
+}

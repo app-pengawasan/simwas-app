@@ -65,7 +65,7 @@ class UsulanSuratSrikandiController extends Controller
     public function index()
     {
 
-        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->where('user_id', auth()->user()->id)->get();
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->get();
         foreach ($usulanSuratSrikandi as $usulan) {
             $usulan->tanggal = date('d F Y', strtotime($usulan->updated_at));
         }

@@ -12,4 +12,10 @@ class MasterHasil extends Model
 
     protected $primaryKey = 'id_master_hasil';
     protected $guarded = ['id_master_hasil'];
+
+    // master_subunsur_id belongs to id in master_sub_unsurs
+    public function masterSubUnsur()
+    {
+        return $this->belongsTo(MasterSubUnsur::class, 'master_subunsur_id');
+    }
 }

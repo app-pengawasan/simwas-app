@@ -32,4 +32,8 @@ class RencanaKerja extends Model
     public function pelaksana(){
         return $this->hasMany(PelaksanaTugas::class, 'id_rencanakerja');
     }
+
+    public function proyek(){
+        return $this->belongsTo(Proyek::class, 'id_proyek');
+    }
 }

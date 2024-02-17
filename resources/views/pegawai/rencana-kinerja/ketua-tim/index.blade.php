@@ -51,12 +51,12 @@
                                                 <td>{{ $tim->iku->iku }}</td>
                                                 <td>{{ $tim->nama }}</td>
                                                 <td>{{ $tim->ketua->name }}</td>
-                                                <td class="text-{{ $colorText[$tim->status] }}">
-                                                    {{ $statusTim[$tim->status] }}
+                                                <td >
+                                                    <span class="badge badge-{{ $colorText[$tim->status] }}">{{ $statusTim[$tim->status] }}</span>
                                                 </td>
                                                 <td>
                                                     <a href="/ketua-tim/rencana-kinerja/{{ $tim->id_timkerja }}"
-                                                        class="btn btn-primary" style="width: 42px">
+                                                        class="btn btn-primary btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>

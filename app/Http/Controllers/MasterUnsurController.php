@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MasterSubUnsur;
 use App\Models\MasterUnsur;
 use App\Http\Requests\StoreMasterUnsurRequest;
 use App\Http\Requests\UpdateMasterUnsurRequest;
@@ -94,5 +95,11 @@ class MasterUnsurController extends Controller
     {
         $masterUnsur->delete();
         return redirect()->route('master-unsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+    }
+
+    public function getUnsurBySubUnsur($id)
+    {
+        $unsur = MasterSubUnsur::where('id', $id)->first()->masterUnsur;
+        return response()->json($unsur);
     }
 }

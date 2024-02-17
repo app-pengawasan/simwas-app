@@ -41,6 +41,18 @@ class PelaksanaTugasController extends Controller
             'pelaksana'        => 'required',
             'pt_jabatan'        => 'required',
             'hasil_kerja'          => 'required',
+            'jan'               => 'required',
+            'feb'               => 'required',
+            'mar'               => 'required',
+            'apr'               => 'required',
+            'mei'               => 'required',
+            'jun'               => 'required',
+            'jul'               => 'required',
+            'agu'               => 'required',
+            'sep'               => 'required',
+            'okt'               => 'required',
+            'nov'               => 'required',
+            'des'               => 'required',
         ];
         $validateData = $request->validate($rules);
 
@@ -48,7 +60,20 @@ class PelaksanaTugasController extends Controller
             'id_rencanakerja'   => $validateData['id_rencanakerja'],
             'id_pegawai'        => $validateData['pelaksana'],
             'pt_jabatan'        => $validateData['pt_jabatan'],
-            'pt_hasil'          => $validateData['hasil_kerja']
+            'pt_hasil'          => $validateData['hasil_kerja'],
+            'jan'            => $validateData['jan'],
+            'feb'            => $validateData['feb'],
+            'mar'            => $validateData['mar'],
+            'apr'            => $validateData['apr'],
+            'mei'            => $validateData['mei'],
+            'jun'            => $validateData['jun'],
+            'jul'            => $validateData['jul'],
+            'agu'            => $validateData['agu'],
+            'sep'            => $validateData['sep'],
+            'okt'            => $validateData['okt'],
+            'nov'            => $validateData['nov'],
+            'des'            => $validateData['des'],
+
         ]);
 
         $request->session()->put('status', 'Berhasil menambahkan Pelaksana Tugas.');
@@ -101,6 +126,18 @@ class PelaksanaTugasController extends Controller
             'pelaksana'        => 'required',
             'pt_jabatan'        => 'required',
             'hasil_kerja'          => 'required',
+            'jan'               => 'required',
+            'feb'               => 'required',
+            'mar'               => 'required',
+            'apr'               => 'required',
+            'mei'               => 'required',
+            'jun'               => 'required',
+            'jul'               => 'required',
+            'agu'               => 'required',
+            'sep'               => 'required',
+            'okt'               => 'required',
+            'nov'               => 'required',
+            'des'               => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -114,6 +151,18 @@ class PelaksanaTugasController extends Controller
             'id_pegawai'    => $request->pelaksana,
             'pt_jabatan'    => $request->pt_jabatan,
             'pt_hasil'      => $request->hasil_kerja,
+            'jan'           => $request->jan,
+            'feb'           => $request->feb,
+            'mar'           => $request->mar,
+            'apr'           => $request->apr,
+            'mei'           => $request->mei,
+            'jun'           => $request->jun,
+            'jul'           => $request->jul,
+            'agu'           => $request->agu,
+            'sep'           => $request->sep,
+            'okt'           => $request->okt,
+            'nov'           => $request->nov,
+            'des'           => $request->des,
         ]);
 
         $request->session()->put('status', 'Berhasil memperbarui Pelaksana Tugas.');

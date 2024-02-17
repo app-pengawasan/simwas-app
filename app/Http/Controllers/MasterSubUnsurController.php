@@ -16,11 +16,8 @@ class MasterSubUnsurController extends Controller
      */
     public function index()
     {
-        $masterSubUnsurs = MasterSubUnsur::all();
+        $masterSubUnsurs = MasterSubUnsur::with('masterUnsur')->latest()->get();
         $masterUnsurs = MasterUnsur::all();
-        foreach ($masterSubUnsurs as $key => $masterSubUnsur) {
-            $masterSubUnsur->master_unsur_name = $masterUnsurs->where('id', $masterSubUnsur->master_unsur_id)->first()->nama_unsur;
-        }
         return view('admin.master-subunsur.index', [
             'type_menu' => 'rencana-kinerja',
             'masterSubUnsurs' => $masterSubUnsurs,
