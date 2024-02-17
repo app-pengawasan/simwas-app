@@ -109,6 +109,7 @@ Route::resource('/admin/master-subunsur', MasterSubUnsurController::class);
 Route::resource('/admin/master-hasil-kerja', MasterHasilKerjaController::class);
 Route::get('/admin/master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
 Route::get('/admin/master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
+Route::get('/admin/master-unsur/subunsur/{id}',[MasterUnsurController::class, 'getUnsurBySubUnsur'])->middleware('auth');
 
 
 

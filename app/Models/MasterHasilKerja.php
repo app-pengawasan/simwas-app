@@ -24,8 +24,6 @@ class MasterHasilKerja extends Model
 
     public function masterSubUnsur()
     {
-        return $this->belongsTo(MasterSubUnsur::class);
+        return $this->belongsTo(MasterSubUnsur::class, 'master_subunsur_id', 'id');
     }
-
-
 }

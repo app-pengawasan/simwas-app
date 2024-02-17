@@ -139,8 +139,9 @@ class KetuaTimRencanaKerjaController extends Controller
             'id_timkerja' => 'required',
             'hasilkerja' => 'required',
             'tugas' => 'required',
-            'mulai' => 'required',
-            'selesai' => 'required|after_or_equal:mulai',
+            'id_proyek' => 'required',
+            'melaksanakan' => 'required',
+            'capaian' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -157,8 +158,9 @@ class KetuaTimRencanaKerjaController extends Controller
             'id_hasilkerja'  => $validateData['hasilkerja'],
             'kategori_pelaksanatugas'   => $request->kategori_pelaksana,
             'tugas'         => $validateData['tugas'],
-            'mulai'         => $validateData['mulai'],
-            'selesai'         => $validateData['selesai'],
+            'id_proyek'     => $validateData['id_proyek'],
+            'melaksanakan'  => $validateData['melaksanakan'],
+            'capaian'       => $validateData['capaian'],
         ]);
 
         TimKerja::where('id_timkerja', $validateData['id_timkerja'])

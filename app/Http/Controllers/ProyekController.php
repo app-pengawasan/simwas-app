@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyek;
+use App\Models\MasterHasil;
 use App\Http\Requests\StoreProyekRequest;
 use App\Http\Requests\UpdateProyekRequest;
+use App\Models\MasterHasilKerja;
 
 class ProyekController extends Controller
 {
@@ -43,6 +45,8 @@ class ProyekController extends Controller
                 'rencana_kinerja_anggota' => $request->rk_anggota,
                 'iki_anggota' => $request->iki_anggota,
             ]);
+            $request->session()->put('status', 'Berhasil menambahkan Proyek');
+        $request->session()->put('alert-type', 'success');
             return response()->json([
             'success' => true,
             'message' => 'Berhasil menambahkan Proyek',
@@ -64,8 +68,19 @@ class ProyekController extends Controller
     public function show(Proyek $proyek)
     {
         $proyek = Proyek::where('id', $proyek->id)->first();
+        $timKerja = $proyek->timKerja;
+        $masterHasil = MasterHasilKerja::all();
+        $rencanaKerjas = $proyek->rencanaKerja;
+        // dd($timKerja);
+        // dd($proyek);
+        // dd($masterHasil);
+        // dd($rencanaKerjas);
         return view('pegawai.rencana-kinerja.proyek.show', [
             'proyek' => $proyek,
+            'timKerja' => $timKerja,
+            'masterHasil' => $masterHasil,
+            'rencanaKerjas' => $rencanaKerjas,
+            'type_menu' => 'rencana-kinerja'
         ]);
     }
 
@@ -100,6 +115,9 @@ class ProyekController extends Controller
      */
     public function destroy(Proyek $proyek)
     {
-        //
+        $proyek->delete();
+        // return back
+        return redirect()->back()->with('status', 'Berhasil Menghapus Proyek')
+            ->with('alert-type', 'success');
     }
 }

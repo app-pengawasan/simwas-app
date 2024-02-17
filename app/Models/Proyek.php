@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class Proyek extends Model
 {
-        use HasFactory;
+    use HasFactory;
     use HasUlids;
 
     protected $primaryKey = 'id';
@@ -18,5 +18,10 @@ class Proyek extends Model
     public function timKerja()
     {
         return $this->belongsTo(TimKerja::class, 'id_tim_kerja');
+    }
+
+    public function rencanaKerja()
+    {
+        return $this->hasMany(RencanaKerja::class, 'id_proyek');
     }
 }

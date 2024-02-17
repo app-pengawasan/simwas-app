@@ -73,10 +73,10 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('usulan-surat-srikandi.show', $usulan->id) }}"
-                                                class="btn btn-info btn-sm">
+                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
-                                                Detail
+                                                Lihat
                                             </a>
                                             @if ($usulan->status == 'disetujui')
                                             <a href="{{ route('surat-srikandi.download', $usulan->id) }}"

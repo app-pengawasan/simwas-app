@@ -108,11 +108,20 @@ class TimKerjaController extends Controller
                 'iki_ketua'     => 'required',
             ];
 
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+
             $timKerja->update([
                 'uraian_tugas'  => $request->uraian_tugas,
                 'renca_kerja_ketua' => $request->rk_ketua,
                 'iki_ketua'     => $request->iki_ketua,
             ]);
+            $request->session()->put('status', 'Berhasil mengubah Tim Kerja');
+            $request->session()->put('alert-type', 'success');
             return response()->json([
                 'success' => true,
                 'message' => 'Berhasil mengubah Tim Kerja',

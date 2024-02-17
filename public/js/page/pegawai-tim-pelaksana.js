@@ -459,6 +459,19 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     let jabatan = $("#pt-jabatan").val();
     let hasil_kerja = $("#pt-hasil").val();
     let pelaksana = $("#pelaksana").val();
+    let jan = $("#create-januari").val();
+    let feb = $("#create-februari").val();
+    let mar = $("#create-maret").val();
+    let apr = $("#create-april").val();
+    let mei = $("#create-mei").val();
+    let jun = $("#create-juni").val();
+    let jul = $("#create-juli").val();
+    let agu = $("#create-agustus").val();
+    let sep = $("#create-september").val();
+    let okt = $("#create-oktober").val();
+    let nov = $("#create-november").val();
+    let des = $("#create-desember").val();
+
 
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
@@ -473,6 +486,18 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             pt_jabatan: jabatan,
             hasil_kerja: hasil_kerja,
             pelaksana: pelaksana,
+            jan: jan,
+            feb: feb,
+            mar: mar,
+            apr: apr,
+            mei: mei,
+            jun: jun,
+            jul: jul,
+            agu: agu,
+            sep: sep,
+            okt: okt,
+            nov: nov,
+            des: des,
         },
         success: function (response) {
             location.reload();
@@ -544,6 +569,18 @@ $(".btn-edit-pelaksana").on("click", function (e) {
             $("#edit-pt-hasil").val(response.data.pt_hasil);
             $("#edit-pelaksana").val(response.data.id_pegawai);
             $("#edit-id_pelaksana").val(response.data.id_pelaksana);
+            $("#edit-januari").val(response.data.jan);
+            $("#edit-februari").val(response.data.feb);
+            $("#edit-maret").val(response.data.mar);
+            $("#edit-april").val(response.data.apr);
+            $("#edit-mei").val(response.data.mei);
+            $("#edit-juni").val(response.data.jun);
+            $("#edit-juli").val(response.data.jul);
+            $("#edit-agustus").val(response.data.agu);
+            $("#edit-september").val(response.data.sep);
+            $("#edit-oktober").val(response.data.okt);
+            $("#edit-november").val(response.data.nov);
+            $("#edit-desember").val(response.data.des);
         },
         error: function (e) {
             console.log(e);
@@ -558,6 +595,19 @@ $("#btn-edit-pelaksana").on("click", function (e) {
     let jabatan = $("#edit-pt-jabatan").val();
     let hasil_kerja = $("#edit-pt-hasil").val();
     let pelaksana = $("#edit-pelaksana").val();
+    let jan = $("#edit-januari").val();
+    let feb = $("#edit-februari").val();
+    let mar = $("#edit-maret").val();
+    let apr = $("#edit-april").val();
+    let mei = $("#edit-mei").val();
+    let jun = $("#edit-juni").val();
+    let jul = $("#edit-juli").val();
+    let agu = $("#edit-agustus").val();
+    let sep = $("#edit-september").val();
+    let okt = $("#edit-oktober").val();
+    let nov = $("#edit-november").val();
+    let des = $("#edit-desember").val();
+
 
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
@@ -572,6 +622,18 @@ $("#btn-edit-pelaksana").on("click", function (e) {
             pt_jabatan: jabatan,
             hasil_kerja: hasil_kerja,
             pelaksana: pelaksana,
+            jan: jan,
+            feb: feb,
+            mar: mar,
+            apr: apr,
+            mei: mei,
+            jun: jun,
+            jul: jul,
+            agu: agu,
+            sep: sep,
+            okt: okt,
+            nov: nov,
+            des: des,
         },
         success: function (response) {
             location.reload();

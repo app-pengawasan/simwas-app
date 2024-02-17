@@ -1,4 +1,4 @@
-let table = $("#tim-kerja");
+let table = $("#table-proyek");
 // Index Rencana Kinerja
 $(function () {
     table
@@ -7,24 +7,13 @@ $(function () {
             responsive: true,
             lengthChange: false,
             autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
-                    },
-                },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5],
-                    },
-                },
-            ],
+            searching: false, // Remove search input
+            lengthChange: false, // Remove page length options
+            buttons: [],
+            paging: false,
+            info: false,
+            "bInfo": false,
+
         })
         .buttons()
         .container()
@@ -69,10 +58,16 @@ $("#btn-tambah-tugas").on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     let id_timkerja = $("#id_timkerja").val();
     let tugas = $("#create-tugas").val();
-    let mulai = $("#create-mulai").val();
-    let selesai = $("#create-selesai").val();
-    let hasilkerja = $("#create-hasilkerja").val();
-    let kategori_pelaksana = $("#create-kategori_pelaksana").val();
+    let hasilkerja = $("#create-hasil_kerja").val();
+    let kategori_pelaksana = $("#pelaksana-tugas").val();
+    if (kategori_pelaksana == "Gugus Tugas") {
+        kategori_pelaksana = "gt";
+    } else if (kategori_pelaksana == "Non Gugus Tugas") {
+        kategori_pelaksana = "ngt";
+    }
+    let melaksanakan = $("#create-melaksanakan").val();
+    let capaian = $("#create-capaian").val();
+    let id_proyek = $("#id_proyek").val();
 
     $.ajax({
         url: `/ketua-tim/rencana-kinerja`,
@@ -81,11 +76,12 @@ $("#btn-tambah-tugas").on("click", function (e) {
         data: {
             _token: token,
             id_timkerja: id_timkerja,
+            id_proyek: id_proyek,
             tugas: tugas,
-            mulai: mulai,
-            selesai: selesai,
             hasilkerja: hasilkerja,
             kategori_pelaksana: kategori_pelaksana,
+            melaksanakan: melaksanakan,
+            capaian: capaian,
         },
         success: function (response) {
             location.reload();
@@ -365,6 +361,29 @@ $("#btn-create-proyek").on("click", function () {
         },
         success: function (response) {
             location.reload();
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+
+// create-hasil_kerja onchange
+$("#create-hasil_kerja").on("change", function () {
+    let dataId = $("#create-hasil_kerja option:selected").val();
+    $.ajax({
+        url: `/admin/master-hasil-kerja/detail/${dataId}`,
+        type: "GET",
+        cache: false,
+        success: function (response) {
+            $("#unsur").val(response.masterUnsurName);
+            $("#subunsur").val(response.masterSubUnsurName);
+            let pelaksana = response.kategori_pelaksana;
+            if (pelaksana == "gt") {
+                $("#pelaksana-tugas").val("Gugus Tugas");
+            } else if (pelaksana == "ngt") {
+                $("#pelaksana-tugas").val("Non Gugus Tugas");
+            }
         },
         error: function (e) {
             console.log(e);
