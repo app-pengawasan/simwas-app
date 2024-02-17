@@ -20,6 +20,10 @@ class TimKerja extends Model
         return $this->belongsTo(User::class, 'id_ketua', 'id');
     }
 
+    public function operator(){
+        return $this->belongsTo(User::class, 'id_operator', 'id');
+    }
+
     public function iku(){
         return $this->belongsTo(MasterIKU::class, 'id_iku');
     }

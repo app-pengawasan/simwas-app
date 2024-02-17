@@ -17,14 +17,9 @@ class MasterHasilKerjaController extends Controller
      */
     public function index()
     {
-        $masterHasilKerjas = MasterHasilKerja::all();
+        $masterHasilKerjas = MasterHasilKerja::with('masterSubUnsur')->latest()->get();
         $masterSubUnsurs = MasterSubUnsur::all();
         $masterUnsurs = MasterUnsur::all();
-        foreach ($masterHasilKerjas as $masterHasilKerja) {
-            $masterHasilKerja->masterSubUnsurName = MasterSubUnsur::find($masterHasilKerja->master_subunsur_id)->nama_sub_unsur;
-            $masterHasilKerja->masterUnsurName = MasterUnsur::find(MasterSubUnsur::find($masterHasilKerja->master_subunsur_id)->master_unsur_id)->nama_unsur;
-            $masterHasilKerja->masterUnsurId = MasterSubUnsur::find($masterHasilKerja->master_subunsur_id)->master_unsur_id;
-        }
         return view('admin.master-hasil-kerja.index', [
             'type_menu' => 'rencana-kinerja',
             'masterSubUnsurs' => $masterSubUnsurs,
@@ -51,7 +46,6 @@ class MasterHasilKerjaController extends Controller
      */
     public function store(StoreMasterHasilKerjaRequest $request)
     {
-        // dd($request->all());
         MasterHasilKerja::create([
             'master_subunsur_id' => $request->masterSubUnsurId,
             'nama_hasil_kerja' => $request->namaHasilKerja,
@@ -61,7 +55,7 @@ class MasterHasilKerjaController extends Controller
             'ketua_tim' => $request->ketuaTim,
             'anggota_tim' => $request->anggotaTim,
             'pic' => $request->picKoordinator,
-
+            'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
         ]);
         return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
     }

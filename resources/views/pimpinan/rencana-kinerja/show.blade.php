@@ -12,7 +12,7 @@
     @include('components.header')
     @include('components.pegawai-sidebar')
     <!-- Modal -->
-    @include('components.rencana-kerja.create');
+    {{-- @include('components.rencana-kerja.create'); --}}
     @include('components.rencana-kerja.summary');
     <div class="main-content">
         <section class="section">

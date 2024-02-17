@@ -8,6 +8,7 @@ use App\Models\MasterIKU;
 use App\Models\MasterHasil;
 use App\Models\MasterTujuan;
 use App\Models\RencanaKerja;
+use App\Models\Proyek;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
 use App\Http\Controllers\Controller;
@@ -97,8 +98,10 @@ class KetuaTimRencanaKerjaController extends Controller
         $masterIku = MasterIKU::all();
         $pegawai = User::all();
 
+
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
+
         return view('pegawai.rencana-kinerja.ketua-tim.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -136,8 +139,9 @@ class KetuaTimRencanaKerjaController extends Controller
             'id_timkerja' => 'required',
             'hasilkerja' => 'required',
             'tugas' => 'required',
-            'mulai' => 'required',
-            'selesai' => 'required|after_or_equal:mulai',
+            'id_proyek' => 'required',
+            'melaksanakan' => 'required',
+            'capaian' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -154,8 +158,9 @@ class KetuaTimRencanaKerjaController extends Controller
             'id_hasilkerja'  => $validateData['hasilkerja'],
             'kategori_pelaksanatugas'   => $request->kategori_pelaksana,
             'tugas'         => $validateData['tugas'],
-            'mulai'         => $validateData['mulai'],
-            'selesai'         => $validateData['selesai'],
+            'id_proyek'     => $validateData['id_proyek'],
+            'melaksanakan'  => $validateData['melaksanakan'],
+            'capaian'       => $validateData['capaian'],
         ]);
 
         TimKerja::where('id_timkerja', $validateData['id_timkerja'])
@@ -184,10 +189,8 @@ class KetuaTimRencanaKerjaController extends Controller
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
         $masterHasil = MasterHasil::all();
-
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
-        dd($timKerja[0]);
-
+        $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
         return view('pegawai.rencana-kinerja.ketua-tim.show', [
             'type_menu'     => 'rencana-kinerja',
             'unitKerja'     => $this->unitkerja,
@@ -202,7 +205,8 @@ class KetuaTimRencanaKerjaController extends Controller
             'timKerja'      => $timKerja[0],
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
-            'rencanaKerja'  => $rencanaKerja
+            'rencanaKerja'  => $rencanaKerja,
+            'proyeks'       => $proyeks
         ]);
     }
 

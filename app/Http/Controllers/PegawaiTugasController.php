@@ -98,7 +98,7 @@ class PegawaiTugasController extends Controller
         $pegawai = User::all();
         $allHasilKerja = MasterHasil::where('kategori_pelaksana', 'ngt')->get();
         $masterHasilKerja = $this->hasilKerja;
-
+        $timKerja = TimKerja::where('id_timkerja', $rencanaKerja[0]->id_timkerja)->first();
         return view('pegawai.pelaksana-tugas.index', [
             'type_menu'         => 'rencana-kinerja',
             'rencanaKerja'      => $rencanaKerja[0],
@@ -107,7 +107,8 @@ class PegawaiTugasController extends Controller
             'satuan'            => $this->satuan,
             'pegawai'           => $pegawai,
             'allHasilKerja'     => $allHasilKerja,
-            'masterHasilKerja'  => $masterHasilKerja
+            'masterHasilKerja'  => $masterHasilKerja,
+            'timKerja'          => $timKerja,
         ]);
     }
 

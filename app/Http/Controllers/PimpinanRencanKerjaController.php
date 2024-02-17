@@ -11,6 +11,7 @@ use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
 use App\Http\Controllers\Controller;
+use App\Models\Proyek;
 
 class PimpinanRencanKerjaController extends Controller
 {
@@ -95,11 +96,13 @@ class PimpinanRencanKerjaController extends Controller
         $masterIku = MasterIKU::all();
         $pegawai = User::all();
 
+
         $id_unitkerja = auth()->user()->unit_kerja;
         $timKerja = TimKerja::where('unitkerja', $id_unitkerja)
-                    ->where('status', 5)
-                    ->orWhere('status', 6)
-                    ->get();
+        ->where('status', 5)
+        ->orWhere('status', 6)
+        ->get();
+        $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
         return view('pimpinan.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -110,6 +113,7 @@ class PimpinanRencanKerjaController extends Controller
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'proyeks'   => $proyeks
         ]);
 
         // return $id_unitkerja;
