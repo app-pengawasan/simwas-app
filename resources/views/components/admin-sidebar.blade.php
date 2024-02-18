@@ -14,7 +14,7 @@
         <ul class="sidebar-menu">
             <li class="{{ Request::is('admin') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin-dashboard') }}">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -86,9 +86,6 @@
                     <li class="{{ Request::is('admin/master-iku') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-iku">Master IKU</a>
                     </li>
-                    <li class="{{ Request::is('admin/master-hasil') ? 'active' : '' }}">
-                        <a class="nav-link" href="/admin/master-hasil">Master Hasil</a>
-                    </li>
                     <li class="{{ Request::is('admin/master-unsur') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('master-unsur.index') }}">Master Unsur</a>
                     </li>
@@ -101,5 +98,6 @@
                 </ul>
             </li>
         </ul>
+        @include('components.footer')
     </aside>
 </div>

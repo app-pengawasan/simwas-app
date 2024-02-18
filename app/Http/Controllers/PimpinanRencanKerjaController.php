@@ -102,7 +102,6 @@ class PimpinanRencanKerjaController extends Controller
         ->where('status', 5)
         ->orWhere('status', 6)
         ->get();
-        $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
         return view('pimpinan.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -113,7 +112,6 @@ class PimpinanRencanKerjaController extends Controller
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
-            'proyeks'   => $proyeks
         ]);
 
         // return $id_unitkerja;

@@ -37,6 +37,8 @@ class SocialiteController extends Controller
         // setelah login redirect ke dashboard
         return redirect()->route('dashboard');
     }
+    // get avatar from socialite
+    
 
     public function findOrCreateUser($socialUser, $provider)
     {

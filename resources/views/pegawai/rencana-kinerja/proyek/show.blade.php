@@ -22,6 +22,14 @@
             <h1>Detail Proyek
                 {{ $proyek->nama_proyek }}
             </h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja">Kelola Rencana Kinerja</a></div>
+                <div class="breadcrumb-item">
+                    <a href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">Tim Kerja</a>
+                </div>
+                <div class="breadcrumb-item">Detail Proyek</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
@@ -29,7 +37,7 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="{{ url()->previous() }}">
+                                <a class="btn btn-primary" href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">
                                     <i class="fas fa-chevron-circle-left"></i> Kembali
                                 </a>
                             </div>

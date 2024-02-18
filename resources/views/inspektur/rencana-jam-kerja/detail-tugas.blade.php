@@ -18,6 +18,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
+                
             </div>
             <div class="row">
                 <div class=" col-md-12">

@@ -4300,3 +4300,18 @@ body:not(.sidebar-mini)
         display: block;
     }
 }
+
+footer{
+    /* make bottom of the page */
+    position: absolute;
+    bottom: 5px;
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+}
+/* mobile view */
+@media (max-width: 600px) {
+    .changelog-list{
+        flex-direction: column !important;
+    }
+}

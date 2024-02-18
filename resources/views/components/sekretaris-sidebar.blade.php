@@ -14,7 +14,7 @@
         <ul class="sidebar-menu">
             <li class="{{ Request::is('sekretaris') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('sekretaris-dashboard') }}">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -49,5 +49,6 @@
             </a>
             </li> --}}
         </ul>
+        @include('components.footer')
     </aside>
 </div>

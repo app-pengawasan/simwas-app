@@ -14,7 +14,7 @@ class RencanaKerja extends Model
     protected $guarded = ['id_rencanakerja'];
 
     public function hasilKerja(){
-        return $this->belongsTo(MasterHasil::class, 'id_hasilkerja', 'id_master_hasil');
+        return $this->belongsTo(MasterHasilKerja::class, 'id_hasilkerja', 'id');
     }
 
     public function timkerja(){
