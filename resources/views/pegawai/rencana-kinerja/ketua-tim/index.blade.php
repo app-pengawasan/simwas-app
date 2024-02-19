@@ -19,6 +19,10 @@
         <section class="section">
             <div class="section-header">
                 <h1>Kelola Rencana Kinerja</h1>
+                <div class="section-header-breadcrumb">
+                    <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                    <div class="breadcrumb-item">Kelola Rencana Kinerja</div>
+                </div>
             </div>
             <div class="row">
                 <div class=" col-md-12">

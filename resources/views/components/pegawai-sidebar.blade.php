@@ -16,7 +16,7 @@
         <ul class="sidebar-menu">
             <li class="{{ Request::is('pegawai/dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dashboard') }}">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -104,12 +104,12 @@
                 </li>
             </ul>
             </li> --}}
-            <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('st-kinerja.index') }}">
                     <i class="fas fa-wrench"></i>
                     <span>ST Kinerja</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('usulan-surat-srikandi.index') }}">
                 <i class="fas fa-solid fa-envelope"></i>
@@ -160,7 +160,7 @@
                 </a>
             </li>
         </ul>
-
+        @include('components.footer')
         {{-- <div class="hide-sidebar-mini mt-4 mb-4 p-3">
             <a href="/dashboard-general-dashboard" class="btn btn-primary btn-lg btn-block btn-icon-split">
                 <i class="fas fa-rocket"></i> Dashboard Lama

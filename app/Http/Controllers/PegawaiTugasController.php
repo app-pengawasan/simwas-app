@@ -6,6 +6,7 @@ use App\Models\AnggaranRencanaKerja;
 use App\Models\MasterHasil;
 use App\Models\ObjekPengawasan;
 use App\Models\PelaksanaTugas;
+use App\Models\Proyek;
 use App\Models\RencanaKerja;
 use App\Models\TimKerja;
 use App\Models\User;
@@ -99,6 +100,7 @@ class PegawaiTugasController extends Controller
         $allHasilKerja = MasterHasil::where('kategori_pelaksana', 'ngt')->get();
         $masterHasilKerja = $this->hasilKerja;
         $timKerja = TimKerja::where('id_timkerja', $rencanaKerja[0]->id_timkerja)->first();
+        $proyek = Proyek::where('id', $rencanaKerja[0]->id_proyek)->first();
         return view('pegawai.pelaksana-tugas.index', [
             'type_menu'         => 'rencana-kinerja',
             'rencanaKerja'      => $rencanaKerja[0],
@@ -109,6 +111,7 @@ class PegawaiTugasController extends Controller
             'allHasilKerja'     => $allHasilKerja,
             'masterHasilKerja'  => $masterHasilKerja,
             'timKerja'          => $timKerja,
+            'proyek'            => $proyek,
         ]);
     }
 

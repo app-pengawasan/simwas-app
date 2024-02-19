@@ -28,6 +28,15 @@
     <section class="section">
         <div class="section-header">
             <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja">Kelola Rencana Kinerja</a></div>
+                <div class="breadcrumb-item">
+                    <a href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">Tim Kerja</a>
+                </div>
+                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">Proyek</a></div>
+                <div class="breadcrumb-item">Detail Tugas</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
@@ -35,34 +44,39 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="{{ url()->previous() }}">
+                                <a class="btn btn-primary" href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">
                                     <i class="fas fa-chevron-circle-left"></i> Kembali
                                 </a>
                             </div>
                         </div>
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
-                        <table class="mb-4">
+                        <table class="mb-4 table table-striped" id="table-show">
                             <input type="hidden" name="id_rencanakerja" id="id_rencanakerja"
                                 value="{{ $rencanaKerja->id_rencanakerja }}">
                             <tr>
                                 <th style="min-width: 120pt">Nama Tim</th>
-                                <td>: </td>
                                 <td>{{ $rencanaKerja->timkerja->nama }}</td>
                             </tr>
                             <tr>
                                 <th>Tugas</th>
-                                <td>: </td>
                                 <td>{{ $rencanaKerja->tugas }}</td>
                             </tr>
                             <tr>
+                                <th>Hasil Kerja</th>
+                                <td>{{ $rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
+                            </tr>
+                            {{-- unsur --}}
+                            <tr>
                                 <th>Unsur</th>
-                                <td>: </td>
-                                {{-- <td>{{ $unsur[$rencanaKerja->hasilkerja->unsur] }}</td> --}}
+                                <td>{{ $rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}</td>
+                            </tr>
+                            <tr>
+                                <th>Subunsur</th>
+                                <td>{{ $rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur }}</td>
                             </tr>
                             <tr>
                                 <th>Objek</th>
-                                <td>: </td>
                                 <td>
                                     @if (count($rencanaKerja->objekPengawasan))
                                     <ol>
@@ -97,7 +111,6 @@
                             </tr>
                             <tr>
                                 <th>Kategori Pelaksana</th>
-                                <td>: </td>
                                 <td>{{ $pelaksanaTugas[$rencanaKerja->kategori_pelaksanatugas] }}</td>
                             </tr>
                         </table>

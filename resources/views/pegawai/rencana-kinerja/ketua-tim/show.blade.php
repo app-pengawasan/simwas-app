@@ -22,6 +22,11 @@
     <section class="section">
         <div class="section-header">
             <h1>Detail Tim kerja</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja">Kelola Rencana Kinerja</a></div>
+                <div class="breadcrumb-item">Detail Tim Kerja</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">

@@ -66,10 +66,6 @@ class UsulanSuratSrikandiController extends Controller
     {
 
         $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->get();
-        foreach ($usulanSuratSrikandi as $usulan) {
-            $usulan->tanggal = date('d F Y', strtotime($usulan->updated_at));
-        }
-
         return view('pegawai.usulan-surat-srikandi.index', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,

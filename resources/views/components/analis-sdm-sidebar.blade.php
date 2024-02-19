@@ -17,7 +17,7 @@
         <ul class="sidebar-menu">
             <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('analis-sdm-dashboard') }}">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -41,5 +41,6 @@
                 </ul>
             </li>
         </ul>
+        @include('components.footer')
     </aside>
 </div>

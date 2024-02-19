@@ -55,8 +55,6 @@ use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\SuratSrikandiController;
-use App\Models\SuratSrikandi;
-use App\Models\UsulanSuratSrikandi;
 use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\ProyekController;
 
@@ -87,7 +85,11 @@ Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth
  * ADMIN
  * ---------------------------------------------------------------------------
  * */
-Route::get('/admin', function(){return view('admin.index', ['type_menu' => 'dashboard']);})->middleware('auth')->name('admin-dashboard');
+Route::middleware(['auth', 'can:admin'])->group(function () {
+    Route::get('/admin', function () {
+        return view('admin.index', ['type_menu' => 'dashboard']);
+    })->name('admin-dashboard');
+});
 
 //Kelola-anggaran
 //1.Master Anggaran

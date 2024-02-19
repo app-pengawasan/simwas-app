@@ -20,6 +20,8 @@ class SatuanKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterSatuanKerja = SatuanKerja::where('kategori', 2)->get();
 
         // return $masterSatuanKerja;

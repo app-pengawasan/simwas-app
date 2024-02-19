@@ -20,6 +20,7 @@ class MasterUnitKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
 
         return view('admin.master-objek.unit-kerja', [
