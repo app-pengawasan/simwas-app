@@ -19,6 +19,8 @@ class WilayahKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterWilayahkerja = WilayahKerja::where('kategori', 3)->get();
 
         return view('admin.master-objek.wilayah-kerja', [

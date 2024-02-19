@@ -17,7 +17,7 @@
         <ul class="sidebar-menu">
             <li class="{{ Request::is('inspektur') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('inspektur-dashboard') }}">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
@@ -60,5 +60,6 @@
                 </ul>
             </li>
         </ul>
+        @include('components.footer')
     </aside>
 </div>

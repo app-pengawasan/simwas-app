@@ -101,7 +101,6 @@ class TimKerjaController extends Controller
      */
     public function update(Request $request, TimKerja $timKerja)
     {
-        try {
             $rules = [
                 'uraian_tugas'  => 'required',
                 'rk_ketua'      => 'required',
@@ -126,12 +125,6 @@ class TimKerjaController extends Controller
                 'success' => true,
                 'message' => 'Berhasil mengubah Tim Kerja',
             ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengubah Tim Kerja',
-            ]);
-        }
     }
 
     /**

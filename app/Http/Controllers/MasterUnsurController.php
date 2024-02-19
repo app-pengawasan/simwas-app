@@ -16,6 +16,8 @@ class MasterUnsurController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterUnsurs = MasterUnsur::all();
         return view('admin.master-unsur.index', [
             'type_menu' => 'rencana-kinerja',

@@ -11,6 +11,7 @@ use App\Models\Stpd;
 use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 class DashboardController extends Controller
 {

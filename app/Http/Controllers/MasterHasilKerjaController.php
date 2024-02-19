@@ -17,6 +17,8 @@ class MasterHasilKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterHasilKerjas = MasterHasilKerja::with('masterSubUnsur')->latest()->get();
         $masterSubUnsurs = MasterSubUnsur::all();
         $masterUnsurs = MasterUnsur::all();
@@ -50,11 +52,10 @@ class MasterHasilKerjaController extends Controller
             'master_subunsur_id' => $request->masterSubUnsurId,
             'nama_hasil_kerja' => $request->namaHasilKerja,
             'hasil_kerja_tim' => $request->hasilKerjaTim,
-            'pengendali_teknis' => $request->pengendaliTeknis,
-            'pengendali_mutu' => $request->pengendaliMutu,
-            'ketua_tim' => $request->ketuaTim,
+            'pengendali_teknis' => $request->status == '1' ? $request->pengendaliTeknis : null,
+            'ketua_tim' => $request->status == '1' ? $request->ketuaTim : null,
             'anggota_tim' => $request->anggotaTim,
-            'pic' => $request->picKoordinator,
+            'pic' => $request->status != '1' ? $request->picKoordinator : null,
             'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
         ]);
         return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');

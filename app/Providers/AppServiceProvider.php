@@ -42,5 +42,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('analis_sdm', function (User $user) {
             return $user->is_analissdm == true;
         });
+        Gate::define('admin', function (User $user) {
+            return $user->is_admin == true;
+        });
     }
 }

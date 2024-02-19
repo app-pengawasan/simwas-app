@@ -43,6 +43,7 @@ class PaguAnggaranController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $paguAnggaran = PaguAnggaran::all();
 
         return view('admin.pagu-anggaran.index', [
