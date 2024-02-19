@@ -24,6 +24,7 @@ class MasterAnggaranController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $masterAnggaran = MasterAnggaran::all();
         return view('admin.master-anggaran.index', [
             'type_menu'     => 'anggaran',

@@ -17,6 +17,7 @@ class MasterIKUController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();

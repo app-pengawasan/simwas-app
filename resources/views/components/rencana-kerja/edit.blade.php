@@ -41,7 +41,7 @@
                     <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
                         <i class="fas fa-exclamation-triangle"></i>Batal
                     </button>
-                    <button type="submit" id="btn-edit-tim" class="btn btn-icon icon-left btn-primary">
+                    <button type="button" id="btn-edit-tim" class="btn btn-icon icon-left btn-primary">
                         <i class="fas fa-save"></i>Simpan
                     </button>
                 </div>

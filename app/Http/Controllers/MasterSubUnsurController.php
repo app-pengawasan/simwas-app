@@ -16,6 +16,8 @@ class MasterSubUnsurController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterSubUnsurs = MasterSubUnsur::with('masterUnsur')->latest()->get();
         $masterUnsurs = MasterUnsur::all();
         return view('admin.master-subunsur.index', [

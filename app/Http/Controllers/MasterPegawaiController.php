@@ -88,7 +88,8 @@ class MasterPegawaiController extends Controller
      */
     public function index()
     {
-      $users = User::all();
+        $this->authorize('admin');
+        $users = User::all();
         return view('admin.master-pegawai.index', [
             'type_menu' => 'master-pegawai',
             'pangkat'       => $this->pangkat,

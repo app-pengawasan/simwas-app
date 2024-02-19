@@ -18,6 +18,8 @@ class ObjekKegiatanController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
         $masterObjekKegiatan = ObjekKegiatan::where('is_active', 1)->get();
 

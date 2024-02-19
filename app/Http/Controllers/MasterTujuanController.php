@@ -15,6 +15,8 @@ class MasterTujuanController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin');
+
         $masterTujuan = MasterTujuan::all();
 
         return view('admin.master-tujuan', [
