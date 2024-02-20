@@ -16,7 +16,7 @@
         <div class="page-search">
             </form>
             <div class="mt-3">
-                <a href="/" class="btn btn-outline-primary d-inline-flex align-items-center">
+                <a href="{{ url()->previous() }}" class="btn btn-outline-primary d-inline-flex align-items-center">
                     <i class="fa-solid fa-arrow-left mr-2"></i>
                     Kembali Ke Beranda
                 </a>

@@ -57,6 +57,8 @@ use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\SuratSrikandiController;
 use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\ProyekController;
+use App\Http\Controllers\RealisasiIkuUnitKerjaController;
+use App\Http\Controllers\TargetIkuUnitKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -331,6 +333,16 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
     Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}', [PenilaianBerjenjangController::class, 'show']);
 });
+
+/**
+     * ---------------------------------------------------------------------------
+     * PERENCANA
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/perencana', [DashboardController::class, 'perencana'])->name('perencana-dashboard');
+    Route::resource('perencana/target-iku-unit-kerja', TargetIkuUnitKerjaController::class);
+    Route::resource('perencana/realisasi-iku-unit-kerja', RealisasiIkuUnitKerjaController::class);
+    Route::resource('perencana/evaluasi-iku-unit-kerja', TargetIkuUnitKerjaController::class);
 
 /**
  * ===========================================================================
