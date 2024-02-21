@@ -1,5 +1,5 @@
-// let today = new Date();
-// $('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
+let today = new Date();
+$('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
 
 $(".nilai-btn").on("click", function () {
     document.forms['myform'].reset();

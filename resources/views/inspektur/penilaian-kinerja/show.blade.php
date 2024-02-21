@@ -38,9 +38,9 @@
                                     <thead>
                                         <tr>
                                             <th>Tugas</th>
+                                            <th>Jabatan</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
-                                            <th>Status</th>
                                             <th>Bukti Dukung</th>
                                             <th>Catatan Pegawai</th>
                                             <th>Nilai</th>
@@ -63,9 +63,9 @@
                                             @endphp
                                             <tr>
                                                 <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
+                                                <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                 <td>{{ $rencana_jam }}</td>
                                                 <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
-                                                <td class="text-{{ $colorText[$realisasi->status] }}">{{ $status[$realisasi->status] }}</td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                         <a class="btn btn-primary"

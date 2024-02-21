@@ -263,8 +263,7 @@ class PenilaianBerjenjangController extends Controller
 
         return view('pegawai.penilaian-berjenjang.show', [
             'type_menu' => 'realisasi-kinerja',
-            'status'    => $this->status,
-            'colorText' => $this->colorText,
+            'jabatan' => $this->jabatan,
             'id_pegawai'=> $pegawai_dinilai,
             'events'    => $events,
             'jamRealisasi' => $jamRealisasi
