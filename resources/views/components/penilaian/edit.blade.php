@@ -11,6 +11,8 @@
             <form class="needs-validation" novalidate="" name="myeditform" id="myeditform">
                 <div class="modal-body">
                     <input type="hidden" name="edit-id" id="edit-id">
+                    <input type="hidden" name="edit-id-pegawai" id="edit-id-pegawai">
+                    <input type="hidden" name="edit-bulan" id="edit-bulan">
                     <div class="form-group form-inline">
                         <label for="edit-nilai" class="form-label col-lg-4 justify-content-start font-weight-bold">Nilai</label>
                         <input type="number" id="edit-nilai" name="edit-nilai" min="0" max="100" step=".01" class="form-control" required>

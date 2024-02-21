@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Rencana Jam Kerja')
+@section('title', 'Master Data Kepegawaian')
 
 @push('style')
-    <!-- CSS Libraries -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
     <link
@@ -13,51 +12,54 @@
 @endpush
 
 @section('main')
-    @include('components.inspektur-header')
-    @include('components.inspektur-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rencana Jam Kerja</h1>
+                <h1>Master Data Kepegawaian</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rencana Jam Kerja</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Master Data Kepegawaian</div>
                 </div>
             </div>
 
+            @if (session()->has('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
             <div class="section-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-inspektur-kinerja">
+                                    <a href="/analis-sdm/master-data-kepegawaian" class="btn btn-primary">Aktif</a>
+                                    <div class="btn btn-primary disabled">Nonaktif</div>
+                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Pegawai</th>
-                                                <th>Jumlah Tim</th>
-                                                <th>Jumlah Tugas</th>
-                                                <th>Jumlah Jam Kerja</th>
-                                                <th>Jumlah Hari Kerja</th>
-                                                <th>Detail</th>
+                                                <th>No</th>
+                                                <th>Jenis Pengembangan Profesi</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($countall as $key => $count)
+                                            @foreach ($masters as $master)
                                             <tr>
                                                 <td></td>
-                                                <td>{{ $count[0]->name }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tim'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tugas'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
+                                                <td>{{ $master->jenis }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/inspektur/rencana-jam-kerja/pool/{{ $key }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    <form method="post" action="/analis-sdm/master-data-kepegawaian/{{ $master->id }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="aktifkan" value="1">
+                                                        <input type="hidden" name="is_aktif" value="1">
+                                                        <input type="hidden" name="id" value="{{ $master->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-info">Aktifkan</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -92,33 +94,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     
     <!-- Page Specific JS File -->
-    {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
-    <script>
-        var datatable = $('#table-inspektur-kinerja').DataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            // scrollX: true,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                }
-            ],
-            columnDefs: [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }],
-        });
-
-        //update ukuran kalender saat ukuran sidebar berubah
-        // $('.nav-link').on("click", function () {
-        //     setTimeout( function () {
-        //         datatable.columns.adjust();
-        //     }, 500);
-        // });
-    </script>
+    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 @endpush

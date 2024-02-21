@@ -1,6 +1,8 @@
 <?php
 
 use GuzzleHttp\Middleware;
+use App\Models\SuratSrikandi;
+use App\Models\UsulanSuratSrikandi;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PpController;
 use App\Http\Controllers\SlController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\MasterHasilController;
+use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\SatuanKerjaController;
 use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\MasterTujuanController;
@@ -33,29 +36,30 @@ use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
+use App\Http\Controllers\SuratSrikandiController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\PelaksanaTugasController;
 use App\Http\Controllers\AktivitasHarianController;
+use App\Http\Controllers\DataKepegawaianController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
+use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
-use App\Http\Controllers\PimpinanRencanKerjaController;
-use App\Http\Controllers\AnggaranRencanaKerjaController;
-use App\Http\Controllers\InspekturRencanaJamKerjaController;
-use App\Http\Controllers\KetuaTimRencanaKerjaController;
-use App\Http\Controllers\MasterHasilKerjaController;
-use App\Http\Controllers\MasterSubUnsurController;
-use App\Http\Controllers\MasterUnsurController;
-use App\Http\Controllers\UsulanSuratSrikandiController;
-use App\Http\Controllers\SuratSrikandiController;
 use App\Http\Controllers\PenilaianBerjenjangController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
+use App\Http\Controllers\UsulanSuratSrikandiController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\InspekturRencanaJamKerjaController;
+use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\ProyekController;
 
 /*
@@ -200,6 +204,12 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 
     Route::resource('analis-sdm/kelola-kompetensi', AnalisKompetensiController::class);
 
+    Route::resource('analis-sdm/master-data-kepegawaian', DataKepegawaianController::class);
+    Route::get('analis-sdm/master-data-kepegawaian-nonaktif', [DataKepegawaianController::class, 'nonaktif']);
+    Route::get('analis-sdm/data-kepegawaian', [DataKepegawaianController::class, 'kelola']);
+    Route::post('analis-sdm/data-kepegawaian/import', [DataKepegawaianController::class, 'import']);
+    Route::get('analis-sdm/data-kepegawaian/export', [DataKepegawaianController::class, 'export']);
+
     /**
      * ---------------------------------------------------------------------------
      * INSPEKTUR
@@ -225,6 +235,12 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
     Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
     Route::get('/inspektur/rencana-kinerja/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+
+    //Penilaian Kinerja Pegawai
+    Route::resource('inspektur/penilaian-kinerja', InspekturPenilaianKinerjaController::class);
+    Route::get('inspektur/penilaian-kinerja/detail/{id}', [InspekturPenilaianKinerjaController::class, 'detail']);
+    Route::get('inspektur/penilaian-kinerja/{pegawai_dinilai}/{bulan}', [InspekturPenilaianKinerjaController::class, 'show']);
+    Route::get('inspektur/penilaian-kinerja/nilai/{id_pegawai}/{bulan}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
 
     /**
      * ---------------------------------------------------------------------------

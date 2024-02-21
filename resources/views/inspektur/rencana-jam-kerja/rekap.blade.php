@@ -36,7 +36,7 @@
                                             <tr>
                                                 <th rowspan="2" class="align-middle">No.</th>
                                                 <th rowspan="2" class="align-middle">Pegawai</th>
-                                                <th colspan="13" class="text-center">Kebutuhan Hari Kerja</th>
+                                                <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
                                             </tr>
                                             <tr>
                                                 <th>Jan</th>
@@ -55,23 +55,39 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pegawai as $p)
+                                            @foreach ($jam_kerja as $jam)
                                             <tr>
                                                 <td></td>
-                                                <td>{{ $p->name }}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>{{ $jam[0]->name }}</td>
+                                                @isset($jam[1])
+                                                    <td class="convert" value="{{ $jam[1]->jan }}">{{ $jam[1]->jan }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->feb }}">{{ $jam[1]->feb }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->mar }}">{{ $jam[1]->mar }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->apr }}">{{ $jam[1]->apr }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->mei }}">{{ $jam[1]->mei }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->jun }}">{{ $jam[1]->jun }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->jul }}">{{ $jam[1]->jul }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->agu }}">{{ $jam[1]->agu }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->sep }}">{{ $jam[1]->sep }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->okt }}">{{ $jam[1]->okt }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->nov }}">{{ $jam[1]->nov }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->des }}">{{ $jam[1]->des }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->total }}">{{ $jam[1]->total }}</td>
+                                                @else
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                @endisset
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -117,6 +133,14 @@
                 {
                     extend: "excel",
                     className: "btn-success"
+                },
+                {
+                    text: 'Jam Kerja',
+                    className: 'btn btn-primary disabled ml-2 jam-kerja toggle',
+                },
+                {
+                    text: 'Hari Kerja',
+                    className: 'btn btn-primary hari-kerja toggle',
                 }
             ],
             columnDefs: [{
@@ -133,5 +157,24 @@
                 datatable.columns.adjust();
             }, 500);
         });
+
+        $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
+        $('.toggle').wrapAll('<div class="btn-group"></div>');
+        $('.hari-kerja').on('click', function() {
+            $(this).addClass('disabled');
+            $(".jam-kerja").removeClass('disabled');
+            $(".convert").each(function() {
+                if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+            });
+            $('#title').text('Rencana Hari Kerja');
+        })
+        $('.jam-kerja').on('click', function() {
+            $(this).addClass('disabled');
+            $(".hari-kerja").removeClass('disabled');
+            $(".convert").each(function() {
+                if ($(this).text() != '0') $(this).text($(this).attr('value'));
+            });
+            $('#title').text('Rencana Jam Kerja');
+        })
     </script>
 @endpush

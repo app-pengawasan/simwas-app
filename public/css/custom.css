@@ -212,6 +212,22 @@
     display:none;
 }
 
-.fc-toolbar-chunk {
-    /* padding-left: 6rem; */
+.fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled):hover{
+    background-color:#ebf8fb;
+    cursor: pointer;
+    content: '+';
+    color: gray;
+}
+
+.current-time {
+    background-color: #ebf8fb;
+    color: gray;
+    position: relative;
+    cursor: pointer;
+    /* padding-right: 5px; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid var(--fc-border-color);
 }

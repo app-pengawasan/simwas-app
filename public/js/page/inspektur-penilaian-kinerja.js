@@ -1,5 +1,111 @@
-let today = new Date();
-$('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
+// let today = new Date();
+// $('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
+
+$(".nilai-btn").on("click", function () {
+    document.forms['myform'].reset();
+    let id_pegawai = $(this).attr("data-pegawai");
+    let bulan = $(this).attr("data-bulan");
+    $('#id_pegawai').val(id_pegawai);
+    $('#bulan').val(bulan);
+});
+
+$(".edit-btn").on("click", function (e) {
+    e.preventDefault();
+    
+    let id_pegawai = $(this).attr("data-pegawai");
+    let bulan = $(this).attr("data-bulan");
+    $('#edit-id-pegawai').val(id_pegawai);
+    $('#edit-bulan').val(bulan);
+    $('#error-edit-nilai').text('');
+
+    $.ajax({
+        url: `/inspektur/penilaian-kinerja/nilai/${id_pegawai}/${bulan}`,
+        type: "GET",
+        cache: false,
+        success: function (response) {
+            document.forms['myeditform'].reset();
+            $("#edit-id").val(response.data[0].id);
+            $("#edit-nilai").val(response.data[0].nilai);
+            $("#edit-catatan").val(response.data[0].catatan);
+        },
+    });
+});
+
+$('.submit-btn').on("click", function (e) {
+    e.preventDefault();
+    $('#error-nilai').text('');
+
+    let token = $("meta[name='csrf-token']").attr("content");
+    let id_pegawai = $('#id_pegawai').val();
+    let bulan = $('#bulan').val();
+    let nilai = $("#nilai").val();
+    let catatan = $("#catatan").val();
+    $.ajax({
+        url: `/inspektur/penilaian-kinerja`,
+        type: "POST",
+        cache: false,
+        data: {
+            _token: token,
+            nilai: nilai,
+            catatan: catatan,
+            id_pegawai: id_pegawai,
+            bulan: bulan
+        },
+        success: function (response) {
+            location.reload();
+            $('#filterBulan').val(bulan);
+        },
+        error: function (error) {
+            $('form').removeClass('was-validated');
+            $('.form-group').addClass('was-validated');
+
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                console.log(errors);
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+        },
+    });
+});
+
+$('.submit-edit-btn').on("click", function (e) {
+    e.preventDefault();
+
+    let dataId = $('#edit-id').val();
+    let token = $("meta[name='csrf-token']").attr("content");
+    let nilai = $("#edit-nilai").val();
+    let catatan = $("#edit-catatan").val();
+    $.ajax({
+        url: `/inspektur/penilaian-kinerja/${dataId}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            nilai: nilai,
+            catatan: catatan
+        },
+        success: function (response) {
+            location.reload();
+            $('#filterBulan').val(bulan);
+        },
+        error: function (error) {
+            $('form').removeClass('was-validated');
+            $('.form-group').addClass('was-validated');
+
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                console.log(errors);
+                let errorMessage = document.getElementById(`error-edit-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+        },
+    });
+});
 
 let table = $("#table-daftar-nilai")
     .dataTable({
@@ -28,18 +134,14 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; ' +
-                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
                 },
             },
         ],
     }).api();
 
 $('#filterBulan').on("change", function () {
-    table.draw();
-});
-
-$('#filterUnitKerja').on("change", function () {
+    $(this).val() == 'all' ? table.column(6).visible(false) : table.column(6).visible(true);
     table.draw();
 });
 
@@ -53,13 +155,13 @@ $.fn.dataTableExt.afnFiltering.push(
             return true;
         }
         var selectedBulan = $('select#filterBulan option:selected').val();
-        var selectedUnit = $('select#filterUnitKerja option:selected').val();
-        if (data[7] == selectedBulan && (data[8] == selectedUnit || selectedUnit == 'all')) return true;
+        if (data[8] == selectedBulan) return true;
         else return false;
     }
 );
 
 table.draw();
+$('#filterBulan').val() == 'all' ? table.column(6).visible(false) : table.column(6).visible(true);
 
 $("#table-nilai")
     .dataTable({
@@ -92,103 +194,6 @@ $("#table-nilai")
             },
         ],
     });
-
-$(".nilai-btn").on("click", function () {
-    document.forms['myform'].reset();
-    let dataId = $(this).attr("data-id");
-    $('#id').val(dataId);
-});
-
-$(".edit-btn").on("click", function (e) {
-    e.preventDefault();
-
-    let dataId = $(this).attr("data-id");
-    $('#edit-id').val(dataId);
-    $('#error-edit-nilai').text('');
-
-    $.ajax({
-        url: `/pegawai/nilai-berjenjang/nilai/${dataId}`,
-        type: "GET",
-        cache: false,
-        success: function (response) {
-            document.forms['myeditform'].reset();
-            $("#edit-id").val(response.data[0].id);
-            $("#edit-nilai").val(response.data[0].nilai);
-            $("#edit-catatan").val(response.data[0].catatan_penilai);
-        },
-    });
-});
-
-$('.submit-btn').on("click", function (e) {
-    e.preventDefault();
-    $('#error-nilai').text('');
-
-    let dataId = $('#id').val();
-    let token = $("meta[name='csrf-token']").attr("content");
-    let nilai = $("#nilai").val();
-    let catatan = $("#catatan").val();
-    $.ajax({
-        url: `/pegawai/nilai-berjenjang/${dataId}`,
-        type: "PUT",
-        cache: false,
-        data: {
-            _token: token,
-            nilai: nilai,
-            catatan: catatan
-        },
-        success: function (response) {
-            location.reload();
-        },
-        error: function (error) {
-            $('form').removeClass('was-validated');
-            $('.form-group').addClass('was-validated');
-
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                console.log(errors);
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
-            });
-        },
-    });
-});
-
-$('.submit-edit-btn').on("click", function (e) {
-    e.preventDefault();
-
-    let dataId = $('#edit-id').val();
-    let token = $("meta[name='csrf-token']").attr("content");
-    let nilai = $("#edit-nilai").val();
-    let catatan = $("#edit-catatan").val();
-    $.ajax({
-        url: `/pegawai/nilai-berjenjang/${dataId}`,
-        type: "PUT",
-        cache: false,
-        data: {
-            _token: token,
-            nilai: nilai,
-            catatan: catatan
-        },
-        success: function (response) {
-            location.reload();
-        },
-        error: function (error) {
-            $('form').removeClass('was-validated');
-            $('.form-group').addClass('was-validated');
-
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                console.log(errors);
-                let errorMessage = document.getElementById(`error-edit-${key}`);
-                errorMessage.innerText = `${value}`;
-            });
-        },
-    });
-});
 
 var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {

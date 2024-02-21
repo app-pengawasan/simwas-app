@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nilai Hasil Kerja Bulanan')
+@section('title', 'Penilaian Kinerja Pegawai')
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -12,18 +12,23 @@
 @endpush
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.inspektur-header')
+    @include('components.inspektur-sidebar')
 
     <div class="main-content">
+        <!-- Modal -->
+        @include('components.penilaian.create');
+        @include('components.penilaian.edit');
         <section class="section">
             <div class="section-header">
-                <h1>Nilai Hasil Kerja Bulanan</h1>
+                <h1>Penilaian Kinerja Pegawai Bulanan</h1>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <div class="d-flex float-right col-6">
                                 <div class="ml-auto my-2 col-12 p-0 pl-2">
                                     <select class="form-control" id="filterBulan">
@@ -43,32 +48,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="d-flex float-right col-6 p-0">
-                                <div class="ml-auto my-2 col-12 p-0 pr-2">
-                                    <select class="form-control" id="filterUnitKerja" autocomplete="off">
-                                        <option value="all">Semua Unit Kerja</option>
-                                        <option value="8000">Inspektorat Utama</option>
-                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
-                                        <option value="8100">Inspektorat Wilayah I</option>
-                                        <option value="8200">Inspektorat Wilayah II</option>
-                                        <option value="8300">Inspektorat Wilayah III</option>
-                                    </select>
-                                </div>
-                            </div>
                             <div style="margin-top: 5rem">
                                 <table id="table-daftar-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
                                             <th>Nama</th>
-                                            <th>Unit Kerja</th>
                                             <th>Jumlah Tugas</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
-                                            <th>Rata-Rata Hasil Penilaian</th>
+                                            <th>Rata-Rata Hasil Penilaian Berjenjang</th>
+                                            <th>Hasil Penilaian</th>
+                                            <th>Catatan</th>
                                             <th>Aksi</th>
                                             <th class="never">Bulan</th>
-                                            <th class="never">Unit Kerja</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,20 +69,51 @@
                                             @foreach ($tugas['count'] as $bulan => $count)
                                                 <tr>
                                                     <td>{{ $tugas['nama'] }}</td>
-                                                    <td>{{ $unitkerja[$tugas['unit_kerja']] }}</td>
                                                     <td>{{ $count }}</td>
                                                     <td>{{ $tugas['rencana_jam'][$bulan] }}</td>
                                                     <td>{{ $tugas['realisasi_jam'][$bulan] }}</td>
-                                                    <td>{{ $tugas['avg'][$bulan] }}</td>
+                                                    <td>{{ $tugas['avg'][$bulan] }}</td> 
+                                                    <td>{{ isset($tugas['nilai_ins'][$bulan]) ? round($tugas['nilai_ins'][$bulan], 2) : 0 }}</td>
+                                                    <td>{{ $bulan == 'all' ? '' : (isset($tugas['catatan']) ? $tugas['catatan'][$bulan] ?? '' : '') }}</td>
                                                     <td>
-                                                        <a class="btn btn-primary"
-                                                            href="/pegawai/nilai-berjenjang/{{ $id_pegawai }}/{{ $bulan }}"
-                                                            style="width: 42px">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
+                                                        @if ($bulan == 'all')
+                                                            <a class="btn btn-primary"
+                                                            href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        @else
+                                                            <div class="btn-group dropdown">
+                                                                <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
+                                                                </button>
+                                                                <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                                    <a href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}" 
+                                                                    class="dropdown-item">
+                                                                        <i class="fas fa-circle-info text-primary mr-2"></i>
+                                                                        Detail
+                                                                    </a>
+                                                                    @if (!isset($tugas['nilai_ins'][$bulan]) || $tugas['nilai_ins'][$bulan] == null)
+                                                                        <a class="dropdown-item nilai-btn" href="javascript:void(0)"
+                                                                        data-pegawai="{{ $id_pegawai }}"
+                                                                        data-bulan="{{ $bulan }}" data-toggle="modal" 
+                                                                        data-target="#modal-create-nilai">
+                                                                            <i class="fas fa-circle-plus text-success mr-2"></i>
+                                                                            Nilai
+                                                                        </a>
+                                                                    @else
+                                                                        <a class="dropdown-item edit-btn" href="javascript:void(0)"
+                                                                        data-pegawai="{{ $id_pegawai }}"
+                                                                        data-bulan="{{ $bulan }}" data-toggle="modal" 
+                                                                        data-target="#modal-edit-nilai">
+                                                                            <i class="fas fa-edit text-warning mr-2"></i>
+                                                                            Edit Nilai
+                                                                        </a>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     </td>
                                                     <td>{{ $bulan }}</td>
-                                                    <td>{{ $tugas['unit_kerja'] }}</td>
                                                 </tr>
                                             @endforeach
                                         @endforeach
@@ -123,5 +147,5 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/pegawai/penilaian-berjenjang.js') }}"></script>
+    <script src="{{ asset('js/page/inspektur-penilaian-kinerja.js') }}"></script>
 @endpush

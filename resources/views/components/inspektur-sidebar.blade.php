@@ -21,6 +21,12 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+            <li class="{{ Request::is('inspektur/penilaian-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/penilaian-kinerja">
+                    <i class="fas fa-road"></i>
+                    <span>Penilaian Kinerja Pegawai</span>
+                </a>
+            </li>
             <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="/inspektur/st-kinerja">
                     <i class="fas fa-wrench"></i>

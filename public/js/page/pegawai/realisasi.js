@@ -34,6 +34,7 @@ $(function () {
 $("#tugas").prop("disabled", true); //disable pilihan tugas
 $('.disabled').show(); //show pilihan "Pilih Tugas"
 $('.disabled').prop("selected", true);
+if ($('#status').val() != '1') $('.status_change').hide();
 
 //hide clockpicker kalo discroll
 $(document).on("scroll", function (e) {
@@ -64,8 +65,30 @@ $("#tugas").on("change", function () {
 });
 
 $("#status").on("change", function () {
-    if ($(this).val() == '1') $('#catatan').prop("required", false);
-    else $('#catatan').prop("required", true);
+    if ($(this).val() == '1') {
+        let hasil_kerja = $('#tugas').find(":selected").attr('data-hasil');
+
+        $('#catatan').prop("required", false);
+        $('.status_change').show();
+
+        $('#kegiatan').prop("required", true);
+        $("#kegiatan").val('Menyusun ' + hasil_kerja);
+        $("#kegiatan").removeClass('is-invalid');
+        $("#error-kegiatan").text("");
+        $("#kegiatan").closest('.form-group').addClass('was-validated');
+
+        $('#capaian').prop("required", true);
+        $("#capaian").val(hasil_kerja + ' sebanyak 1 dokumen');
+        $("#capaian").removeClass('is-invalid');
+        $("#error-capaian").text("");
+        $("#capaian").closest('.form-group').addClass('was-validated');
+    } 
+    else {
+        $('#catatan').prop("required", true);
+        $('.status_change').hide();
+        $('#kegiatan').prop("required", false);
+        $('#capaian').prop("required", false);
+    } 
 });
 
 $("#link").on("input", function () {

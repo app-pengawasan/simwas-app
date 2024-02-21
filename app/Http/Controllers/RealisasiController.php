@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
+use Illuminate\Validation\Rule;
 use App\Models\RealisasiKinerja;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Builder;
@@ -60,7 +62,7 @@ class RealisasiController extends Controller
                     'pelaksana', function (Builder $query){    
                         $id_pegawai = auth()->user()->id;
                         $query->where('id_pegawai', $id_pegawai);
-                    })->get();
+                    })->orderByDesc('created_at')->get();
 
         return view('pegawai.realisasi.index',[
             'type_menu'     => 'realisasi-kinerja',
@@ -109,38 +111,86 @@ class RealisasiController extends Controller
      */
     public function store(Request $request)
     {
+        $start = $request->tgl.' '.$request->start;
+        $end = $request->tgl.' '.$request->end;
+        //cek duplikat jam mulai
+        $duplicateStart = Event::whereRelation('pelaksana', function (Builder $query){   
+                            $query->where('id_pegawai', auth()->user()->id);
+                        })->where('start', '<=', $start)->where('end', '>', $start)->count();
+        //cek duplikat jam selesai
+        $duplicateEnd = Event::whereRelation('pelaksana', function (Builder $query){   
+                            $query->where('id_pegawai', auth()->user()->id);
+                        })->where('start', '<=', $end)->where('end', '>', $end)->count();
+        //cek jam antara jam mulai dan jam selesai
+        $duplicateBetween = Event::whereRelation('pelaksana', function (Builder $query){   
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '>=', $start)->where('end', '<', $end)->count();
+        
         $rules = [
             'tugas'         => 'required',
             'tgl'           => 'required|date_format:Y-m-d',
-            'start'         => 'required|date_format:H:i|before:end',
-            'end'           => 'required|date_format:H:i|after:start',
+            'start'         => [
+                                'required',
+                                'date_format:H:i',
+                                'before:end',
+                                Rule::when($duplicateStart != 0 || $duplicateBetween != 0, ['boolean'])
+                            ],
+            'end'           => [
+                                'required',
+                                'date_format:H:i',
+                                'after:start',
+                                Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
+                            ],
             'status'        => 'required',
-            'kegiatan'      => 'required',
-            'capaian'       => 'required',
+            'kegiatan'      => 'required_if:status,1',
+            'capaian'       => 'required_if:status,1',
             'link'          => 'required_if:file,0|url',
             'file'          => 'required_if:link,0|mimes:pdf|max:500',
             'catatan'       => 'required_if:status,2'
         ];
+
+        ($duplicateBetween != 0) ? $timeMessage = 'Ada aktivitas di antara jam mulai dan selesai ini'
+                                 : $timeMessage = 'Sudah ada aktivitas pada jam ini';
+
+        $customMessages = [
+            'boolean' => $timeMessage,
+            'required' => ':attribute harus diisi',
+            'date_format' => 'Format jam harus JJ:MM',
+            'before' => 'Jam mulai harus sebelum jam selesai',
+            'after' => 'Jam selesai harus setelah jam mulai',
+        ];
         
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $customMessages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $validateData = $request->validate($rules);
+        $realisasiData = $request->validate($rules);
 
-        if (array_key_exists("link", $validateData)) 
-            $validateData['hasil_kerja'] = $validateData['link'];
+        if (array_key_exists("link", $realisasiData)) 
+            $realisasiData['hasil_kerja'] = $realisasiData['link'];
         else {
-            $validateData['hasil_kerja'] =  'Realisasi_'.time().'.'.$validateData['file']->getClientOriginalExtension();
-            $validateData['file']->move(public_path()."/document/realisasi/", $validateData['hasil_kerja']);
+            $realisasiData['hasil_kerja'] =  'Realisasi_'.time().'.'.$realisasiData['file']->getClientOriginalExtension();
+            $realisasiData['file']->move(public_path()."/document/realisasi/", $realisasiData['hasil_kerja']);
         }
 
-        $validateData['id_pelaksana'] = $validateData['tugas'];
-        $validateData['catatan'] = $request->catatan;
+        $realisasiData['id_pelaksana'] = $realisasiData['tugas'];
+        $realisasiData['catatan'] = $request->catatan;
+        if ($realisasiData['status'] == 2) {
+            $realisasiData['kegiatan'] = null;
+            $realisasiData['capaian'] = null;
+        }
 
-        RealisasiKinerja::create($validateData);
+        RealisasiKinerja::where('id_pelaksana', $realisasiData['tugas'])->where('status', 1)->update(['status' => 2]);
+        RealisasiKinerja::create($realisasiData);
+
+        Event::create([
+            'id_pelaksana' => $realisasiData['tugas'],
+            'start'        => $start,
+            'end'          => $end
+        ]);
+
 
         $request->session()->put('status', 'Berhasil mengisi realisasi.');
         $request->session()->put('alert-type', 'success');
@@ -199,21 +249,63 @@ class RealisasiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $realisasi = RealisasiKinerja::findOrfail($id);
+        $realisasi = RealisasiKinerja::findOrfail($id);        
+        $event = Event::where('id_pelaksana', $realisasi->id_pelaksana)
+                        ->where('start', $realisasi->tgl.' '.$realisasi->start)
+                        ->where('end', $realisasi->tgl.' '.$realisasi->end)->first();
+
+        $start = $request->tgl.' '.$request->start;
+        $end = $request->tgl.' '.$request->end;
+        //cek duplikat jam mulai
+        $duplicateStart = Event::whereNot('id', $event->id)
+                            ->whereRelation('pelaksana', function (Builder $query){   
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '<=', $start)->where('end', '>', $start)->count();
+        //cek duplikat jam selesai
+        $duplicateEnd = Event::whereNot('id', $event->id)
+                            ->whereRelation('pelaksana', function (Builder $query){  
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '<=', $end)->where('end', '>', $end)->count();
+        //cek jam antara jam mulai dan jam selesai
+        $duplicateBetween = Event::whereNot('id', $event->id)
+                            ->whereRelation('pelaksana', function (Builder $query){   
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '>=', $start)->where('end', '<', $end)->count();
 
         $rules = [
             'tgl'           => 'required|date_format:Y-m-d',
-            'start'         => 'required|date_format:H:i|before:end',
-            'end'           => 'required|date_format:H:i|after:start',
+            'start'         => [
+                                    'required',
+                                    'date_format:H:i',
+                                    'before:end',
+                                    Rule::when($duplicateStart != 0 || $duplicateBetween != 0, ['boolean'])
+                                ],
+            'end'           => [
+                                    'required',
+                                    'date_format:H:i',
+                                    'after:start',
+                                    Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
+                                ],
             'status'        => 'required',
-            'kegiatan'      => 'required',
-            'capaian'       => 'required',
+            'kegiatan'      => 'required_if:status,1',
+            'capaian'       => 'required_if:status,1',
             'edit-link'     => 'nullable|url',
             'edit-file'     => 'nullable|mimes:pdf|max:500',
             'catatan'       => 'required_if:status,2'
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        ($duplicateBetween != 0) ? $timeMessage = 'Ada aktivitas di antara jam mulai dan selesai ini'
+                                 : $timeMessage = 'Sudah ada aktivitas pada jam ini';
+
+        $customMessages = [
+            'boolean' => $timeMessage,
+            'required' => ':attribute harus diisi',
+            'date_format' => 'Format jam harus JJ:MM',
+            'before' => 'Jam mulai harus sebelum jam selesai',
+            'after' => 'Jam selesai harus setelah jam mulai',
+        ];
+        
+        $validator = Validator::make($request->all(), $rules, $customMessages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -231,8 +323,14 @@ class RealisasiController extends Controller
         }
 
         $validateData['catatan'] = $request->catatan;
+        if ($validateData['status'] == 2) {
+            $validateData['kegiatan'] = null;
+            $validateData['capaian'] = null;
+        }
         
         $realisasiEdit = RealisasiKinerja::where('id', $id)->update(Arr::except($validateData, ['edit-link', 'edit-file']));
+        
+        Event::where('id', $event->id)->update(['start' => $start, 'end' => $end]);
 
         $request->session()->put('status', 'Berhasil memperbarui data realisasi.');
         $request->session()->put('alert-type', 'success');
@@ -255,6 +353,11 @@ class RealisasiController extends Controller
         $realisasi = RealisasiKinerja::where('id', $id)->first();
         File::delete(public_path()."/document/realisasi/".$realisasi->hasil_kerja);
         $realisasi->delete();
+           
+        $event = Event::where('id_pelaksana', $realisasi->id_pelaksana)
+                        ->where('start', $realisasi->tgl.' '.$realisasi->start)
+                        ->where('end', $realisasi->tgl.' '.$realisasi->end)->first();
+        $event->delete();
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Dihapus!',

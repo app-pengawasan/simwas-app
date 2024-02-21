@@ -15,7 +15,7 @@
                             <div>
                                 <span class="badge alert-primary mr-2 mb-2">v2.0.0</span>
                             </div>
-                            <span>Feb 20, 2023</span>
+                            <span>Feb 20, 2024</span>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <h4 class="text-dark">Revision, Remove, Feat feature</h4>

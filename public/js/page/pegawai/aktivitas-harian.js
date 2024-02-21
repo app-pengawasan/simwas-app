@@ -40,6 +40,15 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 moment.locale('en');
                 if (eDate[4] === 0) return moment(eDate).format('ha');
                 else return moment(eDate).format('h.ma')
+            },
+            selectable: true,
+            select: function(selectionInfo) {
+                let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
+                let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
+                let selisih = Date.parse(endDate) - Date.parse(startDate);
+                //jika hanya memilih sehari pindah ke view day, jika memilih berhari-hari pindah ke view week
+                if (selisih == 86400000) calendar.changeView('timeGridDay', startDate); 
+                else calendar.changeView('timeGridWeek', startDate);
             }
         },
         timeGrid: {
@@ -59,7 +68,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        // alert(JSON.stringify())
+        let status;
+        if (info.event.extendedProps.status == 1) status = '<span class="badge badge-success">Selesai</span>';
+        else status = '<span class="badge badge-primary">Belum Selesai</span>';
         $(info.el).popover({ 
             sanitize: false,
             title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
@@ -70,38 +81,39 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             html: true,
             content: '<h3>' + info.event.title + '</h3>' + 
                      startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                     + '<br><br><h3>Aktivitas</h3>' + info.event.extendedProps.aktivitas,
+                     + '<br>Tim: ' + info.event.extendedProps.tim + '<br>Proyek: ' + info.event.extendedProps.proyek
+                     + '<br>Status Realisasi: ' + status,
         });
     },
-    selectable: true,
-    select: function(selectionInfo) {
-        document.forms['myform'].reset();
-        $('#error-id_pelaksana').text('');
-        $('#error-start').text('');
-        $('#error-end').text('');
-        $('#error-aktivitas').text('');
+    // selectable: true,
+    // select: function(selectionInfo) {
+    //     document.forms['myform'].reset();
+    //     $('#error-id_pelaksana').text('');
+    //     $('#error-start').text('');
+    //     $('#error-end').text('');
+    //     $('#error-aktivitas').text('');
         
-        let start = moment(selectionInfo.start).format("HH:mm");
-        let end = moment(selectionInfo.end).format("HH:mm");
-        let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
-        let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
-        let selisih = Date.parse(endDate) - Date.parse(startDate);
-        let view = selectionInfo.view.type;
+    //     let start = moment(selectionInfo.start).format("HH:mm");
+    //     let end = moment(selectionInfo.end).format("HH:mm");
+    //     let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
+    //     let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
+    //     let selisih = Date.parse(endDate) - Date.parse(startDate);
+    //     let view = selectionInfo.view.type;
 
-        //tidak boleh memilih lebih dari sehari sekaligus
-        if ((view != 'dayGridMonth' && startDate != endDate) || (view == 'dayGridMonth' && selisih != 86400000)) {
-            calendar.unselect();
-            return;
-        }
+    //     //tidak boleh memilih lebih dari sehari sekaligus
+    //     if ((view != 'dayGridMonth' && startDate != endDate) || (view == 'dayGridMonth' && selisih != 86400000)) {
+    //         calendar.unselect();
+    //         return;
+    //     }
 
-        $('#modal-create-aktivitas').modal('toggle');
-        if (start != '00:00') {
-            $('#start').val(start);
-            $('#end').val(end);
-        }
-        $('#tgl').val(startDate);
-        $('#modal-create-aktivitas-label').html('Tambah Aktivitas: ' + moment(selectionInfo.start).format('LL'));
-    },
+    //     $('#modal-create-aktivitas').modal('toggle');
+    //     if (start != '00:00') {
+    //         $('#start').val(start);
+    //         $('#end').val(end);
+    //     }
+    //     $('#tgl').val(startDate);
+    //     $('#modal-create-aktivitas-label').html('Tambah Aktivitas: ' + moment(selectionInfo.start).format('LL'));
+    // },
 });
 calendar.render();
 
@@ -121,6 +133,36 @@ $('.nav-link').on("click", function () {
         calendar.updateSize();
     }, 400);
 });
+
+// $(document).on({
+//     mouseenter: function() {
+//         let cellWidth = $('th.fc-col-header-cell').width();
+//         let cellHeight = $(this).height();
+//         let columnCount = $('th.fc-col-header-cell').children().length;
+
+//         if (!$(this).html()) {
+//             for (var i = 0; i < columnCount; i++) {
+//                 $(this).append('<td class="temp-cell" style="border:0px; height:' + (cellHeight - 1) + 'px;width:' + (cellWidth + 3) + 'px"></td>');
+//             }
+//         }
+//         $(this).children('td').each(function() {
+//             $(this).on('mouseenter', function() {
+//                 $(this).html('<div class="current-time h-100">+</div>');
+//             }).on('mouseleave', function() {
+//                 $(this).html('');
+//             });
+//         });
+
+//     },
+
+//     mouseleave: function() {
+//         $(this).children('.temp-cell').remove();
+//     }
+// }, 'td.fc-timegrid-slot.fc-timegrid-slot-lane');
+
+$(".fc-button-group").on("click", function (e) {
+    $('.temp-cell').remove();
+})
 
 $("#modal-create-aktivitas .close, #modal-create-aktivitas .btn-danger") .on("click", function (e) {
     document.forms['myform'].reset();

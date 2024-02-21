@@ -40,6 +40,26 @@
                     </li>
                 </ul>
             </li>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'data-kepegawaian' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fab fa-stumbleupon-circle"></i>
+                    <span>Data Kepegawaian Lainnya</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('analis-sdm/master-data-kepegawaian*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/master-data-kepegawaian">
+                            <span>Master Data Kepegawaian</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('analis-sdm/data-kepegawaian') || Request::is('analis-sdm/data-kepegawaian/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/data-kepegawaian">
+                            <span>Kelola Data Kepegawaian</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         @include('components.footer')
     </aside>

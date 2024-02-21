@@ -112,17 +112,17 @@
                                             <small id="error-status" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
                                         <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" id="kegiatan" name="kegiatan" required></textarea>
+                                            <textarea rows="5" class="form-control h-auto" id="kegiatan" name="kegiatan"></textarea>
                                             <small id="error-kegiatan" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="capaian">Capaian</label>
                                         <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" id="capaian" name="capaian" required></textarea>
+                                            <textarea rows="5" class="form-control h-auto" id="capaian" name="capaian"></textarea>
                                             <small id="error-capaian" class="text-danger"></small>
                                         </div>
                                     </div>

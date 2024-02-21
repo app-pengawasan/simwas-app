@@ -31,6 +31,7 @@
                                     </a>
                                 </div>
                             </div>
+                            @php $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja']; @endphp
                             <form enctype="multipart/form-data" name="myeditform" id="myeditform" class="needs-validation" novalidate="">
                                 <div class="card-body">
                                     <input type="hidden" name="id" id="id" value="{{ $realisasi->id }}">
@@ -48,7 +49,18 @@
                                         <label class="col-sm-2 col-form-label" for="tugas">Tugas</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" name="tugas" id="tugas" required disabled>
-                                                <option value="{{ $realisasi->id_pelaksana }}" selected>
+                                                @if ($realisasi->pelaksana->pt_jabatan == 3)
+                                                    @if ($realisasi->pelaksana->pt_hasil == 2)
+                                                        @php $hasil = 'Kertas Kerja'; @endphp
+                                                    @else
+                                                        @php $hasil = $hasilKerja[$realisasi->pelaksana->pt_hasil]; @endphp
+                                                    @endif
+                                                @elseif ($realisasi->pelaksana->pt_jabatan == 4)
+                                                    @php $hasil = 'Kertas Kerja'; @endphp
+                                                @else
+                                                    @php $hasil = $hasilKerja2[$realisasi->pelaksana->pt_hasil]; @endphp
+                                                @endif
+                                                <option value="{{ $realisasi->id_pelaksana }}" data-hasil="{{ $hasil }}" selected>
                                                     {{ $realisasi->pelaksana->rencanaKerja->tugas }}
                                                 </option>
                                             </select>
@@ -96,7 +108,7 @@
                                             <small id="error-status" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
                                         <div class="col-sm-10">
                                             <textarea rows="5" class="form-control h-auto" 
@@ -105,7 +117,7 @@
                                             <small id="error-kegiatan" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="capaian">Capaian</label>
                                         <div class="col-sm-10">
                                             <textarea rows="5" class="form-control h-auto" 

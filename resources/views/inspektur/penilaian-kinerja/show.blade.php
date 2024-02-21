@@ -12,13 +12,10 @@
 @endpush
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.inspektur-header')
+    @include('components.inspektur-sidebar')
 
     <div class="main-content">
-        <!-- Modal -->
-        @include('components.penilaian.create');
-        @include('components.penilaian.edit');
         <section class="section">
             <div class="section-header">
                 <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }}</h1>
@@ -29,15 +26,13 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/pegawai/nilai-berjenjang">
+                                    <a class="btn btn-primary" href="/inspektur/penilaian-kinerja">
                                         <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>
                             <center><div id='calendar' style="width: 90%" class="mt-5"></div></center>
                             <div class="mt-5">
-                                @include('components.flash')
-                                {{ session()->forget(['alert-type', 'status']) }}
                                 <table id="table-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
@@ -49,6 +44,7 @@
                                             <th>Bukti Dukung</th>
                                             <th>Catatan Pegawai</th>
                                             <th>Nilai</th>
+                                            <th>Penilai</th>
                                             <th>Catatan Penilai</th>
                                             <th>Aksi</th>
                                             <th class="never">Link Bukti Dukung</th>
@@ -85,35 +81,14 @@
                                                 </td>
                                                 <td>{{ $realisasi->catatan }}</td>
                                                 <td>{{ $realisasi->nilai }}</td>
+                                                <td>{{ $realisasi->getPenilai->name ?? '' }}</td>
                                                 <td>{{ $realisasi->catatan_penilai }}</td>
                                                 <td>
-                                                    <div class="btn-group dropdown">
-                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
-                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-right shadow-lg">
-                                                            <a href="/pegawai/nilai-berjenjang/detail/{{ $realisasi->id }}" 
-                                                            class="dropdown-item">
-                                                                <i class="fas fa-circle-info text-primary mr-2"></i>
-                                                                Detail
-                                                            </a>
-                                                            @if ($realisasi->nilai == '')
-                                                                <a class="dropdown-item nilai-btn" href="javascript:void(0)"
-                                                                data-id="{{ $realisasi->id }}" data-toggle="modal" 
-                                                                data-target="#modal-create-nilai">
-                                                                    <i class="fas fa-circle-plus text-success mr-2"></i>
-                                                                    Nilai
-                                                                </a>
-                                                            @else
-                                                                <a class="dropdown-item edit-btn" href="javascript:void(0)"
-                                                                data-id="{{ $realisasi->id }}" data-toggle="modal" 
-                                                                data-target="#modal-edit-nilai">
-                                                                    <i class="fas fa-edit text-warning mr-2"></i>
-                                                                    Edit Nilai
-                                                                </a>
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                                    <a class="btn btn-primary"
+                                                        href="/inspektur/penilaian-kinerja/detail/{{ $realisasi->id }}"
+                                                        style="width: 42px">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
@@ -159,5 +134,5 @@
     <script>
         var events = @json($events);
     </script>
-    <script src="{{ asset('js/page/pegawai/penilaian-berjenjang.js') }}"></script>
+    <script src="{{ asset('js/page/inspektur-penilaian-kinerja.js') }}"></script>
 @endpush

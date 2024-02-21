@@ -106,16 +106,34 @@ class InspekturRencanaJamKerjaController extends Controller
     public function rekap()
     {
         $this->authorize('inspektur');
+        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
+                            $query->where('status', 6);
+                        })->groupBy('id_pegawai')->select('id_pegawai as id')
+                        ->selectRaw('sum('.implode('+', $bulans).') as total');
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
+                            $query->where('status', 6);
+                        })->whereRelation('user', function (Builder $query){
+                            $query->where('unit_kerja', auth()->user()->unit_kerja);
+                        })->groupBy('id_pegawai')->select('id_pegawai as id')
+                        ->selectRaw('sum('.implode('+', $bulans).') as total');
         }
+
+        foreach ($bulans as $bulan) {
+            $tugas = $tugas->selectRaw("SUM(".$bulan.") as ".$bulan);
+        }
+        $tugas = $tugas->get();
+        
+        $jam_kerja = $pegawai->toBase()->merge($tugas)->groupBy('id');
 
         return view('inspektur.rencana-jam-kerja.rekap',[
             'type_menu'     => 'rencana-jam-kerja'
-        ])->with('pegawai', $pegawai);
+        ])->with('jam_kerja', $jam_kerja);
     }
 
     public function pool()
@@ -124,12 +142,12 @@ class InspekturRencanaJamKerjaController extends Controller
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                             $query->where('status', 6);
                         })->get();
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                             $query->where('status', 6);
                         })
                         ->whereRelation('user', function (Builder $query){
@@ -141,21 +159,21 @@ class InspekturRencanaJamKerjaController extends Controller
         $count = $tugas
                 ->groupBy('id_pegawai')
                 ->map(function ($items) {
+                        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
+                        $jam_kerja = 0;
+                        foreach ($bulans as $bulan) {
+                            $jam_kerja += $items->sum($bulan);
+                        }
                         return [
-                            'jumlah_tim' => $items->unique('rencanaKerja.id_timkerja')->count(),
+                            'id' => $items[0]->id_pegawai,
+                            'jumlah_tim' => $items->unique('rencanaKerja.proyek')->count(),
                             'jumlah_tugas' => $items->count(),
+                            'jam_kerja'   => $jam_kerja,
+                            'hari_kerja'  => round($jam_kerja / 7.5, 2)
                         ];
-                  })->toArray(); 
+                  });
 
-        $countall = []; 
-
-        foreach ($pegawai as $p) {
-            $countall[$p->id] = [
-                'nama' => $p->name,
-                'jumlah_tim' => isset($count[$p->id]) ? $count[$p->id]['jumlah_tim'] : 0,
-                'jumlah_tugas' => isset($count[$p->id]) ? $count[$p->id]['jumlah_tugas'] : 0,
-            ];
-        }
+        $countall = $pegawai->toBase()->merge($count)->groupBy('id');
         
         return view('inspektur.rencana-jam-kerja.pool',[
             'type_menu'     => 'rencana-jam-kerja'
@@ -173,7 +191,8 @@ class InspekturRencanaJamKerjaController extends Controller
         $tugas = PelaksanaTugas::where('id_pegawai', $id)
                 ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
                     $query->where('status', 6);
-                })->get();
+                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
+                  ->get();
         
         $pegawai = User::where('id', $id)->first();
 
