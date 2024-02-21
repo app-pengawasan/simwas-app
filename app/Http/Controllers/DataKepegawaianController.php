@@ -151,6 +151,7 @@ class DataKepegawaianController extends Controller
     */
     public function import(Request $request)
     {
+        $this->authorize('analis_sdm');
         $validateFile = $request->validate([
             'file' => 'required|mimes::xls,xlsx'
         ]);
@@ -206,6 +207,7 @@ class DataKepegawaianController extends Controller
     }
 
     public function export() {
+        $this->authorize('analis_sdm');
         $spreadsheet = IOFactory::load(public_path()."/document/data-kepegawaian-inspektorat-utama.xlsx");
 
         $sheetpegawai = $spreadsheet->getSheet(1);

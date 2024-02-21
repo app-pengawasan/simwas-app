@@ -12,12 +12,13 @@
 @endpush
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
+    @include('components.inspektur-header')
+    @include('components.inspektur-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
+                
             </div>
             <div class="row">
                 <div class=" col-md-12">
@@ -25,7 +26,7 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="{{ url()->previous() }}">
+                                    <a class="btn btn-primary" href="/inspektur/realisasi-jam-kerja/pool/{{ $tugas->user->id }}">
                                         <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>

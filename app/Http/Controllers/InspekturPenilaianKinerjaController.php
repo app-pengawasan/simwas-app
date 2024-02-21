@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\NilaiInspektur;
@@ -56,17 +55,23 @@ class InspekturPenilaianKinerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('inspektur');
+
         //realisasi untuk dinilai
-        $realisasiDinilai = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
-                                $query->where('unit_kerja', auth()->user()->unit_kerja);
-                            })->get();
-        $jamRealisasi = $realisasiDinilai->groupBy('pelaksana.user.id')
+        if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
+            $realisasiDinilai = RealisasiKinerja::get();
+        } else {
+            $realisasiDinilai = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
+                                    $query->where('unit_kerja', auth()->user()->unit_kerja);
+                                })->get();
+        }
+        $jamRealisasi = $realisasiDinilai->groupBy('pelaksana.id_pegawai')
                         ->map(function ($items) {
                             $realisasi_jam = 0;
                             foreach ($items as $realisasi) {
-                                $start = new DateTime($realisasi->start);
-                                $end = new DateTime($realisasi->end);
-                                $realisasi_jam += $start->diff($end)->h;
+                                $start = $realisasi->start;
+                                $end = $realisasi->end;
+                                $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                             }
                             return [
                                 'realisasi_jam' => $items->groupBy(function ($item) {
@@ -74,9 +79,9 @@ class InspekturPenilaianKinerjaController extends Controller
                                                             })->map(function ($item) {
                                                                 $realisasi_jam = 0;
                                                                 foreach ($item as $realisasi) {
-                                                                    $start = new DateTime($realisasi->start);
-                                                                    $end = new DateTime($realisasi->end);
-                                                                    $realisasi_jam += $start->diff($end)->h;
+                                                                    $start = $realisasi->start;
+                                                                    $end = $realisasi->end;
+                                                                    $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                                                 }
                                                                 return $realisasi_jam;
                                                             })->toArray(), //realisasi jam kerja per bulan
@@ -85,7 +90,7 @@ class InspekturPenilaianKinerjaController extends Controller
                         })->toArray();
 
         $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
-        $tugasCount = $realisasiDinilai->where('status', 1)->groupBy('pelaksana.user.id')
+        $tugasCount = $realisasiDinilai->where('status', 1)->groupBy('pelaksana.id_pegawai')
                         ->map(function ($items) use ($bulans) {
                             $rencana_jam = 0;
                             foreach ($bulans as $bulan) {
@@ -156,6 +161,8 @@ class InspekturPenilaianKinerjaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('inspektur');
+
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
 
         $validateData = request()->validate($rule);
@@ -182,6 +189,8 @@ class InspekturPenilaianKinerjaController extends Controller
      */
     public function show($pegawai_dinilai, $bulan)
     {
+        $this->authorize('inspektur');
+
         //tugas yang akan dinilai
         $tugas = PelaksanaTugas::where('id_pegawai', $pegawai_dinilai)
             ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
@@ -204,9 +213,9 @@ class InspekturPenilaianKinerjaController extends Controller
                             ->map(function ($items) {
                                     $realisasi_jam = 0;
                                     foreach ($items as $realisasi) {
-                                        $start = new DateTime($realisasi->start);
-                                        $end = new DateTime($realisasi->end);
-                                        $realisasi_jam += $start->diff($end)->h;
+                                        $start = $realisasi->start;
+                                        $end = $realisasi->end;
+                                        $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                     }
                                     return $realisasi_jam;
                             });
@@ -240,6 +249,8 @@ class InspekturPenilaianKinerjaController extends Controller
 
     public function detail($id)
     {
+        $this->authorize('inspektur');
+
         $realisasi = RealisasiKinerja::findOrfail($id);
 
         return view('components.realisasi-kinerja.show', [
@@ -248,7 +259,7 @@ class InspekturPenilaianKinerjaController extends Controller
             'status'        => $this->status,
             'colorText'     => $this->colorText,
             'hasilKerja'    => $this->hasilKerja,
-            'kembali'       => 'nilai'
+            'kembali'       => 'nilai-inspektur'
             ])
             ->with('realisasi', $realisasi);
     }    
@@ -273,6 +284,8 @@ class InspekturPenilaianKinerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('inspektur');
+
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
 
         $validateData = request()->validate($rule);
@@ -290,6 +303,8 @@ class InspekturPenilaianKinerjaController extends Controller
     }
 
     public function getNilai($id_pegawai, $bulan){
+        $this->authorize('inspektur');
+        
         $nilai = NilaiInspektur::where('id_pegawai', $id_pegawai)->where('bulan', $bulan)->get();
 
         return response()->json([

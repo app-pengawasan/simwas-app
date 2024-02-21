@@ -86,10 +86,15 @@ class RealisasiController extends Controller
                         $query->where('status', 6);
                     })->get();
         
-        //mengambil tim unik
+        //mengambil tim dan proyek unik
+        $proyek = [];
         $tim = [];
         foreach ($tugasSaya as $ts) {
-            $tim[$ts->rencanaKerja->timkerja->id_timkerja] = $ts->rencanaKerja->timkerja->nama;
+            $tim[$ts->rencanaKerja->proyek->timkerja->id_timkerja] = $ts->rencanaKerja->timkerja->nama;
+            $proyek[$ts->rencanaKerja->proyek->id] = [
+                'nama_proyek' => $ts->rencanaKerja->proyek->nama_proyek,
+                'tim'    => $ts->rencanaKerja->proyek->timkerja->id_timkerja
+            ];
         }
 
         return view('pegawai.realisasi.create',
@@ -98,7 +103,8 @@ class RealisasiController extends Controller
                 'tugasSaya'     => $tugasSaya,
                 'status'        => $this->status,
                 'hasilKerja'    => $this->hasilKerja,
-                'timkerja'      => $tim
+                'timkerja'      => $tim,
+                'proyeks'       => $proyek
             ]
         );
     }

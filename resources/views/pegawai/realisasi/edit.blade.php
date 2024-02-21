@@ -26,7 +26,7 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/pegawai/realisasi" id="btn-back">
+                                    <a class="btn btn-primary" href="{{  url()->previous() }}" id="btn-back">
                                         <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
                                     </a>
                                 </div>
@@ -39,8 +39,18 @@
                                         <label class="col-sm-2 col-form-label" for="tim">Tim</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" name="tim" id="tim" required disabled>
-                                                <option value="{{ $realisasi->pelaksana->rencanaKerja->timkerja->id_timkerja }}" selected>
-                                                    {{ $realisasi->pelaksana->rencanaKerja->timkerja->nama }}
+                                                <option value="{{ $realisasi->pelaksana->rencanaKerja->proyek->timkerja->id_timkerja }}" selected>
+                                                    {{ $realisasi->pelaksana->rencanaKerja->proyek->timkerja->nama }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="proyek">Proyek</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="proyek" id="proyek" required disabled>
+                                                <option value="{{ $realisasi->pelaksana->rencanaKerja->proyek->id }}" selected>
+                                                    {{ $realisasi->pelaksana->rencanaKerja->proyek->nama_proyek }}
                                                 </option>
                                             </select>
                                         </div>

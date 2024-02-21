@@ -32,9 +32,10 @@ $(function () {
 });
 
 $("#tugas").prop("disabled", true); //disable pilihan tugas
-$('.disabled').show(); //show pilihan "Pilih Tugas"
+$("#proyek").prop("disabled", true); //disable pilihan proyek
+$('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
-if ($('#status').val() != '1') $('.status_change').hide();
+if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
 
 //hide clockpicker kalo discroll
 $(document).on("scroll", function (e) {
@@ -44,12 +45,22 @@ $(document).on("scroll", function (e) {
 
 $("#tim").on("change", function () {
     $("#tugas option").hide(); //hide option" tugas
-    $('.disabled').show(); //show pilihan "Pilih Tugas"
-    $('.disabled').prop("selected", true);
+    $("#tugas").prop("disabled", true); //disable pilihan tugas
+    $("#proyek option").hide(); //hide option" proyek
+    $('.proyek-dis').show(); //show pilihan "Pilih Proyek"
+    $('.proyek-dis').prop("selected", true);
     $("#kegiatan").val(''); //clear kegiatan
     $("#capaian").val(''); //clear capaian
+    $("#proyek").prop("disabled", false); //enable pilihan proyek
+    $(`#proyek option[data-tim="${$(this).val()}"]`).show(); //show option proyek sesuai tim yang dipilih
+});
+
+$("#proyek").on("change", function () {
+    $("#tugas option").hide(); //hide option" tugas
+    $('.tugas-dis').show(); //show pilihan "Pilih Tugas"
+    $('.tugas-dis').prop("selected", true);
     $("#tugas").prop("disabled", false); //enable pilihan tugas
-    $(`#tugas option[data-tim="${$(this).val()}"]`).show(); //show option tugas sesuai tim yang dipilih
+    $(`#tugas option[data-proyek="${$(this).val()}"]`).show(); //show option proyek sesuai tim yang dipilih
 });
 
 $("#tugas").on("change", function () {

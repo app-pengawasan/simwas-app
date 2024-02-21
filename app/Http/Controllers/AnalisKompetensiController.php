@@ -114,6 +114,8 @@ class AnalisKompetensiController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('analis_sdm');
+        
         $kompetensi = Kompetensi::where('id', $id)->get();
 
         return response()->json([

@@ -14,6 +14,7 @@ use App\Http\Controllers\KirimController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\NamaPpController;
+use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SlSekreController;
 use App\Http\Controllers\TimKerjaController;
@@ -60,7 +61,7 @@ use App\Http\Controllers\AnggaranRencanaKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
-use App\Http\Controllers\ProyekController;
+use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -234,7 +235,13 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('/inspektur/rencana-jam-kerja/rekap', [InspekturRencanaJamKerjaController::class, 'rekap']);
     Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
     Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
-    Route::get('/inspektur/rencana-kinerja/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+    Route::get('/inspektur/rencana-jam-kerja/detail/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+
+    //Realisasi Jam Kerja
+    Route::get('/inspektur/realisasi-jam-kerja/rekap', [InspekturRealisasiJamKerjaController::class, 'rekap']);
+    Route::get('/inspektur/realisasi-jam-kerja/pool', [InspekturRealisasiJamKerjaController::class, 'pool']);
+    Route::get('/inspektur/realisasi-jam-kerja/pool/{id}', [InspekturRealisasiJamKerjaController::class, 'show']);
+    Route::get('/inspektur/realisasi-jam-kerja/detail/{id}', [InspekturRealisasiJamKerjaController::class, 'detailTugas']);
 
     //Penilaian Kinerja Pegawai
     Route::resource('inspektur/penilaian-kinerja', InspekturPenilaianKinerjaController::class);
@@ -249,6 +256,7 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * */
     Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->name('dashboard');
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::get('/pegawai/rencana-jam-kerja', [PegawaiRencanaKerjaController::class, 'rencanaJamKerja']);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
 
     // Ketua Tim

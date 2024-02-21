@@ -18,7 +18,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rencana Hari Kerja {{ $pegawai->name }}</h1>
+                <h1>Rencana Jam Kerja {{ $tugas[0]->user->name }}</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
@@ -77,7 +77,7 @@
                                                 <td>{{ $jabatan[$t->pt_jabatan] }}</td>
                                                 <td>
                                                     <a class="btn btn-primary"
-                                                        href="/inspektur/rencana-kinerja/{{ $t->id_pelaksana }}"
+                                                        href="/inspektur/rencana-jam-kerja/detail/{{ $t->id_pelaksana }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
@@ -101,7 +101,7 @@
                                         <tfoot class="font-weight-bold">
                                             <tr>
                                                 <td colspan="18" class="text-center">Total</td>
-                                                <td>{{ $total }}</td>
+                                                <td class="total" value="{{ $total }}">{{ $total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -171,7 +171,7 @@
         $('.hari-kerja').on('click', function() {
             $(this).addClass('disabled');
             $(".jam-kerja").removeClass('disabled');
-            $(".convert").each(function() {
+            $(".convert, .dataTables_scrollFootInner .total").each(function() {
                 $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
             $('#title').text('Rencana Hari Kerja');
@@ -179,7 +179,7 @@
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
             $(".hari-kerja").removeClass('disabled');
-            $(".convert").each(function() {
+            $(".convert, .dataTables_scrollFootInner .total").each(function() {
                 $(this).text($(this).attr('value'));
             });
             $('#title').text('Rencana Jam Kerja');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rencana Jam Kerja')
+@section('title', 'Realisasi Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -18,10 +18,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rencana Jam Kerja</h1>
+                <h1>Realisasi Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rencana Jam Kerja</div>
+                    <div class="breadcrumb-item">Realisasi Jam Kerja</div>
                 </div>
             </div>
 
@@ -56,7 +56,7 @@
                                                 <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                 <td>
                                                     <a class="btn btn-primary"
-                                                        href="/inspektur/rencana-jam-kerja/pool/{{ $key }}"
+                                                        href="/inspektur/realisasi-jam-kerja/pool/{{ $key }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>

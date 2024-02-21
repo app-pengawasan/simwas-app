@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
@@ -92,9 +91,9 @@ class PenilaianBerjenjangController extends Controller
                             ->map(function ($items) {
                                 $realisasi_jam = 0;
                                 foreach ($items as $realisasi) {
-                                    $start = new DateTime($realisasi->start);
-                                    $end = new DateTime($realisasi->end);
-                                    $realisasi_jam += $start->diff($end)->h;
+                                    $start = $realisasi->start;
+                                    $end = $realisasi->end;
+                                    $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                 }
                                 return [
                                     'realisasi_jam' => $items->groupBy(function ($item) {
@@ -102,9 +101,9 @@ class PenilaianBerjenjangController extends Controller
                                                                 })->map(function ($item) {
                                                                     $realisasi_jam = 0;
                                                                     foreach ($item as $realisasi) {
-                                                                        $start = new DateTime($realisasi->start);
-                                                                        $end = new DateTime($realisasi->end);
-                                                                        $realisasi_jam += $start->diff($end)->h;
+                                                                        $start = $realisasi->start;
+                                                                        $end = $realisasi->end;
+                                                                        $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                                                     }
                                                                     return $realisasi_jam;
                                                                 })->toArray(), //realisasi jam kerja per bulan
@@ -239,9 +238,9 @@ class PenilaianBerjenjangController extends Controller
                             ->map(function ($items) {
                                     $realisasi_jam = 0;
                                     foreach ($items as $realisasi) {
-                                        $start = new DateTime($realisasi->start);
-                                        $end = new DateTime($realisasi->end);
-                                        $realisasi_jam += $start->diff($end)->h;
+                                        $start = $realisasi->start;
+                                        $end = $realisasi->end;
+                                        $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                     }
                                     return $realisasi_jam;
                             });

@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\PelaksanaTugas;
+use App\Models\RealisasiKinerja;
 use Illuminate\Database\Eloquent\Builder;
 
-class InspekturRencanaJamKerjaController extends Controller
+class InspekturRealisasiJamKerjaController extends Controller
 {
     protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
 
@@ -99,33 +100,48 @@ class InspekturRencanaJamKerjaController extends Controller
     public function rekap()
     {
         $this->authorize('inspektur');
-        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                            $query->where('status', 6);
-                        })->groupBy('id_pegawai')->select('id_pegawai as id')
-                        ->selectRaw('sum('.implode('+', $bulans).') as total');
+            $realisasiDone = RealisasiKinerja::where('status', 1)->select('id_pelaksana');
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                            $query->where('status', 6);
-                        })->whereRelation('user', function (Builder $query){
-                            $query->where('unit_kerja', auth()->user()->unit_kerja);
-                        })->groupBy('id_pegawai')->select('id_pegawai as id')
-                        ->selectRaw('sum('.implode('+', $bulans).') as total');
-        }
-
-        foreach ($bulans as $bulan) {
-            $tugas = $tugas->selectRaw("SUM(".$bulan.") as ".$bulan);
-        }
-        $tugas = $tugas->get();
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
+                                $query->where('unit_kerja', auth()->user()->unit_kerja);
+                            })->where('status', 1)->select('id_pelaksana');
+        } 
         
-        $jam_kerja = $pegawai->toBase()->merge($tugas)->groupBy('id');
+        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
+                                        ->get()->groupBy('pelaksana.id_pegawai');
 
-        return view('inspektur.rencana-jam-kerja.rekap',[
-            'type_menu'     => 'rencana-jam-kerja'
+        $jam_kerja = $realisasi->map(function ($items) {
+                                    $total_jam = 0;
+                                    foreach ($items as $realisasi) {
+                                        $start = $realisasi->start;
+                                        $end = $realisasi->end;
+                                        $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                    }
+                                    return [
+                                        'id' => $items[0]->pelaksana->id_pegawai,
+                                        'realisasi_jam' => $items->groupBy(function ($item) {
+                                                                        return date("m",strtotime($item->tgl));
+                                                                    })->map(function ($item) {
+                                                                        $realisasi_jam = 0;
+                                                                        foreach ($item as $realisasi) {
+                                                                            $start = $realisasi->start;
+                                                                            $end = $realisasi->end;
+                                                                            $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                                                        }
+                                                                        return $realisasi_jam;
+                                                                    }), //realisasi jam kerja per bulan
+                                        'total' => $total_jam //realisasi jam kerja total
+                                    ];
+                                });
+        
+        $jam_kerja = $pegawai->toBase()->merge($jam_kerja)->groupBy('id'); 
+
+        return view('inspektur.realisasi-jam-kerja.rekap',[
+            'type_menu'     => 'realisasi-jam-kerja'
         ])->with('jam_kerja', $jam_kerja);
     }
 
@@ -135,42 +151,39 @@ class InspekturRencanaJamKerjaController extends Controller
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                            $query->where('status', 6);
-                        })->get();
+            $realisasiDone = RealisasiKinerja::where('status', 1)->select('id_pelaksana');
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                            $query->where('status', 6);
-                        })
-                        ->whereRelation('user', function (Builder $query){
-                            $query->where('unit_kerja', auth()->user()->unit_kerja);
-                        })
-                        ->get();
-        }
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
+                                $query->where('unit_kerja', auth()->user()->unit_kerja);
+                            })->where('status', 1)->select('id_pelaksana');
+        } 
         
-        $count = $tugas
-                ->groupBy('id_pegawai')
+        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
+                                        ->get()->groupBy('pelaksana.id_pegawai');
+        
+        $count = $realisasi
                 ->map(function ($items) {
-                        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
-                        $jam_kerja = 0;
-                        foreach ($bulans as $bulan) {
-                            $jam_kerja += $items->sum($bulan);
+                        $total_jam = 0;
+                        foreach ($items as $realisasi) {
+                            $start = $realisasi->start;
+                            $end = $realisasi->end;
+                            $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                         }
                         return [
-                            'id' => $items[0]->id_pegawai,
-                            'jumlah_tim' => $items->unique('rencanaKerja.proyek.timkerja')->count(),
-                            'jumlah_proyek' => $items->unique('rencanaKerja.proyek')->count(),
-                            'jumlah_tugas' => $items->count(),
-                            'jam_kerja'   => $jam_kerja,
-                            'hari_kerja'  => round($jam_kerja / 7.5, 2)
+                            'id' => $items[0]->pelaksana->id_pegawai,
+                            'jumlah_tim' => $items->unique('pelaksana.rencanaKerja.proyek.timkerja')->count(),
+                            'jumlah_proyek' => $items->unique('pelaksana.rencanaKerja.proyek')->count(),
+                            'jumlah_tugas' => $items->unique('pelaksana')->count(),
+                            'jam_kerja'   => $total_jam,
+                            'hari_kerja'  => round($total_jam / 7.5, 2)
                         ];
                   });
 
         $countall = $pegawai->toBase()->merge($count)->groupBy('id');
         
-        return view('inspektur.rencana-jam-kerja.pool',[
-            'type_menu'     => 'rencana-jam-kerja'
+        return view('inspektur.realisasi-jam-kerja.pool',[
+            'type_menu'     => 'realisasi-jam-kerja'
         ])->with('countall', $countall);
     }
 
@@ -184,16 +197,46 @@ class InspekturRencanaJamKerjaController extends Controller
     {
         $this->authorize('inspektur');
 
-        $tugas = PelaksanaTugas::where('id_pegawai', $id)
-                ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
-                    $query->where('status', 6);
-                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
-                  ->get();
+        $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query) use ($id) {
+                            $query->where('id_pegawai', $id);
+                        })->where('status', 1)->select('id_pelaksana');
 
-        return view('inspektur.rencana-jam-kerja.show',[
-            'type_menu'     => 'rencana-jam-kerja',
+        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
+                    ->get()->groupBy('id_pelaksana');
+
+        $count = $realisasi
+                ->map(function ($items) {
+                        $total_jam = 0;
+                        foreach ($items as $realisasi) {
+                            $start = $realisasi->start;
+                            $end = $realisasi->end;
+                            $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                        }
+                        return [
+                            'pegawai' => $items[0]->pelaksana->user->name,
+                            'tim' => $items[0]->pelaksana->rencanaKerja->proyek->timkerja->nama,
+                            'proyek' => $items[0]->pelaksana->rencanaKerja->proyek->nama_proyek,
+                            'tugas' => $items[0]->pelaksana->rencanaKerja->tugas,
+                            'jabatan' => $items[0]->pelaksana->pt_jabatan,
+                            'realisasi_jam' => $items->groupBy(function ($item) {
+                                                            return date("m",strtotime($item->tgl));
+                                                        })->map(function ($item) {
+                                                            $realisasi_jam = 0;
+                                                            foreach ($item as $realisasi) {
+                                                                $start = $realisasi->start;
+                                                                $end = $realisasi->end;
+                                                                $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                                            }
+                                                            return $realisasi_jam;
+                                                        }), //realisasi jam kerja per bulan
+                            'total' => $total_jam //realisasi jam kerja total
+                        ];
+                    }); 
+
+        return view('inspektur.realisasi-jam-kerja.show',[
+            'type_menu'     => 'realisasi-jam-kerja',
             'jabatan'       => $this->jabatan,
-        ])->with('tugas', $tugas);
+        ])->with('count', $count);
     }
     
     public function detailTugas($id)
@@ -202,8 +245,8 @@ class InspekturRencanaJamKerjaController extends Controller
         
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
 
-        return view('inspektur.rencana-jam-kerja.detail-tugas', [
-            'type_menu'     => 'rencana-jam-kerja',
+        return view('inspektur.realisasi-jam-kerja.detail-tugas', [
+            'type_menu'     => 'realisasi-jam-kerja',
             'unitKerja'     => $this->unitkerja,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,

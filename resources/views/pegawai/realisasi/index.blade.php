@@ -58,7 +58,7 @@
                                                 <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
                                                 </td>
-                                                <td class="text-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</td>
+                                                <td><span class="badge badge-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</span></td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
                                                         <a class="btn btn-primary"

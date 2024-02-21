@@ -47,6 +47,11 @@
                         class="{{ Request::is('pegawai/rencana-kinerja') || Request::is('pegawai/rencana-kinerja/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/pegawai/rencana-kinerja">Tugas Saya</a>
                     </li>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/rencana-jam-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/rencana-jam-kerja">Jam Kerja</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
