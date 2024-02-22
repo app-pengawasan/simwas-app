@@ -6,6 +6,9 @@ use App\Models\EvaluasiIkuUnitKerja;
 use App\Models\TargetIkuUnitKerja;
 use App\Http\Requests\StoreEvaluasiIkuUnitKerjaRequest;
 use App\Http\Requests\UpdateEvaluasiIkuUnitKerjaRequest;
+use App\Models\ObjekIkuUnitKerja;
+use App\Models\RealisasiIkuUnitKerja;
+use App\Models\User;
 
 class EvaluasiIkuUnitKerjaController extends Controller
 {
@@ -30,8 +33,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function index()
     {
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3])->get();
-
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->get();
         return view('perencana.evaluasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
@@ -48,7 +50,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
     public function create()
     {
         return view('perencana.evaluasi-iku.create', [
-            'type_menu' => 'evaluasi-iku-unit-kerja',
+            'type_menu' => 'iku-unit-kerja',
             'unitKerja' => $this->unitKerja,
         ]);
     }
@@ -61,7 +63,47 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function store(StoreEvaluasiIkuUnitKerjaRequest $request)
     {
-        //
+        // dd($request->all());
+        $undanganDoc = $request->file('undangan');
+        $notulenDoc = $request->file('notulen');
+        $laporanDoc = $request->file('laporan_kinerja');
+        $daftarHadirDoc = $request->file('daftar_hadir');
+
+        // change file name to be unique
+        $undanganDocName = time() . '_' . $request->id . '_undangan' . '.' . $undanganDoc->getClientOriginalExtension();
+        $notulenDocName = time() . '_' . $request->id . '_notulen' . '.' . $notulenDoc->getClientOriginalExtension();
+        $laporanDocName = time() . '_' . $request->id . '_laporan' . '.' . $laporanDoc->getClientOriginalExtension();
+        $daftarHadirDocName = time() . '_' . $request->id . '_daftar_hadir' . '.' . $daftarHadirDoc->getClientOriginalExtension();
+
+        // move file to storage
+
+        EvaluasiIkuUnitKerja::create([
+            'id_target_iku_unit_kerja' => $request->id,
+            'kendala' => $request->kendala,
+            'solusi' => $request->solusi,
+            'tindak_lanjut' => $request->tindak_lanjut,
+            'id_pic' => $request->pic_tindak_lanjut,
+            'uraian_tindak_lanjut' => $request->bukti_tindak_lanjut,
+            'link_tindak_lanjut' => $request->link_bukti_tindak_lanjut,
+            'batas_waktu_tindak_lanjut' => $request->batas_waktu,
+            'dokumen_undangan_path' => 'storage/evaluasi-iku/undangan/' . $undanganDocName,
+            'dokumen_notulen_path' => 'storage/evaluasi-iku/notulen/' . $notulenDocName,
+            'dokumen_laporan_path' => 'storage/evaluasi-iku/laporan/' . $laporanDocName,
+            'dokumen_daftar_hadir_path' => 'storage/evaluasi-iku/daftar-hadir/' . $daftarHadirDocName,
+        ]);
+        // update status target iku unit kerja to 4
+        $targetIkuUnitKerja = TargetIkuUnitKerja::find($request->id);
+        $targetIkuUnitKerja->status = 4;
+        $targetIkuUnitKerja->save();
+
+
+        $undanganDoc->move(public_path('storage/evaluasi-iku/undangan'), $undanganDocName);
+        $notulenDoc->move(public_path('storage/evaluasi-iku/notulen'), $notulenDocName);
+        $laporanDoc->move(public_path('storage/evaluasi-iku/laporan'), $laporanDocName);
+        $daftarHadirDoc->move(public_path('storage/evaluasi-iku/daftar-hadir'), $daftarHadirDocName);
+
+        return redirect()->route('evaluasi-iku-unit-kerja.index');
+
     }
 
     /**
@@ -70,9 +112,21 @@ class EvaluasiIkuUnitKerjaController extends Controller
      * @param  \App\Models\EvaluasiIkuUnitKerja  $evaluasiIkuUnitKerja
      * @return \Illuminate\Http\Response
      */
-    public function show(EvaluasiIkuUnitKerja $evaluasiIkuUnitKerja)
+    public function show($id)
     {
-        //
+        $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
+        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
+        $evaluasiIkuUnitKerja = EvaluasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->first();
+
+
+        return view('perencana.evaluasi-iku.show', [
+            'type_menu' => 'iku-unit-kerja',
+            'targetIkuUnitKerja' => $targetIkuUnitKerja,
+            'objekIkuUnitKerja' => $objekIkuUnitKerja,
+            'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
+            'evaluasiIkuUnitKerja' => $evaluasiIkuUnitKerja,
+        ]);
     }
 
     /**
@@ -84,10 +138,17 @@ class EvaluasiIkuUnitKerjaController extends Controller
     public function edit($id)
     {
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        return view('perencana.evaluasi-iku.create', [
-            'type_menu' => 'evaluasi-iku-unit-kerja',
+        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $users = User::all();
+        // dd($users);
+
+        return view('perencana.evaluasi-iku.edit', [
+            'type_menu' => 'iku-unit-kerja',
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
+            'objekIkuUnitKerja' => $objekIkuUnitKerja,
+            'kabupaten' => $this->kabupaten,
+            'users' => $users,
         ]);
     }
 

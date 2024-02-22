@@ -206,21 +206,27 @@ class TargetIkuUnitKerjaController extends Controller
         $status = request()->input('status');
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
-        if($realisasiIkuUnitKerja == null) {
-            return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Realisasi IKU Unit Kerja Belum Diisi')
-            ->with('alert-type', 'danger');
-        }
-        TargetIkuUnitKerja::where('id', $targetIkuUnitKerja->id)
-            ->update([
-                'status' => $status,
-            ]);
+
         if ($status == 2) {
+            TargetIkuUnitKerja::where('id', $targetIkuUnitKerja->id)
+        ->update([
+            'status' => $status,
+        ]);
             return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Realisasi')
             ->with('alert-type', 'success');
         }
         else if ($status == 3) {
+            if($realisasiIkuUnitKerja == null) {
+                return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Realisasi IKU Unit Kerja Belum Diisi')
+                ->with('alert-type', 'danger');
+            } else{
+                TargetIkuUnitKerja::where('id', $targetIkuUnitKerja->id)
+        ->update([
+            'status' => $status,
+        ]);
             return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Evaluasi')
             ->with('alert-type', 'success');
+            }
         }
 
     }

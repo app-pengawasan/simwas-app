@@ -13,6 +13,5 @@ class RealisasiIkuUnitKerja extends Model
     protected $guarded = ['id'];
     public $incrementing = false;
 
-    use HasFactory;
 
 }

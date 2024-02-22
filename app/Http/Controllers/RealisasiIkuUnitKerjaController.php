@@ -31,7 +31,7 @@ class RealisasiIkuUnitKerjaController extends Controller
      */
     public function index()
     {
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3])->get();
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->get();
 
         return view('perencana.realisasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
@@ -77,7 +77,7 @@ class RealisasiIkuUnitKerjaController extends Controller
         }
         $dokumenSumberPath = $request->file('dokumen_sumber');
         // change file name
-        $dokumenSumberPathName = 'realisasi-iku-unit-kerja-' . time();
+        $dokumenSumberPathName = 'realisasi-iku-unit-kerja-' . time() . '.' . $dokumenSumberPath->getClientOriginalExtension();
         // store file
         $dokumenSumberPath->move(public_path('storage/realisasi-iku-unit-kerja'), $dokumenSumberPathName);
         // create

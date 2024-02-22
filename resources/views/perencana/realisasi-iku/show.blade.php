@@ -33,6 +33,128 @@
 @include('components.header')
 @include('components.perencana-sidebar')
 <div class="main-content">
+    {{-- Modal --}}
+    <div class="modal fade" id="targetIKU" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="targetIKULabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="targetIKULabel">Target IKU</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body overflow-scroll">
+                    <div class="form-group col overflow-scroll">
+                        <table class="table table-responsive-md table-bordered overflow-scroll" id="table-iku">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="text-center align-middle" style="width: 30px;">No</th>
+                                    <th rowspan="2" class="text-center align-middle" style="min-width: 250px;">Satuan</th>
+                                    <th rowspan="2" class="text-center align-middle" style="width: 75px; min-width:90px">Y</th>
+                                    <th colspan="4" class="text-center align-middle">X (Triwulan)</th>
+                                    <th colspan="4" class="text-center align-middle">Target Kinerja
+                                        (Triwulan)</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center align-middle" style="min-width: 80px;">1</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">2</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">3</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">4</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">1</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">2</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">3</th>
+                                    <th class="text-center align-middle" style="min-width: 80px;">4</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @foreach ($objekIkuUnitKerja as $key => $value)
+                                <tr id="row-1">
+                                    <td class="text-center align-middle">{{ $key+1 }}</td>
+                                    <td class="text-left">
+                                        <select class="form-control" name="{{ 'satuan-row'.$loop->iteration }}" class="satuan">
+                                            @foreach ($kabupaten as $key => $value1)
+                                            <option {{ $value->satuan == $value1 ? 'selected' : '' }} value="{{ $value->satuan }}">
+                                                {{ $value->satuan }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input value="{{ $value->nilai_y_target }}" type="number"
+                                            name="{{ 'nilai-y-row'.$loop->iteration }}" id="{{ 'nilai-y-row'.$loop->iteration }}"
+                                            class="form-control nilai-y"></td>
+                                    <td><input value="{{ $value->target_triwulan_1 }}" type="number"
+                                            name="{{ 'triwulan1-row'.$loop->iteration }}" id="{{ 'triwulan1-row'.$loop->iteration }}"
+                                            class="form-control triwulan1"></td>
+                                    <td><input value="{{ $value->target_triwulan_2 }}" type="number"
+                                            name="{{ 'triwulan2-row'.$loop->iteration }}" id="{{ 'triwulan2-row'.$loop->iteration }}"
+                                            class="form-control triwulan2"></td>
+                                    <td><input value="{{ $value->target_triwulan_3 }}" type="number"
+                                            name="{{ 'triwulan3-row'.$loop->iteration }}" id="{{ 'triwulan3-row'.$loop->iteration }}"
+                                            class="form-control triwulan3"></td>
+                                    <td><input value="{{ $value->target_triwulan_4 }}" type="number"
+                                            name="{{ 'triwulan4-row'.$loop->iteration }}" id="{{ 'triwulan4-row'.$loop->iteration }}"
+                                            class="form-control triwulan4"></td>
+
+                                    <td><input disabled type="number" name="target-triwulan1-row1"
+                                            id="{{ 'target-triwulan1-row'.$loop->iteration }}" class="form-control target-triwulan1"></td>
+                                    <td><input disabled type="number" name="target-triwulan2-row1"
+                                            id="{{ 'target-triwulan2-row'.$loop->iteration }}" class="form-control target-triwulan2"></td>
+                                    <td><input disabled type="number" name="target-triwulan3-row1"
+                                            id="{{ 'target-triwulan3-row'.$loop->iteration }}" class="form-control target-triwulan3"></td>
+                                    <td><input disabled type="number" name="target-triwulan4-row1"
+                                            id="{{ 'target-triwulan4-row'.$loop->iteration }}" class="form-control target-triwulan4"></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    {{-- total --}}
+                                    <td class="text-center align-middle" colspan="2" style="text-align: center; font-weight: bold;">
+                                        Total:</td>
+                                    <td><input disabled type="number" name="total-y" id="total-y" value="0" class="form-control"></td>
+                                    <td><input disabled type="number" name="total-triwulan1" id="total-triwulan1" value="0"
+                                            class="form-control"></td>
+                                    <td><input disabled type="number" name="total-triwulan2" id="total-triwulan2" value="0"
+                                            class="form-control"></td>
+                                    <td><input disabled type="number" name="total-triwulan3" id="total-triwulan3" value="0"
+                                            class="form-control"></td>
+                                    <td><input disabled type="number" name="total-triwulan4" id="total-triwulan4" value="0"
+                                            class="form-control"></td>
+
+                                    <td><input disabled type="number" name="target-total-triwulan1" id="target-total-triwulan1" value="0"
+                                            class="form-control">
+                                    </td>
+                                    <td><input disabled type="number" name="target-total-triwulan2" id="target-total-triwulan2" value="0"
+                                            class="form-control">
+                                    </td>
+                                    <td><input disabled type="number" name="target-total-triwulan3" id="target-total-triwulan3" value="0"
+                                            class="form-control">
+                                    </td>
+                                    <td><input disabled type="number" name="target-total-triwulan4" id="target-total-triwulan4" value="0"
+                                            class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; font-weight: bold;" colspan="7">
+                                        Target Kinerja (Persen)</td>
+                                    <td><input disabled type="number" name="presentase-target-triwulan1" id="presentase-target-triwulan1"
+                                            value="0" class="form-control"></td>
+                                    <td><input disabled type="number" name="presentase-target-triwulan2" id="presentase-target-triwulan2"
+                                            value="0" class="form-control"></td>
+                                    <td><input disabled type="number" name="presentase-target-triwulan3" id="presentase-target-triwulan3"
+                                            value="0" class="form-control"></td>
+                                    <td><input disabled type="number" name="presentase-target-triwulan4" id="presentase-target-triwulan4"
+                                            value="0" class="form-control"></td>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <section class="section">
         <div class="section-header">
             <h1>Realisasi IKU Unit Kerja</h1>
@@ -40,6 +162,7 @@
                 <div class="breadcrumb-item">Realisasi IKU Unit Kerja</div>
             </div>
         </div>
+
         <div class="section-body">
             <div class="row">
                 <div class="col-12">
@@ -98,6 +221,13 @@
                                         </div>
                                     </div>
                                     @endif
+                                    <div class="form-group
+                                        d-flex justify-content-end">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#targetIKU">Lihat Target
+                                            IKU</button>
+                                    </div>
+
 
 
                                     <div class="form-group col">

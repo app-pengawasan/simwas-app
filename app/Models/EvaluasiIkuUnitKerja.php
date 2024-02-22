@@ -4,8 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class EvaluasiIkuUnitKerja extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
+    public $incrementing = false;
+
 }

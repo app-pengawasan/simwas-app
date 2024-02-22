@@ -61,14 +61,18 @@
                                     {{ $ti->status }}
                                 </td>
                                 <td>
+                                    @if ($ti->status == '4')
                                     <a href="{{ route('evaluasi-iku-unit-kerja.show', $ti->id) }}"
                                         class="btn btn-primary btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    @endif
+                                    @if ($ti->status == '3')
                                     <a href="{{ route('evaluasi-iku-unit-kerja.edit', $ti->id) }}"
                                         class="btn btn-primary btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    @endif
                                     {{-- <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
                                     method="post" class="d-inline">
                                     @csrf
