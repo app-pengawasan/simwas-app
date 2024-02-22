@@ -126,11 +126,11 @@ class RealisasiController extends Controller
         //cek duplikat jam selesai
         $duplicateEnd = Event::whereRelation('pelaksana', function (Builder $query){   
                             $query->where('id_pegawai', auth()->user()->id);
-                        })->where('start', '<=', $end)->where('end', '>', $end)->count();
+                        })->where('start', '<', $end)->where('end', '>=', $end)->count();
         //cek jam antara jam mulai dan jam selesai
         $duplicateBetween = Event::whereRelation('pelaksana', function (Builder $query){   
                                 $query->where('id_pegawai', auth()->user()->id);
-                            })->where('start', '>=', $start)->where('end', '<', $end)->count();
+                            })->where('start', '>=', $start)->where('end', '<=', $end)->count();
         
         $rules = [
             'tugas'         => 'required',
@@ -188,13 +188,37 @@ class RealisasiController extends Controller
             $realisasiData['capaian'] = null;
         }
 
+        //create realisasi
         RealisasiKinerja::where('id_pelaksana', $realisasiData['tugas'])->where('status', 1)->update(['status' => 2]);
         RealisasiKinerja::create($realisasiData);
 
+        $check_tugas = Event::where('id_pelaksana', $realisasiData['tugas'])->first();
+
+        if ($check_tugas == null) { //jika tugas belum ada aktivitas, cari warna event baru untuk kalender
+            //kecualikan warna muda
+            $exclude = range(50, 197); 
+            while(in_array(($hue = rand(0,359)), $exclude));
+            
+            //jika ada minimal 212 tugas (jumlah warna max = 212) maka warna boleh tidak unik
+            if (Event::distinct()->count('id_pelaksana') >= 212) $color = 'hsl('.$hue.',100%,50%)'; 
+            else { //jika jumlah tugas < 212 warna harus unik
+                $check_color_duplicate = Event::where('color', 'hsl('.$hue.',100%,50%)')->first();
+
+                if ($check_color_duplicate != null) { 
+                    while ($check_color_duplicate->color == 'hsl('.$hue.',100%,50%)') //selagi warna masih duplikat, terus cari warna
+                        while(in_array(($hue = rand(0,359)), $exclude));
+                } 
+
+                $color = 'hsl('.$hue.',100%,50%)';
+            }
+        } else $color = $check_tugas->color; //jika tugas sudah ada aktivitas, ambil warnanya
+
+        //create event kalender
         Event::create([
             'id_pelaksana' => $realisasiData['tugas'],
             'start'        => $start,
-            'end'          => $end
+            'end'          => $end,
+            'color'        => $color,
         ]);
 
 
@@ -271,12 +295,12 @@ class RealisasiController extends Controller
         $duplicateEnd = Event::whereNot('id', $event->id)
                             ->whereRelation('pelaksana', function (Builder $query){  
                                 $query->where('id_pegawai', auth()->user()->id);
-                            })->where('start', '<=', $end)->where('end', '>', $end)->count();
+                            })->where('start', '<', $end)->where('end', '>=', $end)->count();
         //cek jam antara jam mulai dan jam selesai
         $duplicateBetween = Event::whereNot('id', $event->id)
                             ->whereRelation('pelaksana', function (Builder $query){   
                                 $query->where('id_pegawai', auth()->user()->id);
-                            })->where('start', '>=', $start)->where('end', '<', $end)->count();
+                            })->where('start', '>=', $start)->where('end', '<=', $end)->count();
 
         $rules = [
             'tgl'           => 'required|date_format:Y-m-d',
@@ -318,12 +342,13 @@ class RealisasiController extends Controller
         }
 
         $validateData = $request->validate($rules);
+        
+        File::delete(public_path()."/document/realisasi/".$realisasi->hasil_kerja);
 
         if (array_key_exists("edit-link", $validateData) && $validateData['edit-link'] != '') 
             $validateData['hasil_kerja'] = $validateData['edit-link'];
 
         if (array_key_exists("edit-file", $validateData) && $validateData['edit-file'] != '') {
-            File::delete(public_path()."/document/realisasi/".$realisasi->hasil_kerja);
             $validateData['hasil_kerja'] =  'Realisasi_'.time().'.'.$validateData['edit-file']->getClientOriginalExtension();
             $validateData['edit-file']->move(public_path()."/document/realisasi/", $validateData['hasil_kerja']);
         }

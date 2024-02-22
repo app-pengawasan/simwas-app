@@ -34,6 +34,7 @@ class AktivitasHarianController extends Controller
             $event->tim = $event->pelaksana->rencanaKerja->proyek->timkerja->nama;
             $event->proyek = $event->pelaksana->rencanaKerja->proyek->nama_proyek;
             $event->status = $realisasi->status;
+            $event->hasil_kerja = $realisasi->hasil_kerja;
         }
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
@@ -243,7 +244,16 @@ class AktivitasHarianController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        Event::destroy($id);
+        $event = Event::findOrFail($id);
+
+        RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
+            ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
+            ->where('start', date_format(date_create($event->start), 'H:i:s'))
+            ->where('end', date_format(date_create($event->end), 'H:i:s'))
+            ->delete();
+
+        $event->delete();
+
         $request->session()->put('status', 'Berhasil menghapus data aktivitas.');
         $request->session()->put('alert-type', 'success');
 

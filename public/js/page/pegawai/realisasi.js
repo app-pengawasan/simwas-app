@@ -25,6 +25,7 @@ $(function () {
                     },
                 },
             ],
+            order: [[8, 'desc']]
         })
         .buttons()
         .container()

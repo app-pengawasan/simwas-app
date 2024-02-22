@@ -47,13 +47,14 @@
                                             <th>Bukti Dukung</th>
                                             <th>Aksi</th>
                                             <th class="never">Link Bukti Dukung</th>
+                                            <th class="never">created_at</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($realisasi as $r)
                                             <tr>
-                                                <td>{{ $r->pelaksana->rencanaKerja->timkerja->nama }}</td>
-                                                <td></td>
+                                                <td>{{ $r->pelaksana->rencanaKerja->proyek->timkerja->nama }}</td>
+                                                <td>{{ $r->pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->tugas }}</td>
                                                 <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
@@ -95,6 +96,7 @@
                                                         {{ $r->hasil_kerja }}
                                                     @endif
                                                 </td>
+                                                <td>{{ $r->created_at }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

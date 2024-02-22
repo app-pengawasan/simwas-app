@@ -68,22 +68,32 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        let status;
-        if (info.event.extendedProps.status == 1) status = '<span class="badge badge-success">Selesai</span>';
-        else status = '<span class="badge badge-primary">Belum Selesai</span>';
-        $(info.el).popover({ 
-            sanitize: false,
-            title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
-                   '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
-            trigger: 'click',
-            placement: 'right',
-            // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
-            html: true,
-            content: '<h3>' + info.event.title + '</h3>' + 
-                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                     + '<br>Tim: ' + info.event.extendedProps.tim + '<br>Proyek: ' + info.event.extendedProps.proyek
-                     + '<br>Status Realisasi: ' + status,
-        });
+        let status; let tag;
+        $.get(document.location.origin + '/document/realisasi/' + info.event.extendedProps.hasil_kerja)
+            .done(function() { 
+                tag = '<a href="' + this.url + '" target="_blank">';
+                desc();
+            }).fail(function() { 
+                tag = '<a href ="' + info.event.extendedProps.hasil_kerja + '" target="_blank">';
+                desc();
+            }) 
+        let desc = () => {
+            if (info.event.extendedProps.status == 1) status = tag + '<span class="badge badge-success">Selesai</span></a>';
+            else status = tag + '<span class="badge badge-primary">Belum Selesai</span></a>';
+            $(info.el).popover({ 
+                sanitize: false,
+                title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
+                    '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
+                trigger: 'click',
+                placement: 'right',
+                // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+                html: true,
+                content: '<h3>' + info.event.title + '</h3>' + 
+                        startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
+                        + '<br>Tim: ' + info.event.extendedProps.tim + '<br>Proyek: ' + info.event.extendedProps.proyek
+                        + '<br>Status Realisasi: ' + status,
+            });
+        }
     },
     // selectable: true,
     // select: function(selectionInfo) {
