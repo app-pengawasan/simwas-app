@@ -19,13 +19,9 @@ return new class extends Migration
             $table->string('unit_kerja', 100);
             $table->integer('jumlah_objek');
             $table->string('nama_kegiatan', 100);
-            $table->timestamps();
-        });
-        Schema::create('objek_iku_unit_kerjas', function (Blueprint $table) {
-            $table->ulid('id')->unique()->primary()->default(Ulid::generate());
-            $table->string('nama_objek', 100);
-            $table->string('satuan', 100);
-            $table->foreignId('target_iku_unit_kerja_id')->constrained('target_iku_unit_kerjas')->onDelete('cascade');
+            $table->string('status', 100);
+            $table->string('user_id', 100);
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

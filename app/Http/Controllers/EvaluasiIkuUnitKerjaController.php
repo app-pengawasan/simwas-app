@@ -3,11 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\EvaluasiIkuUnitKerja;
+use App\Models\TargetIkuUnitKerja;
 use App\Http\Requests\StoreEvaluasiIkuUnitKerjaRequest;
 use App\Http\Requests\UpdateEvaluasiIkuUnitKerjaRequest;
 
 class EvaluasiIkuUnitKerjaController extends Controller
 {
+    protected $kabupaten = [
+        'Kabupaten Aceh Barat',
+        'Kabupaten Aceh Barat Daya',
+        'Kabupaten Aceh Besar',
+        'Kabupaten Aceh Jaya',
+        'Kabupaten Aceh Selatan',
+    ];
+    protected $unitKerja = [
+        '8000'    => 'Inspektorat Utama',
+        '8010'    => 'Bagian Umum Inspektorat Utama',
+        '8100'    => 'Inspektorat Wilayah I',
+        '8200'    => 'Inspektorat Wilayah II',
+        '8300'    => 'Inspektorat Wilayah III',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +30,14 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function index()
     {
-        //
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3])->get();
+
+        return view('perencana.evaluasi-iku.index', [
+            'type_menu' => 'iku-unit-kerja',
+            'kabupaten' => $this->kabupaten,
+            'unitKerja' => $this->unitKerja,
+            'targetIkuUnitKerja' => $targetIkuUnitKerja,
+        ]);
     }
 
     /**
@@ -25,7 +47,10 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function create()
     {
-        //
+        return view('perencana.evaluasi-iku.create', [
+            'type_menu' => 'evaluasi-iku-unit-kerja',
+            'unitKerja' => $this->unitKerja,
+        ]);
     }
 
     /**
@@ -56,9 +81,14 @@ class EvaluasiIkuUnitKerjaController extends Controller
      * @param  \App\Models\EvaluasiIkuUnitKerja  $evaluasiIkuUnitKerja
      * @return \Illuminate\Http\Response
      */
-    public function edit(EvaluasiIkuUnitKerja $evaluasiIkuUnitKerja)
+    public function edit($id)
     {
-        //
+        $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
+        return view('perencana.evaluasi-iku.create', [
+            'type_menu' => 'evaluasi-iku-unit-kerja',
+            'unitKerja' => $this->unitKerja,
+            'targetIkuUnitKerja' => $targetIkuUnitKerja,
+        ]);
     }
 
     /**

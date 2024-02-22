@@ -18,7 +18,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'target-iku-unit-kerja' ? 'active active-dropdown' : '' }}">
+            <li class="nav-item dropdown {{ $type_menu === 'iku-unit-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-solid fa-chart-pie"></i>
                     <span>IKU Unit Kerja</span>
@@ -30,13 +30,15 @@
                             <span>Target</span>
                         </a>
                     </li>
-                    <li class="{{ Request::is('') || Request::is('pimpinan/rencana-kinerja/*') ? 'active' : '' }}">
-                        <a class="nav-link" href="/pimpinan/rencana-kinerja">
+                    <li
+                        class="{{ Request::is('perencana/realisasi-iku-unit-kerja/*') || Request::is('perencana/realisasi-iku-unit-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('realisasi-iku-unit-kerja.index') }}">
                             <span>Realisasi</span>
                         </a>
                     </li>
-                    <li class="{{ Request::is('') || Request::is('pimpinan/rencana-kinerja/*') ? 'active' : '' }}">
-                        <a class="nav-link" href="/pimpinan/rencana-kinerja">
+                    <li
+                        class="{{ Request::is('perencana/evaluasi-iku-unit-kerja/*') || Request::is('perencana/evaluasi-iku-unit-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('evaluasi-iku-unit-kerja.index') }}">
                             <span>Evaluasi</span>
                         </a>
                     </li>

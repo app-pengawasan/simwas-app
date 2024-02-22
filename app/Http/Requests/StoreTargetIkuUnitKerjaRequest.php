@@ -24,7 +24,9 @@ class StoreTargetIkuUnitKerjaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'unit-kerja' => 'required|string|max:100',
+            'jumlah-objek' => 'required|integer',
+            'nama-kegiatan' => 'required|string|max:100',
         ];
     }
 }

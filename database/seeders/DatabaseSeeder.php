@@ -41,9 +41,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'email'     => '222011395@stis.ac.id',
-            'nip'       => '222011395',
-            'name'      => 'Hendra Kusuma',
+            'email'     => 'kudaponiterbang@gmail.com',
+            'nip'       => '593110222',
+            'name'      => 'nubisub',
             'pangkat'   => 'IV/a',
             'unit_kerja' => '8200',
             'jabatan'   => 12,

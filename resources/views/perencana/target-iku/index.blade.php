@@ -33,14 +33,78 @@
                         {{ session()->forget(['alert-type', 'status']) }}
                         <div class="d-flex">
                             <div class="buttons ml-auto my-2">
-                                <a type="button" class="btn btn-primary" href="{{ route('target-iku-unit-kerja.create') }}">
+                                <a type="button" class="btn btn-primary"
+                                    href="{{ route('target-iku-unit-kerja.create') }}">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
                             </div>
                         </div>
                         <div class="">
+                            <table class="table table-bordered table-striped display responsive">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Unit Kerja</th>
+                                        <th>Nama Kegiatan</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($targetIkuUnitKerja as $ti)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $ti->unit_kerja }}</td>
+                                        <td>{{ $ti->nama_kegiatan }}</td>
+                                        <td>
+                                            {{ $ti->status }}
+                                        </td>
+                                        <td>
+                                            {{-- <a href="{{ route('target-iku-unit-kerja.edit', $ti->id) }}"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a> --}}
+                                            {{-- delete --}}
+                                            @if ($ti->status == 1)
+                                            <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
+                                                method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="btn btn-danger btn-sm" type="submit">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            {{-- kirim ke realisasi --}}
+                                            <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
+                                                method="post" class="d-inline">
+                                                @csrf
+                                                @method('put')
+                                                <input type="hidden" name="status" value="2">
+                                                <button class="btn btn-success btn-sm" type="submit">
+                                                    <i class="fas fa-paper-plane"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+                                            <a href="{{ route('target-iku-unit-kerja.show', $ti->id) }}"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {{-- kirim ke realisasi --}}
 
+                                            {{-- <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
+                                            method="post" class="d-inline">
+                                            @csrf
+                                            @method('delete')
+                                            <button class="btn btn-danger btn-sm" type="submit">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            </form> --}}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

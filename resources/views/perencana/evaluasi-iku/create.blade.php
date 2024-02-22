@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ajukan Usulan Surat Lain')
+@section('title', 'Form Evaluasi IKU')
 
 @push('style')
 <!-- CSS Libraries -->
@@ -14,13 +14,13 @@
 
 @section('main')
 @include('components.header')
-@include('components.pegawai-sidebar')
+@include('components.perencana-sidebar')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Form Pembuatan Target IKU</h1>
+            <h1>Form Evaluasi IKU</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item">Form Pembuatan Target IKU</div>
+                <div class="breadcrumb-item">Form Evaluasi IKU</div>
             </div>
         </div>
         <div class="section-body">
@@ -31,6 +31,16 @@
 
                             <form action="/" method="post" enctype="multipart/form-data">
                                 @csrf
+                                <div class="form-group col">
+                                    <label for="nama-kegiatan">Unit Kerja</label>
+                                    <div>
+                                        <select disabled name="unit-kerja" class="form-control">
+                                            @foreach ($unitKerja as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group col">
                                     <label for="nama-kegiatan">Nama Kegiatan</label>
                                     <div>
@@ -175,6 +185,37 @@
                                     <input id="bukti-tindak-lanjut" type="text" class="form-control"
                                         name="bukti-tindak-lanjut" required placeholder="Masukkan bukti tindak lanjut">
                                 </div>
+                                <div class="form-group col">
+                                    <label for="link-bukti-tindak-lanjut">Link Bukti Tindak Lanjut</label>
+                                    <input id="link-bukti-tindak-lanjut" type="text" class="form-control" name="link-bukti-tindak-lanjut" required
+                                        placeholder="Masukkan link/tautan bukti tindak lanjut, contoh : https://www.bukti-pendukung.com">
+                                </div>
+                                {{-- file upload  undangan (pdf) --}}
+                                <div class="form-group col">
+                                    <label for="undangan">Dokumen Undangan</label>
+                                    <input type="file" class="form-control" name="undangan" id="undangan"
+                                        required accept="application/pdf">
+                                </div>
+                                {{-- daftar hadir pdf --}}
+                                <div class="form-group col">
+                                    <label for="daftar-hadir">Dokumen Daftar Hadir</label>
+                                    <input type="file" class="form-control" name="daftar-hadir" id="daftar-hadir"
+                                        required accept="application/pdf">
+                                </div>
+                                {{-- notulen --}}
+                                <div class="form-group col">
+                                    <label for="notulen">Dokumen Notulen</label>
+                                    <input type="file" class="form-control" name="notulen" id="notulen"
+                                        required accept="application/pdf">
+                                </div>
+                                {{-- laporan kinerja --}}
+                                <div class="form-group col">
+                                    <label for="laporan-kinerja">Dokumen Laporan Kinerja</label>
+                                    <input type="file" class="form-control" name="laporan-kinerja" id="laporan-kinerja"
+                                        required accept="application/pdf">
+                                </div>
+
+
 
                                 <button class="btn btn-primary" type="submit">Button</button>
                             </form>
@@ -195,7 +236,7 @@
 <script src="{{ asset('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
 <script src="{{ asset('library/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
 <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
-<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
+{{-- <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script> --}}
 <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
 
 <script>

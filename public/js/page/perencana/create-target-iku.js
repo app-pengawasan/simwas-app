@@ -1,6 +1,10 @@
 $(document).ready(function () {
+    // $(function () {
+    //     $("select").selectpicker();
+    // });
+    // $("select").selectpicker();
+    calculateTotal();
     localStorage.setItem("mini-sidebar", "true");
-
     // Add Objek
     $("#add-objek").on("click", function () {
         var jumlahObjek = $("#jumlah-objek").val();
@@ -181,8 +185,8 @@ $(document).ready(function () {
         $("#presentase-target-triwulan4").val(0);
     });
 
-    // change total every change in triwulan
-    $("table tbody").on("change", "input", function () {
+    // create function to calculate total
+    function calculateTotal() {
         // get id of changed input
         var id = $(this).attr("id");
         // if not ''
@@ -243,11 +247,13 @@ $(document).ready(function () {
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
+        console.log('jumlahObjek', jumlahObjek);
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
                 accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
                 $("#target-triwulan" + j + "-row" + i).val(accumulatedTriwulan);
+                console.log('triwulan', j, '-row' + i + ' = ', accumulatedTriwulan);
             }
             accumulatedTriwulan = 0;
         }
@@ -319,5 +325,10 @@ $(document).ready(function () {
         $("#presentase-target-triwulan4").val(
             ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2)
         );
+    }
+
+    // change total every change in triwulan
+    $("table tbody").on("change", "input", function () {
+        calculateTotal();
     });
 });

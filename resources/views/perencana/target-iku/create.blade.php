@@ -3,6 +3,9 @@
 @section('title', 'Buat Target IKU Unit Kerja')
 
 @push('style')
+<link rel="stylesheet" href="{{ asset('library') }}/select2/dist/css/select2.min.css">
+<link rel="stylesheet" href="{{ asset('library') }}/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+<link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 <style>
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
@@ -51,7 +54,7 @@
                                     <div class="form-group col">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
-                                            <select name="unit-kerja" class="form-control">
+                                            <select class="form-control" name="unit-kerja" data-placeholder="Pilih Unit kerja" data-allow-clear="1">
                                                 @foreach ($unitKerja as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
@@ -101,8 +104,8 @@
                                             <tbody>
                                                 <tr id="row-1">
                                                     <td class="text-center align-middle">1</td>
-                                                    <td>
-                                                        <select name="satuan-row1" class="form-control satuan">
+                                                    <td class="text-left">
+                                                        <select class="form-control" name="satuan-row1" class="satuan">
                                                             @foreach ($kabupaten as $key => $value)
                                                             <option value="{{ $value }}">{{ $value }}</option>
                                                             @endforeach
@@ -203,5 +206,9 @@
 
 @push('scripts')
 <!-- JS Libraies -->
+{{-- <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>d --}}
+
+<script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/perencana/create-target-iku.js') }}"></script>
+<!-- Latest compiled and minified CSS -->
 @endpush
