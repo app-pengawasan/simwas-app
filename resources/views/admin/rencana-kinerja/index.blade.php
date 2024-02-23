@@ -6,9 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
     <link
+
         href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.4/af-2.5.3/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/cr-1.6.2/date-1.4.1/fc-4.2.2/fh-3.3.2/kt-2.9.0/r-2.4.1/rg-1.3.1/rr-1.3.3/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/sr-1.2.2/datatables.min.css"
         rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library') }}/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 @endpush
 
 @section('main')
@@ -21,7 +24,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Kelola Rencana Kinerja</h1>
-                
+
             </div>
             <div class="row">
                 <div class=" col-md-12">
@@ -96,6 +99,7 @@
 
 @push('scripts')
     <!-- JS Libraies -->
+    <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>

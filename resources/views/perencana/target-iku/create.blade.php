@@ -39,7 +39,10 @@
         <div class="section-header">
             <h1>Form Pembuatan Target IKU</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item">Form Pembuatan Target IKU</div>
+                <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('target-iku-unit-kerja.index') }}">Target IKU Unit
+                        Kerja</a></div>
+                <div class="breadcrumb-item">Buat Target IKU Unit Kerja</div>
             </div>
         </div>
         <div class="section-body">
@@ -54,7 +57,8 @@
                                     <div class="form-group col">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
-                                            <select class="form-control" name="unit-kerja" data-placeholder="Pilih Unit kerja" data-allow-clear="1">
+                                            <select class="form-control" name="unit-kerja"
+                                                data-placeholder="Pilih Unit kerja" data-allow-clear="1">
                                                 @foreach ($unitKerja as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach

@@ -33,6 +33,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('perencana');
+
         $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->get();
         return view('perencana.evaluasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
@@ -49,6 +51,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function create()
     {
+        $this->authorize('perencana');
+
         return view('perencana.evaluasi-iku.create', [
             'type_menu' => 'iku-unit-kerja',
             'unitKerja' => $this->unitKerja,
@@ -114,6 +118,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('perencana');
+
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
         $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
@@ -126,6 +132,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
             'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
             'evaluasiIkuUnitKerja' => $evaluasiIkuUnitKerja,
+            'kabupaten' => $this->kabupaten,
         ]);
     }
 
@@ -137,8 +144,11 @@ class EvaluasiIkuUnitKerjaController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('perencana');
+
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
         $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
         $users = User::all();
         // dd($users);
 
@@ -147,6 +157,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
+            'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
             'kabupaten' => $this->kabupaten,
             'users' => $users,
         ]);

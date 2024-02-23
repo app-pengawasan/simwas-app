@@ -31,6 +31,7 @@ class TargetIkuUnitKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('perencana');
         $targetIkuUnitKerja = TargetIkuUnitKerja::all();
         // dd($targetIkuUnitKerja);
         return view('perencana.target-iku.index', [
@@ -46,6 +47,8 @@ class TargetIkuUnitKerjaController extends Controller
      */
     public function create()
     {
+        $this->authorize('perencana');
+
         return view('perencana.target-iku.create', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
@@ -108,6 +111,8 @@ class TargetIkuUnitKerjaController extends Controller
     public function show(TargetIkuUnitKerja $targetIkuUnitKerja)
     {
         // dd($targetIkuUnitKerja);
+        $this->authorize('perencana');
+
         $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
         // dd($objekIkuUnitKerja);
         return view('perencana.target-iku.show', [
@@ -128,6 +133,8 @@ class TargetIkuUnitKerjaController extends Controller
     public function edit(TargetIkuUnitKerja $targetIkuUnitKerja)
     {
         // dd($targetIkuUnitKerja);
+        $this->authorize('perencana');
+
         $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
         // dd($objekIkuUnitKerja);
         return view('perencana.target-iku.edit', [

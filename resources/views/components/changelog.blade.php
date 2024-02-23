@@ -20,9 +20,17 @@
                         <div class="d-flex flex-column flex-grow-1">
                             <h4 class="text-dark">Revision, Remove, Feat feature</h4>
                             <ul>
-                                <li>Revisi Modul Perencanaan dan Realisasi Kinerja Pegawai</li>
-                                <li>Remove Modul Pengelolaan Dokumen</li>
-                                <li>Feat Modul Surat Srikandi</li>
+                                <li>Revised feature: Modul Perencanaan dan Realisasi Kinerja Pegawai</li>
+                                    <ul>
+                                        <li>Add feature: Master Hasil Kerja, Unsur, Subunsur</li>
+                                        <li>Add feature: Proyek Perencanaan Kinerja</li>
+                                        <li>Add feature: Jam Kerja Pegawai</li>
+                                        <li>Add field to tim kerja</li>
+                                    </ul>
+                                <li>Remove feature: Modul Pengelolaan Dokumen</li>
+                                <li>Added feature: Modul Permintaan dan Pengarsipan Surat Srikandi</li>
+                                <li>Added feature: Modul Evaluasi Kinerja Unit Kerja</li>
+                                <li>Enhanched App: User Interface, Security</li>
                             </ul>
                         </div>
                     </div>

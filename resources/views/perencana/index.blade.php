@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Perencana')
+@section('title', 'Dashboard Perencana')
 
 @push('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,7 +16,9 @@
 @include('components.perencana-sidebar')
 <div class="main-content">
     <section class="section">
-
+        <div class="section-header">
+            <h1>Perencana Dashboard</h1>
+        </div>
     </section>
 </div>
 @endsection

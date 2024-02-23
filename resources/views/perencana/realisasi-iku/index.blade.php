@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Target IKU Unit Kerja')
+@section('title', 'Realisasi IKU Unit Kerja')
 
 @push('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -20,6 +20,10 @@
     <section class="section">
         <div class="section-header">
             <h1>Kelola Realisasi IKU Unit Kerja</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
+                <div class="breadcrumb-item">Realisasi IKU Unit Kerja</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">

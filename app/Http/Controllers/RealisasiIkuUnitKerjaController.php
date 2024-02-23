@@ -31,6 +31,8 @@ class RealisasiIkuUnitKerjaController extends Controller
      */
     public function index()
     {
+        $this->authorize('perencana');
+
         $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->get();
 
         return view('perencana.realisasi-iku.index', [
@@ -48,6 +50,8 @@ class RealisasiIkuUnitKerjaController extends Controller
      */
     public function create()
     {
+        $this->authorize('perencana');
+
         return view('perencana.realisasi-iku.create', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
@@ -116,6 +120,8 @@ class RealisasiIkuUnitKerjaController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('perencana');
+
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
         $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();

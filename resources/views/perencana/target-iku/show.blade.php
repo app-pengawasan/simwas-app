@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Buat Target IKU Unit Kerja')
+@section('title', 'Detail Target IKU Unit Kerja')
 
 @push('style')
 <link rel="stylesheet" href="{{ asset('library') }}/select2/dist/css/select2.min.css">
@@ -39,7 +39,10 @@
         <div class="section-header">
             <h1>Form Pembuatan Target IKU</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item">Form Pembuatan Target IKU</div>
+                <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('target-iku-unit-kerja.index') }}">Target IKU Unit
+                        Kerja</a></div>
+                <div class="breadcrumb-item">Detail Target IKU Unit Kerja</div>
             </div>
         </div>
         <div class="section-body">
@@ -197,6 +200,7 @@
                                                     <td><input disabled type="number" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
                                                             class="form-control"></td>
+                                                </tr>
                                             </tfoot>
 
                                         </table>

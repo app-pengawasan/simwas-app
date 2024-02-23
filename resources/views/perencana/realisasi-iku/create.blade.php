@@ -30,7 +30,7 @@
 @endpush
 
 @section('main')
-@include('components.header')
+@include('components.perencana-header')
 @include('components.perencana-sidebar')
 <div class="main-content">
     <section class="section">

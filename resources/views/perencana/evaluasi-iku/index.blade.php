@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Target IKU Unit Kerja')
+@section('title', 'Evaluasi IKU Unit Kerja')
 
 @push('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -20,6 +20,10 @@
     <section class="section">
         <div class="section-header">
             <h1>Evaluasi Realisasi IKU Unit Kerja</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
+                <div class="breadcrumb-item">Evaluasi IKU Unit Kerja</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
@@ -28,7 +32,7 @@
                         @include('components.flash')
                         <p class="mt-3">
                             <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Halaman Mengelola Realisasi Indikator Kinerja Utama Unit Kerja.
+                            Halaman Mengelola Evaluasi Indikator Kinerja Utama Unit Kerja.
                         </p>
                         {{ session()->forget(['alert-type', 'status']) }}
                         {{-- <div class="d-flex">

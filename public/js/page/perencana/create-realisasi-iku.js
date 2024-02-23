@@ -1,6 +1,7 @@
 $(document).ready(function () {
     localStorage.setItem("mini-sidebar", "true");
     calculateTotal();
+    calculateTotalTarget();
     // hide footer
 
     // Add Objek
@@ -182,64 +183,9 @@ $(document).ready(function () {
         $("#presentase-target-triwulan3").val(0);
         $("#presentase-target-triwulan4").val(0);
     });
-    function calculateTotal(){
+    function calculateTotal() {
         // get id of changed input
         var id = $(this).attr("id");
-        // if not ''
-        // disable other input
-        // if (id.includes("triwulan1")) {
-        //     row = id.replace("triwulan1-row", "");
-        //     // if val is empty set to enable
-        //     value = parseInt($(this).val()) || 0;
-        //     if (value === 0) {
-        //         $("#triwulan2-row" + row).removeAttr("disabled");
-        //         $("#triwulan3-row" + row).removeAttr("disabled");
-        //         $("#triwulan4-row" + row).removeAttr("disabled");
-        //     } else {
-        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
-        //     }
-        // }
-        // if (id.includes("triwulan2")) {
-        //     row = id.replace("triwulan2-row", "");
-        //     value = parseInt($(this).val()) || 0;
-        //     if (value === 0) {
-        //         $("#triwulan1-row" + row).removeAttr("disabled");
-        //         $("#triwulan3-row" + row).removeAttr("disabled");
-        //         $("#triwulan4-row" + row).removeAttr("disabled");
-        //     } else {
-        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
-        //     }
-        // }
-        // if (id.includes("triwulan3")) {
-        //     row = id.replace("triwulan3-row", "");
-        //     value = parseInt($(this).val()) || 0;
-        //     if (value === 0) {
-        //         $("#triwulan1-row" + row).removeAttr("disabled");
-        //         $("#triwulan2-row" + row).removeAttr("disabled");
-        //         $("#triwulan4-row" + row).removeAttr("disabled");
-        //     } else {
-        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
-        //     }
-        // }
-        // if (id.includes("triwulan4")) {
-        //     row = id.replace("triwulan4-row", "");
-        //     value = parseInt($(this).val()) || 0;
-        //     if (value === 0) {
-        //         $("#triwulan1-row" + row).removeAttr("disabled");
-        //         $("#triwulan2-row" + row).removeAttr("disabled");
-        //         $("#triwulan3-row" + row).removeAttr("disabled");
-        //     } else {
-        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
-        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
-        //     }
-        // }
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
@@ -248,7 +194,8 @@ $(document).ready(function () {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
                 accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
                 var y = $("#nilai-y-row" + i).val();
-                $("#target-triwulan" + j + "-row" + i).val(triwulan / y);
+                var targetTriwulan = (triwulan / y).toFixed(2); // Format the calculated value with two decimal places
+                $("#target-triwulan" + j + "-row" + i).val(targetTriwulan);
             }
             accumulatedTriwulan = 0;
         }
@@ -349,6 +296,153 @@ $(document).ready(function () {
                     totalNilaiY) *
                 100
             ).toFixed(2)
+        );
+    }
+    function calculateTotalTarget() {
+        // get id of changed input
+        var id = $(this).attr("id");
+        // if not ''
+        // disable other input
+        // if (id.includes("triwulan1")) {
+        //     row = id.replace("triwulan1-row", "");
+        //     // if val is empty set to enable
+        //     value = parseInt($(this).val()) || 0;
+        //     if (value === 0) {
+        //         $("#triwulan2-row" + row).removeAttr("disabled");
+        //         $("#triwulan3-row" + row).removeAttr("disabled");
+        //         $("#triwulan4-row" + row).removeAttr("disabled");
+        //     } else {
+        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
+        //     }
+        // }
+        // if (id.includes("triwulan2")) {
+        //     row = id.replace("triwulan2-row", "");
+        //     value = parseInt($(this).val()) || 0;
+        //     if (value === 0) {
+        //         $("#triwulan1-row" + row).removeAttr("disabled");
+        //         $("#triwulan3-row" + row).removeAttr("disabled");
+        //         $("#triwulan4-row" + row).removeAttr("disabled");
+        //     } else {
+        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
+        //     }
+        // }
+        // if (id.includes("triwulan3")) {
+        //     row = id.replace("triwulan3-row", "");
+        //     value = parseInt($(this).val()) || 0;
+        //     if (value === 0) {
+        //         $("#triwulan1-row" + row).removeAttr("disabled");
+        //         $("#triwulan2-row" + row).removeAttr("disabled");
+        //         $("#triwulan4-row" + row).removeAttr("disabled");
+        //     } else {
+        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan4-row" + row).attr("disabled", "disabled");
+        //     }
+        // }
+        // if (id.includes("triwulan4")) {
+        //     row = id.replace("triwulan4-row", "");
+        //     value = parseInt($(this).val()) || 0;
+        //     if (value === 0) {
+        //         $("#triwulan1-row" + row).removeAttr("disabled");
+        //         $("#triwulan2-row" + row).removeAttr("disabled");
+        //         $("#triwulan3-row" + row).removeAttr("disabled");
+        //     } else {
+        //         $("#triwulan1-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan2-row" + row).attr("disabled", "disabled");
+        //         $("#triwulan3-row" + row).attr("disabled", "disabled");
+        //     }
+        // }
+
+        var jumlahObjek = $("#jumlah-objek").val() || 1;
+        var accumulatedTriwulan = 0;
+        console.log("jumlahObjek", jumlahObjek);
+        for (i = 1; i <= jumlahObjek; i++) {
+            for (j = 1; j <= 4; j++) {
+                var triwulan = $("#tgt-triwulan" + j + "-row" + i).val();
+                accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
+                $("#tgt-target-triwulan" + j + "-row" + i).val(
+                    accumulatedTriwulan
+                );
+                console.log(
+                    "triwulan",
+                    j,
+                    "-row" + i + " = ",
+                    accumulatedTriwulan
+                );
+            }
+            accumulatedTriwulan = 0;
+        }
+
+        var totalTargetTriwulan1 = 0;
+        var totalTargetTriwulan2 = 0;
+        var totalTargetTriwulan3 = 0;
+        var totalTargetTriwulan4 = 0;
+
+        var totalTriwulan1 = 0;
+        var totalTriwulan2 = 0;
+        var totalTriwulan3 = 0;
+        var totalTriwulan4 = 0;
+        var totalNilaiY = 0;
+
+        $("table tbody tr").each(function () {
+            var triwulan1 = $(this).find(".tgt-triwulan1").val();
+            triwulan1 = triwulan1 ? parseInt(triwulan1) : 0; // Handle empty input values
+            var triwulan2 = $(this).find(".tgt-triwulan2").val();
+            triwulan2 = triwulan2 ? parseInt(triwulan2) : 0; // Handle empty input values
+            var triwulan3 = $(this).find(".tgt-triwulan3").val();
+            triwulan3 = triwulan3 ? parseInt(triwulan3) : 0; // Handle empty input values
+            var triwulan4 = $(this).find(".tgt-triwulan4").val();
+            triwulan4 = triwulan4 ? parseInt(triwulan4) : 0; // Handle empty input values
+            var nilaiY = $(this).find(".tgt-nilai-y").val();
+            nilaiY = nilaiY ? parseInt(nilaiY) : 0; // Handle empty input values
+
+            var targetTriwulan1 = $(this).find(".tgt-target-triwulan1").val();
+            targetTriwulan1 = targetTriwulan1 ? parseInt(targetTriwulan1) : 0; // Handle empty input values
+            var targetTriwulan2 = $(this).find(".tgt-target-triwulan2").val();
+            targetTriwulan2 = targetTriwulan2 ? parseInt(targetTriwulan2) : 0; // Handle empty input values
+            var targetTriwulan3 = $(this).find(".tgt-target-triwulan3").val();
+            targetTriwulan3 = targetTriwulan3 ? parseInt(targetTriwulan3) : 0; // Handle empty input values
+            var targetTriwulan4 = $(this).find(".tgt-target-triwulan4").val();
+            targetTriwulan4 = targetTriwulan4 ? parseInt(targetTriwulan4) : 0; // Handle empty input values
+
+            totalTriwulan1 += triwulan1;
+            totalTriwulan2 += triwulan2;
+            totalTriwulan3 += triwulan3;
+            totalTriwulan4 += triwulan4;
+            totalNilaiY += nilaiY;
+
+            totalTargetTriwulan1 += targetTriwulan1;
+            totalTargetTriwulan2 += targetTriwulan2;
+            totalTargetTriwulan3 += targetTriwulan3;
+            totalTargetTriwulan4 += targetTriwulan4;
+        });
+
+        $("#tgt-target-total-triwulan1").val(totalTargetTriwulan1);
+        $("#tgt-target-total-triwulan2").val(totalTargetTriwulan2);
+        $("#tgt-target-total-triwulan3").val(totalTargetTriwulan3);
+        $("#tgt-target-total-triwulan4").val(totalTargetTriwulan4);
+
+        $("#tgt-total-triwulan1").val(totalTriwulan1);
+        $("#tgt-total-triwulan2").val(totalTriwulan2);
+        $("#tgt-total-triwulan3").val(totalTriwulan3);
+        $("#tgt-total-triwulan4").val(totalTriwulan4);
+        $("#tgt-total-y").val(totalNilaiY);
+
+        $("#tgt-presentase-target-triwulan1").val(
+            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2)
+        );
+        $("#tgt-presentase-target-triwulan2").val(
+            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2)
+        );
+        $("#tgt-presentase-target-triwulan3").val(
+            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2)
+        );
+        $("#tgt-presentase-target-triwulan4").val(
+            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2)
         );
     }
 

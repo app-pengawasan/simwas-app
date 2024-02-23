@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Form Evaluasi IKU')
+@section('title', 'Buat Evaluasi IKU Unit Kerja')
 
 @push('style')
 <!-- CSS Libraries -->
@@ -8,20 +8,50 @@
 <link rel="stylesheet" href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library') }}/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
-<link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}"> --}}
 <link rel="stylesheet" href="{{ asset('library/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
 <link rel="stylesheet" href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    input[type="number"] {
+        text-align: center;
+        padding: 2px !important;
+    }
+
+    #jumlah-objek {
+        text-align: left;
+        padding: 15px !important;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+</style>
 @endpush
 
 @section('main')
-@include('components.header')
+@include('components.perencana-header')
 @include('components.perencana-sidebar')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
             <h1>Form Evaluasi IKU</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item">Form Evaluasi IKU</div>
+                <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('evaluasi-iku-unit-kerja.index') }}">Evaluasi
+                        IKU Unit Kerja</a></div>
+                <div class="breadcrumb-item">Buat Evaluasi IKU Unit Kerja</div>
             </div>
         </div>
         <div class="section-body">
@@ -30,7 +60,8 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <form action="{{ route('evaluasi-iku-unit-kerja.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('evaluasi-iku-unit-kerja.store') }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group col">
                                     <input type="hidden" name="id" value="{{ $targetIkuUnitKerja->id }}">
@@ -64,101 +95,139 @@
                                             required placeholder="Isikan Jumlah Objek">
                                     </div>
                                 </div>
-                                <div class="d-lg-flex flex-lg-row px-3 my-3 overflow-auto">
-                                    <table class="table table-bordered text-center">
+                                <div class="form-group col overflow-auto table-wrapper">
+                                    <table class="table table-responsive-md table-bordered " id="table-iku">
                                         <thead>
                                             <tr>
-                                                <th colspan="5">
-                                                    <h5 class="text-center">Target</h5>
+                                                <th rowspan="2" class="text-center align-middle" style="width: 30px;">No
                                                 </th>
+                                                <th rowspan="2" class="text-center align-middle"
+                                                    style="min-width: 250px;">
+                                                    Satuan</th>
+                                                <th rowspan="2" class="text-center align-middle"
+                                                    style="width: 75px; min-width:90px">Y</th>
+                                                <th colspan="4" class="text-center align-middle">Target Kinerja
+                                                    (Triwulan)</th>
+                                                <th colspan="4" class="text-center align-middle">Realisasi Kinerja
+                                                    (Triwulan)</th>
+                                                <th colspan="4" class="text-center align-middle">Capaian Kinerja
+                                                    (Triwulan)</th>
                                             </tr>
                                             <tr>
-                                                <th rowspan="2" class="text-center align-middle">Y
-                                                </th>
-                                                <th colspan="4" class="text-center align-middle">X</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">1</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">2</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">3</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">4</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">1</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">2</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">3</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">4</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">1</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">2</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">3</th>
+                                                <th class="text-center align-middle" style="min-width: 80px;">4</th>
                                             </tr>
-                                            <tr style="font-size: 0.8em;">
-                                                <th class="text-center align-middle">Triwulan
-                                                    1</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    2</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    3</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    4</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="row-1">
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="table table-bordered text-center">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="5">
-                                                    <h5 class="text-center">Realisasi</h5>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="4" class="text-center align-middle">X</th>
-                                            </tr>
-                                            <tr style="font-size: 0.8em;">
-                                                <th class="text-center align-middle">Triwulan
-                                                    1</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    2</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    3</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    4</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="row-1">
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="table table-bordered text-center">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="5">
-                                                    <h5 class="text-center">Capaian Kinerja</h5>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="4" class="text-center align-middle">X</th>
-                                            </tr>
-                                            <tr style="font-size: 0.8em;">
-                                                <th class="text-center align-middle">Triwulan
-                                                    1</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    2</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    3</th>
-                                                <th class="text-center align-middle">Triwulan
-                                                    4</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="row-1">
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
 
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($objekIkuUnitKerja as $key => $value)
+                                            <tr id="row-1">
+                                                <td class="text-center align-middle">{{ $key+1 }}</td>
+                                                <td class="text-left">
+                                                    <select disabled class="form-control" name="satuan-row1"
+                                                        class="satuan">
+                                                        @foreach ($kabupaten as $key => $value1)
+                                                        <option {{ $value->satuan == $value1 ? 'selected' : '' }}
+                                                            value="{{ $value }}">
+                                                            {{ $value->satuan }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td><input value="{{ $value->nilai_y_target }}" disabled type="number"
+                                                        name="nilai-y-row1" id="nilai-y-row1"
+                                                        class="form-control nilai-y"></td>
+                                                <td><input value="{{ $value->target_triwulan_1 }}" disabled
+                                                        type="number" name="triwulan1-row1"
+                                                        id="{{ 'triwulan1-row'.$loop->iteration }}"
+                                                        class="form-control triwulan1"></td>
+                                                <td><input
+                                                        value="{{ $value->target_triwulan_1 + $value->target_triwulan_2  }}"
+                                                        disabled type="number" name="triwulan2-row1"
+                                                        id="{{ 'triwulan2-row'.$loop->iteration }}"
+                                                        class="form-control triwulan2">
+                                                </td>
+                                                <td><input
+                                                        value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 }}"
+                                                        disabled type="number" name="triwulan3-row1"
+                                                        id="{{ 'triwulan3-row'.$loop->iteration }}"
+                                                        class="form-control triwulan3"></td>
+                                                <td><input
+                                                        value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 + $value->target_triwulan_4 }}"
+                                                        disabled type="number" name="triwulan4-row1"
+                                                        id="{{ 'triwulan4-row'.$loop->iteration }}"
+                                                        class="form-control triwulan4"></td>
+
+
+                                                <td><input type="number" disabled
+                                                        value="{{ number_format($value->realisasi_triwulan_1/$value->nilai_y_realisasi, 2) }}"
+                                                        name="{{ 'triwulan1-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan1-row'.$loop->iteration }}"
+                                                        class="form-control triwulan1"></td>
+                                                <td><input type="number" disabled
+                                                        value="{{ number_format($value->realisasi_triwulan_2/$value->nilai_y_realisasi, 2) }}"
+                                                        name="{{ 'triwulan2-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan2-row'.$loop->iteration }}"
+                                                        class="form-control triwulan2"></td>
+                                                <td><input type="number" disabled
+                                                        value="{{ number_format($value->realisasi_triwulan_3/$value->nilai_y_realisasi, 2) }}"
+                                                        name="{{ 'triwulan3-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan3-row'.$loop->iteration }}"
+                                                        class="form-control triwulan3"></td>
+                                                <td><input type="number" disabled
+                                                        value="{{ number_format($value->realisasi_triwulan_4/$value->nilai_y_realisasi, 2) }}"
+                                                        name="{{ 'triwulan4-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan4-row'.$loop->iteration }}"
+                                                        class="form-control triwulan4"></td>
+
+
+                                                <td><input type="number" disabled
+                                                        name="{{ 'capaian1-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian1-row'.$loop->iteration }}"
+                                                        class="form-control triwulan1"></td>
+                                                <td><input type="number" disabled
+                                                        name="{{ 'capaian2-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian2-row'.$loop->iteration }}"
+                                                        class="form-control triwulan2"></td>
+                                                <td><input type="number" disabled
+                                                        name="{{ 'capaian3-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian3-row'.$loop->iteration }}"
+                                                        class="form-control triwulan3"></td>
+                                                <td><input type="number" disabled
+                                                        name="{{ 'capaian4-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian4-row'.$loop->iteration }}"
+                                                        class="form-control triwulan4"></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            {{-- <tr>
+                                                                            <td class="text-center align-middle" colspan="2"
+                                                                                style="text-align: center; font-weight: bold;">
+                                                                                Total:</td>
+                                                                            <td><input disabled type="number" name="total-y" id="total-y" value="0"
+                                                                                    class="form-control"></td>
+                                                                            <td><input disabled type="number" name="total-triwulan1" id="total-triwulan1"
+                                                                                    value="0" class="form-control"></td>
+                                                                            <td><input disabled type="number" name="total-triwulan2" id="total-triwulan2"
+                                                                                    value="0" class="form-control"></td>
+                                                                            <td><input disabled type="number" name="total-triwulan3" id="total-triwulan3"
+                                                                                    value="0" class="form-control"></td>
+                                                                            <td><input disabled type="number" name="total-triwulan4" id="total-triwulan4"
+                                                                                    value="0" class="form-control"></td>
+                                                                        </tr> --}}
+                                        </tfoot>
+
+                                    </table>
                                 </div>
                                 {{-- create table with no, Satuan = Select Option, Y=number, Triwulan 1 =number, Triwulan 2 =number , Triwulan 3 =number, Triwulan 4 =number--}}
                                 <div class="form-group col">
@@ -224,7 +293,10 @@
                                     <input type="file" class="form-control" name="laporan_kinerja" id="laporan_kinerja"
                                         required accept="application/pdf">
                                 </div>
-                                <button class="btn btn-primary" type="submit">Button</button>
+                                <button class="btn btn-success float-right" type="submit">
+                                    <i class="fas fa-save"></i>
+                                    Simpan
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -245,20 +317,7 @@
 <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-<script>
-    // add table row if same as jumlah objek
-
-    function toggleBackdateInput(input) {
-            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-
-            if (input.value === '1') {
-                tanggalInputContainer.style.display = 'block';
-            } else {
-                tanggalInputContainer.style.display = 'none';
-            }
-        }
-</script>
+<script src="{{ asset('js') }}/page/perencana/evaluasi-iku.js"></script>
 <!-- Page Specific JS File -->
 <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush
