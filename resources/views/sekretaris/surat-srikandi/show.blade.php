@@ -11,7 +11,7 @@
 @endpush
 
 @section('main')
-@include('components.header')
+@include('components.sekretaris-header')
 @include('components.sekretaris-sidebar')
 <div class="main-content">
     <section class="section">

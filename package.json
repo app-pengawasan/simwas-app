@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.7.2",
+        "@ttskch/select2-bootstrap4-theme": "^1.5.2",
         "bootstrap": "^4.2.1",
         "bootstrap-colorpicker": "^3.0.3",
         "bootstrap-daterangepicker": "^3.0.3",
@@ -45,7 +46,7 @@
         "perfect-scrollbar": "^1.4.0",
         "popper.js": "^1.14.7",
         "prismjs": "^1.15.0",
-        "select2": "^4.0.6-rc.1",
+        "select2": "^4.0.13",
         "selectric": "^1.13.0",
         "simpleweather": "^3.1.0",
         "sticky-kit": "^1.1.3",

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-timkerja" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-timkerja" data-backdrop="static" data-keyboard="false" 
     aria-labelledby="modal-create-timkerja-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

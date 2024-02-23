@@ -60,6 +60,7 @@ let plugins = [
     "bs-stepper",
     "bootstrap-steps",
     "bootstrap-select",
+    "@ttskch/select2-bootstrap4-theme",
 ];
 
 plugins.forEach((plugin) => {

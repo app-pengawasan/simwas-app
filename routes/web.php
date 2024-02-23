@@ -58,10 +58,13 @@ use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\RealisasiIkuUnitKerjaController;
+use App\Http\Controllers\TargetIkuUnitKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -357,6 +360,19 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 });
 
 /**
+     * ---------------------------------------------------------------------------
+     * PERENCANA
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/perencana', [DashboardController::class, 'perencana'])->name('perencana-dashboard');
+    Route::resource('perencana/target-iku-unit-kerja', TargetIkuUnitKerjaController::class);
+    Route::resource('perencana/realisasi-iku-unit-kerja', RealisasiIkuUnitKerjaController::class);
+    Route::resource('perencana/evaluasi-iku-unit-kerja', EvaluasiIkuUnitKerjaController::class);
+
+    Route::put('/perencana/target-iku-unit-kerja/status/{id}', [TargetIkuUnitKerjaController::class, 'editStatus'])->name('target-iku-unit-kerja.status');
+
+
+/**
  * ===========================================================================
  * End of Simwas
  * ===========================================================================
@@ -558,18 +574,6 @@ Route::get('/auth-reset-password', function () {
 });
 
 // error
-Route::get('/error-403', function () {
-    return view('pages.error-403', ['type_menu' => 'error']);
-});
-Route::get('/error-404', function () {
-    return view('pages.error-404', ['type_menu' => 'error']);
-});
-Route::get('/error-500', function () {
-    return view('pages.error-500', ['type_menu' => 'error']);
-});
-Route::get('/error-503', function () {
-    return view('pages.error-503', ['type_menu' => 'error']);
-});
 
 // features
 Route::get('/features-activities', function () {

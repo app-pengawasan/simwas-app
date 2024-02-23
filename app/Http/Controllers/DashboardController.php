@@ -78,4 +78,11 @@ class DashboardController extends Controller
             'count' => $count
         ]);
     }
+
+    function perencana() {
+        $this->authorize('perencana');
+        return view('perencana.index', [
+            'type_menu' => 'rencana-kerja'
+        ]);
+    }
 }

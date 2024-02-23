@@ -6512,5 +6512,19 @@
     "/library/bootstrap-select/sass/bootstrap-select.scss": "/library/bootstrap-select/sass/bootstrap-select.scss",
     "/library/bootstrap-select/sass/variables.scss": "/library/bootstrap-select/sass/variables.scss",
     "/library/bootstrap-select/tests/bootstrap3.html": "/library/bootstrap-select/tests/bootstrap3.html",
-    "/library/bootstrap-select/tests/bootstrap4.html": "/library/bootstrap-select/tests/bootstrap4.html"
+    "/library/bootstrap-select/tests/bootstrap4.html": "/library/bootstrap-select/tests/bootstrap4.html",
+    "/library/@ttskch/select2-bootstrap4-theme/composer.json": "/library/@ttskch/select2-bootstrap4-theme/composer.json",
+    "/library/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css": "/library/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css",
+    "/library/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css": "/library/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css",
+    "/library/@ttskch/select2-bootstrap4-theme/docs/index.html": "/library/@ttskch/select2-bootstrap4-theme/docs/index.html",
+    "/library/@ttskch/select2-bootstrap4-theme/docs/README.md": "/library/@ttskch/select2-bootstrap4-theme/docs/README.md",
+    "/library/@ttskch/select2-bootstrap4-theme/docs/script.js": "/library/@ttskch/select2-bootstrap4-theme/docs/script.js",
+    "/library/@ttskch/select2-bootstrap4-theme/LICENSE": "/library/@ttskch/select2-bootstrap4-theme/LICENSE",
+    "/library/@ttskch/select2-bootstrap4-theme/package.json": "/library/@ttskch/select2-bootstrap4-theme/package.json",
+    "/library/@ttskch/select2-bootstrap4-theme/README.md": "/library/@ttskch/select2-bootstrap4-theme/README.md",
+    "/library/@ttskch/select2-bootstrap4-theme/src/select2-bootstrap4.scss": "/library/@ttskch/select2-bootstrap4-theme/src/select2-bootstrap4.scss",
+    "/library/@ttskch/select2-bootstrap4-theme/src/_layout.scss": "/library/@ttskch/select2-bootstrap4-theme/src/_layout.scss",
+    "/library/@ttskch/select2-bootstrap4-theme/src/_multiple.scss": "/library/@ttskch/select2-bootstrap4-theme/src/_multiple.scss",
+    "/library/@ttskch/select2-bootstrap4-theme/src/_single.scss": "/library/@ttskch/select2-bootstrap4-theme/src/_single.scss",
+    "/library/@ttskch/select2-bootstrap4-theme/webpack.config.js": "/library/@ttskch/select2-bootstrap4-theme/webpack.config.js"
 }

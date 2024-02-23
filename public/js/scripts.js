@@ -169,6 +169,8 @@ $(function () {
         if (!mini) {
             localStorage.setItem("mini-sidebar", "false");
             body.removeClass("sidebar-mini");
+            // show footer
+            $("footer").show();
             $(".main-sidebar").css({
                 overflow: "hidden",
             });
@@ -185,6 +187,8 @@ $(function () {
         } else {
             // add to local storage mini-sidebar
             localStorage.setItem("mini-sidebar", "true");
+            // hide footer
+            $("footer").hide();
             body.addClass("sidebar-mini");
             body.removeClass("sidebar-show");
             sidebar_nicescroll.remove();
@@ -389,6 +393,9 @@ $(function () {
     if (jQuery().select2) {
         $(".select2").select2();
     }
+    $("select").select2({
+        theme: "bootstrap4",
+    });
 
     // Selectric
     if (jQuery().selectric) {
