@@ -30,6 +30,9 @@
                                 <li>Remove feature: Modul Pengelolaan Dokumen</li>
                                 <li>Added feature: Modul Permintaan dan Pengarsipan Surat Srikandi</li>
                                 <li>Added feature: Modul Evaluasi Kinerja Unit Kerja</li>
+                                <li>Added feature: Modul Pelaporan dan Evaluasi Kinerja Pegawai</li>
+                                <li>Added feature: Modul Pengelolaan Kompetensi Pegawai</li>
+                                <li>Added feature: Modul Pengelolaan Data Kepegawaian</li>
                                 <li>Enhanched App: User Interface, Security</li>
                             </ul>
                         </div>
