@@ -41,7 +41,9 @@ $('.toggle').wrapAll('<div class="btn-group" style="float: right"></div>');
 
 $('.hari-kerja').on('click', function() {
     $(this).addClass('disabled');
+    $(this).attr('disabled', true);
     $(".jam-kerja").removeClass('disabled');
+    $(".jam-kerja").attr('disabled', false);
     $(".convert").each(function() {
         $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
     });
@@ -50,7 +52,9 @@ $('.hari-kerja').on('click', function() {
 
 $('.jam-kerja').on('click', function() {
     $(this).addClass('disabled');
+    $(this).attr('disabled', true);
     $(".hari-kerja").removeClass('disabled');
+    $(".hari-kerja").attr('disabled', false);
     $(".convert").each(function() {
         $(this).text($(this).attr('value'));
     });

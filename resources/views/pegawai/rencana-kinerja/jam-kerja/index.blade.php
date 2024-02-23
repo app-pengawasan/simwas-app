@@ -159,19 +159,24 @@
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
             $(this).addClass('disabled');
+            $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
-            $(".convert, .dataTables_scrollFootInner .total").each(function() {
+            $(".jam-kerja").attr('disabled', false);
+            $(".convert, .dataTables_scrollFoot .total").each(function() {
                 $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
             $('#title').text('Rencana Hari Kerja');
-        })
+        });
+
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
+            $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
-            $(".convert, .dataTables_scrollFootInner .total").each(function() {
+            $(".hari-kerja").attr('disabled', false);
+            $(".convert, .dataTables_scrollFoot .total").each(function() {
                 $(this).text($(this).attr('value'));
             });
             $('#title').text('Rencana Jam Kerja');
-        })
+        });
     </script>
 @endpush

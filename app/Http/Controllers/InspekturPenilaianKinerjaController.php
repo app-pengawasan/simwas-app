@@ -235,6 +235,7 @@ class InspekturPenilaianKinerjaController extends Controller
             $event->title = $event->pelaksana->rencanaKerja->tugas;
             if ($bulan != 'all')  $event->initialDate = $realisasiDinilai->first()->tgl;
             $event->hasil_kerja = $realisasi->hasil_kerja;
+            $event->catatan = $realisasi->catatan;
         }
 
         return view('inspektur.penilaian-kinerja.show', [

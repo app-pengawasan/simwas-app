@@ -56,7 +56,7 @@
                                 value="{{ $rencanaKerja->id_rencanakerja }}">
                             <tr>
                                 <th style="min-width: 120pt">Nama Tim</th>
-                                <td>{{ $rencanaKerja->timkerja->nama }}</td>
+                                <td>{{ $rencanaKerja->proyek->timkerja->nama }}</td>
                             </tr>
                             <tr>
                                 <th>Tugas</th>

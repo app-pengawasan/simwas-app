@@ -62,7 +62,7 @@ class DataKepegawaianController extends Controller
 
         MasterDataKepegawaian::create($validatedData);
 
-        return redirect('/analis-sdm/master-data-kepegawaian')->with('success', 'Berhasil menambahkan jenis data kepegawaian!');
+        return back()->with('status', 'Berhasil menambahkan jenis data kepegawaian!')->with('alert-type', 'success');
     }
 
     /**

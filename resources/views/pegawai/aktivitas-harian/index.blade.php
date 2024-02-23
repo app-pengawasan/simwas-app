@@ -33,7 +33,7 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div id='calendar'></div>
+                            <div id='calendar' style="90%"></div>
                         </div>
                     </div>
                 </div>

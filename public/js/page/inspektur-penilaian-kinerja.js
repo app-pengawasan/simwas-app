@@ -122,8 +122,7 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + ' - ' +
-                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
                 },
             },
             {
@@ -172,7 +171,7 @@ $("#table-nilai")
         buttons: [
             {
                 extend: "excel",
-                className: "btn-success",
+                className: "btn-success unduh",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 9, 5, 6, 7],
@@ -183,7 +182,7 @@ $("#table-nilai")
             },
             {
                 extend: "pdf",
-                className: "btn-danger",
+                className: "btn-danger unduh",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 9, 5, 6, 7],
@@ -192,12 +191,24 @@ $("#table-nilai")
                     return $('.section-header').text();
                 },
             },
+            {
+                text: 'Lihat Aktivitas Pegawai',
+                className: 'btn btn-primary kalender-btn',
+            },
         ],
     });
+
+$('#table-nilai_wrapper .dt-buttons').removeClass('btn-group').addClass('mb-4');
+$('.unduh').wrapAll('<div class="btn-group"></div>');
+$('.kalender-btn').wrapAll('<div style="float: right"></div>');
+$('.kalender-btn').on("click", function () {
+    $('#kalenderModal').modal('show');
+});
 
 var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
+    aspectRatio: 2.6,
     initialView: 'dayGridMonth',
     nowIndicator: true,
     slotDuration: '01:00:00',
@@ -275,10 +286,14 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 placement: 'right',
                 // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
                 html: true,
-                content: '<h3>' + info.event.title + '</h3>' + 
-                        startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                        + '<br>Tim: ' + info.event.extendedProps.tim + '<br>Proyek: ' + info.event.extendedProps.proyek
-                        + '<br>Status Realisasi: ' + status,
+                content: '<h3>' + info.event.title + '</h3>'
+                        + startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
+                        + '<table><tbody>'
+                        + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
+                        + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
+                        + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
+                        + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
+                        + '</tbody></table>',
             });
         }
     },
@@ -286,6 +301,10 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 });
 
 calendar.render();
+
+$('#kalenderModal').on('shown.bs.modal', function () {
+    calendar.render();
+});
 
 if (events[0]['initialDate']) {
     calendar.gotoDate(events[0]['initialDate']);
@@ -315,11 +334,4 @@ $("html").on("mouseup", function (e) {
             $(this).popover("hide");
         });
     }
-});
-
-//update ukuran kalender saat ukuran sidebar berubah
-$('.nav-link').on("click", function () {
-    setTimeout(() => {
-        calendar.updateSize();
-    }, 400);
 });

@@ -259,6 +259,8 @@ class PenilaianBerjenjangController extends Controller
             $event->status = $realisasi->status;
             $event->title = $event->pelaksana->rencanaKerja->tugas;
             if ($bulan != 'all')  $event->initialDate = $realisasiDinilai->first()->tgl;
+            $event->hasil_kerja = $realisasi->hasil_kerja;
+            $event->catatan = $realisasi->catatan;
         }
 
         return view('pegawai.penilaian-berjenjang.show', [

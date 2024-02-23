@@ -16,7 +16,23 @@
     @include('components.pegawai-sidebar')
 
     <div class="main-content">
-        <!-- Modal -->
+        {{-- Modal --}}
+        <div class="modal fade" id="kalenderModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="kalenderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="kalenderModalLabel">Kalender Aktivitas Pegawai</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <center><div id='calendar' style="width: 90%"></div></center>
+                    </div>
+                </div>
+            </div>
+        </div>
         @include('components.penilaian.create');
         @include('components.penilaian.edit');
         <section class="section">
@@ -34,7 +50,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <center><div id='calendar' style="width: 90%" class="mt-5"></div></center>
                             <div class="mt-5">
                                 @include('components.flash')
                                 {{ session()->forget(['alert-type', 'status']) }}

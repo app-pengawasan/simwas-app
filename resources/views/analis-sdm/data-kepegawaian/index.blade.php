@@ -56,18 +56,12 @@
                     <div class="breadcrumb-item">Master Data Kepegawaian</div>
                 </div>
             </div>
-
-            @if (session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-            
             <div class="section-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
+                                @include('components.flash')
                                 <div class="btn btn-primary disabled">Aktif</div>
                                     <a href="/analis-sdm/master-data-kepegawaian-nonaktif" class="btn btn-primary">Nonaktif</a>
                                 <div class="pt-1 pb-1 m-4">

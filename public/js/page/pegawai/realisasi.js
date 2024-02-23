@@ -1,36 +1,49 @@
-let table = $("#table-realisasi");
+let table = $("#table-realisasi")
+    .dataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> Pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+        ],
+        order: [[9, 'desc']]
+    }).api();
 
-$(function () {
-    table
-        .DataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 7],
-                    },
-                },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> Pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 7],
-                    },
-                },
-            ],
-            order: [[8, 'desc']]
-        })
-        .buttons()
-        .container()
-        .appendTo("#realisasi_wrapper .col-md-6:eq(0)");
+$('#filterBulan').on("change", function () {
+    table.draw();
 });
+
+$.fn.dataTableExt.afnFiltering.push(
+    function (setting, data, index) {
+        var selectedBulan = $('select#filterBulan option:selected').val();
+        if (data[3].substr(3, 2) == selectedBulan || selectedBulan == 'all') return true;
+        else return false;
+    }
+);
+
+table.draw();
 
 $("#tugas").prop("disabled", true); //disable pilihan tugas
 $("#proyek").prop("disabled", true); //disable pilihan proyek
@@ -38,7 +51,7 @@ $('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
 if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
 
-//hide clockpicker kalo discroll
+//hide clockpicker saat discroll
 $(document).on("scroll", function (e) {
     clockpicker.clockpicker('hide');
     $('.clockpicker input').trigger('blur');

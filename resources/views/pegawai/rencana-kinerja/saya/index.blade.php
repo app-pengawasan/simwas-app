@@ -75,7 +75,7 @@
                                         </td>
                                         <td class="convert" value="{{ $ts->total }}">{{ $ts->total }}</td>
                                         <td>
-                                            {{ $statusTugas[$ts->rencanaKerja->status_realisasi] }}
+                                            <span class="badge badge-{{ $statusColor[$ts->rencanaKerja->status_realisasi] }}">{{ $statusTugas[$ts->rencanaKerja->status_realisasi] }}</span>
                                         </td>
                                         <td>
                                             <a href="/pegawai/rencana-kinerja/{{ $ts->id_rencanakerja }}"

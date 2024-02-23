@@ -35,6 +35,7 @@ class AktivitasHarianController extends Controller
             $event->proyek = $event->pelaksana->rencanaKerja->proyek->nama_proyek;
             $event->status = $realisasi->status;
             $event->hasil_kerja = $realisasi->hasil_kerja;
+            $event->catatan = $realisasi->catatan;
         }
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)

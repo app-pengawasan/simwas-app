@@ -90,8 +90,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 html: true,
                 content: '<h3>' + info.event.title + '</h3>' + 
                         startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                        + '<br>Tim: ' + info.event.extendedProps.tim + '<br>Proyek: ' + info.event.extendedProps.proyek
-                        + '<br>Status Realisasi: ' + status,
+                        + '<table><tbody>'
+                        + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
+                        + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
+                        + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
+                        + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
+                        + '</tbody></table>',
             });
         }
     },

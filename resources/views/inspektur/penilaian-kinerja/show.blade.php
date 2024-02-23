@@ -14,8 +14,24 @@
 @section('main')
     @include('components.inspektur-header')
     @include('components.inspektur-sidebar')
-
     <div class="main-content">
+        {{-- Modal --}}
+        <div class="modal fade" id="kalenderModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="kalenderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="kalenderModalLabel">Kalender Aktivitas Pegawai</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <center><div id='calendar' style="width: 90%"></div></center>
+                    </div>
+                </div>
+            </div>
+        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }}</h1>
@@ -31,7 +47,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <center><div id='calendar' style="width: 90%" class="mt-5"></div></center>
                             <div class="mt-5">
                                 <table id="table-nilai"
                                     class="table table-bordered table-striped display responsive">

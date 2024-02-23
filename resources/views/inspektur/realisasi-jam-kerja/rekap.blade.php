@@ -166,7 +166,9 @@
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
             $(this).addClass('disabled');
+            $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
+            $(".jam-kerja").attr('disabled', false);
             $(".convert").each(function() {
                 if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
@@ -174,7 +176,9 @@
         })
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
+            $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
+            $(".hari-kerja").attr('disabled', false);
             $(".convert").each(function() {
                 if ($(this).text() != '0') $(this).text($(this).attr('value'));
             });

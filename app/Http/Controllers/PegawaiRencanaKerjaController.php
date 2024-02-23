@@ -51,6 +51,13 @@ class PegawaiRencanaKerjaController extends Controller
         99  => 'Dibatalkan'
     ];
 
+    protected $statusColor = [
+        0   => 'dark',
+        1   => 'primary',
+        2   => 'Selesai',
+        99  => 'danger'
+    ];
+
     protected $unsur = [
         'msu001'    => 'Perencanaan, pengorganisasian, dan pengendalian Pengawasan Intern',
         'msu002'    => 'Pelaksanaan teknis pengawasan internal',
@@ -129,6 +136,7 @@ class PegawaiRencanaKerjaController extends Controller
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
             'statusTugas'   => $this->statusTugas,
+            'statusColor'   => $this->statusColor,
         ]);
 
         // return $id_pegawai;
