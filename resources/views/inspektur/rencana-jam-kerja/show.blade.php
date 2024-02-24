@@ -18,7 +18,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rencana Jam Kerja {{ $tugas[0]->user->name }}</h1>
+                <h1>Rencana Jam Kerja {{ $pegawai }}</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
@@ -118,8 +118,9 @@
 @push('scripts')
     <!-- JS Libraies -->
     {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> --}}
-    <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
+    {{-- <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script> --}}
     <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
@@ -138,6 +139,9 @@
     <script>
         var datatable = $('#table-inspektur-kinerja').DataTable({
             dom: "Bfrtip",
+            fixedColumns: {
+                leftColumns: 2
+            },
             responsive: false,
             lengthChange: false,
             autoWidth: false,

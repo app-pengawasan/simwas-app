@@ -66,7 +66,7 @@ class PenilaianBerjenjangController extends Controller
 
         //tugas penilai
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                 $query->where('status', 6);
             })->select('id_rencanakerja', 'pt_jabatan');
         
@@ -87,33 +87,44 @@ class PenilaianBerjenjangController extends Controller
         
         //realisasi untuk dinilai
         $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->get();
-        $jamRealisasiCount = $realisasiDinilai->groupBy('pelaksana.user.id')
-                            ->map(function ($items) {
-                                $realisasi_jam = 0;
-                                foreach ($items as $realisasi) {
-                                    $start = $realisasi->start;
-                                    $end = $realisasi->end;
-                                    $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                                }
-                                return [
-                                    'realisasi_jam' => $items->groupBy(function ($item) {
-                                                                    return date("m",strtotime($item->tgl));
-                                                                })->map(function ($item) {
-                                                                    $realisasi_jam = 0;
-                                                                    foreach ($item as $realisasi) {
-                                                                        $start = $realisasi->start;
-                                                                        $end = $realisasi->end;
-                                                                        $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                                                                    }
-                                                                    return $realisasi_jam;
-                                                                })->toArray(), //realisasi jam kerja per bulan
-                                    'realisasi_jam_all' => $realisasi_jam
-                                ];
-                            })->toArray();
+        
+        //realisasi berstatus selesai group by bulan dan tahun realisasi, diambil id_pelaksana nya
+        $pelaksanaDinilai = $realisasiDinilai->where('status', 1)->groupBy([function ($items){
+            return date("Y",strtotime($items->tgl));
+        }, function ($items){
+            return date("m",strtotime($items->tgl));
+        }])->map->map->map->map->map->map->map->id_pelaksana->toArray();
+
+        $realisasiCount = [];
+
+        foreach ($pelaksanaDinilai as $tahun => $bulanitems) { 
+            foreach ($bulanitems as $bulan => $items) {
+                foreach ($items as $id_pelaksana) {
+                    $realisasi = $realisasiDinilai->where('id_pelaksana', $id_pelaksana);
+                    foreach ($realisasi as $item) {
+                        $id_pegawai = $item->pelaksana->id_pegawai;
+                        $start = $item->start;
+                        $end = $item->end;
+                        $realisasi_jam = (strtotime($end) - strtotime($start)) / 60 / 60;
+                        //jam realisasi pegawai per bulan
+                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan]) ?
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] += $realisasi_jam :
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] = $realisasi_jam;
+                        //jam realisasi pegawai per tahun
+                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all']) ?
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] += $realisasi_jam :
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] = $realisasi_jam;
+                    }
+                }
+            }
+        }
 
         $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
-        $tugasCount = $realisasiDinilai->where('status', 1)->groupBy('pelaksana.user.id')
-                        ->map(function ($items) use ($bulans) {
+        $tugasCount = $realisasiDinilai->where('status', 1)
+                        ->groupBy(['pelaksana.id_pegawai', function ($items){
+                            return date("Y",strtotime($items->tgl));
+                        }])
+                        ->map->map(function ($items) use ($bulans) {
                             $rencana_jam = 0;
                             foreach ($bulans as $bulan) {
                                 $rencana_jam += $items->sum('pelaksana.'.$bulan);
@@ -121,36 +132,37 @@ class PenilaianBerjenjangController extends Controller
                             return [
                                 'nama' => $items[0]->pelaksana->user->name,
                                 'unit_kerja' => $items[0]->pelaksana->user->unit_kerja,
-                                'count' => $items->countBy(function ($item) {
-                                                        return date("m",strtotime($item->tgl));
-                                                    })->toArray(), //jumlah tugas per bulan
+                                'count' => $items->countBy(function ($realisasi) {
+                                                            return date("m",strtotime($realisasi->tgl));
+                                                        })->toArray(), //jumlah tugas per bulan
                                 'count_all' => $items->count(),
-                                'avg' => $items->groupBy(function ($item) {
-                                                    return date("m",strtotime($item->tgl));
-                                                })->map(function ($item) {
-                                                    return round($item->avg('nilai'), 2);
-                                                })->toArray(), //rata rata nilai per bulan
-                                'avg_all' => round($items->avg('nilai'), 2),
-                                'rencana_jam' => $items->groupBy(function ($item) {
+                                'avg' => $items->groupBy(function ($item) { //rata rata nilai per bulan
                                                             return date("m",strtotime($item->tgl));
-                                                        })->map(function ($item)  use ($bulans) {
-                                                            $rencana_jam = 0;
-                                                            foreach ($bulans as $bulan) {
-                                                                $rencana_jam += $item->sum('pelaksana.'.$bulan);
-                                                            }
-                                                            return $rencana_jam;
-                                                        })->toArray(), //rencana jam kerja per bulan
+                                                        })->map->avg->map->nilai->toArray(), 
+                                'avg_all' => $items->avg->nilai,
+                                'rencana_jam' => $items->groupBy(function ($item) {
+                                                                return date("m",strtotime($item->tgl));
+                                                            })->map(function ($item) use ($bulans) {
+                                                                    $rencana_jam = 0;
+                                                                    foreach ($bulans as $bulan) {
+                                                                        $rencana_jam += $item->sum('pelaksana.'.$bulan);
+                                                                }
+                                                                return $rencana_jam;
+                                                            })->toArray(), //rencana jam kerja per bulan
                                 'rencana_jam_all' => $rencana_jam,
                             ];
                         })->toArray();
 
-        $tugasCount = array_replace_recursive($tugasCount, $jamRealisasiCount);
-        foreach ($tugasCount as $id_pegawai => &$tugas) {
-            $tugas['count']['all'] = $tugas['count_all'];
-            $tugas['avg']['all'] = $tugas['avg_all'];
-            $tugas['rencana_jam']['all'] = $tugas['rencana_jam_all'];
-            $tugas['realisasi_jam']['all'] = $tugas['realisasi_jam_all'];
-        }
+        if (!empty($tugasCount)) {
+            $tugasCount = array_replace_recursive($tugasCount, $realisasiCount);
+            foreach ($tugasCount as &$count) { 
+                foreach ($count as $tahun => $values) {
+                    $count[$tahun]['count']['all'] = $count[$tahun]['count_all'];
+                    $count[$tahun]['avg']['all'] = $count[$tahun]['avg_all'];
+                    $count[$tahun]['rencana_jam']['all'] = $count[$tahun]['rencana_jam_all'];
+                }
+            } 
+        } 
 
         return view('pegawai.penilaian-berjenjang.index', [
             'type_menu' => 'realisasi-kinerja',
@@ -196,13 +208,13 @@ class PenilaianBerjenjangController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($pegawai_dinilai, $bulan)
+    public function show($pegawai_dinilai, $bulan, $tahun)
     {
         $id_pegawai = auth()->user()->id;
 
         //tugas penilai
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                 $query->where('status', 6);
             })->select('id_rencanakerja', 'pt_jabatan');
         
@@ -225,13 +237,12 @@ class PenilaianBerjenjangController extends Controller
         //realisasi untuk dinilai
         if ($bulan == 'all') {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)
-                                                ->where('status', 1)->get();
+                               ->where('status', 1)->whereYear('tgl', $tahun)->get();
             $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->get();
         } else {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->where('status', 1)
-                                                ->whereMonth('tgl', $bulan)->get();
-            $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)
-                                                ->whereMonth('tgl', $bulan)->get();
+                                ->whereYear('tgl', $tahun)->whereMonth('tgl', $bulan)->get();
+            $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->get();
         } 
 
         $jamRealisasi = $realisasiDinilaiAll->groupBy('id_pelaksana')
@@ -245,9 +256,7 @@ class PenilaianBerjenjangController extends Controller
                                     return $realisasi_jam;
                             });
 
-        $events = Event::whereRelation('pelaksana', function (Builder $query) use ($pegawai_dinilai) {
-                     $query->where('id_pegawai', $pegawai_dinilai);
-                  })->get();
+        $events = Event::whereIn('id_pelaksana', $realisasiDinilai->pluck('id_pelaksana'))->get();
 
         foreach ($events as $event) {
             $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)

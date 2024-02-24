@@ -10,7 +10,6 @@ $(".modal").on("scroll", function (e) {
 var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
-    initialView: 'timeGridWeek',
     nowIndicator: true,
     slotDuration: '01:00:00',
     eventOverlap: false,

@@ -1,5 +1,6 @@
 let today = new Date();
 $('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
+$('#filterTahun').val(today.getFullYear());
 
 let table = $("#table-daftar-nilai")
     .dataTable({
@@ -16,8 +17,9 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + ' - ' +
-                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return $(":selected", '#filterBulan').text() + ' ' + 
+                           $(":selected", '#filterTahun').text() + '; ' +
+                           'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
                 },
             },
             {
@@ -28,8 +30,9 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; ' +
-                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return $(":selected", '#filterBulan').text() + ' ' + 
+                           $(":selected", '#filterTahun').text() + '; ' +
+                           'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
                 },
             },
         ],
@@ -40,6 +43,10 @@ $('#filterBulan').on("change", function () {
 });
 
 $('#filterUnitKerja').on("change", function () {
+    table.draw();
+});
+
+$('#filterTahun').on("change", function () {
     table.draw();
 });
 
@@ -54,7 +61,9 @@ $.fn.dataTableExt.afnFiltering.push(
         }
         var selectedBulan = $('select#filterBulan option:selected').val();
         var selectedUnit = $('select#filterUnitKerja option:selected').val();
-        if (data[7] == selectedBulan && (data[8] == selectedUnit || selectedUnit == 'all')) return true;
+        var selectedTahun = $('select#filterTahun option:selected').val();
+        if (data[7] == selectedBulan && data[9] == selectedTahun &&
+            (data[8] == selectedUnit || selectedUnit == 'all')) return true;
         else return false;
     }
 );
@@ -205,7 +214,6 @@ var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
     aspectRatio: 2.6,
-    initialView: 'dayGridMonth',
     nowIndicator: true,
     slotDuration: '01:00:00',
     eventOverlap: false,
@@ -304,22 +312,6 @@ $('#kalenderModal').on('shown.bs.modal', function () {
 
 if (events[0]['initialDate']) {
     calendar.gotoDate(events[0]['initialDate']);
-
-    let date = new Date(events[0]['initialDate']);
-    y = date.getFullYear();
-    m = date.getMonth();
-
-    calendar.setOption('validRange', {
-        start: new Date(y, m, 1),
-        end: new Date(y, m + 1, 0)
-    });
-
-    calendar.setOption('headerToolbar', {
-        start: 'prev,next',
-        center: 'title',
-        end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-    });
-    // $('.fc-toolbar-chunk').css('padding-left', '6rem');
 }
 
 //tutup popover event saat klik di luar atau buka modal

@@ -232,10 +232,13 @@ class InspekturRealisasiJamKerjaController extends Controller
                             'total' => $total_jam //realisasi jam kerja total
                         ];
                     }); 
+        
+        $pegawai = User::findOrFail($id)->name;
 
         return view('inspektur.realisasi-jam-kerja.show',[
             'type_menu'     => 'realisasi-jam-kerja',
             'jabatan'       => $this->jabatan,
+            'pegawai'       => $pegawai
         ])->with('count', $count);
     }
     

@@ -1,12 +1,15 @@
 let today = new Date();
 $('#filterBulan').val(("0" + (today.getMonth() + 1)).slice(-2));
+$('#filterTahun').val(today.getFullYear());
 
 $(".nilai-btn").on("click", function () {
     document.forms['myform'].reset();
     let id_pegawai = $(this).attr("data-pegawai");
     let bulan = $(this).attr("data-bulan");
+    let tahun = $(this).attr("data-tahun");
     $('#id_pegawai').val(id_pegawai);
     $('#bulan').val(bulan);
+    $('#tahun').val(tahun);
 });
 
 $(".edit-btn").on("click", function (e) {
@@ -14,12 +17,14 @@ $(".edit-btn").on("click", function (e) {
     
     let id_pegawai = $(this).attr("data-pegawai");
     let bulan = $(this).attr("data-bulan");
+    let tahun = $(this).attr("data-tahun");
     $('#edit-id-pegawai').val(id_pegawai);
     $('#edit-bulan').val(bulan);
+    $('#edit-tahun').val(tahun);
     $('#error-edit-nilai').text('');
 
     $.ajax({
-        url: `/inspektur/penilaian-kinerja/nilai/${id_pegawai}/${bulan}`,
+        url: `/inspektur/penilaian-kinerja/nilai/${id_pegawai}/${bulan}/${tahun}`,
         type: "GET",
         cache: false,
         success: function (response) {
@@ -38,6 +43,7 @@ $('.submit-btn').on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     let id_pegawai = $('#id_pegawai').val();
     let bulan = $('#bulan').val();
+    let tahun = $('#tahun').val();
     let nilai = $("#nilai").val();
     let catatan = $("#catatan").val();
     $.ajax({
@@ -49,7 +55,8 @@ $('.submit-btn').on("click", function (e) {
             nilai: nilai,
             catatan: catatan,
             id_pegawai: id_pegawai,
-            bulan: bulan
+            bulan: bulan,
+            tahun: tahun
         },
         success: function (response) {
             location.reload();
@@ -119,10 +126,10 @@ let table = $("#table-daftar-nilai")
                 className: "btn-success",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
+                    columns: [0, 1, 2, 3, 4, 5],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                    return $(":selected", '#filterBulan').text() + ' ' + $(":selected", '#filterTahun').text();
                 },
             },
             {
@@ -130,10 +137,10 @@ let table = $("#table-daftar-nilai")
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4],
+                    columns: [0, 1, 2, 3, 4, 5],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                    return $(":selected", '#filterBulan').text() + ' ' + $(":selected", '#filterTahun').text();
                 },
             },
         ],
@@ -141,6 +148,10 @@ let table = $("#table-daftar-nilai")
 
 $('#filterBulan').on("change", function () {
     $(this).val() == 'all' ? table.column(6).visible(false) : table.column(6).visible(true);
+    table.draw();
+});
+
+$('#filterTahun').on("change", function () {
     table.draw();
 });
 
@@ -154,12 +165,14 @@ $.fn.dataTableExt.afnFiltering.push(
             return true;
         }
         var selectedBulan = $('select#filterBulan option:selected').val();
-        if (data[8] == selectedBulan) return true;
+        var selectedTahun = $('select#filterTahun option:selected').val();
+        if (data[8] == selectedBulan && data[9] == selectedTahun) return true;
         else return false;
     }
 );
 
 table.draw();
+
 $('#filterBulan').val() == 'all' ? table.column(6).visible(false) : table.column(6).visible(true);
 
 $("#table-nilai")
@@ -209,7 +222,6 @@ var calendarEl = $("#calendar")[0];
 var calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'id',
     aspectRatio: 2.6,
-    initialView: 'dayGridMonth',
     nowIndicator: true,
     slotDuration: '01:00:00',
     eventOverlap: false,
@@ -308,22 +320,6 @@ $('#kalenderModal').on('shown.bs.modal', function () {
 
 if (events[0]['initialDate']) {
     calendar.gotoDate(events[0]['initialDate']);
-
-    let date = new Date(events[0]['initialDate']);
-    y = date.getFullYear();
-    m = date.getMonth();
-
-    calendar.setOption('validRange', {
-        start: new Date(y, m, 1),
-        end: new Date(y, m + 1, 0)
-    });
-
-    calendar.setOption('headerToolbar', {
-        start: 'prev,next',
-        center: 'title',
-        end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-    });
-    // $('.fc-toolbar-chunk').css('padding-left', '6rem');
 }
 
 //tutup popover event saat klik di luar atau buka modal

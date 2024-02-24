@@ -65,33 +65,44 @@ class InspekturPenilaianKinerjaController extends Controller
                                     $query->where('unit_kerja', auth()->user()->unit_kerja);
                                 })->get();
         }
-        $jamRealisasi = $realisasiDinilai->groupBy('pelaksana.id_pegawai')
-                        ->map(function ($items) {
-                            $realisasi_jam = 0;
-                            foreach ($items as $realisasi) {
-                                $start = $realisasi->start;
-                                $end = $realisasi->end;
-                                $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                            }
-                            return [
-                                'realisasi_jam' => $items->groupBy(function ($item) {
-                                                                return date("m",strtotime($item->tgl));
-                                                            })->map(function ($item) {
-                                                                $realisasi_jam = 0;
-                                                                foreach ($item as $realisasi) {
-                                                                    $start = $realisasi->start;
-                                                                    $end = $realisasi->end;
-                                                                    $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                                                                }
-                                                                return $realisasi_jam;
-                                                            })->toArray(), //realisasi jam kerja per bulan
-                                'realisasi_jam_all' => $realisasi_jam
-                            ];
-                        })->toArray();
+
+        //realisasi berstatus selesai group by bulan dan tahun realisasi, diambil id_pelaksana nya
+        $pelaksanaDinilai = $realisasiDinilai->where('status', 1)->groupBy([function ($items){
+            return date("Y",strtotime($items->tgl));
+        }, function ($items){
+            return date("m",strtotime($items->tgl));
+        }])->map->map->map->map->map->map->map->id_pelaksana->toArray(); 
+
+        $realisasiCount = [];
+
+        foreach ($pelaksanaDinilai as $tahun => $bulanitems) { 
+            foreach ($bulanitems as $bulan => $items) {
+                foreach ($items as $id_pelaksana) {
+                    $realisasi = $realisasiDinilai->where('id_pelaksana', $id_pelaksana);
+                    foreach ($realisasi as $item) {
+                        $id_pegawai = $item->pelaksana->id_pegawai;
+                        $start = $item->start;
+                        $end = $item->end;
+                        $realisasi_jam = (strtotime($end) - strtotime($start)) / 60 / 60;
+                        //jam realisasi pegawai per bulan
+                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan]) ?
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] += $realisasi_jam :
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] = $realisasi_jam;
+                        //jam realisasi pegawai per tahun
+                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all']) ?
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] += $realisasi_jam :
+                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] = $realisasi_jam;
+                    }
+                }
+            }
+        }
 
         $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
-        $tugasCount = $realisasiDinilai->where('status', 1)->groupBy('pelaksana.id_pegawai')
-                        ->map(function ($items) use ($bulans) {
+        $tugasCount = $realisasiDinilai->where('status', 1)
+                        ->groupBy(['pelaksana.id_pegawai', function ($items){
+                                        return date("Y",strtotime($items->tgl));
+                                    }])
+                        ->map->map(function ($items) use ($bulans) {
                             $rencana_jam = 0;
                             foreach ($bulans as $bulan) {
                                 $rencana_jam += $items->sum('pelaksana.'.$bulan);
@@ -102,13 +113,10 @@ class InspekturPenilaianKinerjaController extends Controller
                                                         return date("m",strtotime($item->tgl));
                                                     })->toArray(), //jumlah tugas per bulan
                                 'count_all' => $items->count(),
-                                'avg' => $items->groupBy(function ($item) {
+                                'avg' => $items->groupBy(function ($item) { //rata rata nilai per bulan
                                                     return date("m",strtotime($item->tgl));
-                                                })->map(function ($item) {
-                                                    return round($item->avg('nilai'), 2);
-                                                })->toArray(), //rata rata nilai per bulan
-                                'avg_all' => round($items->avg('nilai'), 2),
-                                
+                                                })->map->avg->map->nilai->toArray(), 
+                                'avg_all' => $items->avg->nilai,
                                 'rencana_jam' => $items->groupBy(function ($item) {
                                                             return date("m",strtotime($item->tgl));
                                                         })->map(function ($item)  use ($bulans) {
@@ -122,21 +130,26 @@ class InspekturPenilaianKinerjaController extends Controller
                             ];
                         })->toArray();
 
-        $tugasCount = array_replace_recursive($tugasCount, $jamRealisasi);
-        foreach ($tugasCount as $id_pegawai => &$tugas) {
-            foreach ($tugas['count'] as $bulan => $jumlah) { 
-                $nilai_ins = NilaiInspektur::where('id_pegawai', $id_pegawai)->where('bulan', $bulan)->first();
-                if($nilai_ins) {
-                    $tugas['nilai_ins'][$bulan] = optional($nilai_ins)->nilai;
-                    $tugas['catatan'][$bulan] = $nilai_ins->catatan;
+        if (!empty($tugasCount)) {
+            $tugasCount = array_replace_recursive($tugasCount, $realisasiCount);
+            foreach ($tugasCount as $id_pegawai => &$count) { 
+                foreach ($count as $tahun => $values) {
+                    foreach ($values['count'] as $bulan => $jumlah_tugas) { 
+                        $nilai_ins = NilaiInspektur::where('id_pegawai', $id_pegawai)
+                                    ->where('bulan', $bulan)->where('tahun', $tahun)->first();
+                        if ($nilai_ins) {
+                            $count[$tahun]['nilai_ins'][$bulan] = optional($nilai_ins)->nilai;
+                            $count[$tahun]['catatan'][$bulan] = $nilai_ins->catatan;
+                        }
+                    }
+                    $count[$tahun]['count']['all'] = $count[$tahun]['count_all'];
+                    $count[$tahun]['avg']['all'] = $count[$tahun]['avg_all'];
+                    $count[$tahun]['rencana_jam']['all'] = $count[$tahun]['rencana_jam_all'];
+                    $count[$tahun]['nilai_ins']['all'] = NilaiInspektur::where('id_pegawai', $id_pegawai)
+                                                        ->where('tahun', $tahun)->avg('nilai');
                 }
-            }
-            $tugas['count']['all'] = $tugas['count_all'];
-            $tugas['avg']['all'] = $tugas['avg_all'];
-            $tugas['rencana_jam']['all'] = $tugas['rencana_jam_all'];
-            $tugas['realisasi_jam']['all'] = $tugas['realisasi_jam_all'];
-            $tugas['nilai_ins']['all'] = NilaiInspektur::where('id_pegawai', $id_pegawai)->avg('nilai');
-        } 
+            } 
+        }
 
         return view('inspektur.penilaian-kinerja.index', [
             'tugasCount' => $tugasCount
@@ -166,9 +179,9 @@ class InspekturPenilaianKinerjaController extends Controller
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
 
         $validateData = request()->validate($rule);
-        $validateData['tahun'] = '2024';
         $validateData['id_pegawai'] = $request->id_pegawai;
         $validateData['bulan'] = $request->bulan;
+        $validateData['tahun'] = $request->tahun;
 
         NilaiInspektur::create($validateData);
 
@@ -187,26 +200,25 @@ class InspekturPenilaianKinerjaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($pegawai_dinilai, $bulan)
+    public function show($pegawai_dinilai, $bulan, $tahun)
     {
         $this->authorize('inspektur');
 
         //tugas yang akan dinilai
         $tugas = PelaksanaTugas::where('id_pegawai', $pegawai_dinilai)
-            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                 $query->where('status', 6);
             })->select('id_pelaksana');
         
         //realisasi untuk dinilai
         if ($bulan == 'all') {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugas)
-                                                ->where('status', 1)->get();
+                                ->whereYear('tgl', $tahun)->where('status', 1)->get();
             $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugas)->get();
         } else {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugas)->where('status', 1)
-                                                ->whereMonth('tgl', $bulan)->get();
-            $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugas)
-                                                ->whereMonth('tgl', $bulan)->get();
+                                ->whereYear('tgl', $tahun)->whereMonth('tgl', $bulan)->get();
+            $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugas)->get();
         } 
 
         $jamRealisasi = $realisasiDinilaiAll->groupBy('id_pelaksana')
@@ -220,9 +232,7 @@ class InspekturPenilaianKinerjaController extends Controller
                                     return $realisasi_jam;
                             });
 
-        $events = Event::whereRelation('pelaksana', function (Builder $query) use ($pegawai_dinilai) {
-                     $query->where('id_pegawai', $pegawai_dinilai);
-                  })->get();
+        $events = Event::whereIn('id_pelaksana', $realisasiDinilai->pluck('id_pelaksana'))->get();
 
         foreach ($events as $event) {
             $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
@@ -303,10 +313,11 @@ class InspekturPenilaianKinerjaController extends Controller
         ]);
     }
 
-    public function getNilai($id_pegawai, $bulan){
+    public function getNilai($id_pegawai, $bulan, $tahun){
         $this->authorize('inspektur');
         
-        $nilai = NilaiInspektur::where('id_pegawai', $id_pegawai)->where('bulan', $bulan)->get();
+        $nilai = NilaiInspektur::where('id_pegawai', $id_pegawai)
+                ->where('bulan', $bulan)->where('tahun', $tahun)->get();
 
         return response()->json([
             'success'   => true,

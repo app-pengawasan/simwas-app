@@ -26,8 +26,8 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div class="d-flex float-left col-6 p-0">
-                                <div class="ml-auto my-2 col-12 p-0">
+                            <div class="d-flex col-12 p-0">
+                                <div class="ml-auto my-2 col-6 p-0">
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -44,8 +44,17 @@
                                         <option value="12">Desember</option>
                                     </select>
                                 </div>
+                                <div class="d-flex my-2 col-6 pr-2 mb-3">
+                                    <select class="form-control" id="filterTahun" name="filterTahun" required>
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">
+                                                {{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
                             </div>
-                            <div class="d-flex mb-2">
+                            <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="/pegawai/realisasi/create">
                                         <i class="fas fa-plus-circle"></i>

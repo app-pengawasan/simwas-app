@@ -13,6 +13,7 @@
                     <input type="hidden" name="id" id="id">
                     <input type="hidden" name="id_pegawai" id="id_pegawai">
                     <input type="hidden" name="bulan" id="bulan">
+                    <input type="hidden" name="tahun" id="tahun">
                     <div class="form-group form-inline">
                         <label for="nilai" class="form-label col-lg-4 justify-content-start font-weight-bold">Nilai</label>
                         <input type="number" id="nilai" name="nilai" min="0" max="100" step=".01" class="form-control" required>

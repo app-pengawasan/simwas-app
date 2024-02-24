@@ -185,14 +185,17 @@ class InspekturRencanaJamKerjaController extends Controller
         $this->authorize('inspektur');
 
         $tugas = PelaksanaTugas::where('id_pegawai', $id)
-                ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                     $query->where('status', 6);
                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
                   ->get();
+        
+        $pegawai = User::findOrFail($id)->name;
 
         return view('inspektur.rencana-jam-kerja.show',[
             'type_menu'     => 'rencana-jam-kerja',
             'jabatan'       => $this->jabatan,
+            'pegawai'       => $pegawai
         ])->with('tugas', $tugas);
     }
     

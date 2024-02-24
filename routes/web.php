@@ -249,8 +249,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     //Penilaian Kinerja Pegawai
     Route::resource('inspektur/penilaian-kinerja', InspekturPenilaianKinerjaController::class);
     Route::get('inspektur/penilaian-kinerja/detail/{id}', [InspekturPenilaianKinerjaController::class, 'detail']);
-    Route::get('inspektur/penilaian-kinerja/{pegawai_dinilai}/{bulan}', [InspekturPenilaianKinerjaController::class, 'show']);
-    Route::get('inspektur/penilaian-kinerja/nilai/{id_pegawai}/{bulan}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
+    Route::get('inspektur/penilaian-kinerja/{pegawai_dinilai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'show']);
+    Route::get('inspektur/penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
 
     /**
      * ---------------------------------------------------------------------------
@@ -356,7 +356,7 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('pegawai/nilai-berjenjang', PenilaianBerjenjangController::class);
     Route::get('pegawai/nilai-berjenjang/nilai/{id}', [PenilaianBerjenjangController::class, 'getNilai']);
     Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
-    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}', [PenilaianBerjenjangController::class, 'show']);
+    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}/{tahun}', [PenilaianBerjenjangController::class, 'show']);
 });
 
 /**

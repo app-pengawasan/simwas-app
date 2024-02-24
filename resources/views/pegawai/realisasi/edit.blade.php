@@ -77,6 +77,7 @@
                                             <small id="error-tugas" class="text-danger"></small>
                                         </div>
                                     </div>
+                                    <input type="hidden" name="id_pelaksana" value="{{ $realisasi->id_pelaksana }}">
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="tgl">Tanggal</label>
                                         <div class="col-sm-10">

@@ -54,7 +54,7 @@ class PegawaiRencanaKerjaController extends Controller
     protected $statusColor = [
         0   => 'dark',
         1   => 'primary',
-        2   => 'Selesai',
+        2   => 'success',
         99  => 'danger'
     ];
 
@@ -118,7 +118,7 @@ class PegawaiRencanaKerjaController extends Controller
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                 $query->where('status', 6);
             })->selectRaw('*, '.implode('+', $bulans).' as total')->get();
 
@@ -269,7 +269,7 @@ class PegawaiRencanaKerjaController extends Controller
 
     public function rencanaJamKerja() {
         $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
-                ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                     $query->where('status', 6);
                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
                   ->get();

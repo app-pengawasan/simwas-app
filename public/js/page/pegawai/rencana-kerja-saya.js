@@ -1,6 +1,4 @@
-let table = $("#tim-kerja");
-
-table
+let table = $("#tim-kerja")
     .DataTable({
         dom: "Bfrtip",
         responsive: true,
@@ -60,6 +58,23 @@ $('.jam-kerja').on('click', function() {
     });
     $('#title').text('Rencana Jam Kerja');
 });
+
+let today = new Date(); 
+$('#filterTahun').val(today.getFullYear());
+
+$('#filterTahun').on("change", function () {
+    table.draw();
+});
+
+$.fn.dataTableExt.afnFiltering.push(
+    function (setting, data, index) {
+        var selectedTahun = $('select#filterTahun option:selected').val();
+        if (data[8] == selectedTahun) return true;
+        else return false;
+    }
+);
+
+table.draw();
 
 $(".disable-btn").on("click", function (e) {
     e.preventDefault();

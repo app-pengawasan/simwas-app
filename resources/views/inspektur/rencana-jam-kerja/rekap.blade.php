@@ -168,7 +168,7 @@
             $(".convert").each(function() {
                 if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
-            $('#title').text('Realisasi Hari Kerja');
+            $('#title').text('Rencana Hari Kerja');
         })
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
@@ -178,7 +178,7 @@
             $(".convert").each(function() {
                 if ($(this).text() != '0') $(this).text($(this).attr('value'));
             });
-            $('#title').text('Realisasi Jam Kerja');
+            $('#title').text('Rencana Jam Kerja');
         })
     </script>
 @endpush

@@ -24,10 +24,21 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-3">
-                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Menampilkan seluruh tugas yang telah disetujui Pimpinan.
-                            </p>
+                            <div class="row align-items-center mb-3">
+                                <p class="col-8 m-0">
+                                    <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                    Menampilkan seluruh tugas yang telah disetujui Pimpinan.
+                                </p>
+                                <div class="my-2 col-4 float-right">
+                                    <select class="form-control" id="filterTahun" name="filterTahun" required>
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">
+                                                {{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                             <?php
                             $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
                             $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
@@ -43,6 +54,7 @@
                                         <th id="title">Rencana Jam Kerja</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
+                                        <th class="never">tahun</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,6 +104,7 @@
                                                 @endif
                                             @endif
                                         </td>
+                                        <td>{{ $ts->rencanaKerja->proyek->timkerja->tahun }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -39,7 +39,7 @@ class AktivitasHarianController extends Controller
         }
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
-                    ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                         $query->where('status', 6);
                     })->get();
                     

@@ -18,7 +18,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Realisasi Jam Kerja {{ $count->first()['pegawai'] }}</h1> 
+                <h1>Realisasi Jam Kerja {{ $pegawai }}</h1> 
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Realisasi Jam Kerja</div>
@@ -47,7 +47,7 @@
                                                 <th rowspan="2" class="align-middle">Tugas</th>
                                                 <th rowspan="2" class="align-middle">Jabatan</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
-                                                <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
+                                                <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
                                             </tr>
                                             <tr>
                                                 <th>Jan</th>

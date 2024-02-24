@@ -29,8 +29,8 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div class="d-flex float-right col-6">
-                                <div class="ml-auto my-2 col-12 p-0 pl-2">
+                            <div class="d-flex float-left col-6 p-0 pr-2">
+                                <div class="ml-auto my-2 col-12 p-0">
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -48,6 +48,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="d-flex float-right col-6 p-0 pl-2">
+                                <div class="ml-auto my-2 col-12 p-0">
+                                    <select class="form-control" id="filterTahun">
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                             <div style="margin-top: 5rem">
                                 <table id="table-daftar-nilai"
                                     class="table table-bordered table-striped display responsive">
@@ -62,59 +72,63 @@
                                             <th>Catatan</th>
                                             <th>Aksi</th>
                                             <th class="never">Bulan</th>
+                                            <th class="never">Tahun</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($tugasCount as $id_pegawai => $tugas)
-                                            @foreach ($tugas['count'] as $bulan => $count)
-                                                <tr>
-                                                    <td>{{ $tugas['nama'] }}</td>
-                                                    <td>{{ $count }}</td>
-                                                    <td>{{ $tugas['rencana_jam'][$bulan] }}</td>
-                                                    <td>{{ $tugas['realisasi_jam'][$bulan] }}</td>
-                                                    <td>{{ $tugas['avg'][$bulan] }}</td> 
-                                                    <td>{{ isset($tugas['nilai_ins'][$bulan]) ? round($tugas['nilai_ins'][$bulan], 2) : 0 }}</td>
-                                                    <td>{{ $bulan == 'all' ? '' : (isset($tugas['catatan']) ? $tugas['catatan'][$bulan] ?? '' : '') }}</td>
-                                                    <td>
-                                                        @if ($bulan == 'all')
-                                                            <a class="btn btn-primary"
-                                                            href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
-                                                        @else
-                                                            <div class="btn-group dropdown">
-                                                                <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
-                                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
-                                                                </button>
-                                                                <div class="dropdown-menu dropdown-menu-right shadow-lg">
-                                                                    <a href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}" 
-                                                                    class="dropdown-item">
-                                                                        <i class="fas fa-circle-info text-primary mr-2"></i>
-                                                                        Detail
-                                                                    </a>
-                                                                    @if (!isset($tugas['nilai_ins'][$bulan]) || $tugas['nilai_ins'][$bulan] == null)
-                                                                        <a class="dropdown-item nilai-btn" href="javascript:void(0)"
-                                                                        data-pegawai="{{ $id_pegawai }}"
-                                                                        data-bulan="{{ $bulan }}" data-toggle="modal" 
-                                                                        data-target="#modal-create-nilai">
-                                                                            <i class="fas fa-circle-plus text-success mr-2"></i>
-                                                                            Nilai
+                                        @foreach ($tugasCount as $id_pegawai => $count)
+                                            @foreach ($count as $tahun => $values)
+                                                @foreach ($values['count'] as $bulan => $jumlah_tugas)
+                                                    <tr>
+                                                        <td>{{ $values['nama'] }}</td>
+                                                        <td>{{ $jumlah_tugas }}</td>
+                                                        <td>{{ $values['rencana_jam'][$bulan] }}</td>
+                                                        <td>{{ $values['realisasi_jam'][$bulan] }}</td>
+                                                        <td>{{ $values['avg'][$bulan] }}</td> 
+                                                        <td>{{ isset($values['nilai_ins'][$bulan]) ? round($values['nilai_ins'][$bulan], 2) : 0 }}</td>
+                                                        <td>{{ $bulan == 'all' ? '' : (isset($values['catatan']) ? $values['catatan'][$bulan] ?? '' : '') }}</td>
+                                                        <td>
+                                                            @if ($bulan == 'all')
+                                                                <a class="btn btn-primary"
+                                                                href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                            @else
+                                                                <div class="btn-group dropdown">
+                                                                    <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                                        <a href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}" 
+                                                                        class="dropdown-item">
+                                                                            <i class="fas fa-circle-info text-primary mr-2"></i>
+                                                                            Detail
                                                                         </a>
-                                                                    @else
-                                                                        <a class="dropdown-item edit-btn" href="javascript:void(0)"
-                                                                        data-pegawai="{{ $id_pegawai }}"
-                                                                        data-bulan="{{ $bulan }}" data-toggle="modal" 
-                                                                        data-target="#modal-edit-nilai">
-                                                                            <i class="fas fa-edit text-warning mr-2"></i>
-                                                                            Edit Nilai
-                                                                        </a>
-                                                                    @endif
+                                                                        @if (!isset($values['nilai_ins'][$bulan]) || $values['nilai_ins'][$bulan] == null)
+                                                                            <a class="dropdown-item nilai-btn" href="javascript:void(0)"
+                                                                            data-pegawai="{{ $id_pegawai }}" data-tahun="{{ $tahun }}"
+                                                                            data-bulan="{{ $bulan }}" data-toggle="modal" 
+                                                                            data-target="#modal-create-nilai">
+                                                                                <i class="fas fa-circle-plus text-success mr-2"></i>
+                                                                                Nilai
+                                                                            </a>
+                                                                        @else
+                                                                            <a class="dropdown-item edit-btn" href="javascript:void(0)"
+                                                                            data-pegawai="{{ $id_pegawai }}" data-tahun="{{ $tahun }}"
+                                                                            data-bulan="{{ $bulan }}" data-toggle="modal" 
+                                                                            data-target="#modal-edit-nilai">
+                                                                                <i class="fas fa-edit text-warning mr-2"></i>
+                                                                                Edit Nilai
+                                                                            </a>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $bulan }}</td>
-                                                </tr>
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $bulan }}</td>
+                                                        <td>{{ $tahun }}</td>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
                                         @endforeach
                                     </tbody>

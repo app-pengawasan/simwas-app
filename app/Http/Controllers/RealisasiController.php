@@ -82,7 +82,7 @@ class RealisasiController extends Controller
         $id_pegawai = auth()->user()->id;
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-                    ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                         $query->where('status', 6);
                     })->get();
         
@@ -357,7 +357,9 @@ class RealisasiController extends Controller
         if ($validateData['status'] == 2) {
             $validateData['kegiatan'] = null;
             $validateData['capaian'] = null;
-        }
+        } else 
+            RealisasiKinerja::where('id_pelaksana', $request->id_pelaksana)
+                            ->where('status', 1)->update(['status' => 2]);
         
         $realisasiEdit = RealisasiKinerja::where('id', $id)->update(Arr::except($validateData, ['edit-link', 'edit-file']));
         

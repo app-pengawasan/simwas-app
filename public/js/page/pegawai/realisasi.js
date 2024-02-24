@@ -1,50 +1,3 @@
-let table = $("#table-realisasi")
-    .dataTable({
-        dom: "Bfrtip",
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
-        buttons: [
-            {
-                extend: "excel",
-                className: "btn-success",
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 6, 8],
-                },
-                messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
-                },
-            },
-            {
-                extend: "pdf",
-                className: "btn-danger",
-                text: '<i class="fas fa-file-pdf"></i> Pdf',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 6, 8],
-                },
-                messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
-                },
-            },
-        ],
-        order: [[9, 'desc']]
-    }).api();
-
-$('#filterBulan').on("change", function () {
-    table.draw();
-});
-
-$.fn.dataTableExt.afnFiltering.push(
-    function (setting, data, index) {
-        var selectedBulan = $('select#filterBulan option:selected').val();
-        if (data[3].substr(3, 2) == selectedBulan || selectedBulan == 'all') return true;
-        else return false;
-    }
-);
-
-table.draw();
-
 $("#tugas").prop("disabled", true); //disable pilihan tugas
 $("#proyek").prop("disabled", true); //disable pilihan proyek
 $('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
@@ -326,3 +279,59 @@ $(".delete-btn").on("click", function (e) {
         }
     });
 });
+
+let table = $("#table-realisasi")
+    .dataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> Pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+        ],
+        order: [[9, 'desc']]
+    }).api();
+
+let today = new Date(); 
+$('#filterTahun').val(today.getFullYear());
+
+$('#filterBulan').on("change", function () {
+    table.draw();
+});
+
+$('#filterTahun').on("change", function () {
+    table.draw();
+});
+
+$.fn.dataTableExt.afnFiltering.push(
+    function (setting, data, index) {
+        var selectedBulan = $('select#filterBulan option:selected').val();
+        var selectedTahun = $('select#filterTahun option:selected').val();
+        if ((data[3].substr(3, 2) == selectedBulan || selectedBulan == 'all') 
+            && data[3].substr(6, 4) == selectedTahun) return true;
+        else return false;
+    }
+);
+
+table.draw();
