@@ -62,7 +62,9 @@
                                 <td>{{ $ti->unit_kerja }}</td>
                                 <td>{{ $ti->nama_kegiatan }}</td>
                                 <td>
-                                    {{ $ti->status }}
+                                    <span class="badge badge-{{ $colorBadge[$ti->status] }}">
+                                        {{ $status[$ti->status] }}
+                                    </span>
                                 </td>
                                 <td>
                                     @if ($ti->status == '4')

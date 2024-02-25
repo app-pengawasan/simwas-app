@@ -6,27 +6,41 @@ $(document).ready(function () {
     calculateTotal();
     localStorage.setItem("mini-sidebar", "true");
     // Add Objek
+
     $("#add-objek").on("click", function () {
+        console.log("add objek");
+
         var jumlahObjek = $("#jumlah-objek").val();
         // if jumlah objek is empty set to 1
         if (jumlahObjek === "") {
             jumlahObjek = 1;
         }
         var table = $("table tbody");
+        for(var i = 1; i <= jumlahObjek; i++) {
+            $("#satuan-row" + i).select2("destroy");
+        }
+
         // add row to table
         for (var i = 0; i < jumlahObjek; i++) {
+
+            console.log(i);
             row = parseInt(jumlahObjek) + 1;
             var html = "";
             html += "<tr id='row-" + row + "'>";
             html += '<td class="text-center align-middle">' + row + "</td>";
-            html += "<td>";
+            html += "<td class='text-left'>";
+            // destroy select2
+
             selectOption = $(
                 "table tbody tr:first-child td:nth-child(2)"
             ).html();
+
+
             html += selectOption;
             html = html.replace(/-row1/g, "-row" + row);
 
             html += "</td>";
+
             html +=
                 '<td><input type="number" name="nilai-y-row' +
                 row +
@@ -83,11 +97,19 @@ $(document).ready(function () {
                 '" class="form-control target-triwulan4"></td>';
 
             html += "</tr>";
-        }
-        table.append(html);
 
+        }
+
+        table.append(html);
+        for (var i = 1; i <= jumlahObjek+1; i++) {
+            $("#satuan-row" + i).select2({
+                theme: "bootstrap4",
+            });
+        }
         jumlahObjek = parseInt(jumlahObjek) + 1;
         $("#jumlah-objek").val(jumlahObjek);
+
+
     });
 
     // change Jumlah Objek
@@ -96,13 +118,16 @@ $(document).ready(function () {
         if (jumlahObjek == 0) {
             jumlahObjek = 1;
         }
+        for (var i = 1; i <= jumlahObjek; i++) {
+            $("#satuan-row" + i).select2("destroy");
+        }
         var table = $("table tbody");
         var html = "";
         for (var i = 0; i < jumlahObjek; i++) {
             row = i + 1;
             html += "<tr>";
             html += '<td class="text-center align-middle">' + (i + 1) + "</td>";
-            html += "<td>";
+            html += "<td class='text-left'>";
             // copy select option from first row
             selectOption = $(
                 "table tbody tr:first-child td:nth-child(2)"
@@ -169,6 +194,12 @@ $(document).ready(function () {
             html += "</tr>";
         }
         table.html(html);
+        for (var i = 1; i <= jumlahObjek; i++) {
+            $("#satuan-row" + i).select2({
+                theme: "bootstrap4",
+            });
+        }
+
         $("#total-triwulan1").val(0);
         $("#total-triwulan2").val(0);
         $("#total-triwulan3").val(0);
@@ -247,13 +278,18 @@ $(document).ready(function () {
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
-        console.log('jumlahObjek', jumlahObjek);
+        console.log("jumlahObjek", jumlahObjek);
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
                 accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
                 $("#target-triwulan" + j + "-row" + i).val(accumulatedTriwulan);
-                console.log('triwulan', j, '-row' + i + ' = ', accumulatedTriwulan);
+                console.log(
+                    "triwulan",
+                    j,
+                    "-row" + i + " = ",
+                    accumulatedTriwulan
+                );
             }
             accumulatedTriwulan = 0;
         }

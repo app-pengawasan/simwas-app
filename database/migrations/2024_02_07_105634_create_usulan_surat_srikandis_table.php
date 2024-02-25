@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('kode_klasifikasi_arsip', 100);
             $table->string('melaksanakan', 100);
             $table->date('usulan_tanggal_penandatanganan');
-            $table->string('directory', 100);
+            $table->string('directory', 255);
             $table->string('catatan', 100);
             $table->string('status', 100);
             $table->string('user_id', 100);

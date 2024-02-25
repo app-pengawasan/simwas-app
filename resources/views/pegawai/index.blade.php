@@ -20,8 +20,8 @@
         <div class="section-header">
             <h1>Dashboard</h1>
         </div>
-        
-        <div class="row">
+        <div style="gap:15px" class="d-flex flex-row dashboard-card">
+            @include('components.pegawai.surat-card')
         </div>
     </section>
 </div>

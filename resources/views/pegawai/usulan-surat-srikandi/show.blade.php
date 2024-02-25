@@ -75,7 +75,12 @@
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
-                                <td>{{ $usulanSuratSrikandi->link_srikandi }}</td>
+                                <td>
+                                    <a target="_blank" class="badge badge-primary" href="{{ $usulanSuratSrikandi->link_srikandi }}">
+                                        {{ $usulanSuratSrikandi->link_srikandi }}
+                                    </a>
+                                </td>
+
                             </tr>
                         </table>
                         @endif

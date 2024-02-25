@@ -62,12 +62,14 @@
                                         <td>{{ $ti->unit_kerja }}</td>
                                         <td>{{ $ti->nama_kegiatan }}</td>
                                         <td>
-                                            {{ $ti->status }}
+                                            <span class="badge badge-{{ $colorBadge[$ti->status] }}">
+                                                {{ $status[$ti->status] }}
+                                            </span>
                                         </td>
                                         <td>
                                             {{-- <a href="{{ route('target-iku-unit-kerja.edit', $ti->id) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="fas fa-edit"></i>
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
                                             </a> --}}
                                             {{-- delete --}}
                                             @if ($ti->status == 1)

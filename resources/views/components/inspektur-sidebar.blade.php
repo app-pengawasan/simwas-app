@@ -5,7 +5,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('inspektur-dashboard') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Inspektur</span>
         </div>
@@ -27,7 +27,7 @@
                     <span>Penilaian Kinerja Pegawai</span>
                 </a>
             </li>
-            <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="/inspektur/st-kinerja">
                     <i class="fas fa-wrench"></i>
                     <span>ST Kinerja</span>
@@ -44,7 +44,7 @@
                     <i class="fas fa-road"></i>
                     <span>ST Perjalanan Dinas</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-hourglass-half"></i>

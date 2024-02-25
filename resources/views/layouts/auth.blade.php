@@ -32,7 +32,7 @@
                             <div class="container container-header-hero">
                                 <!-- Navbar Brand -->
                                 <a href="#" class="navbar-brand">
-                                    <img src="{{ asset('img/simwas-text-nobg.svg') }}" alt="logo" width="150">
+                                    <img src="{{ asset('img/simwas-text-nobg.png') }}" alt="logo" width="150">
                                 </a>
                             </div>
                         </nav>
