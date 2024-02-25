@@ -24,6 +24,19 @@ class RealisasiIkuUnitKerjaController extends Controller
         '8200'    => 'Inspektorat Wilayah II',
         '8300'    => 'Inspektorat Wilayah III',
     ];
+    protected $colorBadge = [
+        '1' => 'secondary',
+        '2' => 'warning',
+        '3' => 'info',
+        '4' => 'success',
+    ];
+
+    protected $status = [
+        '1' => 'Penyusunan Target',
+        '2' => 'Penyusunan Realisasi',
+        '3' => 'Penyusunan Evaluasi',
+        '4' => 'Selesai',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +53,8 @@ class RealisasiIkuUnitKerjaController extends Controller
             'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
+            'colorBadge' => $this->colorBadge,
+            'status' => $this->status,
         ]);
     }
 

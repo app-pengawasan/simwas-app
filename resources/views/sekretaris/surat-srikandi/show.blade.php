@@ -85,7 +85,12 @@
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
-                                <td>{{ $usulanSuratSrikandi->link_srikandi }}</td>
+                                <td>
+                                    <a target="_blank" class="badge badge-primary"
+                                        href="{{ $usulanSuratSrikandi->link_srikandi }}">
+                                        {{ $usulanSuratSrikandi->link_srikandi }}
+                                    </a>
+                                </td>
                             </tr>
                         </table>
                         @endif
@@ -228,6 +233,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <input type="hidden" name="pejabat_penanda_tangan"
+                    value="{{ $usulanSuratSrikandi->pejabat_penanda_tangan }}">
                 <div class="modal-body">
                     {{-- hidden form id $usulanSuratSrikandi --}}
                     <input type="hidden" name="usulan_surat_srikandi_id" value="{{ $usulanSuratSrikandi->id }}">
@@ -250,7 +257,7 @@
                     <div class="form-group
                         {{ $errors->has('tanggal_persetujuan_srikandi') ? 'has-error' : '' }}">
                         <label for="tanggal_persetujuan_srikandi">Tanggal Persetujuan Srikandi</label>
-                        <input type="date" class="form-control" name="tanggal_persetujuan_srikandi"
+                        <input required type="date" class="form-control" name="tanggal_persetujuan_srikandi"
                             id="tanggal_persetujuan_srikandi" value="{{ old('tanggal_persetujuan_srikandi') }}">
                         @if ($errors->has('tanggal_persetujuan_srikandi'))
                         <span class="help-block
@@ -261,8 +268,8 @@
                     <div class="form-group
                         {{ $errors->has('nomor_surat_srikandi') ? 'has-error' : '' }}">
                         <label for="nomor_surat_srikandi">Nomor Surat Srikandi</label>
-                        <input type="text" class="form-control" name="nomor_surat_srikandi" id="nomor_surat_srikandi"
-                            value="{{ old('nomor_surat_srikandi') }}">
+                        <input required type="text" class="form-control" name="nomor_surat_srikandi"
+                            id="nomor_surat_srikandi" value="{{ old('nomor_surat_srikandi') }}">
                         @if ($errors->has('nomor_surat_srikandi'))
                         <span class="help-block
                             text-danger">{{ $errors->first('nomor_surat_srikandi') }}</span>
@@ -327,7 +334,7 @@
                     <div class="form-group
                         {{ $errors->has('link_srikandi') ? 'has-error' : '' }}">
                         <label for="link_srikandi">Link Srikandi</label>
-                        <input type="text" class="form-control" name="link_srikandi" id="link_srikandi"
+                        <input required type="text" class="form-control" name="link_srikandi" id="link_srikandi"
                             value="{{ old('link_srikandi') }}">
                         @if ($errors->has('link_srikandi'))
                         <span class="help-block
@@ -338,7 +345,9 @@
                     <div class="form-group
                         {{ $errors->has('upload_word_document') ? 'has-error' : '' }}">
                         <label for="upload_word_document">Upload Word Document</label>
-                        <input type="file" class="form-control" name="upload_word_document" id="upload_word_document"
+                        <input required type="file" class="form-control" name="upload_word_document"
+                            id="upload_word_document"
+                            accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             value="{{ old('upload_word_document') }}">
                         @if ($errors->has('upload_word_document'))
                         <span class="help-block
@@ -349,8 +358,8 @@
                     <div class="form-group
                         {{ $errors->has('upload_pdf_document') ? 'has-error' : '' }}">
                         <label for="upload_pdf_document">Upload PDF Document</label>
-                        <input type="file" class="form-control" name="upload_pdf_document" id="upload_pdf_document"
-                            value="{{ old('upload_pdf_document') }}">
+                        <input required type="file" class="form-control" name="upload_pdf_document"
+                            id="upload_pdf_document" accept="application/pdf" value="{{ old('upload_pdf_document') }}">
                         @if ($errors->has('upload_pdf_document'))
                         <span class="help-block
                             text-danger">{{ $errors->first('upload_pdf_document') }}</span>

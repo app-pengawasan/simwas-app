@@ -64,8 +64,15 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function index()
     {
-
-        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->get();
+        $year = request('year');
+        // get parameter from url
+       if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
+        // dd($usulanSuratSrikandi);
         return view('pegawai.usulan-surat-srikandi.index', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
@@ -100,8 +107,33 @@ class UsulanSuratSrikandiController extends Controller
     {
 
         $file = $request->file('file');
-        $fileName = time() . '-usulan-surat-srikandi-' . $file->getClientOriginalName();
-        $file->move(public_path('usulan-surat-srikandi'), $fileName);
+        $fileName = time() . '-usulan-surat-srikandi.' . $file->getClientOriginalExtension();
+        $pejabatPenandaTangan = $request->pejabatPenandaTangan;
+        if ($pejabatPenandaTangan == "8000 Inspektur Utama") {
+            $path = public_path('storage/usulan-surat-srikandi/8000-Inspektur-Utama');
+            $document ='storage/usulan-surat-srikandi/8000-Inspektur-Utama/' . $fileName;
+        }
+        elseif ($pejabatPenandaTangan == "8100 Inspektur Wilayah I") {
+            $path = public_path('storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I');
+            $document ='storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I/' . $fileName;
+        }
+        elseif ($pejabatPenandaTangan == "8200 Inspektur Wilayah II") {
+            $path = public_path('storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II');
+            $document ='storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II/' . $fileName;
+        }
+        elseif ($pejabatPenandaTangan == "8300 Inspektur Wilayah III") {
+            $path = public_path('storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III');
+            $document ='storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III/' . $fileName;
+        }
+        elseif ($pejabatPenandaTangan == "8010 Kepala Bagian Umum") {
+            $path = public_path('storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum');
+            $document ='storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum/' . $fileName;
+        }
+        else {
+            $path = public_path('storage/usulan-surat-srikandi');
+        }
+
+        $file->move($path, $fileName);
 
 
 
@@ -116,7 +148,7 @@ class UsulanSuratSrikandiController extends Controller
             'kode_klasifikasi_arsip' => $request->kodeKlasifikasiArsip,
             'melaksanakan' => $request->melaksanakan,
             'usulan_tanggal_penandatanganan' => $request->usulanTanggal,
-            'directory' => $fileName,
+            'directory' => $document,
             'status' => 'usulan',
             'catatan' => 'catatan',
             'user_id' => auth()->user()->id,
@@ -222,7 +254,7 @@ class UsulanSuratSrikandiController extends Controller
     public function downloadUsulanSurat($id)
     {
         $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-        $file = public_path('usulan-surat-srikandi/' . $usulanSuratSrikandi->directory);
+        $file = public_path($usulanSuratSrikandi->directory);
         return response()->download($file);
     }
 }

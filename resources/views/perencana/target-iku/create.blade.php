@@ -14,6 +14,7 @@
         margin: 0;
     }
 
+
     /* Firefox */
     input[type=number] {
         -moz-appearance: textfield;
@@ -75,7 +76,7 @@
                                     <div class="form-group col">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
-                                            <input id="jumlah-objek" type="number" class="form-control"
+                                            <input value="1" id="jumlah-objek" type="number" class="form-control"
                                                 name="jumlah-objek" required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
@@ -109,7 +110,7 @@
                                                 <tr id="row-1">
                                                     <td class="text-center align-middle">1</td>
                                                     <td class="text-left">
-                                                        <select class="form-control" name="satuan-row1" class="satuan">
+                                                        <select  class="select2 satuan" name="satuan-row1" id="satuan-row1">
                                                             @foreach ($kabupaten as $key => $value)
                                                             <option value="{{ $value }}">{{ $value }}</option>
                                                             @endforeach
@@ -210,7 +211,7 @@
 
 @push('scripts')
 <!-- JS Libraies -->
-{{-- <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>d --}}
+<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>d
 
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/perencana/create-target-iku.js') }}"></script>

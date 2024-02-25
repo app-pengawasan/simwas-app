@@ -24,7 +24,15 @@ class StoreSuratSrikandiRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'jenisNaskahDinas' => ['required', 'string', 'max:255'],
+            'tanggal_persetujuan_srikandi' => ['required', 'date'],
+            'nomor_surat_srikandi' => ['required', 'string', 'max:255'],
+            'derajatKeamanan' => ['required', 'string', 'max:255'],
+            'kodeKlasifikasiArsip' => ['required', 'string', 'max:255'],
+            'pejabatPenandaTangan' => ['required', 'string', 'max:255'],
+            'link_srikandi' => ['required', 'string', 'max:255'],
+            'upload_word_document' => ['required', 'file', 'mimes:doc,docx'],
+            'upload_pdf_document' => ['required', 'file', 'mimes:pdf'],
         ];
     }
 }

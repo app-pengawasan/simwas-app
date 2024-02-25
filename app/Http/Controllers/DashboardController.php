@@ -12,32 +12,67 @@ use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\UsulanSuratSrikandi;
 
 class DashboardController extends Controller
 {
     function pegawai() {
-        $stk = StKinerja::where('user_id', auth()->user()->id)->count();
-        $stp = Stp::where('user_id', auth()->user()->id)->count();
-        $stpd = Stpd::where('user_id', auth()->user()->id)->count();
-        $sl = Sl::where('user_id', auth()->user()->id)->count();
-        $surat = Surat::latest()->where('user_id', auth()->user()->id)->get();
+        // $stk = StKinerja::where('user_id', auth()->user()->id)->count();
+        // $stp = Stp::where('user_id', auth()->user()->id)->count();
+        // $stpd = Stpd::where('user_id', auth()->user()->id)->count();
+        // $sl = Sl::where('user_id', auth()->user()->id)->count();
+        // $surat = Surat::latest()->where('user_id', auth()->user()->id)->get();
+
+        // return view('pegawai.index', [
+        //     "stk" => $stk,
+        //     "stp" => $stp,
+        //     "stpd" => $stpd,
+        //     "sl" => $sl
+        // ])->with('surat', $surat);
+        $year = request('year');
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+        $usulanCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'usulan')->count();
+        $disetujuiCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'disetujui')->count();
+        $ditolakCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'ditolak')->count();
+        
+        if ($usulanCount+$disetujuiCount+$ditolakCount != 0) {
+            $percentage_usulan = intval($usulanCount/($usulanCount+$disetujuiCount+$ditolakCount)*100);
+            $percentage_disetujui = intval($disetujuiCount/($usulanCount+$disetujuiCount+$ditolakCount)*100);
+            $percentage_ditolak = intval($ditolakCount/($usulanCount+$disetujuiCount+$ditolakCount)*100);
+        } else
+        {
+            $percentage_usulan = 0;
+            $percentage_disetujui = 0;
+            $percentage_ditolak = 0;
+        }
 
         return view('pegawai.index', [
-            "stk" => $stk,
-            "stp" => $stp,
-            "stpd" => $stpd,
-            "sl" => $sl
-        ])->with('surat', $surat);
+            'type_menu' => 'usulan-surat-srikandi',
+            'percentage_usulan' => $percentage_usulan,
+            'percentage_disetujui' => $percentage_disetujui,
+            'percentage_ditolak' => $percentage_ditolak,
+            'total_usulan' => $usulanCount + $disetujuiCount + $ditolakCount,
+            'usulanCount' => $usulanCount,
+            'disetujuiCount' => $disetujuiCount,
+            'ditolakCount' => $ditolakCount,
+        ]);
     }
 
     function sekretaris() {
         $this->authorize('sekretaris');
+        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->where('status', 'usulan')->count();
         $nh = NormaHasil::where('unit_kerja', auth()->user()->unit_kerja)->count();
         $us = Sl::where('unit_kerja', auth()->user()->unit_kerja)->count();
 
         return view('sekretaris.index', [
             "nh" => $nh,
-            "us" => $us
+            "us" => $us,
+            "usulanCount" => $usulanSuratSrikandi
+
         ]);
     }
 

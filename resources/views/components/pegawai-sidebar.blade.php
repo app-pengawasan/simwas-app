@@ -5,7 +5,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('dashboard') }}">
-                <img src="{{ asset('img/simwas-text-nobg.svg') }}" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">

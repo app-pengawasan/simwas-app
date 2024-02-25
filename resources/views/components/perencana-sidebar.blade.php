@@ -1,8 +1,8 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('sekretaris-dashboard') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
+            <a href="{{ route('perencana-dashboard') }}">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Perencana</span>
         </div>
