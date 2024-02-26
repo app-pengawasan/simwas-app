@@ -50,8 +50,8 @@
                                                 <td>{{ $tim->iku->iku }}</td>
                                                 <td>{{ $tim->nama }}</td>
                                                 <td>{{ $tim->ketua->name }}</td>
-                                                <td class="text-{{ $colorText[$tim->status] }}">
-                                                    {{ $statusTim[$tim->status] }}
+                                                <td>
+                                                    <span class="badge badge-{{ $colorText[$tim->status] }}">{{ $statusTim[$tim->status] }}</span>
                                                 </td>
                                                 <td>
                                                     <a href="/pimpinan/rencana-kinerja/{{ $tim->id_timkerja }}"

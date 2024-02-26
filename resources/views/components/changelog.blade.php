@@ -15,14 +15,25 @@
                             <div>
                                 <span class="badge alert-primary mr-2 mb-2">v2.0.0</span>
                             </div>
-                            <span>Feb 20, 2023</span>
+                            <span>Feb 20, 2024</span>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
                             <h4 class="text-dark">Revision, Remove, Feat feature</h4>
                             <ul>
-                                <li>Revisi Modul Perencanaan dan Realisasi Kinerja Pegawai</li>
-                                <li>Remove Modul Pengelolaan Dokumen</li>
-                                <li>Feat Modul Surat Srikandi</li>
+                                <li>Revised feature: Modul Perencanaan dan Realisasi Kinerja Pegawai</li>
+                                    <ul>
+                                        <li>Add feature: Master Hasil Kerja, Unsur, Subunsur</li>
+                                        <li>Add feature: Proyek Perencanaan Kinerja</li>
+                                        <li>Add feature: Jam Kerja Pegawai</li>
+                                        <li>Add field to tim kerja</li>
+                                    </ul>
+                                <li>Remove feature: Modul Pengelolaan Dokumen</li>
+                                <li>Added feature: Modul Permintaan dan Pengarsipan Surat Srikandi</li>
+                                <li>Added feature: Modul Evaluasi Kinerja Unit Kerja</li>
+                                <li>Added feature: Modul Pelaporan dan Evaluasi Kinerja Pegawai</li>
+                                <li>Added feature: Modul Pengelolaan Kompetensi Pegawai</li>
+                                <li>Added feature: Modul Pengelolaan Data Kepegawaian</li>
+                                <li>Enhanched App: User Interface, Security</li>
                             </ul>
                         </div>
                     </div>

@@ -26,6 +26,34 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
+                            <div class="d-flex col-12 p-0">
+                                <div class="ml-auto my-2 col-6 p-0">
+                                    <select class="form-control" id="filterBulan">
+                                        <option value="all">Semua Bulan</option>
+                                        <option value="01">Januari</option>
+                                        <option value="02">Februari</option>
+                                        <option value="03">Maret</option>
+                                        <option value="04">April</option>
+                                        <option value="05">Mei</option>
+                                        <option value="06">Juni</option>
+                                        <option value="07">Juli</option>
+                                        <option value="08">Agustus</option>
+                                        <option value="09">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                                <div class="d-flex my-2 col-6 pr-2 mb-3">
+                                    <select class="form-control" id="filterTahun" name="filterTahun" required>
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">
+                                                {{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <a type="button" class="btn btn-primary" href="/pegawai/realisasi/create">
@@ -45,20 +73,22 @@
                                             <th>Waktu</th>
                                             <th>Status</th>
                                             <th>Bukti Dukung</th>
+                                            <th>Catatan</th>
                                             <th>Aksi</th>
                                             <th class="never">Link Bukti Dukung</th>
+                                            <th class="never">created_at</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($realisasi as $r)
                                             <tr>
-                                                <td>{{ $r->pelaksana->rencanaKerja->timkerja->nama }}</td>
-                                                <td></td>
+                                                <td>{{ $r->pelaksana->rencanaKerja->proyek->timkerja->nama }}</td>
+                                                <td>{{ $r->pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->tugas }}</td>
                                                 <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
                                                 </td>
-                                                <td class="text-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</td>
+                                                <td><span class="badge badge-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</span></td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
                                                         <a class="btn btn-primary"
@@ -72,21 +102,30 @@
                                                         </a>
                                                     @endif
                                                 </td>
+                                                <td>{{ $r->catatan }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/pegawai/realisasi/{{ $r->id }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a class="btn btn-warning"
-                                                        href="/pegawai/realisasi/{{ $r->id }}/edit"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0)" class="btn btn-danger delete-btn"
-                                                        style="width: 42px" data-id="{{ $r->id }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
+                                                    <div class="btn-group dropdown">
+                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                            <a href="/pegawai/realisasi/{{ $r->id }}" 
+                                                            class="dropdown-item">
+                                                                <i class="fas fa-circle-info text-primary mr-2"></i>
+                                                                Detail
+                                                            </a>
+                                                            <a class="dropdown-item" href="/pegawai/realisasi/{{ $r->id }}/edit">
+                                                                <i class="fas fa-edit text-warning mr-2"></i>
+                                                                Edit
+                                                            </a>
+                                                            </a>
+                                                            <a class="dropdown-item delete-btn" href="javascript:void(0)"
+                                                            data-id="{{ $r->id }}">
+                                                                <i class="fas fa-trash text-danger mr-2"></i>
+                                                                Hapus
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
@@ -95,6 +134,7 @@
                                                         {{ $r->hasil_kerja }}
                                                     @endif
                                                 </td>
+                                                <td>{{ $r->created_at }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

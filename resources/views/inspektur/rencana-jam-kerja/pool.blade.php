@@ -37,6 +37,7 @@
                                                 <th>No.</th>
                                                 <th>Pegawai</th>
                                                 <th>Jumlah Tim</th>
+                                                <th>Jumlah Proyek</th>
                                                 <th>Jumlah Tugas</th>
                                                 <th>Jumlah Jam Kerja</th>
                                                 <th>Jumlah Hari Kerja</th>
@@ -47,11 +48,12 @@
                                             @foreach ($countall as $key => $count)
                                             <tr>
                                                 <td></td>
-                                                <td>{{ $count['nama'] }}</td>
-                                                <td>{{ $count['jumlah_tim'] }}</td>
-                                                <td>{{ $count['jumlah_tugas'] }}</td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>{{ $count[0]->name }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tim'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_proyek'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tugas'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                 <td>
                                                     <a class="btn btn-primary"
                                                         href="/inspektur/rencana-jam-kerja/pool/{{ $key }}"

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-timkerja" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-timkerja" data-backdrop="static" data-keyboard="false"
     aria-labelledby="modal-create-timkerja-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-tahun">Tahun</label>
                         <div class="">
-                            <select class="form-control" id="create-tahun" name="create-tahun" required>
+                            <select class="form-control select2" id="create-tahun" name="create-tahun" required>
                                 <?php $year = date('Y'); ?>
                                 @for ($i = -3; $i < 5; $i++) <option value="{{ $year + $i }}"
                                     {{ $i === 0 ? 'selected' : '' }}>
@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-unitkerja">Unit Kerja</label>
                         <div class="">
-                            <select class="form-control" id="create-unitkerja" name="create-unitkerja" required>
+                            <select class="form-control select2" id="create-unitkerja" name="create-unitkerja" required>
                                 <option value="" disabled selected>Pilih Unit Kerja</option>
                                 @foreach ($unitKerja as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
@@ -46,7 +46,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-ketua">Ketua Tim Kerja</label>
                         <div class="">
-                            <select class="form-control" name="create-ketua" id="create-ketua" required>
+                            <select class="form-control select2" name="create-ketua" id="create-ketua" required>
                                 <option value="" selected disabled>Pilih Ketua Tim</option>
                                 @foreach ($pegawai as $p)
                                 <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -61,7 +61,7 @@
                         <small class="text-muted">*Optional</small>
 
                         <div class="">
-                            <select class="form-control" name="create-operator" id="create-operator">
+                            <select class="form-control select2" name="create-operator" id="create-operator">
                                 <option value="" selected disabled>Pilih Operator Tim</option>
                                 @foreach ($pegawai as $p)
                                 <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -73,7 +73,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-iku">IKU</label>
                         <div class="">
-                            <select class="form-control" name="create-iku" id="create-iku" required>
+                            <select class="form-control select2" name="create-iku" id="create-iku" required>
                                 <option value="" selected disabled>Pilih IKU</option>
                                 @foreach ($masterIku as $iku)
                                 <option value="{{ $iku->id_iku }}" data-idsasaran="{{ $iku->id_sasaran }}">

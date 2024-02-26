@@ -1,6 +1,5 @@
 <?php
 
-use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PpController;
 use App\Http\Controllers\SlController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\KirimController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\NamaPpController;
+use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SlSekreController;
 use App\Http\Controllers\TimKerjaController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\MasterHasilController;
+use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\SatuanKerjaController;
 use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\MasterTujuanController;
@@ -33,30 +34,35 @@ use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
+use App\Http\Controllers\SuratSrikandiController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPimpinanController;
+use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\PelaksanaTugasController;
 use App\Http\Controllers\AktivitasHarianController;
+use App\Http\Controllers\DataKepegawaianController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
+use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
-use App\Http\Controllers\PimpinanRencanKerjaController;
-use App\Http\Controllers\AnggaranRencanaKerjaController;
-use App\Http\Controllers\InspekturRencanaJamKerjaController;
-use App\Http\Controllers\KetuaTimRencanaKerjaController;
-use App\Http\Controllers\MasterHasilKerjaController;
-use App\Http\Controllers\MasterSubUnsurController;
-use App\Http\Controllers\MasterUnsurController;
-use App\Http\Controllers\UsulanSuratSrikandiController;
-use App\Http\Controllers\SuratSrikandiController;
 use App\Http\Controllers\PenilaianBerjenjangController;
-use App\Http\Controllers\ProyekController;
+use App\Http\Controllers\PimpinanRencanKerjaController;
+use App\Http\Controllers\UsulanSuratSrikandiController;
+use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
+use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\InspekturRencanaJamKerjaController;
+use App\Http\Controllers\InspekturPenilaianKinerjaController;
+use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\PegawaiLaporanKinerjaController;
+use App\Http\Controllers\RealisasiIkuUnitKerjaController;
+use App\Http\Controllers\TargetIkuUnitKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,103 +77,98 @@ use App\Http\Controllers\ProyekController;
 
 /**
  * ===========================================================================
- * Simwas here...
+ * Sistem Informasi Manajemen Pengawasan (SIMWAS)
  * ===========================================================================
 */
 //SSO and Auth Route
 Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
-
 Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
+Route::get('/auth-login', function () {
+    return view('pages.auth-login', ['type_menu' => 'auth']);
+})->middleware('guest')->name('login');
 
-/**
- * ---------------------------------------------------------------------------
- * ADMIN
- * ---------------------------------------------------------------------------
- * */
-Route::middleware(['auth', 'can:admin'])->group(function () {
+
+Route::group(['middleware'=>'auth'], function(){
+    /**
+     * ---------------------------------------------------------------------------
+     * ADMIN
+     * ---------------------------------------------------------------------------
+     * */
     Route::get('/admin', function () {
         return view('admin.index', ['type_menu' => 'dashboard']);
     })->name('admin-dashboard');
-});
 
-//Kelola-anggaran
-//1.Master Anggaran
-Route::resource('/admin/master-anggaran', MasterAnggaranController::class)->except(['show']);
-//2.Pagu Anggaran
-Route::resource('/admin/pagu-anggaran', PaguAnggaranController::class);
+    //Kelola-anggaran
+    //1.Master Anggaran
+    Route::resource('/admin/master-anggaran', MasterAnggaranController::class)->except(['show']);
+    //2.Pagu Anggaran
+    Route::resource('/admin/pagu-anggaran', PaguAnggaranController::class);
 
-//Master-pegawai
-Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
-Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+    //Master-pegawai
+    Route::resource('/admin/master-pegawai', MasterPegawaiController::class);
+    Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
-//Master-pimpinan
-Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
-// Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
+    //Master-pimpinan
+    Route::resource('/admin/master-pimpinan', MasterPimpinanController::class);
+    // Route::post('/admin/master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
-// Master Unsur, Sub Unsur, Hasil Kerja
-Route::resource('/admin/master-unsur', MasterUnsurController::class);
-Route::resource('/admin/master-subunsur', MasterSubUnsurController::class);
-Route::resource('/admin/master-hasil-kerja', MasterHasilKerjaController::class);
-Route::get('/admin/master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
-Route::get('/admin/master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
-Route::get('/admin/master-unsur/subunsur/{id}',[MasterUnsurController::class, 'getUnsurBySubUnsur'])->middleware('auth');
+    // Master Unsur, Sub Unsur, Hasil Kerja
+    Route::resource('/admin/master-unsur', MasterUnsurController::class);
+    Route::resource('/admin/master-subunsur', MasterSubUnsurController::class);
+    Route::resource('/admin/master-hasil-kerja', MasterHasilKerjaController::class);
+    Route::get('/admin/master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
+    Route::get('/admin/master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
+    Route::get('/admin/master-unsur/subunsur/{id}',[MasterUnsurController::class, 'getUnsurBySubUnsur'])->middleware('auth');
+
+    //Master Objek
+    //1. Unit Kerja
+    Route::resource('/admin/master-unit-kerja', MasterUnitKerjaController::class);
+    Route::post('/admin/master-unit-kerja/import', [MasterUnitKerjaController::class, 'import']);
+    //2. Satuan Kerja
+    Route::resource('/admin/master-satuan-kerja', SatuanKerjaController::class);
+    Route::post('/admin/master-satuan-kerja/import', [SatuanKerjaController::class, 'import']);
+    //3. Wilayah Kerja
+    Route::resource('/admin/master-wilayah-kerja', WilayahKerjaController::class);
+    Route::post('/admin/master-wilayah-kerja/import', [WilayahKerjaController::class, 'import']);
+    //4. Objek Kegiatan
+    Route::resource('/admin/objek-kegiatan', ObjekKegiatanController::class);
+    Route::get('/admin/objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);
+
+    //Master Tujuan
+    Route::resource('/admin/master-tujuan', MasterTujuanController::class);
+
+    //Master Sasaran
+    Route::resource('/admin/master-sasaran', MasterSasaranController::class);
+
+    //Master IKU
+    Route::resource('/admin/master-iku', MasterIKUController::class);
+
+    //Master Hasil
+    Route::resource('/admin/master-hasil', MasterHasilController::class);
+    Route::get('/master-hasil/unsur/{id}',[MasterHasilController::class, 'subunsur1']);
+    Route::post('/master-hasil/subunsur1/{id}',[MasterHasilController::class, 'subunsur2']);
+    Route::post('/master-hasil/subunsur2/{id}',[MasterHasilController::class, 'kategoriHasil']);
+    Route::resource('/admin/tim-kerja', TimKerjaController::class);
+
+    //Rencana Kinerja
+    Route::resource('/admin/rencana-kinerja', AdminRencanaKerjaController::class);
+    Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
+    Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
+    Route::resource('/ketua-tim/rencana-kinerja/proyek', ProyekController::class);
+
+    /**
+     * ---------------------------------------------------------------------------
+     * PIMPINAN
+     * ---------------------------------------------------------------------------
+     * */
+    //Rencana Kinerja
+    Route::resource('/pimpinan/rencana-kinerja', PimpinanRencanKerjaController::class);
+    Route::put('/pimpinan/rencana-kinerja/accept/{id}', [PimpinanRencanKerjaController::class, 'accept']);
+    Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaController::class, 'sendBackToKetuaTim']);
 
 
 
-
-//Master Objek
-//1. Unit Kerja
-Route::resource('/admin/master-unit-kerja', MasterUnitKerjaController::class);
-Route::post('/admin/master-unit-kerja/import', [MasterUnitKerjaController::class, 'import']);
-//2. Satuan Kerja
-Route::resource('/admin/master-satuan-kerja', SatuanKerjaController::class);
-Route::post('/admin/master-satuan-kerja/import', [SatuanKerjaController::class, 'import']);
-//3. Wilayah Kerja
-Route::resource('/admin/master-wilayah-kerja', WilayahKerjaController::class);
-Route::post('/admin/master-wilayah-kerja/import', [WilayahKerjaController::class, 'import']);
-//4. Objek Kegiatan
-Route::resource('/admin/objek-kegiatan', ObjekKegiatanController::class);
-Route::get('/admin/objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);
-
-//Master Tujuan
-Route::resource('/admin/master-tujuan', MasterTujuanController::class);
-
-//Master Sasaran
-Route::resource('/admin/master-sasaran', MasterSasaranController::class);
-
-//Master IKU
-Route::resource('/admin/master-iku', MasterIKUController::class);
-
-//Master Hasil
-Route::resource('/admin/master-hasil', MasterHasilController::class);
-Route::get('/master-hasil/unsur/{id}',[MasterHasilController::class, 'subunsur1']);
-Route::post('/master-hasil/subunsur1/{id}',[MasterHasilController::class, 'subunsur2']);
-Route::post('/master-hasil/subunsur2/{id}',[MasterHasilController::class, 'kategoriHasil']);
-Route::resource('/admin/tim-kerja', TimKerjaController::class);
-
-//Rencana Kinerja
-Route::resource('/admin/rencana-kinerja', AdminRencanaKerjaController::class);
-Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
-Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
-Route::resource('/ketua-tim/rencana-kinerja/proyek', ProyekController::class);
-
-/**
- * ---------------------------------------------------------------------------
- * PIMPINAN
- * ---------------------------------------------------------------------------
- * */
-//Rencana Kinerja
-Route::resource('/pimpinan/rencana-kinerja', PimpinanRencanKerjaController::class);
-Route::put('/pimpinan/rencana-kinerja/accept/{id}', [PimpinanRencanKerjaController::class, 'accept']);
-Route::put('/pimpinan/rencana-kinerja/return/{id}', [PimpinanRencanKerjaController::class, 'sendBackToKetuaTim']);
-
-/**
- * ---------------------------------------------------------------------------
- * PEGAWAI
- * ---------------------------------------------------------------------------
- * */
-Route::group(['middleware'=>'auth'], function(){// Dashboard
     /**
      * ---------------------------------------------------------------------------
      * SEKRETARIS
@@ -181,6 +182,8 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
 
     // Sekretaris-norma-hasil
     Route::resource('sekretaris/norma-hasil', NormaHasilSekreController::class);
+
+
 
     /**
      * ---------------------------------------------------------------------------
@@ -199,6 +202,14 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('analis-sdm/namaPp', NamaPpController::class);
 
     Route::resource('analis-sdm/kelola-kompetensi', AnalisKompetensiController::class);
+
+    Route::resource('analis-sdm/master-data-kepegawaian', DataKepegawaianController::class);
+    Route::get('analis-sdm/master-data-kepegawaian-nonaktif', [DataKepegawaianController::class, 'nonaktif']);
+    Route::get('analis-sdm/data-kepegawaian', [DataKepegawaianController::class, 'kelola']);
+    Route::post('analis-sdm/data-kepegawaian/import', [DataKepegawaianController::class, 'import']);
+    Route::get('analis-sdm/data-kepegawaian/export', [DataKepegawaianController::class, 'export']);
+
+
 
     /**
      * ---------------------------------------------------------------------------
@@ -224,7 +235,19 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::get('/inspektur/rencana-jam-kerja/rekap', [InspekturRencanaJamKerjaController::class, 'rekap']);
     Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
     Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
-    Route::get('/inspektur/rencana-kinerja/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+    Route::get('/inspektur/rencana-jam-kerja/detail/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+
+    //Realisasi Jam Kerja
+    Route::get('/inspektur/realisasi-jam-kerja/rekap', [InspekturRealisasiJamKerjaController::class, 'rekap']);
+    Route::get('/inspektur/realisasi-jam-kerja/pool', [InspekturRealisasiJamKerjaController::class, 'pool']);
+    Route::get('/inspektur/realisasi-jam-kerja/pool/{id}', [InspekturRealisasiJamKerjaController::class, 'show']);
+    Route::get('/inspektur/realisasi-jam-kerja/detail/{id}', [InspekturRealisasiJamKerjaController::class, 'detailTugas']);
+
+    //Penilaian Kinerja Pegawai
+    Route::resource('inspektur/penilaian-kinerja', InspekturPenilaianKinerjaController::class);
+    Route::get('inspektur/penilaian-kinerja/detail/{id}', [InspekturPenilaianKinerjaController::class, 'detail']);
+    Route::get('inspektur/penilaian-kinerja/{pegawai_dinilai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'show']);
+    Route::get('inspektur/penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
 
     /**
      * ---------------------------------------------------------------------------
@@ -233,6 +256,7 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
      * */
     Route::get('/pegawai/dashboard', [DashboardController::class, 'pegawai'])->name('dashboard');
     Route::resource('/pegawai/rencana-kinerja', PegawaiRencanaKerjaController::class);
+    Route::get('/pegawai/rencana-jam-kerja', [PegawaiRencanaKerjaController::class, 'rencanaJamKerja']);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
 
     // Ketua Tim
@@ -249,14 +273,10 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
+
+    // Usulan Surat Srikandi
     Route::resource('/pegawai/usulan-surat-srikandi', UsulanSuratSrikandiController::class);
-    Route::resource('/sekretaris/surat-srikandi', SuratSrikandiController::class);
-    // add decline route to SuratSrikandiController
-    Route::put('/sekretaris/surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
-    // downloadSuratSrikandi
-    Route::get('/sekretaris/surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
-    Route::get('/pegawai/usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
-    Route::get('/sekretaris/arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
+
 
     // Ajax
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
@@ -304,12 +324,6 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
         'show' => 'surat-eksternal.show',
     ]);
 
-    // Usulan Nomor Surat
-    Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
-
-    // Surat
-    Route::resource('sekretaris/surat', SuratController::class);
-
     // Templating dokumen
     Route::get('word', function () {
         return view('word');
@@ -329,8 +343,47 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
     Route::resource('pegawai/nilai-berjenjang', PenilaianBerjenjangController::class);
     Route::get('pegawai/nilai-berjenjang/nilai/{id}', [PenilaianBerjenjangController::class, 'getNilai']);
     Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
-    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}', [PenilaianBerjenjangController::class, 'show']);
+    Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}/{tahun}', [PenilaianBerjenjangController::class, 'show']);
+
+    //Laporan Kinerja
+    Route::resource('pegawai/laporan-kinerja', PegawaiLaporanKinerjaController::class);
+    /**
+     * ---------------------------------------------------------------------------
+     * SEKRETARIS
+     * ---------------------------------------------------------------------------
+     * */
+    Route::resource('/sekretaris/surat-srikandi', SuratSrikandiController::class);
+    Route::put('/sekretaris/surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
+    Route::get('/sekretaris/surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
+    Route::get('/pegawai/usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
+    Route::get('/sekretaris/arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
+    // Usulan Nomor Surat
+    Route::resource('sekretaris/nomor-surat', NomorSuratController::class);
+    // Surat
+    Route::resource('sekretaris/surat', SuratController::class);
+
+
+    /**
+     * ---------------------------------------------------------------------------
+     * PERENCANA
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/perencana', [DashboardController::class, 'perencana'])->name('perencana-dashboard');
+    Route::resource('perencana/target-iku-unit-kerja', TargetIkuUnitKerjaController::class);
+    Route::resource('perencana/realisasi-iku-unit-kerja', RealisasiIkuUnitKerjaController::class);
+    Route::resource('perencana/evaluasi-iku-unit-kerja', EvaluasiIkuUnitKerjaController::class);
+
+    Route::put('/perencana/target-iku-unit-kerja/status/{id}', [TargetIkuUnitKerjaController::class, 'editStatus'])->name('target-iku-unit-kerja.status');
 });
+
+
+Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
+
+// if in production force redirect to https
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
 
 /**
  * ===========================================================================
@@ -338,264 +391,245 @@ Route::group(['middleware'=>'auth'], function(){// Dashboard
  * ===========================================================================
  * */
 
-Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
 
-Route::get('/dashboard-general-dashboard', function () {
-    return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
-});
-Route::get('/dashboard-ecommerce-dashboard', function () {
-    return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
-});
+// Route::get('/dashboard-general-dashboard', function () {
+//     return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
+// });
+// Route::get('/dashboard-ecommerce-dashboard', function () {
+//     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
+// });
 
 // UserController
-Route::get('/search', [UserController::class, 'search'])->name('search');
+// Route::get('/search', [UserController::class, 'search'])->name('search');
 
 // Layout
-Route::get('/layout-default-layout', function () {
-    return view('pages.layout-default-layout', ['type_menu' => 'layout']);
-});
+// Route::get('/layout-default-layout', function () {
+//     return view('pages.layout-default-layout', ['type_menu' => 'layout']);
+// });
 
 // Blank Page
-Route::get('/blank-page', function () {
-    return view('pages.blank-page', ['type_menu' => '']);
-});
+// Route::get('/blank-page', function () {
+//     return view('pages.blank-page', ['type_menu' => '']);
+// });
 
 // Bootstrap
-Route::get('/bootstrap-alert', function () {
-    return view('pages.bootstrap-alert', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-badge', function () {
-    return view('pages.bootstrap-badge', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-breadcrumb', function () {
-    return view('pages.bootstrap-breadcrumb', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-buttons', function () {
-    return view('pages.bootstrap-buttons', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-card', function () {
-    return view('pages.bootstrap-card', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-carousel', function () {
-    return view('pages.bootstrap-carousel', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-collapse', function () {
-    return view('pages.bootstrap-collapse', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-dropdown', function () {
-    return view('pages.bootstrap-dropdown', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-form', function () {
-    return view('pages.bootstrap-form', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-list-group', function () {
-    return view('pages.bootstrap-list-group', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-media-object', function () {
-    return view('pages.bootstrap-media-object', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-modal', function () {
-    return view('pages.bootstrap-modal', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-nav', function () {
-    return view('pages.bootstrap-nav', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-navbar', function () {
-    return view('pages.bootstrap-navbar', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-pagination', function () {
-    return view('pages.bootstrap-pagination', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-popover', function () {
-    return view('pages.bootstrap-popover', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-progress', function () {
-    return view('pages.bootstrap-progress', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-table', function () {
-    return view('pages.bootstrap-table', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-tooltip', function () {
-    return view('pages.bootstrap-tooltip', ['type_menu' => 'bootstrap']);
-});
-Route::get('/bootstrap-typography', function () {
-    return view('pages.bootstrap-typography', ['type_menu' => 'bootstrap']);
-});
+// Route::get('/bootstrap-alert', function () {
+//     return view('pages.bootstrap-alert', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-badge', function () {
+//     return view('pages.bootstrap-badge', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-breadcrumb', function () {
+//     return view('pages.bootstrap-breadcrumb', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-buttons', function () {
+//     return view('pages.bootstrap-buttons', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-card', function () {
+//     return view('pages.bootstrap-card', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-carousel', function () {
+//     return view('pages.bootstrap-carousel', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-collapse', function () {
+//     return view('pages.bootstrap-collapse', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-dropdown', function () {
+//     return view('pages.bootstrap-dropdown', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-form', function () {
+//     return view('pages.bootstrap-form', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-list-group', function () {
+//     return view('pages.bootstrap-list-group', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-media-object', function () {
+//     return view('pages.bootstrap-media-object', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-modal', function () {
+//     return view('pages.bootstrap-modal', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-nav', function () {
+//     return view('pages.bootstrap-nav', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-navbar', function () {
+//     return view('pages.bootstrap-navbar', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-pagination', function () {
+//     return view('pages.bootstrap-pagination', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-popover', function () {
+//     return view('pages.bootstrap-popover', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-progress', function () {
+//     return view('pages.bootstrap-progress', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-table', function () {
+//     return view('pages.bootstrap-table', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-tooltip', function () {
+//     return view('pages.bootstrap-tooltip', ['type_menu' => 'bootstrap']);
+// });
+// Route::get('/bootstrap-typography', function () {
+//     return view('pages.bootstrap-typography', ['type_menu' => 'bootstrap']);
+// });
 
 
 // components
-Route::get('/components-article', function () {
-    return view('pages.components-article', ['type_menu' => 'components']);
-});
-Route::get('/components-avatar', function () {
-    return view('pages.components-avatar', ['type_menu' => 'components']);
-});
-Route::get('/components-chat-box', function () {
-    return view('pages.components-chat-box', ['type_menu' => 'components']);
-});
-Route::get('/components-empty-state', function () {
-    return view('pages.components-empty-state', ['type_menu' => 'components']);
-});
-Route::get('/components-gallery', function () {
-    return view('pages.components-gallery', ['type_menu' => 'components']);
-});
-Route::get('/components-hero', function () {
-    return view('pages.components-hero', ['type_menu' => 'components']);
-});
-Route::get('/components-multiple-upload', function () {
-    return view('pages.components-multiple-upload', ['type_menu' => 'components']);
-});
-Route::get('/components-pricing', function () {
-    return view('pages.components-pricing', ['type_menu' => 'components']);
-});
-Route::get('/components-statistic', function () {
-    return view('pages.components-statistic', ['type_menu' => 'components']);
-});
-Route::get('/components-tab', function () {
-    return view('pages.components-tab', ['type_menu' => 'components']);
-});
-Route::get('/components-table', function () {
-    return view('pages.components-table', ['type_menu' => 'components']);
-});
-Route::get('/components-user', function () {
-    return view('pages.components-user', ['type_menu' => 'components']);
-});
-Route::get('/components-wizard', function () {
-    return view('pages.components-wizard', ['type_menu' => 'components']);
-});
+// Route::get('/components-article', function () {
+//     return view('pages.components-article', ['type_menu' => 'components']);
+// });
+// Route::get('/components-avatar', function () {
+//     return view('pages.components-avatar', ['type_menu' => 'components']);
+// });
+// Route::get('/components-chat-box', function () {
+//     return view('pages.components-chat-box', ['type_menu' => 'components']);
+// });
+// Route::get('/components-empty-state', function () {
+//     return view('pages.components-empty-state', ['type_menu' => 'components']);
+// });
+// Route::get('/components-gallery', function () {
+//     return view('pages.components-gallery', ['type_menu' => 'components']);
+// });
+// Route::get('/components-hero', function () {
+//     return view('pages.components-hero', ['type_menu' => 'components']);
+// });
+// Route::get('/components-multiple-upload', function () {
+//     return view('pages.components-multiple-upload', ['type_menu' => 'components']);
+// });
+// Route::get('/components-pricing', function () {
+//     return view('pages.components-pricing', ['type_menu' => 'components']);
+// });
+// Route::get('/components-statistic', function () {
+//     return view('pages.components-statistic', ['type_menu' => 'components']);
+// });
+// Route::get('/components-tab', function () {
+//     return view('pages.components-tab', ['type_menu' => 'components']);
+// });
+// Route::get('/components-table', function () {
+//     return view('pages.components-table', ['type_menu' => 'components']);
+// });
+// Route::get('/components-user', function () {
+//     return view('pages.components-user', ['type_menu' => 'components']);
+// });
+// Route::get('/components-wizard', function () {
+//     return view('pages.components-wizard', ['type_menu' => 'components']);
+// });
 
 // forms
-Route::get('/forms-advanced-form', function () {
-    return view('pages.forms-advanced-form', ['type_menu' => 'forms']);
-});
-Route::get('/forms-editor', function () {
-    return view('pages.forms-editor', ['type_menu' => 'forms']);
-});
-Route::get('/forms-validation', function () {
-    return view('pages.forms-validation', ['type_menu' => 'forms']);
-});
+// Route::get('/forms-advanced-form', function () {
+//     return view('pages.forms-advanced-form', ['type_menu' => 'forms']);
+// });
+// Route::get('/forms-editor', function () {
+//     return view('pages.forms-editor', ['type_menu' => 'forms']);
+// });
+// Route::get('/forms-validation', function () {
+//     return view('pages.forms-validation', ['type_menu' => 'forms']);
+// });
 
 // google maps
 // belum tersedia
 
 // modules
-Route::get('/modules-calendar', function () {
-    return view('pages.modules-calendar', ['type_menu' => 'modules']);
-});
-Route::get('/modules-chartjs', function () {
-    return view('pages.modules-chartjs', ['type_menu' => 'modules']);
-});
-Route::get('/modules-datatables', function () {
-    return view('pages.modules-datatables', ['type_menu' => 'modules']);
-});
-Route::get('/modules-flag', function () {
-    return view('pages.modules-flag', ['type_menu' => 'modules']);
-});
-Route::get('/modules-font-awesome', function () {
-    return view('pages.modules-font-awesome', ['type_menu' => 'modules']);
-});
-Route::get('/modules-ion-icons', function () {
-    return view('pages.modules-ion-icons', ['type_menu' => 'modules']);
-});
-Route::get('/modules-owl-carousel', function () {
-    return view('pages.modules-owl-carousel', ['type_menu' => 'modules']);
-});
-Route::get('/modules-sparkline', function () {
-    return view('pages.modules-sparkline', ['type_menu' => 'modules']);
-});
-Route::get('/modules-sweet-alert', function () {
-    return view('pages.modules-sweet-alert', ['type_menu' => 'modules']);
-});
-Route::get('/modules-toastr', function () {
-    return view('pages.modules-toastr', ['type_menu' => 'modules']);
-});
-Route::get('/modules-vector-map', function () {
-    return view('pages.modules-vector-map', ['type_menu' => 'modules']);
-});
-Route::get('/modules-weather-icon', function () {
-    return view('pages.modules-weather-icon', ['type_menu' => 'modules']);
-});
+// Route::get('/modules-calendar', function () {
+//     return view('pages.modules-calendar', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-chartjs', function () {
+//     return view('pages.modules-chartjs', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-datatables', function () {
+//     return view('pages.modules-datatables', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-flag', function () {
+//     return view('pages.modules-flag', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-font-awesome', function () {
+//     return view('pages.modules-font-awesome', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-ion-icons', function () {
+//     return view('pages.modules-ion-icons', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-owl-carousel', function () {
+//     return view('pages.modules-owl-carousel', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-sparkline', function () {
+//     return view('pages.modules-sparkline', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-sweet-alert', function () {
+//     return view('pages.modules-sweet-alert', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-toastr', function () {
+//     return view('pages.modules-toastr', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-vector-map', function () {
+//     return view('pages.modules-vector-map', ['type_menu' => 'modules']);
+// });
+// Route::get('/modules-weather-icon', function () {
+//     return view('pages.modules-weather-icon', ['type_menu' => 'modules']);
+// });
 
 // auth
-Route::get('/auth-forgot-password', function () {
-    return view('pages.auth-forgot-password', ['type_menu' => 'auth']);
-});
-Route::get('/auth-login', function () {
-    return view('pages.auth-login', ['type_menu' => 'auth']);
-})->middleware('guest')->name('login');
-Route::get('/auth-login2', function () {
-    return view('pages.auth-login2', ['type_menu' => 'auth']);
-});
-Route::get('/auth-register', function () {
-    return view('pages.auth-register', ['type_menu' => 'auth']);
-});
-Route::get('/auth-reset-password', function () {
-    return view('pages.auth-reset-password', ['type_menu' => 'auth']);
-});
+// Route::get('/auth-forgot-password', function () {
+//     return view('pages.auth-forgot-password', ['type_menu' => 'auth']);
+// });
+
+// Route::get('/auth-login2', function () {
+//     return view('pages.auth-login2', ['type_menu' => 'auth']);
+// });
+// Route::get('/auth-register', function () {
+//     return view('pages.auth-register', ['type_menu' => 'auth']);
+// });
+// Route::get('/auth-reset-password', function () {
+//     return view('pages.auth-reset-password', ['type_menu' => 'auth']);
+// });
 
 // error
-Route::get('/error-403', function () {
-    return view('pages.error-403', ['type_menu' => 'error']);
-});
-Route::get('/error-404', function () {
-    return view('pages.error-404', ['type_menu' => 'error']);
-});
-Route::get('/error-500', function () {
-    return view('pages.error-500', ['type_menu' => 'error']);
-});
-Route::get('/error-503', function () {
-    return view('pages.error-503', ['type_menu' => 'error']);
-});
 
 // features
-Route::get('/features-activities', function () {
-    return view('pages.features-activities', ['type_menu' => 'features']);
-});
-Route::get('/features-post-create', function () {
-    return view('pages.features-post-create', ['type_menu' => 'features']);
-});
-Route::get('/features-post', function () {
-    return view('pages.features-post', ['type_menu' => 'features']);
-});
-Route::get('/features-profile', function () {
-    return view('pages.features-profile', ['type_menu' => 'features']);
-});
-Route::get('/features-settings', function () {
-    return view('pages.features-settings', ['type_menu' => 'features']);
-});
-Route::get('/features-setting-detail', function () {
-    return view('pages.features-setting-detail', ['type_menu' => 'features']);
-});
-Route::get('/features-tickets', function () {
-    return view('pages.features-tickets', ['type_menu' => 'features']);
-});
+// Route::get('/features-activities', function () {
+//     return view('pages.features-activities', ['type_menu' => 'features']);
+// });
+// Route::get('/features-post-create', function () {
+//     return view('pages.features-post-create', ['type_menu' => 'features']);
+// });
+// Route::get('/features-post', function () {
+//     return view('pages.features-post', ['type_menu' => 'features']);
+// });
+// Route::get('/features-profile', function () {
+//     return view('pages.features-profile', ['type_menu' => 'features']);
+// });
+// Route::get('/features-settings', function () {
+//     return view('pages.features-settings', ['type_menu' => 'features']);
+// });
+// Route::get('/features-setting-detail', function () {
+//     return view('pages.features-setting-detail', ['type_menu' => 'features']);
+// });
+// Route::get('/features-tickets', function () {
+//     return view('pages.features-tickets', ['type_menu' => 'features']);
+// });
 
 // utilities
-Route::get('/utilities-contact', function () {
-    return view('pages.utilities-contact', ['type_menu' => 'utilities']);
-});
-Route::get('/utilities-invoice', function () {
-    return view('pages.utilities-invoice', ['type_menu' => 'utilities']);
-});
-Route::get('/utilities-subscribe', function () {
-    return view('pages.utilities-subscribe', ['type_menu' => 'utilities']);
-});
+// Route::get('/utilities-contact', function () {
+//     return view('pages.utilities-contact', ['type_menu' => 'utilities']);
+// });
+// Route::get('/utilities-invoice', function () {
+//     return view('pages.utilities-invoice', ['type_menu' => 'utilities']);
+// });
+// Route::get('/utilities-subscribe', function () {
+//     return view('pages.utilities-subscribe', ['type_menu' => 'utilities']);
+// });
 
 // credits
-Route::get('/credits', function () {
-    return view('pages.credits', ['type_menu' => '']);
-});
-Route::get('/testing', function () {
-    return view('welcome');
-});
-Route::get('/testing1', function () {
-    return view('welcome');
-});
-Route::get('/testing2', function () {
-    return view('welcome');
-});
+// Route::get('/credits', function () {
+//     return view('pages.credits', ['type_menu' => '']);
+// });
+// Route::get('/testing', function () {
+//     return view('welcome');
+// });
+// Route::get('/testing1', function () {
+//     return view('welcome');
+// });
+// Route::get('/testing2', function () {
+//     return view('welcome');
+// });
 
-// if in production force redirect to https
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}

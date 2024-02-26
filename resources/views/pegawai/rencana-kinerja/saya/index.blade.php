@@ -24,10 +24,21 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <p class="mb-3">
-                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Menampilkan seluruh tugas yang telah disetujui Pimpinan.
-                            </p>
+                            <div class="row align-items-center mb-3">
+                                <p class="col-8 m-0">
+                                    <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                    Menampilkan seluruh tugas yang telah disetujui Pimpinan.
+                                </p>
+                                <div class="my-2 col-4 float-right">
+                                    <select class="form-control" id="filterTahun" name="filterTahun" required>
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">
+                                                {{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
                             <?php
                             $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
                             $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
@@ -35,64 +46,73 @@
                             <table id="tim-kerja" class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th>Tim</th>
+                                        <th>Proyek</th>
                                         <th>Tugas</th>
-                                        <th>Tahun</th>
                                         <th>Jabatan</th>
                                         <th>Hasil kerja</th>
+                                        <th id="title">Rencana Jam Kerja</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
+                                        <th class="never">tahun</th>
                                     </tr>
                                 </thead>
+                                <tbody>
                                 @foreach ($tugasSaya as $ts)
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {{ $ts->rencanaKerja->tugas }}
-                                            </td>
-                                            <td>
-                                                {{ $ts->rencanaKerja->timkerja->tahun }}
-                                            </td>
-                                            <td>
-                                                {{ $jabatanPelaksana[$ts->pt_jabatan] }}
-                                            </td>
-                                            <td>
-                                                @if ($ts->pt_jabatan == 3)
-                                                    @if ($ts->pt_hasil == 2)
-                                                        Kertas Kerja
-                                                    @else
-                                                        {{ $hasilKerja[$ts->pt_hasil] }}
-                                                    @endif
-                                                @elseif ($ts->pt_jabatan == 4)
+                                    <tr>
+                                        <td>
+                                            {{ $ts->rencanaKerja->proyek->timkerja->nama }}
+                                        </td>
+                                        <td>
+                                            {{ $ts->rencanaKerja->proyek->nama_proyek }}
+                                        </td>
+                                        <td>
+                                            {{ $ts->rencanaKerja->tugas }}
+                                        </td>
+                                        <td>
+                                            {{ $jabatanPelaksana[$ts->pt_jabatan] }}
+                                        </td>
+                                        <td>
+                                            @if ($ts->pt_jabatan == 3)
+                                                @if ($ts->pt_hasil == 2)
                                                     Kertas Kerja
                                                 @else
-                                                    {{ $hasilKerja2[$ts->pt_hasil] }}
+                                                    {{ $hasilKerja[$ts->pt_hasil] }}
                                                 @endif
-                                            </td>
-                                            <td>
-                                                {{ $statusTugas[$ts->rencanaKerja->status_realisasi] }}
-                                            </td>
-                                            <td>
-                                                <a href="/pegawai/rencana-kinerja/{{ $ts->id_rencanakerja }}"
-                                                    class="btn btn-primary" style="width: 42px">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                @if ($ts->pt_jabatan == 3 || $ts->pt_jabatan == 2)
-                                                    @if ($ts->rencanaKerja->status_realisasi == 0)
-                                                        <a href="javascript:void(0)" class="btn btn-danger disable-btn"
-                                                            data-id="{{ $ts->id_rencanakerja }}" style="width: 42px"
-                                                            data-toggle="modal" data-target="#disable-tugas">
-                                                            <i class="fas fa-ban"></i>
-                                                        </a>
-                                                    @endif
+                                            @elseif ($ts->pt_jabatan == 4)
+                                                Kertas Kerja
+                                            @else
+                                                {{ $hasilKerja2[$ts->pt_hasil] }}
+                                            @endif
+                                        </td>
+                                        <td class="convert" value="{{ $ts->total }}">{{ $ts->total }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ $statusColor[$ts->rencanaKerja->status_realisasi] }}">{{ $statusTugas[$ts->rencanaKerja->status_realisasi] }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="/pegawai/rencana-kinerja/{{ $ts->id_rencanakerja }}"
+                                                class="btn btn-primary" style="width: 42px">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            @if ($ts->pt_jabatan == 3 || $ts->pt_jabatan == 2)
+                                                @if ($ts->rencanaKerja->status_realisasi == 0)
+                                                    <a href="javascript:void(0)" class="btn btn-danger disable-btn"
+                                                        data-id="{{ $ts->id_rencanakerja }}" style="width: 42px"
+                                                        data-toggle="modal" data-target="#disable-tugas">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
                                                 @endif
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                @endforeach
+                                            @endif
+                                        </td>
+                                        <td>{{ $ts->rencanaKerja->proyek->timkerja->tahun }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
     </div>
 @endsection

@@ -20,86 +20,86 @@
                 <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
             </div>
             <div class="row">
-                <div class=" col-md-12">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/pegawai/rencana-kinerja">
+                                    <a class="btn btn-primary" href="{{ url()->previous() }}">
                                         <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mx-auto">
-                                    <table class="mb-4">
-                                        <tr>
-                                            <th style="min-width: 94pt">Tujuan</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->sasaran->tujuan->tujuan }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Sasaran</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->sasaran->sasaran }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>IKU</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->iku }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Kegiatan</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->nama }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Unit Kerja</th>
-                                            <td>: </td>
-                                            <td>{{ $unitKerja[$rencanaKerja->timkerja->unitkerja] }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Ketua</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->ketua->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tahun</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->tahun }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tugas</th>
-                                            <td>: </td>
-                                            <td>{{ $rencanaKerja->tugas }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Status Tugas</th>
-                                            <td>: </td>
-                                            <td>{{ $statusTugas[$rencanaKerja->status_realisasi] }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th valign=top style="min-width: 64px">Objek</th>
-                                            <td>:</td>
-                                            <td>
-                                                @if (count($rencanaKerja->objekPengawasan) > 0)
-                                                    @foreach ($rencanaKerja->objekPengawasan as $objek)
-                                                        <p>{{ $loop->iteration }}. {{ $objek->nama }}</p>
-                                                    @endforeach
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tanggal</th>
-                                            <td>:</td>
-                                            <td class="">
-                                                {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->mulai)) }} -
-                                                {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->selesai)) }}
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            <table class="mb-4 table table-striped responsive">
+                                                <tr>
+                                                    <th style="min-width: 94pt">Tujuan</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->iku->sasaran->tujuan->tujuan }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Sasaran</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->iku->sasaran->sasaran }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>IKU</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->iku->iku }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Kegiatan</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->nama }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Unit Kerja</th>
+                                                    <td>: </td>
+                                                    <td>{{ $unitKerja[$rencanaKerja->proyek->timkerja->unitkerja] }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Ketua</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->ketua->name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tahun</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->proyek->timkerja->tahun }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tugas</th>
+                                                    <td>: </td>
+                                                    <td>{{ $rencanaKerja->tugas }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Status Tugas</th>
+                                                    <td>: </td>
+                                                    <td>{{ $statusTugas[$rencanaKerja->status_realisasi] }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th valign=top style="min-width: 64px">Objek</th>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if (count($rencanaKerja->objekPengawasan) > 0)
+                                                            @foreach ($rencanaKerja->objekPengawasan as $objek)
+                                                                <p>{{ $loop->iteration }}. {{ $objek->nama }}</p>
+                                                            @endforeach
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                {{-- <tr>
+                                                    <th>Tanggal</th>
+                                                    <td>:</td>
+                                                    <td class="">
+                                                        {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->mulai)) }} -
+                                                        {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->selesai)) }}
+                                                    </td>
+                                                </tr> --}}
+                                            </table>
                                     <p class="font-weight-bold">Pelaksana</p>
                                     <table class="table table-striped">
                                         <thead>

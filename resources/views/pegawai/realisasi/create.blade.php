@@ -48,10 +48,24 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="proyek">Proyek</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="proyek" id="proyek" required>
+                                                <option value="" selected disabled class="disabled proyek-dis">Pilih Proyek</option>
+                                                @foreach ($proyeks as $id_proyek => $proyek)
+                                                    <option value="{{ $id_proyek }}" 
+                                                    data-tim="{{ $proyek['tim'] }}">
+                                                        {{ $proyek['nama_proyek'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="tugas">Tugas</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" name="tugas" id="tugas" required>
-                                                <option value="" selected disabled class="disabled">Pilih Tugas</option>
+                                                <option value="" selected disabled class="disabled tugas-dis">Pilih Tugas</option>
                                                 @foreach ($tugasSaya as $ts)
                                                     @if ($ts->pt_jabatan == 3)
                                                         @if ($ts->pt_hasil == 2)
@@ -65,7 +79,7 @@
                                                         @php $hasil = $hasilKerja2[$ts->pt_hasil]; @endphp
                                                     @endif
                                                     <option value="{{ $ts->id_pelaksana }}"
-                                                    data-tim="{{ $ts->rencanaKerja->id_timkerja }}"
+                                                    data-proyek="{{ $ts->rencanaKerja->id_proyek }}"
                                                     data-hasil="{{ $hasil }}">
                                                         {{ $ts->rencanaKerja->tugas }}
                                                     </option>
@@ -112,17 +126,17 @@
                                             <small id="error-status" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
                                         <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" id="kegiatan" name="kegiatan" required></textarea>
+                                            <textarea rows="5" class="form-control h-auto" id="kegiatan" name="kegiatan"></textarea>
                                             <small id="error-kegiatan" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="capaian">Capaian</label>
                                         <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" id="capaian" name="capaian" required></textarea>
+                                            <textarea rows="5" class="form-control h-auto" id="capaian" name="capaian"></textarea>
                                             <small id="error-capaian" class="text-danger"></small>
                                         </div>
                                     </div>

@@ -22,8 +22,8 @@ return new class extends Migration
             $table->time('start');
             $table->time('end');
             $table->integer('status');
-            $table->text('kegiatan');
-            $table->text('capaian');
+            $table->text('kegiatan')->nullable();
+            $table->text('capaian')->nullable();
             $table->text('hasil_kerja');
             $table->text('catatan')->nullable();
             $table->decimal('nilai', 5, 2)->nullable();

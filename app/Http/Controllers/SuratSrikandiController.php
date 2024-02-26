@@ -62,6 +62,7 @@ class SuratSrikandiController extends Controller
     public function index()
     {
         $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->get();
+
         foreach ($usulanSuratSrikandi as $usulan) {
             $usulan->user_name = $usulan->user->name;
         }
@@ -103,12 +104,54 @@ class SuratSrikandiController extends Controller
 
     public function store(StoreSuratSrikandiRequest $request)
     {
+
+        $pejabatPenandaTangan = $request->pejabatPenandaTangan;
         $file = $request->file('upload_word_document');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads'), $fileName);
+        $fileName = time() . '-surat_srikandi.' . $file->getClientOriginalExtension();
+
         $file2 = $request->file('upload_pdf_document');
-        $fileName2 = time() . '_' . $file2->getClientOriginalName();
-        $file2->move(public_path('uploads'), $fileName2);
+        $fileName2 = time() . '-surat_srikandi.' . $file2->getClientOriginalExtension();
+
+        if ($pejabatPenandaTangan == "8000 Inspektur Utama") {
+            $path = public_path('storage/surat-srikandi/8000-Inspektur-Utama/word');
+            $document ='storage/surat-srikandi/8000-Inspektur-Utama/word/' . $fileName;
+            $path2 = public_path('storage/surat-srikandi/8000-Inspektur-Utama/pdf');
+            $document2 ='storage/surat-srikandi/8000-Inspektur-Utama/pdf/' . $fileName2;
+        }
+        elseif ($pejabatPenandaTangan == "8100 Inspektur Wilayah I") {
+            $path = public_path('storage/surat-srikandi/8100-Inspektur-Wilayah-I/word');
+            $document ='storage/surat-srikandi/8100-Inspektur-Wilayah-I/word/' . $fileName;
+            $path2 = public_path('storage/surat-srikandi/8100-Inspektur-Wilayah-I/pdf');
+            $document2 ='storage/surat-srikandi/8100-Inspektur-Wilayah-I/pdf/' . $fileName2;
+        }
+        elseif ($pejabatPenandaTangan == "8200 Inspektur Wilayah II") {
+            $path = public_path('storage/surat-srikandi/8200-Inspektur-Wilayah-II/word');
+            $document ='storage/surat-srikandi/8200-Inspektur-Wilayah-II/word/' . $fileName;
+            $path2 = public_path('storage/surat-srikandi/8200-Inspektur-Wilayah-II/pdf');
+            $document2 ='storage/surat-srikandi/8200-Inspektur-Wilayah-II/pdf/' . $fileName2;
+        }
+        elseif ($pejabatPenandaTangan == "8300 Inspektur Wilayah III") {
+            $path = public_path('storage/surat-srikandi/8300-Inspektur-Wilayah-III/word');
+            $document ='storage/surat-srikandi/8300-Inspektur-Wilayah-III/word/' . $fileName;
+            $path2 = public_path('storage/surat-srikandi/8300-Inspektur-Wilayah-III/pdf');
+            $document2 ='storage/surat-srikandi/8300-Inspektur-Wilayah-III/pdf/' . $fileName2;
+        }
+        elseif ($pejabatPenandaTangan == "8010 Kepala Bagian Umum") {
+            $path = public_path('storage/surat-srikandi/8010-Kepala-Bagian-Umum/word');
+            $document ='storage/surat-srikandi/8010-Kepala-Bagian-Umum/word/' . $fileName;
+            $path2 = public_path('storage/surat-srikandi/8010-Kepala-Bagian-Umum/pdf');
+            $document2 ='storage/surat-srikandi/8010-Kepala-Bagian-Umum/pdf/' . $fileName2;
+        }
+        else {
+            $path = public_path('storage/surat-srikandi');
+        }
+
+        $file->move($path, $fileName);
+        $file2->move($path2, $fileName2);
+
+
+
+
 
         // dd($request->all());
 
@@ -122,8 +165,8 @@ class SuratSrikandiController extends Controller
             'perihal_srikandi' => 'Surat Srikandi',
             'kepala_unit_penandatangan_srikandi' => $request->pejabatPenandaTangan,
             'link_srikandi' => $request->link_srikandi,
-            'document_srikandi_word_path' => $fileName,
-            'document_srikandi_pdf_path' => $fileName2,
+            'document_srikandi_word_path' => $document,
+            'document_srikandi_pdf_path' => $document2,
             'user_id' => auth()->user()->id,
             'id_usulan_surat_srikandi' => $request->usulan_surat_srikandi_id,
         ]);
@@ -179,7 +222,7 @@ class SuratSrikandiController extends Controller
      */
     public function update(UpdateSuratSrikandiRequest $request, SuratSrikandi $suratSrikandi)
     {
-        //
+        // dd($request->all());
     }
 
     /**
@@ -213,7 +256,7 @@ class SuratSrikandiController extends Controller
     {
         $suratSrikandi = SuratSrikandi::where('id_usulan_surat_srikandi', $id)->first();
 
-        $file = public_path('uploads/' . $suratSrikandi->document_srikandi_pdf_path);
+        $file = public_path($suratSrikandi->document_srikandi_pdf_path);
         return response()->download($file);
         // dd($suratSrikandi);
     }

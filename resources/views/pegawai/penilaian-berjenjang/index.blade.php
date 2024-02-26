@@ -24,8 +24,18 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex float-right col-6">
-                                <div class="ml-auto my-2 col-12 p-0 pl-2">
+                            <div class="d-flex float-right col-4 p-0 pl-2">
+                                <div class="ml-auto my-2 col-12 p-0">
+                                    <select class="form-control" id="filterTahun">
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex float-right col-4 p-0 pr-1 pl-1">
+                                <div class="ml-auto my-2 col-12 p-0">
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -43,8 +53,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="d-flex float-right col-6 p-0">
-                                <div class="ml-auto my-2 col-12 p-0 pr-2">
+                            <div class="d-flex float-left col-4 p-0 pr-2">
+                                <div class="ml-auto my-2 col-12 p-0">
                                     <select class="form-control" id="filterUnitKerja" autocomplete="off">
                                         <option value="all">Semua Unit Kerja</option>
                                         <option value="8000">Inspektorat Utama</option>
@@ -69,28 +79,32 @@
                                             <th>Aksi</th>
                                             <th class="never">Bulan</th>
                                             <th class="never">Unit Kerja</th>
+                                            <th class="never">Tahun</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($tugasCount as $id_pegawai => $bulan)
-                                            @foreach ($bulan as $key => $count)
-                                                <tr>
-                                                    <td>{{ $count['nama'] }}</td>
-                                                    <td>{{ $unitkerja[$count['unit_kerja']] }}</td>
-                                                    <td>{{ $count['count'] }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{ $count['avg'] }}</td>
-                                                    <td>
-                                                        <a class="btn btn-primary"
-                                                            href="/pegawai/nilai-berjenjang/{{ $id_pegawai }}/{{ $key }}"
-                                                            style="width: 42px">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ $key }}</td>
-                                                    <td>{{ $count['unit_kerja'] }}</td>
-                                                </tr>
+                                        @foreach ($tugasCount as $id_pegawai => $count) 
+                                            @foreach ($count as $tahun => $values)
+                                                @foreach ($values['count'] as $bulan => $jumlah_tugas)
+                                                    <tr>
+                                                        <td>{{ $values['nama'] }}</td>
+                                                        <td>{{ $unitkerja[$values['unit_kerja']] }}</td>
+                                                        <td>{{ $jumlah_tugas }}</td>
+                                                        <td>{{ $values['rencana_jam'][$bulan] }}</td>
+                                                        <td>{{ $values['realisasi_jam'][$bulan] }}</td>
+                                                        <td>{{ $values['avg'][$bulan] }}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary"
+                                                                href="/pegawai/nilai-berjenjang/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}"
+                                                                style="width: 42px">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>{{ $bulan }}</td>
+                                                        <td>{{ $values['unit_kerja'] }}</td>
+                                                        <td>{{ $tahun }}</td>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
                                         @endforeach
                                     </tbody>

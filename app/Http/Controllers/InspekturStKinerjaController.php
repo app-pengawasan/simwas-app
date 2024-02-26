@@ -106,7 +106,7 @@ class InspekturStKinerjaController extends Controller
             $usulan = StKinerja::latest()->get();
         } else {
             // $usulan = StKinerja::latest()->where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $usulan = StKinerja::latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+            $usulan = StKinerja::latest()->whereHas('rencanaKerja.proyek.timkerja', function ($query) {
                 $query->where('unitkerja', auth()->user()->unit_kerja);
             })->get();
         }

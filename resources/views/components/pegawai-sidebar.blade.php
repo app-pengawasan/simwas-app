@@ -5,7 +5,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('dashboard') }}">
-                <img src="{{ asset('img/simwas-text-nobg.svg') }}" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
@@ -47,6 +47,11 @@
                         class="{{ Request::is('pegawai/rencana-kinerja') || Request::is('pegawai/rencana-kinerja/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/pegawai/rencana-kinerja">Tugas Saya</a>
                     </li>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/rencana-jam-kerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/rencana-jam-kerja">Jam Kerja</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
@@ -74,6 +79,12 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/pegawai/laporan-kinerja">
+                    <i class="fas fa-square-poll-vertical"></i>
+                    <span>Laporan Kinerja</span>
+                </a>
             </li>
             {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('dashboard') }}">

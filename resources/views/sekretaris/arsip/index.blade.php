@@ -12,7 +12,7 @@
 @endpush
 
 @section('main')
-@include('components.header')
+@include('components.sekretaris-header')
 @include('components.sekretaris-sidebar')
 
 <div class="main-content">
@@ -54,7 +54,8 @@
                                         <td>{{ $usulan->tanggal_persetujuan_srikandi }}</td>
                                         <td>{{ $usulan->kepala_unit_penandatangan_srikandi }}</td>
                                         <td>
-                                            <a class="badge badge-primary" href="{{ $usulan->link_srikandi }}">
+                                            <a target="_blank" class="badge badge-primary"
+                                                href="{{ $usulan->link_srikandi }}">
                                                 <i class="fa-solid fa-link mr-1"></i>
                                                 Buka Link Srikandi</a>
                                         </td>

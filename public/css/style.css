@@ -384,7 +384,8 @@ select.form-control:not([size]):not([multiple]) {
     border-bottom-right-radius: 0;
 }
 
-.selectgroup-input {
+.selectgroup-input,
+.selectgroup-input1 {
     opacity: 0;
     position: absolute;
     z-index: -1;
@@ -392,7 +393,9 @@ select.form-control:not([size]):not([multiple]) {
     left: 0;
 }
 
-.selectgroup-button {
+.selectgroup-button,
+.selectgroup-button1
+{
     background-color: #fdfdff;
     border-color: #e4e6fc;
     border-width: 1px;
@@ -408,9 +411,11 @@ select.form-control:not([size]):not([multiple]) {
     -moz-user-select: none;
     user-select: none;
     font-size: 13px;
-    min-width: 2.375rem;
+    min-width: 2rem;
     line-height: 36px;
+    /* border-radius: 5px; */
 }
+
 
 .selectgroup-button-icon {
     padding-left: 0.5rem;
@@ -421,8 +426,18 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .selectgroup-input:checked + .selectgroup-button {
-    background-color: var(--primary);
-    color: #fff;
+    background-color: #cdf4cc;
+
+    color: #06c703;
+    border-color: #06c703;
+    z-index: 1;
+    font-weight: 700;
+}
+.selectgroup-input1:checked + .selectgroup-button1 {
+    background-color: #f7cccc;
+    border-color: #d80606;
+    color: #d80606;
+    font-weight: 700;
     z-index: 1;
 }
 
@@ -4278,7 +4293,7 @@ body:not(.sidebar-mini)
     border-bottom: 1px solid #cbccd0;
     padding-bottom: 7px;
 }
-#month-wrap{
+#month-wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -4286,7 +4301,7 @@ body:not(.sidebar-mini)
 }
 /* < 1200px */
 @media (max-width: 1200px) {
-    #month-wrap{
+    #month-wrap {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -4296,12 +4311,12 @@ body:not(.sidebar-mini)
 }
 /* <600px */
 @media (max-width: 600px) {
-    #month-wrap{
+    #month-wrap {
         display: block;
     }
 }
 
-footer{
+footer {
     /* make bottom of the page */
     position: absolute;
     bottom: 5px;
@@ -4311,7 +4326,22 @@ footer{
 }
 /* mobile view */
 @media (max-width: 600px) {
-    .changelog-list{
+    .changelog-list {
         flex-direction: column !important;
     }
+}
+
+#table-iku td {
+    padding: 0.5rem 1rem;
+    text-align: center;
+    /* center horizontal and vertical */
+    vertical-align: middle;
+    text-align: center;
+}
+
+.rounded-bar {
+    border-radius: 3px;
+}
+.segmented-proggress {
+    margin: 0 1px;
 }

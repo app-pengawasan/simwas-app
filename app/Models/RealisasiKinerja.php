@@ -18,4 +18,9 @@ class RealisasiKinerja extends Model
     {
         return $this->belongsTo(PelaksanaTugas::class, "id_pelaksana","id_pelaksana");
     }
+
+    public function getPenilai(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "penilai", "id");
+    }
 }

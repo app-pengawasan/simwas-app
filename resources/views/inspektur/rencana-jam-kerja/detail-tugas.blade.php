@@ -37,37 +37,37 @@
                                         <tr>
                                             <th style="min-width: 94pt">Tujuan</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->sasaran->tujuan->tujuan }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->iku->sasaran->tujuan->tujuan }}</td>
                                         </tr>
                                         <tr>
                                             <th>Sasaran</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->sasaran->sasaran }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->iku->sasaran->sasaran }}</td>
                                         </tr>
                                         <tr>
                                             <th>IKU</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->iku->iku }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->iku->iku }}</td>
                                         </tr>
                                         <tr>
                                             <th>Kegiatan</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->nama }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->nama }}</td>
                                         </tr>
                                         <tr>
                                             <th>Unit Kerja</th>
                                             <td>: </td>
-                                            <td>{{ $unitKerja[$rencanaKerja->timkerja->unitkerja] }}</td>
+                                            <td>{{ $unitKerja[$rencanaKerja->proyek->timkerja->unitkerja] }}</td>
                                         </tr>
                                         <tr>
                                             <th>Ketua</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->ketua->name }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->ketua->name }}</td>
                                         </tr>
                                         <tr>
                                             <th>Tahun</th>
                                             <td>: </td>
-                                            <td>{{ $rencanaKerja->timkerja->tahun }}</td>
+                                            <td>{{ $rencanaKerja->proyek->timkerja->tahun }}</td>
                                         </tr>
                                         <tr>
                                             <th>Tugas</th>

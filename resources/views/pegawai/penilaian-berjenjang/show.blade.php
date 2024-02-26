@@ -16,9 +16,25 @@
     @include('components.pegawai-sidebar')
 
     <div class="main-content">
-        <!-- Modal -->
-        @include('pegawai.penilaian-berjenjang.create');
-        @include('pegawai.penilaian-berjenjang.edit');
+        {{-- Modal --}}
+        <div class="modal fade" id="kalenderModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="kalenderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="kalenderModalLabel">Kalender Aktivitas Pegawai</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <center><div id='calendar' style="width: 90%"></div></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @include('components.penilaian.create');
+        @include('components.penilaian.edit');
         <section class="section">
             <div class="section-header">
                 <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }}</h1>
@@ -34,7 +50,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <center><div id='calendar' style="width: 90%" class="mt-5"></div></center>
                             <div class="mt-5">
                                 @include('components.flash')
                                 {{ session()->forget(['alert-type', 'status']) }}
@@ -43,9 +58,9 @@
                                     <thead>
                                         <tr>
                                             <th>Tugas</th>
+                                            <th>Jabatan</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
-                                            <th>Status</th>
                                             <th>Bukti Dukung</th>
                                             <th>Catatan Pegawai</th>
                                             <th>Nilai</th>
@@ -55,12 +70,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php 
+                                            $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des']; 
+                                        @endphp
                                         @foreach ($realisasiDinilai as $realisasi)
+                                            @php 
+                                                $rencana_jam = 0; 
+                                                foreach ($bulans as $bulan) {
+                                                    $rencana_jam += $realisasi->pelaksana[$bulan];
+                                                }
+                                            @endphp
                                             <tr>
                                                 <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-{{ $colorText[$realisasi->status] }}">{{ $status[$realisasi->status] }}</td>
+                                                <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
+                                                <td>{{ $rencana_jam }}</td>
+                                                <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                         <a class="btn btn-primary"

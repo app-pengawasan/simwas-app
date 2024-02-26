@@ -51,6 +51,13 @@ class PegawaiRencanaKerjaController extends Controller
         99  => 'Dibatalkan'
     ];
 
+    protected $statusColor = [
+        0   => 'dark',
+        1   => 'primary',
+        2   => 'success',
+        99  => 'danger'
+    ];
+
     protected $unsur = [
         'msu001'    => 'Perencanaan, pengorganisasian, dan pengendalian Pengawasan Intern',
         'msu002'    => 'Pelaksanaan teknis pengawasan internal',
@@ -91,6 +98,9 @@ class PegawaiRencanaKerjaController extends Controller
         's003'      => 'O-H',
         's004'      => 'PAKET'
     ];
+
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    
     /**
      * Display a listing of the resource.
      *
@@ -102,14 +112,15 @@ class PegawaiRencanaKerjaController extends Controller
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
         $pegawai = User::all();
+        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
 
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.timKerja', function (Builder $query){
+            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                 $query->where('status', 6);
-            })->get();
+            })->selectRaw('*, '.implode('+', $bulans).' as total')->get();
 
         // return [$tugasSaya, $id_pegawai];
         return view('pegawai.rencana-kinerja.saya.index', [
@@ -125,6 +136,7 @@ class PegawaiRencanaKerjaController extends Controller
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
             'statusTugas'   => $this->statusTugas,
+            'statusColor'   => $this->statusColor,
         ]);
 
         // return $id_pegawai;
@@ -253,6 +265,18 @@ class PegawaiRencanaKerjaController extends Controller
             'success' => true,
             'message' => 'Berhasil Mengirim Rencana Kerja!',
         ]);
+    }
 
+    public function rencanaJamKerja() {
+        $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
+                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
+                    $query->where('status', 6);
+                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
+                  ->get();
+
+        return view('pegawai.rencana-kinerja.jam-kerja.index',[
+            'type_menu'     => 'rencana-kinerja',
+            'jabatan'       => $this->jabatan,
+        ])->with('tugas', $tugas);
     }
 }

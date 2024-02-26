@@ -40,6 +40,11 @@
                     <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
                 </a>
                 @endif
+                @if (auth()->user()->is_perencana)
+                <a href="{{ route('perencana-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Perencana
+                </a>
+                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">

@@ -54,8 +54,8 @@
                                 <tbody>
                                     @foreach ($usulanSuratSrikandi as $usulan)
                                     <tr>
-                                        <td>{{ $usulan->tanggal }}</td>
-                                        <td>{{ $usulan->nomor_surat }}</td>
+                                        <td>{{ $usulan->created_at->format('d F Y') }}</td>
+                                        <td>{{ $usulan->nomor_surat == 'belum' ? 'Belum ada nomor surat' : $usulan->nomor_surat }}
                                         <td>{{ $usulan->jenis_naskah_dinas }}</td>
                                         <td>
                                             @if ($usulan->status == 'disetujui')

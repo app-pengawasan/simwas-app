@@ -5,7 +5,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('analis-sdm-pp') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Analis SDM</span>
         </div>
@@ -36,6 +36,26 @@
                         class="{{ Request::is('analis-sdm/kelola-kompetensi') || Request::is('analis-sdm/kelola-kompetensi/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/analis-sdm/kelola-kompetensi">
                             <span>Kelola Kompetensi</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'data-kepegawaian' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fab fa-stumbleupon-circle"></i>
+                    <span>Data Kepegawaian Lainnya</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('analis-sdm/master-data-kepegawaian*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/master-data-kepegawaian">
+                            <span>Master Data Kepegawaian</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('analis-sdm/data-kepegawaian') || Request::is('analis-sdm/data-kepegawaian/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/data-kepegawaian">
+                            <span>Kelola Data Kepegawaian</span>
                         </a>
                     </li>
                 </ul>

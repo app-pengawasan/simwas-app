@@ -26,14 +26,14 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="form-group clockpicker" data-autoclose="true">
+                            <div class="form-group clockpicker" data-placement="top" data-autoclose="true">
                                 <label class="form-label" for="edit-start">Jam Mulai</label>
                                 <input type="text" name="edit-start" id="edit-start" class="form-control" required>
                                 <small id="error-edit-start" class="text-danger"></small>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="form-group clockpicker" data-autoclose="true">
+                            <div class="form-group clockpicker" data-placement="top" data-autoclose="true">
                                 <label class="form-label" for="edit-end">Jam Selesai</label>
                                 <input type="text" name="edit-end" id="edit-end" class="form-control" required>
                                 {{-- <span class="input-group-addon">
@@ -43,11 +43,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label class="form-label" for="aktivitas">Aktivitas</label>
                         <textarea rows="5" class="form-control h-auto" id="edit-aktivitas" name="edit-aktivitas"></textarea>
                         <small id="error-edit-aktivitas" class="text-danger"></small>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">

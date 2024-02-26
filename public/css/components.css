@@ -826,10 +826,9 @@ tr:first-child > td > .fc-day-grid-event {
 }
 
 .select2-container .select2-selection--multiple, .select2-container .select2-selection--single {
-  box-sizing: border-box;
+  box-sizing: fill-box;
   cursor: pointer;
   display: block;
-  min-height: 42px;
   -moz-user-select: none;
   user-select: none;
   -webkit-user-select: none;
@@ -2070,3 +2069,4 @@ tr:first-child > td > .fc-day-grid-event {
     margin-bottom: 50px;
   }
 }
+

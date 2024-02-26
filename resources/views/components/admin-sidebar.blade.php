@@ -2,7 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="{{ route('admin-dashboard') }}">
-                <img src="{{ asset('img/simwas-text.svg') }}" alt="brand" style="width: 120px">
+                <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Admin</span>
         </div>

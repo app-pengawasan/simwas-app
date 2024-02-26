@@ -84,9 +84,13 @@
                                                 </td>
                                                 <td>{{ $k->catatan }}</td>
                                                 @if ($k->status == 1)
-                                                    <td class="text-{{ $colorText[$k->status] }}">{{ $status["$k->status"] }} oleh {{ $k->analis->name }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }} oleh {{ $k->analis->name }}</span>
+                                                    </td>
                                                 @else 
-                                                    <td class="text-{{ $colorText[$k->status] }}">{{ $status["$k->status"] }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
+                                                    </td>
                                                 @endif
                                                 <td>
                                                     <a href="javascript:void(0)" class="btn edit-btn btn-warning"

@@ -1,41 +1,10 @@
-let table = $("#table-realisasi");
-
-$(function () {
-    table
-        .DataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 7],
-                    },
-                },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> Pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 7],
-                    },
-                },
-            ],
-        })
-        .buttons()
-        .container()
-        .appendTo("#realisasi_wrapper .col-md-6:eq(0)");
-});
-
 $("#tugas").prop("disabled", true); //disable pilihan tugas
-$('.disabled').show(); //show pilihan "Pilih Tugas"
+$("#proyek").prop("disabled", true); //disable pilihan proyek
+$('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
+if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
 
-//hide clockpicker kalo discroll
+//hide clockpicker saat discroll
 $(document).on("scroll", function (e) {
     clockpicker.clockpicker('hide');
     $('.clockpicker input').trigger('blur');
@@ -43,12 +12,22 @@ $(document).on("scroll", function (e) {
 
 $("#tim").on("change", function () {
     $("#tugas option").hide(); //hide option" tugas
-    $('.disabled').show(); //show pilihan "Pilih Tugas"
-    $('.disabled').prop("selected", true);
+    $("#tugas").prop("disabled", true); //disable pilihan tugas
+    $("#proyek option").hide(); //hide option" proyek
+    $('.proyek-dis').show(); //show pilihan "Pilih Proyek"
+    $('.proyek-dis').prop("selected", true);
     $("#kegiatan").val(''); //clear kegiatan
     $("#capaian").val(''); //clear capaian
+    $("#proyek").prop("disabled", false); //enable pilihan proyek
+    $(`#proyek option[data-tim="${$(this).val()}"]`).show(); //show option proyek sesuai tim yang dipilih
+});
+
+$("#proyek").on("change", function () {
+    $("#tugas option").hide(); //hide option" tugas
+    $('.tugas-dis').show(); //show pilihan "Pilih Tugas"
+    $('.tugas-dis').prop("selected", true);
     $("#tugas").prop("disabled", false); //enable pilihan tugas
-    $(`#tugas option[data-tim="${$(this).val()}"]`).show(); //show option tugas sesuai tim yang dipilih
+    $(`#tugas option[data-proyek="${$(this).val()}"]`).show(); //show option proyek sesuai tim yang dipilih
 });
 
 $("#tugas").on("change", function () {
@@ -64,8 +43,30 @@ $("#tugas").on("change", function () {
 });
 
 $("#status").on("change", function () {
-    if ($(this).val() == '1') $('#catatan').prop("required", false);
-    else $('#catatan').prop("required", true);
+    if ($(this).val() == '1') {
+        let hasil_kerja = $('#tugas').find(":selected").attr('data-hasil');
+
+        $('#catatan').prop("required", false);
+        $('.status_change').show();
+
+        $('#kegiatan').prop("required", true);
+        $("#kegiatan").val('Menyusun ' + hasil_kerja);
+        $("#kegiatan").removeClass('is-invalid');
+        $("#error-kegiatan").text("");
+        $("#kegiatan").closest('.form-group').addClass('was-validated');
+
+        $('#capaian').prop("required", true);
+        $("#capaian").val(hasil_kerja + ' sebanyak 1 dokumen');
+        $("#capaian").removeClass('is-invalid');
+        $("#error-capaian").text("");
+        $("#capaian").closest('.form-group').addClass('was-validated');
+    } 
+    else {
+        $('#catatan').prop("required", true);
+        $('.status_change').hide();
+        $('#kegiatan').prop("required", false);
+        $('#capaian').prop("required", false);
+    } 
 });
 
 $("#link").on("input", function () {
@@ -278,3 +279,59 @@ $(".delete-btn").on("click", function (e) {
         }
     });
 });
+
+let table = $("#table-realisasi")
+    .dataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> Pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 6, 8],
+                },
+                messageTop: function () {
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                },
+            },
+        ],
+        order: [[9, 'desc']]
+    }).api();
+
+let today = new Date(); 
+$('#filterTahun').val(today.getFullYear());
+
+$('#filterBulan').on("change", function () {
+    table.draw();
+});
+
+$('#filterTahun').on("change", function () {
+    table.draw();
+});
+
+$.fn.dataTableExt.afnFiltering.push(
+    function (setting, data, index) {
+        var selectedBulan = $('select#filterBulan option:selected').val();
+        var selectedTahun = $('select#filterTahun option:selected').val();
+        if ((data[3].substr(3, 2) == selectedBulan || selectedBulan == 'all') 
+            && data[3].substr(6, 4) == selectedTahun) return true;
+        else return false;
+    }
+);
+
+table.draw();

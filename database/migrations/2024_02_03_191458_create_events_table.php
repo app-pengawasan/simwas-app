@@ -20,7 +20,8 @@ return new class extends Migration
             $table->foreign('id_pelaksana')->references('id_pelaksana')->on('pelaksana_tugas')->onDelete('cascade');
             $table->dateTime('start');
             $table->dateTime('end');
-            $table->text('aktivitas');
+            $table->string('color', 7);
+            // $table->text('aktivitas')->nullable();
             $table->timestamps();
         });
     }
