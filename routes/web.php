@@ -60,6 +60,7 @@ use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
 
@@ -344,7 +345,8 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('pegawai/nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
     Route::get('pegawai/nilai-berjenjang/{pegawai_dinilai}/{bulan}/{tahun}', [PenilaianBerjenjangController::class, 'show']);
 
-
+    //Laporan Kinerja
+    Route::resource('pegawai/laporan-kinerja', PegawaiLaporanKinerjaController::class);
     /**
      * ---------------------------------------------------------------------------
      * SEKRETARIS

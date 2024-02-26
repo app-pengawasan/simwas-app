@@ -80,6 +80,12 @@
                     </li>
                 </ul>
             </li>
+            <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/pegawai/laporan-kinerja">
+                    <i class="fas fa-solid fa-envelope"></i>
+                    <span>Laporan Kinerja</span>
+                </a>
+            </li>
             {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('dashboard') }}">
                 <i class="fas fa-file-signature"></i>
