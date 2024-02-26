@@ -182,6 +182,7 @@ class InspekturPenilaianKinerjaController extends Controller
         $validateData['id_pegawai'] = $request->id_pegawai;
         $validateData['bulan'] = $request->bulan;
         $validateData['tahun'] = $request->tahun;
+        $validateData['catatan'] = $request->catatan;
 
         NilaiInspektur::create($validateData);
 

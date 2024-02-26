@@ -69,7 +69,7 @@ class PegawaiKompetensiController extends Controller
             'pp_lain'       => 'required_if:create-pp,==,999',
             'nama_pp_id'        => 'required',
             'nama_pp_lain'   => 'required_if:create-nama_pp,==,999',
-            'create-sertifikat'    => 'required|file'
+            'create-sertifikat'    => 'required|mimes:pdf|max:500'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -142,7 +142,8 @@ class PegawaiKompetensiController extends Controller
             'edit-pp'            => 'required',
             'edit-pp_lain'       => 'required_if:create-pp,==,999',
             'edit-nama_pp'        => 'required|not_in:null',
-            'edit-nama_pp_lain'   => 'required_if:create-nama_pp,==,999'
+            'edit-nama_pp_lain'   => 'required_if:create-nama_pp,==,999',
+            'edit-sertifikat'     => 'nullable|mimes:pdf|max:500'
         ];
 
         $validator = Validator::make($request->all(), $rules);

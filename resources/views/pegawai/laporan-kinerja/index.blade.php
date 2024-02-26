@@ -76,7 +76,7 @@
                                             $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des']; 
                                             $rowid = 0;
                                             $rowspan = 0;
-                                            setlocale(LC_ALL, 'id-ID', 'id_ID');
+                                            $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                                         @endphp
                                         @foreach ($realisasiDone as $tahun => $items) 
                                             @foreach ($items as $month => $realisasiList)
@@ -88,7 +88,7 @@
                                                         }
                                                     @endphp
                                                     <tr class="table-bordered">
-                                                        <td class="bulan">{{ strftime('%B', mktime(0, 0, 0, (int)$month)) }}</td>
+                                                        <td class="bulan">{{ $months[(int)$month - 1] }}</td>
                                                         <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                                         <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                         <td>{{ $rencana_jam }}</td>
