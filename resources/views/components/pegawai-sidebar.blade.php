@@ -82,7 +82,7 @@
             </li>
             <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/laporan-kinerja">
-                    <i class="fas fa-solid fa-envelope"></i>
+                    <i class="fas fa-square-poll-vertical"></i>
                     <span>Laporan Kinerja</span>
                 </a>
             </li>
