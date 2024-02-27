@@ -36,3 +36,81 @@ inputs.forEach((input) => {
         }
     });
 });
+
+// onchange input select #jenisNaskahDinas
+$("#jenisNaskahDinas").change(function () {
+    var value = $(this).val();
+    if (value === "1031") {
+        $("#jenisNaskahDinasPenugasanWrapper").removeClass("d-none");
+        $("#jenisNaskahDinasPenugasan").attr("required", "required");
+        $("#kegiatanWrapper").removeClass("d-none");
+        $("#kegiatan").attr("required", "required");
+        $("#melaksanakanWrapper").removeClass("d-none");
+        $("#melaksanakan").attr("required", "required");
+        $("#jenisNaskahDinasKorespondensiWrapper").addClass("d-none");
+        $("#jenisNaskahDinasKorespondensi").removeAttr("required");
+        // disable jenisNaskahDinasKorespondensi
+        $("#jenisNaskahDinasKorespondensi").val("");
+        $("#perihalWrapper").addClass("d-none");
+        $("#perihal").removeAttr("required");
+        $("#perihal").val("");
+    } else if (value === "1032") {
+        $("#jenisNaskahDinasPenugasanWrapper").addClass("d-none");
+        $("#jenisNaskahDinasPenugasan").removeAttr("required");
+        $("#jenisNaskahDinasPenugasan").val("");
+        $("#kegiatanWrapper").addClass("d-none");
+        $("#kegiatan").removeAttr("required");
+        $("#kegiatan").val("");
+        $("#melaksanakanWrapper").addClass("d-none");
+        $("#melaksanakan").removeAttr("required");
+        $("#melaksanakan").val("");
+        $("#jenisNaskahDinasKorespondensiWrapper").removeClass("d-none");
+        $("#jenisNaskahDinasKorespondensi").attr("required", "required");
+        $("#perihalWrapper").removeClass("d-none");
+        $("#perihal").attr("required", "required");
+        $("#unsurTugasWrapper").addClass("d-none");
+        $("#unsurTugas").removeAttr("required");
+        $("#unsurTugas").val("");
+        $("#kegiatanPengawasanWrapper").addClass("d-none");
+        $("#kegiatanPengawasan").removeAttr("required");
+        $("#kegiatanPengawasan").val("");
+        $("#unsurTugasWrapper").addClass("d-none");
+        $("#unsurTugas").removeAttr("required");
+        $("#unsurTugas").val("");
+        $("#kegiatanPengawasanWrapper").addClass("d-none");
+        $("#kegiatanPengawasan").removeAttr("required");
+        $("#kegiatanPengawasan").val("");
+        $("#pendukungPengawasanWrapper").addClass("d-none");
+        $("#pendukungPengawasan").removeAttr("required");
+        $("#pendukungPengawasan").val("");
+    }
+});
+
+$("#kegiatan").change(function () {
+    var value = $(this).val();
+    if (value === "1") {
+        $("#unsurTugasWrapper").removeClass("d-none");
+        $("#unsurTugas").attr("required", "required");
+        $("#kegiatanPengawasanWrapper").removeClass("d-none");
+        $("#kegiatanPengawasan").attr("required", "required");
+    } else if (value === "2") {
+        $("#unsurTugasWrapper").addClass("d-none");
+        $("#unsurTugas").removeAttr("required");
+        $("#unsurTugas").val("");
+        $("#kegiatanPengawasanWrapper").addClass("d-none");
+        $("#kegiatanPengawasan").removeAttr("required");
+        $("#kegiatanPengawasan").val("");
+        $("#pendukungPengawasanWrapper").removeClass("d-none");
+        $("#pendukungPengawasan").attr("required", "required");
+    } else {
+        $("#unsurTugasWrapper").addClass("d-none");
+        $("#unsurTugas").removeAttr("required");
+        $("#unsurTugas").val("");
+        $("#kegiatanPengawasanWrapper").addClass("d-none");
+        $("#kegiatanPengawasan").removeAttr("required");
+        $("#kegiatanPengawasan").val("");
+        $("#pendukungPengawasanWrapper").addClass("d-none");
+        $("#pendukungPengawasan").removeAttr("required");
+        $("#pendukungPengawasan").val("");
+    }
+});

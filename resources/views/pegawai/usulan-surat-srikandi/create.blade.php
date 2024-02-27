@@ -18,6 +18,37 @@
 
 <div class="main-content">
     <!-- Modal -->
+    <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetailLabel">Jenis Naskah Dinas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-dark">Naskah dinas penugasan</h6>
+                    <ul>
+                        <li>Surat Tugas</li>
+                        <li>Surat Perintah</li>
+                    </ul>
+                    <h6 class="text-dark">Naskah Korespondensi</h6>
+                    <ul>
+                        <li>Surat Dinas</li>
+                        <li>Nota Dinas</li>
+                        <li>Memorandum</li>
+                        <li>Undangan</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text-dark" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {{-- @include('components.kelola-kompetensi.create');
     @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
@@ -28,12 +59,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        @include('components.flash-error');
+                        @include('components.flash-error')
                         <div id="stepper1" class="bs-stepper">
                             <div class="bs-stepper-header mx-auto" style="width: 30%;">
                                 <div class="step" data-target="#test-l-1">
                                     <button type="button" class="btn step-trigger d-flex flex-column">
-                                        <span class="bs-stepper-circle"><i class="fa-solid fa-circle-info"></i></span>
+                                        <span class="bs-stepper-circle">
+                                            <i class="fa-solid fa-circle-info"></i></span>
                                         <span class="bs-stepper-label">Data Surat</span>
                                     </button>
                                 </div>
@@ -51,68 +83,156 @@
                                 <div class="bs-stepper-content">
                                     <div id="test-l-1" class="content">
                                         @csrf
+
                                         <div class="form-group">
                                             <label for="pejabatPenandaTangan">Pejabat Penanda Tangan</label>
                                             <select required
                                                 class="form-control select2 @error('pejabatPenandaTangan') is-invalid @enderror"
                                                 id="pejabatPenandaTangan" name="pejabatPenandaTangan">
                                                 <option disabled selected value="">Pilih Pejabat Penanda Tangan</option>
-                                                @foreach ($pejabatPenandaTangan as $pejabatPenandaTangan)
+                                                @foreach ($pejabatPenandaTangan as $key => $pejabatPenandaTangan)
                                                 <option {{
-                                                        old('pejabatPenandaTangan') == $pejabatPenandaTangan ? 'selected' : ''
-                                                    }} value="{{ $pejabatPenandaTangan }}">
+                                                        old('pejabatPenandaTangan') == $key ? 'selected' : ''
+                                                    }} value="{{ $key }}">
                                                     {{ $pejabatPenandaTangan }}
                                                 </option>
                                                 @endforeach
                                             </select>
                                             <div class="invalid-feedback">Pejabat Penanda Tangan Harus Diisi</div>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="jenisNaskahDinas">Jenis Naskah Dinas</label>
+                                            <i class="fa-solid fa-circle-info" data-toggle="modal"
+                                                data-target="#modalDetail" style="cursor: pointer"></i>
                                             <select required
                                                 class="form-control select2 @error('jenisNaskahDinas') is-invalid @enderror"
                                                 id="jenisNaskahDinas" name="jenisNaskahDinas">
                                                 <option disabled selected value="">Pilih Jenis Naskah Dinas</option>
-                                                @foreach ($jenisNaskahDinas as $jenisNaskahDinas)
+                                                @foreach ($jenisNaskahDinas as $key => $jenisNaskahDinas)
                                                 <option {{
                                                         old('jenisNaskahDinas') == $jenisNaskahDinas ? 'selected' : ''
-                                                    }} value="{{ $jenisNaskahDinas }}">
+                                                    }} value="{{ $key }}">
                                                     {{ $jenisNaskahDinas }}</option>
                                                 @endforeach
                                             </select>
                                             <div class="invalid-feedback">Jenis Naskah Dinas Harus Diisi</div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="jenisNaskahDinasPenugasan">Jenis Naskah Dinas
-                                                Penugasan</label>
-                                            <select required
-                                                class="form-control select2 @error('jenisNaskahDinasPenugasan') is-invalid @enderror"
-                                                id="jenisNaskahDinasPenugasan" name="jenisNaskahDinasPenugasan">
-                                                <option disabled selected value="">Pilih Jenis Naskah Dinas Penugasan
-                                                </option>
-                                                @foreach ($jenisNaskahDinasPenugasan as $jndp)
-                                                <option {{
-                                                        old('jenisNaskahDinasPenugasan') == $jndp ? 'selected' : ''
-                                                    }} value="{{ $jndp }}">
-                                                    {{ $jndp }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="invalid-feedback">Jenis Naskah Dinas Penugasan Harus Diisi</div>
+
+                                        <div id="jenisNaskahDinasPenugasanWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="jenisNaskahDinasPenugasan">Jenis Naskah Dinas
+                                                    Penugasan</label>
+                                                <select required
+                                                    class="form-control select2 @error('jenisNaskahDinasPenugasan') is-invalid @enderror"
+                                                    id="jenisNaskahDinasPenugasan" name="jenisNaskahDinasPenugasan">
+                                                    <option disabled selected value="">Pilih Jenis Naskah Dinas
+                                                        Penugasan
+                                                    </option>
+                                                    @foreach ($jenisNaskahDinasPenugasan as $key => $jndp)
+                                                    <option {{
+                                                        old('jenisNaskahDinasPenugasan') == $key ? 'selected' : ''
+                                                    }} value="{{ $key }}">
+                                                        {{ $jndp }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Jenis Naskah Dinas Penugasan Harus Diisi
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="kegiatan">Kegiatan</label>
-                                            <select required
-                                                class="form-control select2 @error('kegiatan') is-invalid @enderror"
-                                                id="kegiatan" name="kegiatan">
-                                                <option disabled selected value="">Pilih Kegiatan</option>
-                                                @foreach ($kegiatan as $kegiatan)
-                                                <option {{ old('kegiatan') == $kegiatan ? 'selected' : '' }}
-                                                    value="{{ $kegiatan }}">
-                                                    {{ $kegiatan }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="invalid-feedback">Kegiatan Harus Diisi</div>
+
+                                        <div id="kegiatanWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="kegiatan">Kegiatan</label>
+                                                <select required
+                                                    class="form-control select2 @error('kegiatan') is-invalid @enderror"
+                                                    id="kegiatan" name="kegiatan">
+                                                    <option disabled selected value="">Pilih Kegiatan</option>
+                                                    @foreach ($kegiatan as $key => $kegiatan)
+                                                    <option {{ old('kegiatan') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">
+                                                        {{ $kegiatan }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Kegiatan Harus Diisi</div>
+                                            </div>
                                         </div>
+
+                                        <div id="kegiatanPengawasanWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="kegiatanPengawasan">Kegiatan Pengawasan</label>
+                                                <select required
+                                                    class="form-control select2 @error('kegiatanPengawasan') is-invalid @enderror"
+                                                    id="kegiatanPengawasan" name="kegiatanPengawasan">
+                                                    <option disabled selected value="">Pilih Kegiatan Pengawasan
+                                                    </option>
+                                                    @foreach ($kegiatanPengawasan as $key => $kegiatanPengawasan)
+                                                    <option {{ old('kegiatanPengawasan') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">
+                                                        {{ $kegiatanPengawasan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="pendukungPengawasanWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="pendukungPengawasan">Pendukung Pengawasan</label>
+                                                <select required
+                                                    class="form-control select2 @error('pendukungPengawasan') is-invalid @enderror"
+                                                    id="pendukungPengawasan" name="pendukungPengawasan">
+                                                    <option disabled selected value="">Pilih Pendukung Pengawasan
+                                                    </option>
+                                                    @foreach ($pendukungPengawasan as $key => $pendukungPengawasan)
+                                                    <option {{ old('pendukungPengawasan') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">
+                                                        {{ $pendukungPengawasan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="jenisNaskahDinasKorespondensiWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="jenisNaskahDinasKorespondensi">Jenis Naskah Dinas
+                                                    Korespondensi</label>
+                                                <select required
+                                                    class="form-control select2 @error('jenisNaskahDinasKorespondensi') is-invalid @enderror"
+                                                    id="jenisNaskahDinasKorespondensi"
+                                                    name="jenisNaskahDinasKorespondensi">
+                                                    <option disabled selected value="">Pilih Jenis Naskah Dinas
+                                                        Korespondensi
+                                                    </option>
+                                                    @foreach ($jenisNaskahDinasKorespondensi as $key => $jndk)
+                                                    <option {{
+                                                        old('jenisNaskahDinasKorespondensi') == $key ? 'selected' : ''
+                                                    }} value="{{ $key }}">
+                                                        {{ $jndk }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Jenis Naskah Dinas Korespondensi Harus
+                                                    Diisi
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="unsurTugasWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="unsurTugas">Unsur Tugas</label>
+                                                <select required
+                                                    class="form-control select2 @error('unsurTugas') is-invalid @enderror"
+                                                    id="unsurTugas" name="unsurTugas">
+                                                    <option disabled selected value="">Pilih Unsur Tugas</option>
+                                                    @foreach ($unsurTugas as $key => $unsurTugas)
+                                                    <option {{ old('unsurTugas') == $key ? 'selected' : '' }}
+                                                        value="{{ $key }}">
+                                                        {{ $unsurTugas }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">Unsur Tugas Harus Diisi</div>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="derajatKeamanan">Derajat Keamanan</label>
                                             <select required
@@ -129,6 +249,17 @@
                                             </select>
                                             <div class="invalid-feedback">Derajat Kemanan Harus Diisi</div>
                                         </div>
+
+                                        <div id="perihalWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="perihal">Perihal</label>
+                                                <input required placeholder="Uraian Singkat isi surat" type="text"
+                                                    class="form-control @error('perihal') is-invalid @enderror"
+                                                    id="perihal" name="perihal" value="{{ old('perihal') }}">
+                                                <div class="invalid-feedback">Perihal Harus Diisi</div>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="kodeKlasifikasiArsip">Kode Klasifikasi Arsip</label>
                                             <select required class="form-control select2
@@ -145,13 +276,18 @@
                                             <div class="invalid-feedback">Kode Klasifikasi Arsip Harus Diisi</div>
                                         </div>
                                         {{-- create input untuk melaksanakan --}}
-                                        <div class="form-group">
-                                            <label for="melaksanakan">Melaksanakan</label>
-                                            <input required placeholder="Input Untuk Melaksanakan" type="text"
-                                                class="form-control @error('melaksanakan') is-invalid @enderror"
-                                                id="melaksanakan" name="melaksanakan" value="{{ old('melaksanakan') }}">
-                                            <div class="invalid-feedback">Melaksanakan Harus Diisi</div>
+                                        <div id="melaksanakanWrapper" class="d-none">
+                                            <div class="form-group">
+                                                <label for="melaksanakan">Melaksanakan</label>
+                                                <input required placeholder="Input Untuk Melaksanakan" type="text"
+                                                    class="form-control @error('melaksanakan') is-invalid @enderror"
+                                                    id="melaksanakan" name="melaksanakan"
+                                                    value="{{ old('melaksanakan') }}">
+                                                <div class="invalid-feedback">Melaksanakan Harus Diisi</div>
+                                            </div>
                                         </div>
+
+                                        {{-- create input untuk menimbang --}}
                                         {{-- create date input with label Usulan Tanggal Penandatangan --}}
                                         <div class="form-group
                                             @if ($errors->has('usulanTanggal'))
