@@ -29,7 +29,7 @@ class StoreUsulanSuratSrikandiRequest extends FormRequest
             'derajatKeamanan' => 'required',
             'kodeKlasifikasiArsip' => 'required',
             'usulanTanggal' => 'required',
-            'file' => 'required|mimes:doc,docx,pdf|max:2048',
+            // 'file' => 'required|mimes:doc,docx,pdf|max:2048',
         ];
     }
     public function messages()

@@ -20,10 +20,8 @@
         <div class="section-header">
             <h1>Usulan Surat Srikandi</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
-                </div>
-                <div class="breadcrumb-item">Form Usulan</div>
+                <div class="breadcrumb-item active"><a href="/sekretaris">Dashboard</a></div>
+                <div class="breadcrumb-item">Usulan Surat Srikandi</div>
             </div>
         </div>
         @include('components.flash')
@@ -32,13 +30,81 @@
                 <div class="card">
                     <div class="card-body">
                         {{ session()->forget(['alert-type', 'status']) }}
+                        <div>
+                            <form action="{{ route('usulan-surat-srikandi.index') }}" method="GET">
+                                <div class="d-flex justify-content-between flex-wrap" style="gap:10px">
+                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                        <label for="filter-search" style="margin-bottom: 0;">
+                                            Cari</label>
+                                        <input style="height: 35px" type="text" name="search" id="filter-search"
+                                            class="form-control" placeholder="Cari berdasarkan nama pengaju"
+                                            value="{{ request()->search }}">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        {{-- select year --}}
+                                        <label for="filter-year" style="margin-bottom: 0;">Tahun</label>
+                                        <select name="filter-year" id="filter-year" class="form-control select2">
+                                            <option disabled value="">Pilih Tahun</option>
+                                            @foreach ( $allYears as $year)
+                                            <option value="{{ $year->year }}" @if (!request()->year && $year->year
+                                                == date('Y'))
+                                                selected
+                                                @elseif (request()->year == $year->year)
+                                                selected
+                                                @endif
+                                                >
+                                                {{ $year->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="filter-month" style="margin-bottom: 0;">Jenis Surat</label>
+                                        <select name="filter-surat" id="filter-surat" class="form-control select2">
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $jenisNaskahDinasPenugasan as $key => $jenis)
+                                            <option value="{{ $jenis }}">
+                                                {{ $jenis }}
+                                            </option>
+                                            @endforeach
+                                            @foreach ( $jenisNaskahDinasKorespondensi as $key => $jenis)
+                                            <option value="{{ $jenis }}">
+                                                {{ $jenis }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        {{-- select year --}}
+                                        <label for="filter-status" style="margin-bottom: 0;">Status</label>
+                                        <select name="filter-status" id="filter-status" class="form-control select2">
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $allStatus as $status)
+                                            <option value="{{ $status->status }}" @if (!request()->status &&
+                                                $status->status
+                                                == 'all')
+                                                selected
+                                                @elseif (request()->status == $status->status)
+                                                selected
+                                                @endif
+                                                >
+                                                {{ ucwords($status->status) }}
+                                            </option>
+
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <div class="">
                             <table id="table-usulan-surat-srikandi"
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th style="width: 10px; text-align:center">No</th>
                                         <th>Nama Pengaju</th>
-                                        <th>Tanggal Pengajuan</th>
+                                        <th style="width: 180px;">Tanggal Pengajuan</th>
                                         <th>Nomor Surat</th>
                                         <th>Jenis Surat</th>
                                         <th>Status</th>
@@ -49,21 +115,43 @@
 
                                     @foreach ($usulanSuratSrikandi as $usulan)
                                     <tr>
-                                        <td>{{ $usulan->user_name }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td>
+                                            <div
+                                                class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
+                                                <div class="circle mr-2">
+                                                    <span class="initials text-capitalize">
+                                                        {{ substr($usulan->user_name, 0, 1) }}{{ substr(strstr($usulan->user_name, ' '), 1, 1) }}
+                                                    </span>
+                                                </div>
+                                                {{ $usulan->user_name }}
+                                            </div>
+                                        </td>
                                         <td>{{ $usulan->tanggal }}</td>
-                                        <td>{{ $usulan->nomor_surat }}</td>
-                                        <td>{{ $usulan->jenis_naskah_dinas }}</td>
+                                        <td>
+                                            @if ($usulan->nomor_surat)
+                                            <span class="badge badge-success">
+                                                {{ $usulan->nomor_surat }}
+                                            </span>
+                                            @endif
+
+                                        </td>
+                                        <td>{{ $usulan->jenis_naskah_dinas_penugasan ? $jenisNaskahDinasPenugasan[$usulan->jenis_naskah_dinas_penugasan] : $jenisNaskahDinasKorespondensi[$usulan->jenis_naskah_dinas_korespondensi] }}
+                                        </td>
                                         <td>
                                             @if ($usulan->status == 'disetujui')
-                                            <span class="badge badge-success"><i
-                                                    class="fa-regular fa-circle-check mr-1"></i>Disetujui</span>
+                                            <span class="badge badge-success text-capitalize"><i
+                                                    class="fa-regular fa-circle-check mr-1"></i>{{ $usulan->status}}</span>
                                             @elseif ($usulan->status == 'ditolak')
-                                            <span class="badge badge-danger" data-toggle="tooltip" data-placement="top"
-                                                title="{{ $usulan->catatan }}" style="cursor: pointer;"><i
-                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                            <span class="badge badge-danger text-capitalize" data-toggle="tooltip"
+                                                data-placement="top" title="{{ $usulan->catatan }}"
+                                                style="cursor: pointer;"><i
+                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>{{ $usulan->status}}</span>
                                             @else
-                                            <span class="badge badge-light"><i
-                                                    class="fa-regular fa-clock mr-1"></i>Menunggu</span>
+                                            <span class="badge badge-light text-capitalize" data-toggle="tooltip"
+                                                data-placement="top" title="Menunggu persetujuan sekretaris"
+                                                style="cursor: pointer;"><i
+                                                    class="fa-regular fa-clock mr-1"></i>{{ $usulan->status}}</span>
                                             @endif
                                         </td>
                                         <td>
@@ -109,7 +197,64 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="{{ asset('library') }}/letterpic/js/jquery.letterpic.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script>
+    $(".letterpic").letterpic({ fill: 'color', });
+    let table = $("#table-usulan-surat-srikandi")
+    .dataTable({
+    dom: "Bfrtip",
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    buttons: [
+    ],
+    })
+    .api();
 
-<script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script>
+    function filterTable() {
+    let filterYear = $("#filter-year").val();
+    let filterStatus = $("#filter-status").val();
+    let filterSurat = $("#filter-surat").val();
+    let filterSearch = $("#filter-search").val();
+
+    if (filterStatus === "Semua") {
+    filterStatus = "";
+    }
+    if (filterSurat === "Semua") {
+    filterSurat = "";
+    }
+
+    table
+    .column(2)
+    .search(filterYear, true, false)
+    .column(4)
+    .search(filterSurat, true, false)
+    .column(5)
+    .search(filterStatus, true, false)
+    .columns(1)
+    .search(filterSearch, true, false)
+    .draw();
+
+    // reset numbering in table first column
+    table
+    .column(0, { search: "applied", order: "applied" })
+    .nodes()
+    .each(function (cell, i) {
+    cell.innerHTML = i + 1;
+    });
+    }
+
+    $("#filter-year, #filter-status, #filter-surat").on("change", function () {
+    filterTable();
+    });
+    $("#filter-search").on("keyup", function () {
+    filterTable();
+    });
+    filterTable();
+
+    $(".dataTables_filter").hide();
+</script>
+
+{{-- <script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script> --}}
 @endpush

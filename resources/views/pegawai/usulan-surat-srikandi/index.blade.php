@@ -35,71 +35,148 @@
                                 <a href="{{ route('usulan-surat-srikandi.create') }}" id="create-btn"
                                     class="btn btn-primary">
                                     <i class="fas fa-plus-circle"></i>
-                                    Tambah
+                                    Tambah Usulan Surat
                                 </a>
                             </div>
                         </div>
-                        <div class="">
-                            <table id="table-usulan-surat-srikandi"
-                                class="table table-bordered table-striped display responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Tanggal Pengajuan</th>
-                                        <th>Nomor Surat</th>
-                                        <th>Jenis Surat</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($usulanSuratSrikandi as $usulan)
-                                    <tr>
-                                        <td>{{ $usulan->created_at->format('d F Y') }}</td>
-                                        <td>{{ $usulan->nomor_surat == 'belum' ? 'Belum ada nomor surat' : $usulan->nomor_surat }}
-                                        <td>{{ $usulan->jenis_naskah_dinas }}</td>
-                                        <td>
-                                            @if ($usulan->status == 'disetujui')
-                                            <span class="badge badge-success"><i
-                                                    class="fa-regular fa-circle-check mr-1"></i>Disetujui</span>
-                                            @elseif ($usulan->status == 'ditolak')
-                                            <span class="badge badge-danger" data-toggle="tooltip" data-placement="top"
-                                                title="{{ $usulan->catatan }}" style="cursor: pointer;"><i
-                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
-                                            @else
-                                            <span class="badge badge-light" data-toggle="tooltip" data-placement="top"
-                                                title="Menunggu persetujuan sekretaris" style="cursor: pointer;"><i
-                                                    class="fa-regular fa-clock mr-1"></i>Menunggu</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('usulan-surat-srikandi.show', $usulan->id) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="fas fa-eye
-                                                "></i>
-                                                Lihat
-                                            </a>
-                                            @if ($usulan->status == 'disetujui')
-                                            <a href="{{ route('surat-srikandi.download', $usulan->id) }}"
-                                                class="btn btn-primary btn-sm" data-toggle="tooltip"
-                                                data-placement="top" title="Download Surat Srikandi">
-                                                <i class="fa-solid fa-file-pdf"></i>
-                                                Download
+                        <div>
+                            <form action="{{ route('usulan-surat-srikandi.index') }}" method="GET">
+                                <div class="d-flex justify-content-between flex-wrap" style="gap:10px">
+                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                        <label for="filter-search" style="margin-bottom: 0;">
+                                            Cari</label>
+                                        <input style="height: 35px" type="text" name="search" id="filter-search"
+                                            class="form-control" placeholder="Cari berdasarkan nomor surat"
+                                            value="{{ request()->search }}">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        {{-- select year --}}
+                                        <label for="filter-year" style="margin-bottom: 0;">Tahun</label>
+                                        <select name="filter-year" id="filter-year" class="form-control select2">
+                                            <option disabled value="">Pilih Tahun</option>
+                                            @foreach ( $allYears as $year)
+                                            <option value="{{ $year->year }}" @if (!request()->year && $year->year
+                                                == date('Y'))
+                                                selected
+                                                @elseif (request()->year == $year->year)
+                                                selected
                                                 @endif
-                                        </td>
-                                        @endforeach
-                                </tbody>
-                            </table>
+                                                >
+                                                {{ $year->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="filter-month" style="margin-bottom: 0;">Jenis Surat</label>
+                                        <select name="filter-surat" id="filter-surat" class="form-control select2">
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $jenisNaskahDinasPenugasan as $key => $jenis)
+                                            <option value="{{ $jenis }}">
+                                                {{ $jenis }}
+                                            </option>
+                                            @endforeach
+                                            @foreach ( $jenisNaskahDinasKorespondensi as $key => $jenis)
+                                            <option value="{{ $jenis }}">
+                                                {{ $jenis }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        {{-- select year --}}
+                                        <label for="filter-status" style="margin-bottom: 0;">Status</label>
+                                        <select name="filter-status" id="filter-status" class="form-control select2">
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $allStatus as $status)
+                                            <option value="{{ $status->status }}" @if (!request()->status &&
+                                                $status->status
+                                                == 'all')
+                                                selected
+                                                @elseif (request()->status == $status->status)
+                                                selected
+                                                @endif
+                                                >
+                                                {{ ucwords($status->status) }}
+                                            </option>
+
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
+                        <table id="table-usulan-surat-srikandi"
+                            class="table table-bordered table-striped display responsive roundedCorners">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px; text-align:center">No</th>
+                                    <th style="width: 180px;">Tanggal Pengajuan</th>
+                                    <th>Nomor Surat</th>
+                                    <th>Jenis Surat</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($usulanSuratSrikandi as $usulan)
+                                <tr>
+                                    <td style="text-align:center">{{ $loop->iteration }}</td>
+                                    <td>{{ $usulan->created_at->format('d F Y') }}</td>
+                                    <td>
+                                        @if ($usulan->nomor_surat)
+                                        <span class="badge badge-success">
+                                            {{ $usulan->nomor_surat }}
+                                        </span>
+                                        @endif
+
+                                    </td>
+                                    <td>{{ $usulan->jenis_naskah_dinas_penugasan ? $jenisNaskahDinasPenugasan[$usulan->jenis_naskah_dinas_penugasan] : $jenisNaskahDinasKorespondensi[$usulan->jenis_naskah_dinas_korespondensi] }}
+                                    <td>
+                                        @if ($usulan->status == 'disetujui')
+                                        <span class="badge badge-success text-capitalize"><i
+                                                class="fa-regular fa-circle-check mr-1"></i>{{ $usulan->status}}</span>
+                                        @elseif ($usulan->status == 'ditolak')
+                                        <span class="badge badge-danger text-capitalize" data-toggle="tooltip"
+                                            data-placement="top" title="{{ $usulan->catatan }}"
+                                            style="cursor: pointer;"><i
+                                                class="fa-solid fa-triangle-exclamation mr-1"></i>{{ $usulan->status}}</span>
+                                        @else
+                                        <span class="badge badge-light text-capitalize" data-toggle="tooltip"
+                                            data-placement="top" title="Menunggu persetujuan sekretaris"
+                                            style="cursor: pointer;"><i
+                                                class="fa-regular fa-clock mr-1"></i>{{ $usulan->status}}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('usulan-surat-srikandi.show', $usulan->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye
+                                                "></i>
+                                            Lihat
+                                        </a>
+                                        @if ($usulan->status == 'disetujui')
+                                        <a href="{{ route('surat-srikandi.download', $usulan->id) }}"
+                                            class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top"
+                                            title="Download Surat Srikandi">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                            Download
+                                            @endif
+                                    </td>
+                                    @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 </div>
 @endsection
 
 @push('scripts')
 <!-- JS Libraies -->
-{{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> --}}
 <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -116,4 +193,5 @@
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
 <script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script>
+
 @endpush

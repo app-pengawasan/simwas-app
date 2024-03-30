@@ -7,6 +7,9 @@
         <title>@yield('title') &mdash; SIMWAS</title>
         <link rel="shortcut icon" href="{{ asset('img/simwas.png') }}" type="image/x-icon">
 
+        {{-- Open Graph --}}
+        
+
         <!-- General CSS Files -->
         @stack('clockpicker')
         <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">

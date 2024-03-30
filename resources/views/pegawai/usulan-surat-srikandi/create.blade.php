@@ -10,6 +10,7 @@
     rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="{{ asset('library') }}/bs-stepper/dist/css/bs-stepper.min.css">
+
 @endpush
 
 @section('main')
@@ -54,6 +55,12 @@
     <section class="section">
         <div class="section-header">
             <h1>Formulir Pengajuan Naskah Dinas untuk diproses pada Aplikasi Srikandi</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
+                </div>
+                <div class="breadcrumb-item">Formulir Pengajuan Naskah Dinas</div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -312,7 +319,7 @@
                                     </div>
                                 </div>
                                 <div id="test-l-2" class="content">
-                                    <div class="form-group">
+                                    <div  id="file-upload-wrapper" class="form-group">
                                         <label for="customFile">Upload Dokumen Naskah Dinas</label>
                                         <div class="custom-file">
                                             <input required name="file" type="file" class="custom-file-input @error('file')
@@ -320,9 +327,82 @@
                                                 @error('file') is-invalid @enderror>
                                             <label class="custom-file-label" for="customFile">Pilih Dokumen Naskah
                                                 Dinas</label>
-                                            <div class="invalid-feedback">Unggah Dokumen Naskah Dinas</div>
+                                            <div class="invalid-feedback pt-1">Unggah Dokumen Naskah Dinas</div>
                                         </div>
                                     </div>
+                                    <div id="surat-tugas-wrapper">
+                                        <div class="form-group">
+                                            <label for="rencana_id">Tugas</label>
+                                            <select required id="rencana_id" name="rencana_id"
+                                                class="form-control select2 @error('rencana_id') is-invalid @enderror">
+                                                <option value="">Pilih tugas</option>
+                                                @foreach ($rencanaKerja as $rencana)
+                                                <option value="{{ $rencana->id_rencanakerja }}"
+                                                    {{ old('rencana_id') == $rencana->id_rencanakerja ? 'selected' : '' }}>
+                                                    {{ $rencana->tugas }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('rencana_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tim_kerja">Tim Kerja</label>
+                                            <input  type="text" readonly
+                                                class="form-control @error('tim_kerja') is-invalid @enderror"
+                                                id="tim_kerja" name="tim_kerja" value="{{ old('tim_kerja') }}">
+                                            @error('tim_kerja')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pelaksana Tugas</label>
+                                            <ul id="pelaksana-tugas" class="list-group">
+                                            </ul>
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group
+                                        {{-- text area --}}
+                                        @if ($errors->has('menimbang'))
+                                            has-error
+                                        @endif">
+                                                <label for="menimbang">Menimbang</label>
+                                                <textarea required style="height: 100px"
+                                                    class="form-control @error('menimbang') is-invalid @enderror"
+                                                    id="menimbang" name="menimbang"
+                                                    value="{{ old('menimbang') }}"></textarea>
+                                                <div class="invalid-feedback">Menimbang Harus Diisi</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-group
+                                        @if ($errors->has('mengingat')) has-error
+                                        @endif">
+                                                <label for="mengingat">Mengingat</label>
+                                                <textarea required style="height: 100px"
+                                                    class="form-control @error('mengingat') is-invalid @enderror"
+                                                    id="mengingat" name="mengingat"
+                                                    value="{{ old('mengingat') }}"></textarea>
+                                                <div class="invalid-feedback">Mengingat Harus Diisi</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-group @if ($errors->has('untuk')) has-error
+                                                                            @endif">
+                                                <label for="untuk">Untuk</label>
+                                                <textarea required style="height: 100px"
+                                                    class="form-control @error('untuk') is-invalid @enderror" id="untuk"
+                                                    name="untuk" value="{{ old('untuk') }}"></textarea>
+                                                <div class="invalid-feedback">Untuk Harus Diisi</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
 
                                     <div class="text-right">
                                         <button type="button" class=" btn btn-primary"

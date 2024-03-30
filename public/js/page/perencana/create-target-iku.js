@@ -3,6 +3,10 @@ $(document).ready(function () {
     //     $("select").selectpicker();
     // });
     // $("select").selectpicker();
+    // $(".satuan").select2({
+    //     placeholder: "Select a state",
+    //     allowClear: true,
+    // });
     calculateTotal();
     localStorage.setItem("mini-sidebar", "true");
     // Add Objek
@@ -16,13 +20,12 @@ $(document).ready(function () {
             jumlahObjek = 1;
         }
         var table = $("table tbody");
-        for(var i = 1; i <= jumlahObjek; i++) {
+        for (var i = 1; i <= jumlahObjek; i++) {
             $("#satuan-row" + i).select2("destroy");
         }
 
         // add row to table
         for (var i = 0; i < jumlahObjek; i++) {
-
             console.log(i);
             row = parseInt(jumlahObjek) + 1;
             var html = "";
@@ -34,7 +37,6 @@ $(document).ready(function () {
             selectOption = $(
                 "table tbody tr:first-child td:nth-child(2)"
             ).html();
-
 
             html += selectOption;
             html = html.replace(/-row1/g, "-row" + row);
@@ -97,24 +99,45 @@ $(document).ready(function () {
                 '" class="form-control target-triwulan4"></td>';
 
             html += "</tr>";
-
         }
 
         table.append(html);
-        for (var i = 1; i <= jumlahObjek+1; i++) {
+        for (var i = 1; i <= jumlahObjek + 1; i++) {
             $("#satuan-row" + i).select2({
                 theme: "bootstrap4",
             });
         }
         jumlahObjek = parseInt(jumlahObjek) + 1;
         $("#jumlah-objek").val(jumlahObjek);
-
-
     });
 
     // change Jumlah Objek
     $("#jumlah-objek").on("change", function () {
         var jumlahObjek = $(this).val();
+
+        if (jumlahObjek > 50) {
+            // sweet alert
+            Swal.fire({
+                title: "Jumlah objek tidak boleh lebih dari 50",
+                icon: "error",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
+            });
+
+            $(this).val(50);
+            jumlahObjek = 50;
+        }
+        if (jumlahObjek < 1) {
+            Swal.fire({
+                title: "Jumlah objek tidak boleh kurang dari 1",
+                icon: "error",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
+            });
+            $(this).val(1);
+            jumlahObjek = 1;
+        }
+
         if (jumlahObjek == 0) {
             jumlahObjek = 1;
         }

@@ -394,8 +394,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .selectgroup-button,
-.selectgroup-button1
-{
+.selectgroup-button1 {
     background-color: #fdfdff;
     border-color: #e4e6fc;
     border-width: 1px;
@@ -415,7 +414,6 @@ select.form-control:not([size]):not([multiple]) {
     line-height: 36px;
     /* border-radius: 5px; */
 }
-
 
 .selectgroup-button-icon {
     padding-left: 0.5rem;
@@ -1303,7 +1301,7 @@ td {
 
 .table:not(.table-sm) thead th {
     border-bottom: none;
-    background-color: #f6f7f8;
+    background-color: #f9fafb;
     color: black;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -1333,7 +1331,7 @@ table tr:hover .table-links {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background: #f9f9f9 !important;
+    /* background: #fafafa !important; */
 }
 
 @media (max-width: 575.98px) {
@@ -4164,8 +4162,8 @@ body:not(.sidebar-mini)
         display: block;
     }
     .main-content {
-        padding-left: 30px;
-        padding-right: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
         width: 100% !important;
     }
     .main-footer {
@@ -4344,4 +4342,23 @@ footer {
 }
 .segmented-proggress {
     margin: 0 1px;
+}
+/* http://caniuse.com/#search=variables */
+:root {
+    --avatar-size: 1.6rem;
+    /* change this value anything, e.g., 100px, 10rem, etc. */
+}
+
+.circle {
+    background-color: #f0f4f8;
+    border-radius: 50%;
+    height: var(--avatar-size);
+    text-align: center;
+    width: var(--avatar-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.initials {
 }

@@ -27,4 +27,10 @@ class SuratSrikandi extends Model
         return $this->belongsTo(User::class);
     }
 
+    // one to one belongsTo usulanSuratSrikandi id_usulan_surat_srikandi
+    public function usulanSuratSrikandi()
+    {
+        return $this->belongsTo(UsulanSuratSrikandi::class, 'id_usulan_surat_srikandi');
+
+    }
 }

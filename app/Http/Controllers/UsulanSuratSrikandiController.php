@@ -6,6 +6,9 @@ use App\Models\UsulanSuratSrikandi;
 use App\Http\Requests\StoreUsulanSuratSrikandiRequest;
 use App\Http\Requests\UpdateUsulanSuratSrikandiRequest;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\IOFactory;
+use App\Models\RencanaKerja;
 class UsulanSuratSrikandiController extends Controller
 {
 
@@ -35,12 +38,6 @@ class UsulanSuratSrikandiController extends Controller
     private $jenisNaskahDinasPenugasan = [
         "1031" => "Surat Tugas",
         "1032" => "Surat Perintah",
-        // "2011" => "Nota Dinas",
-        // "2012" => "Memorandum",
-        // "2013" => "Disposisi",
-        // "2014" => "Surat Undangan Internal",
-        // "2021" => "Surat Dinas",
-        // "2022" => "Surat Undangan Eksternal",
     ];
 
     private $kegiatan = [
@@ -128,7 +125,70 @@ class UsulanSuratSrikandiController extends Controller
             "91" => "Monitoring Pelaksanaan Kegiatan Pengawasan (Tim Koordinator)",
             "92" => "Pengelolaan Kegiatan Pengawasan (Tim Sekeretariat)",
         ];
+    protected $pangkat = [
+        'II/a' =>	'Pengatur Muda',
+        'II/b' =>	'Pengatur Muda Tingkat I',
+        'II/c' => 	'Pengatur',
+        'II/d' => 	'Pengatur Tingkat I',
+        'III/a' =>	'Penata Muda',
+        'III/b' =>	'Penata Muda Tingkat I',
+        'III/c' =>	'Penata',
+        'III/d' =>	'Penata Tingkat I',
+        'IV/a' =>	'Pembina',
+        'IV/b' =>	'Pembina Tingkat I',
+        'IV/c' =>	'Pembina Muda',
+        'IV/d' =>	'Pembina Madya',
+        'IV/e' =>	'Pembina Utama'
+    ];
 
+    protected $unit_kerja = [
+        '8000' => 'Inspektorat Utama',
+        '8010' => 'Bagian Umum Inspektorat Utama',
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
+    ];
+
+    protected $jabatan = [
+        '10' => 'Inspektur Utama',
+        '11' => 'Inspektur Wilayah I',
+        '12' => 'Inspektur wilayah II',
+        '13' => 'Inspektur wilayah III',
+        '14' => 'Kepala Bagian Umum',
+        '21' =>	'Auditor Utama',
+        '22' =>	'Auditor Madya',
+        '23' =>	'Auditor Muda',
+        '24' =>	'Auditor Pertama',
+        '25' =>	'Auditor Penyelia',
+        '26' =>	'Auditor Pelaksana Lanjutan',
+        '27' =>	'Auditor Pelaksana',
+        '31' =>	'Perencana Madya',
+        '32' =>	'Perencana Muda',
+        '33' =>	'Perencana Pertama',
+        '41' =>	'Analis Kepegawaian Madya',
+        '42' =>	'Analis Kepegawaian Muda',
+        '43' =>	'Analis Kepegawaian Pertama',
+        '51' =>	'Analis Pengelolaan Keuangan APBN Madya',
+        '52' =>	'Analis Pengelolaan Keuangan APBN Muda',
+        '53' =>	'Analis Pengelolaan Keuangan APBN Pertama',
+        '61' =>	'Pranata Komputer Madya',
+        '62' =>	'Pranata Komputer Muda',
+        '63' =>	'Pranata Komputer Pratama',
+        '71' =>	'Arsiparis Madya',
+        '72' =>	'Arsiparis Muda',
+        '73' =>	'Arsiparis Pertama',
+        '81' =>	'Analis Hukum Madya',
+        '82' =>	'Analis Hukum Muda',
+        '83' =>	'Analis Hukum Pertama',
+        '91' =>	'Penatalaksana Barang',
+        '90' =>	'Fungsional Umum'
+    ];
+    protected $keterangan = [
+        '1' => 'Pengendali Teknis',
+        '2' => 'Ketua Tim',
+        '3' => 'PIC',
+        '4' => 'Anggota Tim',
+    ];
 
     /**
      * Display a listing of the resource.
@@ -137,18 +197,20 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function index()
     {
-        $year = request('year');
-        // get parameter from url
-       if ($year == null) {
-            $year = date('Y');
-        } else {
-            $year = $year;
-        }
-        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
+
+
+        $allYear = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->get();
+        $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->get();
         // dd($usulanSuratSrikandi);
+        // dd($allYear);
         return view('pegawai.usulan-surat-srikandi.index', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
+            'allYears' => $allYear,
+            'allStatus' => $allStatus,
+            'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
+            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
         ]);
     }
 
@@ -159,6 +221,13 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function create()
     {
+                $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+                            $query->where('status', 6);
+                        })->whereHas('pelaksana', function ($query) {
+                            $query->where('id_pegawai', auth()->user()->id)
+                                ->whereIn('pt_jabatan', [2, 3]);
+                        })->get();
+                        // dd($rencanaKerja);
         return view('pegawai.usulan-surat-srikandi.create', [
             'type_menu' => 'usulan-surat-srikandi',
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
@@ -171,6 +240,7 @@ class UsulanSuratSrikandiController extends Controller
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
+            'rencanaKerja' => $rencanaKerja,
         ]);
     }
 
@@ -180,37 +250,113 @@ class UsulanSuratSrikandiController extends Controller
      * @param  \App\Http\Requests\StoreUsulanSuratSrikandiRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUsulanSuratSrikandiRequest $request)
-    {
-        // dd($request->all());
-        $file = $request->file('file');
-        $fileName = time() . '-usulan-surat-srikandi.' . $file->getClientOriginalExtension();
-        $pejabatPenandaTangan = $request->pejabatPenandaTangan;
-        if ($pejabatPenandaTangan == "8000") {
-            $path = public_path('storage/usulan-surat-srikandi/8000-Inspektur-Utama');
-            $document ='storage/usulan-surat-srikandi/8000-Inspektur-Utama/' . $fileName;
-        }
-        elseif ($pejabatPenandaTangan == "8100") {
-            $path = public_path('storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I');
-            $document ='storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I/' . $fileName;
-        }
-        elseif ($pejabatPenandaTangan == "8200") {
-            $path = public_path('storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II');
-            $document ='storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II/' . $fileName;
-        }
-        elseif ($pejabatPenandaTangan == "8300") {
-            $path = public_path('storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III');
-            $document ='storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III/' . $fileName;
-        }
-        elseif ($pejabatPenandaTangan == "8010") {
-            $path = public_path('storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum');
-            $document ='storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum/' . $fileName;
-        }
-        else {
-            $path = public_path('storage/usulan-surat-srikandi');
+
+    public function makeSurat($menimbang, $mengingat, $rencana_id, $untuk, $path_doc){
+        $usulan = RencanaKerja::findOrFail($rencana_id);
+        $pelaksanaTugas = $usulan->pelaksana;
+        // dd($untuk);
+        // replace /r/n untuk enter
+        $menimbang = str_replace("\r\n", "<w:br/>", $menimbang);
+        $mengingat = str_replace("\r\n", "<w:br/>", $mengingat);
+        $untuk = str_replace("\r\n", "<w:br/>", $untuk);
+
+        // Jika pelaksana tugas kurang dari sama dengan 3 orang
+        if (count($pelaksanaTugas) <= 3) {
+            $path_template = 'document/template-dokumen/template-surat-tugas.docx';
+            $templateProcessor = new TemplateProcessor($path_template);
+            $templateProcessor->setValue('menimbang', $menimbang);
+            $templateProcessor->setValue('mengingat', $mengingat);
+            $templateProcessor->setValue('untuk', $untuk);
+            $no = 1;
+            $nama = "";
+            foreach ($pelaksanaTugas as $pelaksana) {
+                $nama .= $no . ". " . $pelaksana->user->name . "\n";
+                $no++;
+            }
+            $nama = str_replace("\n", "<w:br/>", $nama);
+            $templateProcessor->setValue('nama', $nama);
+
+        } else {
+            $path_template = 'document/template-dokumen/template-surat-tugas-gt3.docx';
+            $templateProcessor = new TemplateProcessor($path_template);
+            $templateProcessor->setValue('menimbang', $menimbang);
+            $templateProcessor->setValue('mengingat', $mengingat);
+            $templateProcessor->setValue('untuk', $untuk);
+
+            // duplicate row
+            $templateProcessor->cloneRow('no', count($pelaksanaTugas));
+            $no = 1;
+            foreach ($pelaksanaTugas as $pelaksana) {
+                $templateProcessor->setValue('no#' . $no, $no);
+                $templateProcessor->setValue('nama#' . $no, $pelaksana->user->name);
+                $templateProcessor->setValue('pangkat#' . $no, $this->pangkat[$pelaksana->user->pangkat]);
+                $templateProcessor->setValue('nip#' . $no, $pelaksana->user->nip);
+                $templateProcessor->setValue('jabatan#' . $no, $this->jabatan[$pelaksana->user->jabatan]);
+                $templateProcessor->setValue('keterangan#' . $no, $this->keterangan[$pelaksana->pt_jabatan]);
+                $no++;
+            }
         }
 
-        $file->move($path, $fileName);
+        $path = public_path('storage/usulan-surat-srikandi/' . $path_doc);
+        $fileName = time() . '-usulan-surat-srikandi.docx';
+        $templateProcessor->saveAs($path . $fileName);
+        // dd($path . $fileName);
+        return "storage/usulan-surat-srikandi/" . $path_doc . $fileName;
+    }
+
+    public function store(StoreUsulanSuratSrikandiRequest $request)
+    {
+
+        // dd($request->all());
+
+        $pejabatPenandaTangan = $request->pejabatPenandaTangan;
+        if ($request->file('file') != null) {
+            $file = $request->file('file');
+            $fileName = time() . '-usulan-surat-srikandi.' . $file->getClientOriginalExtension();
+            if ($pejabatPenandaTangan == "8000") {
+                $path = public_path('storage/usulan-surat-srikandi/8000-Inspektur-Utama');
+                $document ='storage/usulan-surat-srikandi/8000-Inspektur-Utama/' . $fileName;
+            }
+            elseif ($pejabatPenandaTangan == "8100") {
+                $path = public_path('storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I');
+                $document ='storage/usulan-surat-srikandi/8100-Inspektur-Wilayah-I/' . $fileName;
+            }
+            elseif ($pejabatPenandaTangan == "8200") {
+                $path = public_path('storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II');
+                $document ='storage/usulan-surat-srikandi/8200-Inspektur-Wilayah-II/' . $fileName;
+            }
+            elseif ($pejabatPenandaTangan == "8300") {
+                $path = public_path('storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III');
+                $document ='storage/usulan-surat-srikandi/8300-Inspektur-Wilayah-III/' . $fileName;
+            }
+            elseif ($pejabatPenandaTangan == "8010") {
+                $path = public_path('storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum');
+                $document ='storage/usulan-surat-srikandi/8010-Kepala-Bagian-Umum/' . $fileName;
+            }
+            else {
+                $path = public_path('storage/usulan-surat-srikandi');
+            }
+
+            $file->move($path, $fileName);
+        } else if ($request->file('file') == null) {
+            $path_doc = "";
+            if ($pejabatPenandaTangan == "8000") {
+                $path_doc = "8000-Inspektur-Utama/";
+            }
+            elseif ($pejabatPenandaTangan == "8100") {
+                $path_doc = "8100-Inspektur-Wilayah-I/";
+            }
+            elseif ($pejabatPenandaTangan == "8200") {
+                $path_doc = "8200-Inspektur-Wilayah-II/";
+            }
+            elseif ($pejabatPenandaTangan == "8300") {
+                $path_doc = "8300-Inspektur-Wilayah-III/";
+            }
+            elseif ($pejabatPenandaTangan == "8010") {
+                $path_doc = "8010-Kepala-Bagian-Umum/";
+            }
+            $document = $this->makeSurat($request->menimbang, $request->mengingat, $request->rencana_id, $request->untuk, $path_doc);
+        }
 
 
 
@@ -258,6 +404,16 @@ class UsulanSuratSrikandiController extends Controller
         return view('pegawai.usulan-surat-srikandi.show', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
+            'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
+            'jenisNaskahDinas' => $this->jenisNaskahDinas,
+            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
+            'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
+            'kegiatan' => $this->kegiatan,
+            'derajatKeamanan' => $this->derajatKeamanan,
+            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kegiatanPengawasan' => $this->kegiatanPengawasan,
+            'pendukungPengawasan' => $this->pendukungPengawasan,
+            'unsurTugas' => $this->unsurTugas,
         ]);
     }
     /**

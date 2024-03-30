@@ -18,7 +18,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Dashboard</h1>
+            <h1>Hey, {{ explode(' ', auth()->user()->name)[0] }}</h1>
         </div>
         <div style="gap:15px" class="d-flex flex-row dashboard-card">
             @include('components.pegawai.surat-card')
