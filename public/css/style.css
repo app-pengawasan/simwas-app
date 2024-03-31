@@ -221,7 +221,7 @@ ol {
 .custom-select,
 .custom-file-label {
     background-color: #fdfdff;
-    border-color: #e4e6fc;
+    border-color: rgb(205, 215, 225);
 }
 .form-control:focus,
 .input-group-text:focus,
@@ -4358,7 +4358,4 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.initials {
 }

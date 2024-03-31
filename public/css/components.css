@@ -863,26 +863,30 @@ tr:first-child > td > .fc-day-grid-event {
     -webkit-user-select: none;
     outline: none;
     background-color: #fdfdff;
-    border-color: #e4e6fc;
+    border-color: rgb(205, 215, 225);
 }
 
 .select2-dropdown {
-    border-color: #e4e6fc !important;
+    border-color: rgb(205, 215, 225); !important;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    top: 1px;
 }
 
 .select2-container.select2-container--open .select2-selection--multiple {
     background-color: #fefeff;
-    border-color: #95a0f4;
+    border-color: #0069d9;
+    outline: solid 0.1px #0069d9;
 }
 .select2-container.select2-container--focus .select2-selection--multiple,
 .select2-container.select2-container--focus .select2-selection--single {
     background-color: #fefeff;
-    border-color: #95a0f4;
+    border-color: #0069d9;
+    outline: solid 0.1px #0069d9;
 }
 .select2-container.select2-container--open .select2-selection--single {
     background-color: #fefeff;
-    border-color: #95a0f4;
+    border-color: #0069d9;
+    outline: solid 0.1px #0069d9;
 }
 
 .select2-results__option {
