@@ -73,22 +73,22 @@
                             {{-- kegiatan --}}
                             <tr>
                                 <th>Tanggal Persetujuan Srikandi:</th>
-                                <td>{{ $usulanSuratSrikandi->tanggal_persetujuan_srikandi }}</td>
+                                <td>{{ $suratSrikandi->tanggal_persetujuan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Derajat Keamanan:</th>
-                                <td>{{ $usulanSuratSrikandi->derajat_keamanan_srikandi }}</td>
+                                <td>{{ $suratSrikandi->derajat_keamanan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip_srikandi }}</td>
+                                <td>{{ $suratSrikandi->kode_klasifikasi_arsip_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
                                 <td>
                                     <a target="_blank" class="badge badge-primary"
-                                        href="{{ $usulanSuratSrikandi->link_srikandi }}">
-                                        {{ $usulanSuratSrikandi->link_srikandi }}
+                                        href="{{ $suratSrikandi->link_srikandi }}">
+                                        {{ $suratSrikandi->link_srikandi }}
                                     </a>
                                 </td>
                             </tr>
@@ -97,16 +97,13 @@
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Pengajuan Surat</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
-                                <th>Nama Pengaju:</th>
-                                <td class="text-dark">{{ $usulanSuratSrikandi->user_name }}</td>
-                            </tr>
-                            </tr>
-                            <tr>
                                 <th>Status Surat:</th>
                                 <td>
                                     @if ($usulanSuratSrikandi->status == 'disetujui')
-                                    <span class="badge badge-success"><i
+                                    <span class="badge badge-success mr-1"><i
                                             class="fa-regular fa-circle-check mr-1"></i>Disetujui</span>
+                                    Pada Tanggal {{ $usulanSuratSrikandi->updated_at->format('d F Y')}} Oleh
+                                    {{ $suratSrikandi->user->name }}
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
@@ -127,33 +124,73 @@
                                 <th>Dokumen Surat Usulan:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
-                                            class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
+                                        href="{{ route('usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
+                                        <i class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
                                 </td>
                             </tr>
-
-
+                            <tr>
+                                <th>Tanggal Pengajuan:</th>
+                                <td>{{ \Carbon\Carbon::parse($usulanSuratSrikandi->created_at)->format('d F Y') }}</td>
+                            </tr>
                             <tr>
                                 <th>Pejabat Penanda Tangan:</th>
-                                <td>{{ $usulanSuratSrikandi->pejabat_penanda_tangan }}</td>
+                                <td>{{ $pejabatPenandaTangan[$usulanSuratSrikandi->pejabat_penanda_tangan] }}</td>
                             </tr>
                             <tr>
                                 <th>Jenis Naskah Dinas:</th>
-                                <td>{{ $usulanSuratSrikandi->jenis_naskah_dinas }}</td>
+                                <td>{{ $jenisNaskahDinas[$usulanSuratSrikandi->jenis_naskah_dinas] }}</td>
                             </tr>
+                            @if($usulanSuratSrikandi->jenis_naskah_dinas_penugasan != null)
                             <tr>
                                 <th>Jenis Naskah Dinas Penugasan:</th>
-                                <td>{{ $usulanSuratSrikandi->jenis_naskah_dinas_penugasan }}</td>
+                                <td>{{ $jenisNaskahDinasPenugasan[$usulanSuratSrikandi->jenis_naskah_dinas_penugasan] }}
+                                </td>
                             </tr>
+                            @endif
+                            @if ($usulanSuratSrikandi->jenis_naskah_dinas_korespondensi != null)
                             <tr>
-                                <th>Jenis Naskah Dinas Penugasan:</th>
-                                <td>{{ $usulanSuratSrikandi->jenis_naskah_dinas_penugasan }}</td>
+                                <th>Jenis Naskah Dinas Korespondensi:</th>
+                                <td>{{ $jenisNaskahDinasKorespondensi[$usulanSuratSrikandi->jenis_naskah_dinas_korespondensi] }}
+                                </td>
                             </tr>
-                            {{-- kegiatan --}}
+                            @endif
+                            @if ($usulanSuratSrikandi->kegiatan!= null)
                             <tr>
                                 <th>Kegiatan:</th>
-                                <td>{{ $usulanSuratSrikandi->kegiatan }}</td>
+                                <td>{{ $kegiatan[$usulanSuratSrikandi->kegiatan] }}</td>
                             </tr>
+                            @endif
+                            @if($usulanSuratSrikandi->melaksanakan != null)
+                            <tr>
+                                <th>Melaksananan</th>
+                                <td>{{ $usulanSuratSrikandi->melaksanakan }}</td>
+                            </tr>
+                            @endif
+                            @if($usulanSuratSrikandi->kegiatan_pengawasan != null)
+                            <tr>
+                                <th>Kegiatan Pengawasan:</th>
+                                <td>{{ $kegiatanPengawasan[$usulanSuratSrikandi->kegiatan_pengawasan] }}</td>
+                            </tr>
+                            @endif
+                            @if($usulanSuratSrikandi->pendukung_pengawasan != null)
+                            <tr>
+                                <th>Pendukung Pengawasan:</th>
+                                <td>{{ $pendukungPengawasan[$usulanSuratSrikandi->pendukung_pengawasan] }}</td>
+                            </tr>
+                            @endif
+                            @if($usulanSuratSrikandi->unsur_tugas != null)
+                            <tr>
+                                <th>Unsur Tugas:</th>
+                                <td>{{ $unsurTugas[$usulanSuratSrikandi->unsur_tugas] }}</td>
+                            </tr>
+                            @endif
+                            @if($usulanSuratSrikandi->perihal != null)
+                            <tr>
+                                <th>Perihal:</th>
+                                <td>{{ $usulanSuratSrikandi->perihal }}</td>
+                            </tr>
+                            @endif
+
                             <tr>
                                 <th>Derajat Keamanan:</th>
                                 <td>{{ $usulanSuratSrikandi->derajat_keamanan }}</td>
@@ -162,13 +199,11 @@
                                 <th>Kode Klasifikasi Arsip:</th>
                                 <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip }}</td>
                             </tr>
-                            <tr>
-                                <th>Melaksananan</th>
-                                <td>{{ $usulanSuratSrikandi->melaksanakan }}</td>
-                            </tr>
+
                             <tr>
                                 <th>Usulan Tanggal Penanda Tangan</th>
-                                <td>{{ $usulanSuratSrikandi->usulan_tanggal_penandatanganan }}</td>
+                                <td>{{ \Carbon\Carbon::parse($usulanSuratSrikandi->usulan_tanggal_penandatanganan)->format('d F Y') }}
+                                </td>
                             </tr>
                         </table>
                         {{-- edit and delete button --}}
@@ -334,7 +369,7 @@
                     <div class="form-group
                         {{ $errors->has('link_srikandi') ? 'has-error' : '' }}">
                         <label for="link_srikandi">Link Srikandi</label>
-                        <input required type="text" class="form-control" name="link_srikandi" id="link_srikandi"
+                        <input required type="url" class="form-control" name="link_srikandi" id="link_srikandi"
                             value="{{ old('link_srikandi') }}">
                         @if ($errors->has('link_srikandi'))
                         <span class="help-block

@@ -25,5 +25,11 @@ class UsulanSuratSrikandi extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // has many suratSrikandi
+    public function suratSrikandi()
+    {
+        return $this->hasMany(SuratSrikandi::class);
+        // add foreign key
+    }
 
 }

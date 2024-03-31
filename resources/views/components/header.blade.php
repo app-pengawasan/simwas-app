@@ -5,14 +5,14 @@
 <nav class="navbar navbar-expand-lg main-navbar">
     <div class="mr-auto">
         <ul class="navbar-nav mr-3">
-            <li><a href="#"  data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
+            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
         </ul>
     </div>
     <ul class="navbar-nav navbar-right">
         <li class="dropdown d-flex justify-content-center align-items-center"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="{{ asset('img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
+                <div class="d-sm-none d-lg-inline-block">{{ auth()->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 {{-- <div class="dropdown-title">Logged in 5 min ago</div> --}}

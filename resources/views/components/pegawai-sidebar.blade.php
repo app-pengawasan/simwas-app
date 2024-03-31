@@ -94,7 +94,7 @@
             </li> --}}
             {{-- Pengelolaan Dokumen --}}
             <li class="menu-header">Pengelolaan Dokumen</li>
-            {{-- <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
             <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i> <span>Surat
                     Saya</span></a>
             <ul class="dropdown-menu">
@@ -114,7 +114,7 @@
                     <a class="nav-link" href="{{ route('surat-lain.index') }}">Surat Lain</a>
                 </li>
             </ul>
-            </li> --}}
+            </li>
             {{-- <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('st-kinerja.index') }}">
                     <i class="fas fa-wrench"></i>
