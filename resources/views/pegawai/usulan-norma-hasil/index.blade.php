@@ -18,10 +18,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Norma Hasil</h1>
+            <h1>Usulan Norma Hasil</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item">Norma Hasil</div>
+                <div class="breadcrumb-item">Usulan Norma Hasil</div>
             </div>
         </div>
 
@@ -36,18 +36,13 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex align-items-end">
-                                <a href="{{ route('norma-hasil.create') }}" id="create-btn" class="btn btn-primary">
-                                    <i class=" fas fa-plus-circle"></i>
-                                    Ajukan Usulan Norma Hasil
-                                </a>
-                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped display responsive"
                                     id="table-pengelolaan-dokumen-pegawai">
                                     <thead>
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
+                                            <th>Nama Pengusul</th>
                                             <th style="width: 180px;">Tanggal Usulan</th>
                                             <th style="width: 180px;">Nomor Surat</th>
                                             <th>Status</th>
@@ -57,13 +52,14 @@
                                     <tbody>
                                         @foreach ($usulan as $un)
                                         <tr>
-                                            <td></td>
+                                            <td style="text-align:center"></td>
+                                            <td>{{ $un->user->name }}</td>
                                             <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')
                                                 <span class="badge badge-primary">
                                                     R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                                                                                                                            $kodeHasilPengawasan[$un->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                                                                            $kodeHasilPengawasan[$un->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
                                                 </span>
                                                 @endif
                                             </td>
@@ -76,7 +72,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('norma-hasil.show', $un->id) }}"
+                                                <a href="{{ route('usulan-norma-hasil.show', $un->id) }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>

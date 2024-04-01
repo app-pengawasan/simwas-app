@@ -221,7 +221,7 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function create()
     {
-                $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+        $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
                             $query->where('status', 6);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id)
@@ -301,7 +301,7 @@ class UsulanSuratSrikandiController extends Controller
         $fileName = time() . '-usulan-surat-srikandi.docx';
         $templateProcessor->saveAs($path . $fileName);
         // dd($path . $fileName);
-        return "storage/usulan-surat-srikandi/" . $path_doc . $fileName;
+        return "storage/usulan-surat-srikandi/" .   $path_doc . $fileName;
     }
 
     public function store(StoreUsulanSuratSrikandiRequest $request)

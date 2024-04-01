@@ -7,9 +7,52 @@ use App\Http\Requests\StoreNormaHasilRequest;
 use App\Http\Requests\UpdateNormaHasilRequest;
 use App\Models\StKinerja;
 use Illuminate\Support\Facades\Storage;
+use App\Models\RencanaKerja;
 
 class NormaHasilController extends Controller
 {
+
+
+     private $kodeHasilPengawasan = [
+    "110" => 'LHA',
+    "120" => 'LHK',
+    "130" => 'LHT',
+    "140" => 'LHI',
+    "150" => 'LHR',
+    "160" => 'LHE',
+    "170" => 'LHP',
+    "180" => 'LHN',
+    "190" => 'LTA',
+    "200" => 'LTR',
+    "210" => 'LTE',
+    "220" => 'LKP',
+    "230" => 'LKS',
+    "240" => 'LKB',
+    "500" => 'EHP',
+    "510" => 'LTS',
+    "520" => 'PHP',
+    "530" => 'QAP'
+];
+    private $hasilPengawasan = [
+    "110" => "Laporan Hasil Audit Kepatuhan",
+    "120" => "Laporan Hasil Audit Kinerja",
+    "130" => "Laporan Hasil Audit ADTT",
+    "140" => "Laporan Hasil Audit Investigasi",
+    "150" => "Laporan Hasil Reviu",
+    "160" => "Laporan Hasil Evaluasi",
+    "170" => "Laporan Hasil Pemantauan",
+    "180" => "Laporan Hasil Penelaahan",
+    "190" => "Laporan Hasil Monitoring Tindak Lanjut Hasil Audit",
+    "200" => "Laporan Hasil Monitoring Tindak Lanjut Hasil Reviu",
+    "210" => "Laporan Hasil Monitoring Tindak Lanjut Hasil Evaluasi",
+    "220" => "Laporan Pendampingan",
+    "230" => "Laporan Sosialisasi",
+    "240" => "Laporan Bimbingan Teknis",
+    "500" => "Evaluasi Hasil Pengawasan",
+    "510" => "Telaah Sejawat",
+    "520" => "Pengolahan Hasil Pengawasan",
+    "530" => "Penjaminan Kualitas Pengawasan"
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +60,13 @@ class NormaHasilController extends Controller
      */
     public function index()
     {
+
         $usulan = NormaHasil::latest()->where('user_id', auth()->user()->id)->get();
-        return view('pegawai.norma-hasil.index')->with('usulan', $usulan);
+        return view('pegawai.norma-hasil.index', [
+            'usulan' => $usulan,
+            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
+
+        ]);
     }
 
     /**
@@ -28,9 +76,17 @@ class NormaHasilController extends Controller
      */
     public function create()
     {
-        $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
+        $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
+                            $query->where('status', 6);
+                        })->whereHas('pelaksana', function ($query) {
+                            $query->where('id_pegawai', auth()->user()->id)
+                                ->whereIn('pt_jabatan', [2, 3]);
+                        })->get();
+        // $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
         return view('pegawai.norma-hasil.create', [
-            "stks" => $stks
+            // "stks" => $stks
+            'rencanaKerja' => $rencanaKerja,
+            'hasilPengawasan' => $this->hasilPengawasan,
         ]);
     }
 
@@ -42,25 +98,41 @@ class NormaHasilController extends Controller
      */
     public function store(StoreNormaHasilRequest $request)
     {
-        $validatedData = $request->validate([
-            'is_backdate' => 'required',
-            'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-            'st_kinerja_id' => 'required',
-            'hal' => 'required',
-            'draft' => 'required|mimes:doc,docx',
-            'status' => 'required'
-        ], [
-            'required' => 'Wajib diisi',
-            'mimes' => "File yang diupload harus bertipe .doc atau .docx"
+        // dd($request->all());
+        // get user_id from auth
+        $user_id = auth()->user()->id;
+
+        // get unit_kerja from rencana_id in RencanaKerja , timkerja, unitkerja
+        $rencanaKerja = RencanaKerja::find($request->rencana_id);
+        $unit_kerja = $rencanaKerja->timkerja->unitkerja;
+
+        // dd($request->all());
+        // store file to storage
+        $file = $request->file('file');
+        $fileName = time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
+        $path = public_path('storage/norma-hasil');
+        $file->move($path, $fileName);
+        $document_path = 'storage/norma-hasil/' . $fileName;
+        // tanggal = date now
+        $tanggal = date('Y-m-d');
+
+        // store to database
+        NormaHasil::create([
+            'user_id' => $user_id,
+            'unit_kerja' => $unit_kerja,
+            'tugas_id' => $request->rencana_id,
+            'jenis_norma_hasil_id' => $request->jenis_norma_hasil,
+            'document_path' => $document_path,
+            'nama_dokumen' => $request->nama_dokumen,
+            'tanggal' => $tanggal,
+            'status_norma_hasil' => 'diperiksa'
         ]);
-        $stk = StKinerja::find($validatedData['st_kinerja_id']);
-        $validatedData['unit_kerja'] = $stk->rencanaKerja->timkerja->unitkerja;
-        $validatedData['user_id'] = auth()->user()->id;
-        $validatedData['draft'] = $request->file('draft')->store('draft');
-        NormaHasil::create($validatedData);
+
 
         return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
     }
+
+
 
     /**
      * Display the specified resource.
@@ -99,40 +171,16 @@ class NormaHasilController extends Controller
      */
     public function update(UpdateNormaHasilRequest $request, NormaHasil $norma_hasil)
     {
-        if ($request->input('status') == '0') {
-            $validatedData = $request->validate([
-                'is_backdate' => 'required',
-                'tanggal' => $request->input('is_backdate') === '1' ? 'required' : '',
-                'st_kinerja_id' => 'required',
-                'hal' => 'required',
-                'draft' => 'required|mimes:doc,docx',
-                'status' => 'required'
-            ], [
-                'required' => 'Wajib diisi',
-                'mimes' => "File yang diupload harus bertipe .doc atau .docx"
-            ]);
-            $stk = StKinerja::find($validatedData['st_kinerja_id']);
-            $validatedData['unit_kerja'] = $stk->rencanaKerja->timkerja->unitkerja;
-            $validatedData['draft'] = $request->file('draft')->store('draft');
-            NormaHasil::where('id', $norma_hasil->id)->update($validatedData);
-    
-            return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan kembali usulan norma hasil!');
-        } elseif ($request->input('status') == '3') {
-            $validatedData = $request->validate([
-                'status' => 'required',
-                'id' => 'required',
-                'surat' => 'required|mimes:pdf'
-            ], [
-                'required' => 'Wajib diisi',
-                'mimes' => 'File yang diupload harus bertipe .pdf'
-            ]);
-            if ($norma_hasil->surat) {
-                Storage::delete($norma_hasil->surat);
-            }
-            $validatedData['surat'] = '/storage'.'/'.$request->file('surat')->store('norma-hasil');
-            NormaHasil::where('id', $request->input('id'))->update($validatedData);
-            return redirect('/pegawai/norma-hasil')->with('success', 'Berhasil mengunggah file!');
-        }
+        // dd($request->all());
+        $norma_hasil->update([
+            'status_norma_hasil' => 'ditolak',
+            'catatan_norma_hasil' => $request->alasan
+        ]);
+
+        // return back with success message
+        return redirect()->back()->with('success', 'Usulan Norma Hasil Berhasil Ditolak');
+
+
     }
 
     /**

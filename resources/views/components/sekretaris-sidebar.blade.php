@@ -48,12 +48,12 @@
                 <span>Surat Eksternal</span>
             </a>
             </li> --}}
-            <li class="{{ Request::is('sekretaris/usulan-surat*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('sekretaris/usulan-surat*') ? 'active' : '' }}">
                 <a class="nav-link" href="/sekretaris/usulan-surat">
                     <i class="fas fa-file"></i>
                     <span>Usulan Surat</span>
                 </a>
-            </li>
+            </li> --}}
 
         </ul>
         @include('components.footer')

@@ -27,10 +27,10 @@
                     <span>Penilaian Kinerja Pegawai</span>
                 </a>
             </li>
-            <a class="nav-link" href="/inspektur/st-kinerja">
+            {{-- <a class="nav-link" href="/inspektur/st-kinerja">
                 <i class="fas fa-wrench"></i>
                 <span>ST Kinerja</span>
-            </a>
+            </a> --}}
             {{-- <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
             <a class="nav-link" href="/inspektur/st-kinerja">
                 <i class="fas fa-wrench"></i>
@@ -49,12 +49,12 @@
                     <span>ST Perjalanan Dinas</span>
                 </a>
             </li> --}}
-            <li class="{{ Request::is('inspektur/st-pd*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('inspektur/st-pd*') ? 'active' : '' }}">
                 <a class="nav-link" href="/inspektur/st-pd">
                     <i class="fas fa-road"></i>
                     <span>ST Perjalanan Dinas</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-hourglass-half"></i>

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreNormaHasilRequest extends FormRequest
+class StoreNormaHasilAcceptedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,7 @@ class StoreNormaHasilRequest extends FormRequest
     public function rules()
     {
         return [
-            'rencana_id' => ['required', 'string', 'max:100'],
-            'jenis_norma_hasil' => ['required', 'string', 'max:100'],
-            'nama_dokumen' => ['required', 'string', 'max:100'],
-            // file upload word extension
-            'file' => ['required', 'file', 'mimes:doc,docx,pdf', 'max:2048'],
-
+            'norma_hasil' => 'required',
         ];
     }
 }

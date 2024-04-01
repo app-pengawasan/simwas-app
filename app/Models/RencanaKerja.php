@@ -36,4 +36,10 @@ class RencanaKerja extends Model
     public function proyek(){
         return $this->belongsTo(Proyek::class, 'id_proyek');
     }
+
+    // has many norma hasil
+    public function normaHasil()
+    {
+        return $this->hasMany(NormaHasil::class, 'id_rencanakerja');
+    }
 }

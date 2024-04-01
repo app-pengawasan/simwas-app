@@ -44,132 +44,143 @@
                         </a>
                     </li>
                     <li
+                        class="{{ Request::is('ketua-tim/norma-hasil') || Request::is('ketua-tim/norma-hasil/*') || Request::is('ketua-tim/norma-hasil/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/ketua-tim/norma-hasil">
+                            <span>Usulan Norma Hasil</span>
+                        </a>
+                    </li>
+                    <li
                         class="{{ Request::is('pegawai/rencana-kinerja') || Request::is('pegawai/rencana-kinerja/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/pegawai/rencana-kinerja">Tugas Saya</a>
                     </li>
-                    </li>
-                    <li
-                        class="{{ Request::is('pegawai/rencana-jam-kerja') ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/rencana-jam-kerja">Jam Kerja</a>
-                    </li>
-                </ul>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-file-signature"></i>
-                    <span>Realisasi Kinerja</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li
-                        class="{{ Request::is('pegawai/realisasi') || Request::is('pegawai/realisasi/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/realisasi">
-                            <span>Isi Realisasi</span>
-                        </a>
-                    </li>
-                    <li
-                        class="{{ Request::is('pegawai/aktivitas-harian') || Request::is('pegawai/aktivitas-harian/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/aktivitas-harian">
-                            <span>Aktivitas Harian</span>
-                        </a>
-                    </li>
-                    <li
-                        class="{{ Request::is('pegawai/nilai-berjenjang') || Request::is('pegawai/nilai-berjenjang/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/nilai-berjenjang">
-                            <span>Nilai Hasil Kerja</span>
-                        </a>
-                    </li>
-                </ul>
+            <li class="{{ Request::is('pegawai/rencana-jam-kerja') ? 'active' : '' }}">
+                <a class="nav-link" href="/pegawai/rencana-jam-kerja">Jam Kerja</a>
             </li>
-            <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
-                <a class="nav-link" href="/pegawai/laporan-kinerja">
-                    <i class="fas fa-square-poll-vertical"></i>
-                    <span>Laporan Kinerja</span>
-                </a>
-            </li>
-            {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('dashboard') }}">
+        </ul>
+        </li>
+        <li class="nav-item dropdown {{ $type_menu === 'realisasi-kinerja' ? 'active active-dropdown' : '' }}">
+            <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                 <i class="fas fa-file-signature"></i>
                 <span>Realisasi Kinerja</span>
             </a>
-            </li> --}}
-            {{-- Pengelolaan Dokumen --}}
-            <li class="menu-header">Pengelolaan Dokumen</li>
-            <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
-            <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i> <span>Surat
-                    Saya</span></a>
             <ul class="dropdown-menu">
-                <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('st-kinerja.index') }}">ST Kinerja</a>
+                <li
+                    class="{{ Request::is('pegawai/realisasi') || Request::is('pegawai/realisasi/*')  ? 'active' : '' }}">
+                    <a class="nav-link" href="/pegawai/realisasi">
+                        <span>Isi Realisasi</span>
+                    </a>
                 </li>
-                <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('norma-hasil.index') }}">Norma Hasil</a>
+                <li
+                    class="{{ Request::is('pegawai/aktivitas-harian') || Request::is('pegawai/aktivitas-harian/*')  ? 'active' : '' }}">
+                    <a class="nav-link" href="/pegawai/aktivitas-harian">
+                        <span>Aktivitas Harian</span>
+                    </a>
                 </li>
-                <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('st-pp.index') }}">ST Pengembangan Profesi</a>
-                </li>
-                <li class="{{ Request::is('pegawai/st-pd*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('st-pd.index') }}">ST Perjalanan Dinas</a>
-                </li>
-                <li class="{{ Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('surat-lain.index') }}">Surat Lain</a>
+                <li
+                    class="{{ Request::is('pegawai/nilai-berjenjang') || Request::is('pegawai/nilai-berjenjang/*')  ? 'active' : '' }}">
+                    <a class="nav-link" href="/pegawai/nilai-berjenjang">
+                        <span>Nilai Hasil Kerja</span>
+                    </a>
                 </li>
             </ul>
+        </li>
+        <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
+            <a class="nav-link" href="/pegawai/laporan-kinerja">
+                <i class="fas fa-square-poll-vertical"></i>
+                <span>Laporan Kinerja</span>
+            </a>
+        </li>
+        {{-- <li class="{{ Request::is('pegawai/kinerja-pegawai') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('dashboard') }}">
+            <i class="fas fa-file-signature"></i>
+            <span>Realisasi Kinerja</span>
+        </a>
+        </li> --}}
+        {{-- Pengelolaan Dokumen --}}
+        <li class="menu-header">Pengelolaan Dokumen</li>
+        {{-- <li class="nav-item dropdown {{ Request::is('pegawai/st-kinerja*') || Request::is('pegawai/st-pp*') || Request::is('pegawai/st-pd*') || Request::is('pegawai/surat-lain*') || Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-file"></i> <span>Surat
+                Saya</span></a>
+        <ul class="dropdown-menu">
+            <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-kinerja.index') }}">ST Kinerja</a>
             </li>
-            {{-- <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('st-kinerja.index') }}">
-                    <i class="fas fa-wrench"></i>
-                    <span>ST Kinerja</span>
-                </a>
-            </li> --}}
-            <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
+            <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('norma-hasil.index') }}">Norma Hasil</a>
+            </li>
+            <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-pp.index') }}">ST Pengembangan Profesi</a>
+            </li>
+            <li class="{{ Request::is('pegawai/st-pd*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('st-pd.index') }}">ST Perjalanan Dinas</a>
+            </li>
+            <li class="{{ Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('surat-lain.index') }}">Surat Lain</a>
+            </li>
+        </ul>
+        </li> --}}
+        {{-- <li class="{{ Request::is('pegawai/st-kinerja*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('st-kinerja.index') }}">
+            <i class="fas fa-wrench"></i>
+            <span>ST Kinerja</span>
+        </a>
+        </li> --}}
+        <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('usulan-surat-srikandi.index') }}">
                 <i class="fas fa-solid fa-envelope"></i>
                 <span>Usulan Surat</span>
             </a>
-            </li>
-            {{-- <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+        </li>
+        <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('norma-hasil.index') }}">
                 <i class="fas fa-check"></i>
                 <span>Norma Hasil</span>
             </a>
-            </li>
-            <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('st-pp.index') }}">
-                    <i class="fas fa-briefcase"></i>
-                    <span>ST Pengembangan Profesi</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('pegawai/st-pd*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('st-pd.index') }}">
-                    <i class="fas fa-road"></i>
-                    <span>ST Perjalanan Dinas</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('surat-lain.index') }}">
-                    <i class="fas fa-file"></i>
-                    <span>Surat Lain</span>
-                </a>
-            </li> --}}
-            {{-- <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
-                <i class="fas fa-paper-plane"></i>
-                <span>Kirim Dokumen</span>
+        </li>
+        {{-- <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('norma-hasil.index') }}">
+            <i class="fas fa-check"></i>
+            <span>Norma Hasil</span>
+        </a>
+        </li>
+        <li class="{{ Request::is('pegawai/st-pp*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('st-pp.index') }}">
+                <i class="fas fa-briefcase"></i>
+                <span>ST Pengembangan Profesi</span>
             </a>
-            </li>
-            <li class="{{ Request::is('pegawai/surat-eksternal*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('surat-eksternal.index') }}">
-                    <i class="fas fa-file-export"></i>
-                    <span>Surat Eksternal</span>
-                </a>
-            </li> --}}
-            <li class="menu-header">Kelola Kompetensi</li>
-            <li class="{{ Request::is('pegawai/kompetensi*') ? 'active' : '' }}">
-                <a class="nav-link" href="/pegawai/kompetensi">
-                    <i class="fas fa-file"></i>
-                    <span>Pengembangan Kompetensi</span>
-                </a>
-            </li>
+        </li>
+        <li class="{{ Request::is('pegawai/st-pd*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('st-pd.index') }}">
+                <i class="fas fa-road"></i>
+                <span>ST Perjalanan Dinas</span>
+            </a>
+        </li>
+        <li class="{{ Request::is('pegawai/surat-lain*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('surat-lain.index') }}">
+                <i class="fas fa-file"></i>
+                <span>Surat Lain</span>
+            </a>
+        </li> --}}
+        {{-- <li class="{{ Request::is('pegawai/kirim-dokumen*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('kirim-dokumen.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Kirim Dokumen</span>
+        </a>
+        </li>
+        <li class="{{ Request::is('pegawai/surat-eksternal*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('surat-eksternal.index') }}">
+                <i class="fas fa-file-export"></i>
+                <span>Surat Eksternal</span>
+            </a>
+        </li> --}}
+        <li class="menu-header">Kelola Kompetensi</li>
+        <li class="{{ Request::is('pegawai/kompetensi*') ? 'active' : '' }}">
+            <a class="nav-link" href="/pegawai/kompetensi">
+                <i class="fas fa-file"></i>
+                <span>Pengembangan Kompetensi</span>
+            </a>
+        </li>
         </ul>
         @include('components.footer')
         {{-- <div class="hide-sidebar-mini mt-4 mb-4 p-3">

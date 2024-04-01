@@ -63,6 +63,7 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
+use App\Http\Controllers\NormaHasilAcceptedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,6 +157,13 @@ Route::group(['middleware'=>'auth'], function(){
     Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
     Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
     Route::resource('/ketua-tim/rencana-kinerja/proyek', ProyekController::class);
+    Route::resource('/ketua-tim/norma-hasil', NormaHasilAcceptedController::class)->names([
+        'index' => 'usulan-norma-hasil.index',
+        'show' => 'usulan-norma-hasil.show',
+        'update' => 'usulan-norma-hasil.update',
+        'create' => 'usulan-norma-hasil.create',
+        'store' => 'usulan-norma-hasil.store',
+    ]);
 
     /**
      * ---------------------------------------------------------------------------
