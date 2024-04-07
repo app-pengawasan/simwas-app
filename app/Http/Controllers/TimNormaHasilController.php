@@ -143,6 +143,7 @@ class TimNormaHasilController extends Controller
         return view('pegawai.tugas-tim.norma-hasil.show', [
             "usulan" => $norma_hasil,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
+            'type_menu' => 'tugas-tim'
         ]);
     }
 

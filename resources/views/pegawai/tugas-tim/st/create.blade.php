@@ -17,7 +17,9 @@
                             <select required id="tugas" name="tugas" class="form-control select2">
                                 <option value="" selected disabled>Pilih Tugas</option>
                                 @foreach ($tugasSaya as $ts)
-                                <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
+                                    @if (!isset($ts->rencanaKerja->suratTugas))
+                                        <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @if ($errors->has('tugas'))
