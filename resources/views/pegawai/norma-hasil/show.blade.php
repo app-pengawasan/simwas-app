@@ -78,15 +78,13 @@
 
                                         <table class="table">
                                             <tr>
-                                                <th>Tugas</th>
-                                                <th>:</th>
+                                                <th>Tugas:</th>
                                                 <td>{{ $usulan->rencanaKerja->tugas }}</td>
 
                                                 {{-- Status Disetujui --}}
                                                 @if ($usulan->status_norma_hasil == 'disetujui')
                                             <tr>
-                                                <th>Nomor Surat</th>
-                                                <th>:</th>
+                                                <th>Nomor Surat:</th>
                                                 <td>
                                                     Nanti Ambil Dari Database Norma Hasil Accepted
                                                 </td>
@@ -95,13 +93,11 @@
 
 
                                             <tr>
-                                                <th>Tanggal Usulan</th>
-                                                <th>:</th>
+                                                <th>Tanggal Usulan:</th>
                                                 <td>{{ $usulan->tanggal }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Draft Norma Hasil</th>
-                                                <th>:</th>
+                                                <th>Draft Norma Hasil:</th>
                                                 <td>
                                                     <a target="blank" href="{{ asset($usulan->document_path) }}"
                                                         class="badge btn-primary" download><i
@@ -110,7 +106,6 @@
                                             </tr>
                                             <tr>
                                                 <th>Status Surat</th>
-                                                <th>:</th>
                                                 <td>
                                                     <span class="badge
                                                         {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
@@ -122,8 +117,7 @@
                                             </tr>
                                             @if ($usulan->status_norma_hasil == 'ditolak')
                                             <tr>
-                                                <th>Alasan Penolakan</th>
-                                                <th>:</th>
+                                                <th>Alasan Penolakan:</th>
                                                 <td>{{ $usulan->catatan_norma_hasil }}</td>
                                             </tr>
                                             @endif

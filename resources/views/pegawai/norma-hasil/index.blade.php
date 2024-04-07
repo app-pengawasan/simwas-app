@@ -57,7 +57,9 @@
                                     <tbody>
                                         @foreach ($usulan as $un)
                                         <tr>
-                                            <td></td>
+                                            <td class="text-center" style="width: 10px; text-align:center" scope="row">
+                                                {{ $loop->iteration }}
+                                            </td>
                                             <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')

@@ -45,7 +45,8 @@
                             </div>
                         </div>
                         <div class="">
-                            <table class="table table-bordered table-striped display responsive">
+                            <table id="target-iku-unit-kerja"
+                                class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -59,7 +60,7 @@
                                     @foreach ($targetIkuUnitKerja as $ti)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $ti->unit_kerja }}</td>
+                                        <td>{{ $unitKerja[$ti->unit_kerja] }}</td>
                                         <td>{{ $ti->nama_kegiatan }}</td>
                                         <td>
                                             <span class="badge badge-{{ $colorBadge[$ti->status] }}">
@@ -139,13 +140,31 @@
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
 <!-- Page Specific JS File -->
-<script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+{{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
 
-@if ($errors->any())
 <script>
-    $(document).ready(function() {
-                $('#staticBackdrop').modal('show');
-            });
+    let table = $("#target-iku-unit-kerja")
+    .dataTable({
+    dom: "Bfrtip",
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    // filter: false,
+    buttons: [
+    {
+    extend: "excel",
+    className: "btn-success",
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    filename: "Master Unsur",
+    },
+    {
+    extend: "pdf",
+    className: "btn-danger",
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    filename: "Master Unsur",
+    },
+    ],
+    })
+    .api();
 </script>
-@endif
 @endpush

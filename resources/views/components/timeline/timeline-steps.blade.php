@@ -54,7 +54,7 @@
     </div>
 
     @elseif ($usulan->status_norma_hasil == 'ditolak')
-    <div class="circle danger">
+    <div class="circle warning">
         <span class="label"><i class="fa-solid fa-ban"></i></span>
         <span class="title-prg">Norma Hasil Ditolak Ketua Tim</span>
     </div>

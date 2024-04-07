@@ -597,6 +597,7 @@ class TargetIkuUnitKerjaController extends Controller
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'status' => $this->status,
             'colorBadge' => $this->colorBadge,
+            'unitKerja' => $this->unitKerja,
         ]);
     }
 

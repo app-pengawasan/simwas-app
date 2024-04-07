@@ -147,6 +147,8 @@ class PimpinanRencanKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
+        $proyeks = $timKerja[0]->proyek;
+
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
@@ -170,7 +172,8 @@ class PimpinanRencanKerjaController extends Controller
             'timKerja'      => $timKerja[0],
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
-            'rencanaKerja'  => $rencanaKerja
+            'rencanaKerja'  => $rencanaKerja,
+            'proyeks'        => $proyeks
         ]);
     }
 

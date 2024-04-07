@@ -32,7 +32,7 @@ $(function () {
 });
 
 // Kembali ke Halaman sebelumnya
-$("#btn-back").on("click", function (e) {
+$("#btn-back, #btn-back2").on("click", function (e) {
     e.preventDefault();
     Swal.fire({
         title: "Apakah Anda Yakin?",

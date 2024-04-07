@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="">
-                            <table id="master-unsur"
+                            <table id="master-subunsur"
                                 class="table table-bordered table-striped table-striped display responsive">
                                 <thead>
                                     <tr>

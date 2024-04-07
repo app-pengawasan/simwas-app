@@ -28,3 +28,27 @@ $(document).on("click", ".hapus-button", function () {
         }
     });
 });
+
+let table = $("#master-unsur")
+    .dataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        // filter: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                filename: "Master Unsur",
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                filename: "Master Unsur",
+            },
+        ],
+    })
+    .api();
