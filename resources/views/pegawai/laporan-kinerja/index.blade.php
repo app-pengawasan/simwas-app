@@ -74,8 +74,6 @@
                                     <tbody>
                                         @php 
                                             $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des']; 
-                                            $rowid = 0;
-                                            $rowspan = 0;
                                             $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                                         @endphp
                                         @foreach ($realisasiDone as $tahun => $items) 

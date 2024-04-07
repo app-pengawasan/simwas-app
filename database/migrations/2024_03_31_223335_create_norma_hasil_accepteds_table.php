@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('kode_klasifikasi_arsip', 100);
             $table->date('tanggal_norma_hasil');
             $table->string('laporan_path', 255)->nullable();
-            $table->enum('status_verifikasi_arsiparis', ['diperiksa', 'disetujui', 'ditolak']);
+            $table->enum('status_verifikasi_arsiparis', ['belum unggah', 'diperiksa', 'disetujui', 'ditolak']);
+            $table->string('catatan_arsiparis', 100)->nullable();
             $table->string('unit_kerja', 100);
             $table->timestamps();
         });

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('is_sekma')->default(0);
             $table->boolean('is_sekwil')->default(0);
             $table->boolean('is_perencana')->default(0);
+            $table->boolean('is_arsiparis')->default(0);
             $table->boolean('is_apkapbn')->default(0);
             $table->boolean('is_opwil')->default(0);
             $table->boolean('is_analissdm')->default(0);

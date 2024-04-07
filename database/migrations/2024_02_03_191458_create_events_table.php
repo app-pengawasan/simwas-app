@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('start');
             $table->dateTime('end');
             $table->string('color', 17);
-            // $table->text('aktivitas')->nullable();
+            $table->text('aktivitas');
             $table->timestamps();
         });
     }

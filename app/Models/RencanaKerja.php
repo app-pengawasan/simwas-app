@@ -40,6 +40,16 @@ class RencanaKerja extends Model
     // has many norma hasil
     public function normaHasil()
     {
-        return $this->hasMany(NormaHasil::class, 'id_rencanakerja');
+        return $this->hasMany(NormaHasil::class, 'tugas_id', 'id_rencanakerja');
+    }
+
+    public function suratTugas()
+    {
+        return $this->hasOne(SuratTugasTim::class, 'tugas_id', 'id_rencanakerja');
+    }
+
+    public function kendaliMutu()
+    {
+        return $this->hasOne(KendaliMutuTim::class, 'tugas_id', 'id_rencanakerja');
     }
 }

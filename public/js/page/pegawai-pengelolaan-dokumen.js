@@ -60,3 +60,10 @@ let deleteData = (id) => {
         }
     });
 };
+
+$('#formNHtim')[0].reset();
+
+$("#nomor").on("change", function () {
+    let nama = $(this).find(":selected").attr('data-nama');
+    $("#nama").val(nama);
+});

@@ -3,6 +3,7 @@ $("#proyek").prop("disabled", true); //disable pilihan proyek
 $('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
 if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
+$("#aktivitas tr").hide();
 
 //hide clockpicker saat discroll
 $(document).on("scroll", function (e) {
@@ -31,6 +32,7 @@ $("#proyek").on("change", function () {
 });
 
 $("#tugas").on("change", function () {
+    $("#aktivitas tr").hide();
     let hasil_kerja = $(this).find(":selected").attr('data-hasil');
     $("#kegiatan").val('Menyusun ' + hasil_kerja);
     $("#kegiatan").removeClass('is-invalid');
@@ -40,6 +42,7 @@ $("#tugas").on("change", function () {
     $("#capaian").removeClass('is-invalid');
     $("#error-capaian").text("");
     $("#capaian").closest('.form-group').addClass('was-validated');
+    $(`#aktivitas tr[data-tugas="${$(this).val()}"]`).show();
 });
 
 $("#status").on("change", function () {
@@ -69,62 +72,62 @@ $("#status").on("change", function () {
     } 
 });
 
-$("#link").on("input", function () {
-    if ($(this).val() != '') {
-        $("#file").prop("disabled", true);
-        $('#file').prop("required", false);
-        $(`#file`).removeClass('is-invalid');
-    }
-    else {
-        $("#file").prop("disabled", false);
-        $('#file').prop("required", true);
-    }
-});
+// $("#link").on("input", function () {
+//     if ($(this).val() != '') {
+//         $("#file").prop("disabled", true);
+//         $('#file').prop("required", false);
+//         $(`#file`).removeClass('is-invalid');
+//     }
+//     else {
+//         $("#file").prop("disabled", false);
+//         $('#file').prop("required", true);
+//     }
+// });
 
-$("#edit-link").on("input", function () {
-    if ($(this).val() != '') {
-        $("#edit-file").prop("disabled", true);
-        $(`#edit-file`).removeClass('is-invalid');
-    }
-    else {
-        $("#edit-file").prop("disabled", false);
-    }
-});
+// $("#edit-link").on("input", function () {
+//     if ($(this).val() != '') {
+//         $("#edit-file").prop("disabled", true);
+//         $(`#edit-file`).removeClass('is-invalid');
+//     }
+//     else {
+//         $("#edit-file").prop("disabled", false);
+//     }
+// });
 
-$("#file").on("change", function () {
-    if ($(this).val() != '') {
-        $("#link").prop("disabled", true);
-        $('#link').prop("required", false);
-        $(`#link`).removeClass('is-invalid');
-    } 
-    else {
-        $("#link").prop("disabled", false);
-        $('#link').prop("required", true);
-    }
-});
+// $("#file").on("change", function () {
+//     if ($(this).val() != '') {
+//         $("#link").prop("disabled", true);
+//         $('#link').prop("required", false);
+//         $(`#link`).removeClass('is-invalid');
+//     } 
+//     else {
+//         $("#link").prop("disabled", false);
+//         $('#link').prop("required", true);
+//     }
+// });
 
-$("#edit-file").on("change", function () {
-    if ($(this).val() != '') {
-        $("#edit-link").prop("disabled", true);
-        $(`#edit-link`).removeClass('is-invalid');
-    } 
-    else {
-        $("#edit-link").prop("disabled", false);
-    }
-});
+// $("#edit-file").on("change", function () {
+//     if ($(this).val() != '') {
+//         $("#edit-link").prop("disabled", true);
+//         $(`#edit-link`).removeClass('is-invalid');
+//     } 
+//     else {
+//         $("#edit-link").prop("disabled", false);
+//     }
+// });
 
-$("#clear").on("click", function () {
-    $(`#file`).removeClass('is-invalid');
-    $('#file').val('');
-    $("#link").prop("disabled", false);
-    $('#link').prop("required", true);
-});
+// $("#clear").on("click", function () {
+//     $(`#file`).removeClass('is-invalid');
+//     $('#file').val('');
+//     $("#link").prop("disabled", false);
+//     $('#link').prop("required", true);
+// });
 
-$("#edit-clear").on("click", function () {
-    $(`#edit-file`).removeClass('is-invalid');
-    $('#edit-file').val('');
-    $("#edit-link").prop("disabled", false);
-});
+// $("#edit-clear").on("click", function () {
+//     $(`#edit-file`).removeClass('is-invalid');
+//     $('#edit-file').val('');
+//     $("#edit-link").prop("disabled", false);
+// });
 
 const clearError = () => {
     $("#error-tgl").text("");
@@ -147,7 +150,7 @@ $("#myform").on("submit", function (e) {
 
     // Reset invalid message while modal open
     clearError();
-    $("#error-link").text("");
+    $("#error-hasil_kerja").text("");
     $("#error-file").text("");
 
     $.ajax({
@@ -328,8 +331,8 @@ $.fn.dataTableExt.afnFiltering.push(
     function (setting, data, index) {
         var selectedBulan = $('select#filterBulan option:selected').val();
         var selectedTahun = $('select#filterTahun option:selected').val();
-        if ((data[3].substr(3, 2) == selectedBulan || selectedBulan == 'all') 
-            && data[3].substr(6, 4) == selectedTahun) return true;
+        if ((data[3].substr(5, 2) == selectedBulan || selectedBulan == 'all') 
+            && data[3].substr(0, 4) == selectedTahun) return true;
         else return false;
     }
 );

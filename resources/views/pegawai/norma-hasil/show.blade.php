@@ -69,12 +69,12 @@
 
                                     <div class="col-md-12">
                                         <div class="col-md-4 mb-4">
-                                            <a class="btn btn-primary" href="{{ route('norma-hasil.index') }}">
+                                            <a class="btn btn-primary" href="/pegawai/norma-hasil">
                                                 <i class="fas fa-chevron-circle-left"></i> Kembali
                                             </a>
                                         </div>
 
-                                        @include('components.norma-hasil.timeline-steps')
+                                        @include('components.timeline.timeline-steps')
 
                                         <table class="table">
                                             <tr>

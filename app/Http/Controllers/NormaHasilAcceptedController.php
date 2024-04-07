@@ -114,7 +114,7 @@ private $hasilPengawasan = [
             'kode_norma_hasil' => $norma_hasil->jenis_norma_hasil_id,
             'kode_klasifikasi_arsip' => "PW.120",
             'tanggal_norma_hasil' => $tanggal,
-            'status_verifikasi_arsiparis' => 'diperiksa',
+            'status_verifikasi_arsiparis' => 'belum unggah',
             'unit_kerja' => $norma_hasil->unit_kerja,
         ]);
         // update status norma hasil

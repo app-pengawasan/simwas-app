@@ -231,3 +231,19 @@
     align-items: center;
     border-right: 1px solid var(--fc-border-color);
 }
+
+.hovermonth {
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    padding: 0;
+    height: 100%;
+    text-align: center;
+}
+
+/* .hovermonth p {
+    
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+} */

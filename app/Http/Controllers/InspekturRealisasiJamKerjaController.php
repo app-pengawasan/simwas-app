@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Event;
 use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
 use Illuminate\Database\Eloquent\Builder;
@@ -111,8 +112,9 @@ class InspekturRealisasiJamKerjaController extends Controller
                             })->where('status', 1)->select('id_pelaksana');
         } 
         
-        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
-                                        ->get()->groupBy('pelaksana.id_pegawai');
+        $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
+                     ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
+                     ->get()->groupBy('pelaksana.id_pegawai'); 
 
         $jam_kerja = $realisasi->map(function ($items) {
                                     $total_jam = 0;
@@ -124,7 +126,7 @@ class InspekturRealisasiJamKerjaController extends Controller
                                     return [
                                         'id' => $items[0]->pelaksana->id_pegawai,
                                         'realisasi_jam' => $items->groupBy(function ($item) {
-                                                                        return date("m",strtotime($item->tgl));
+                                                                        return date("m",strtotime($item->updated_at));
                                                                     })->map(function ($item) {
                                                                         $realisasi_jam = 0;
                                                                         foreach ($item as $realisasi) {
@@ -201,8 +203,9 @@ class InspekturRealisasiJamKerjaController extends Controller
                             $query->where('id_pegawai', $id);
                         })->where('status', 1)->select('id_pelaksana');
 
-        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
-                    ->get()->groupBy('id_pelaksana');
+        $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
+                    ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
+                    ->get()->groupBy('pelaksana.id_pegawai'); 
 
         $count = $realisasi
                 ->map(function ($items) {
@@ -219,7 +222,7 @@ class InspekturRealisasiJamKerjaController extends Controller
                             'tugas' => $items[0]->pelaksana->rencanaKerja->tugas,
                             'jabatan' => $items[0]->pelaksana->pt_jabatan,
                             'realisasi_jam' => $items->groupBy(function ($item) {
-                                                            return date("m",strtotime($item->tgl));
+                                                            return date("m",strtotime($item->updated_at));
                                                         })->map(function ($item) {
                                                             $realisasi_jam = 0;
                                                             foreach ($item as $realisasi) {

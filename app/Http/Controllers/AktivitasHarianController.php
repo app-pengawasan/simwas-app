@@ -25,17 +25,18 @@ class AktivitasHarianController extends Controller
                   })->get();
 
         foreach ($events as $event) {
-            $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
-                        ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
-                        ->where('start', date_format(date_create($event->start), 'H:i:s'))
-                        ->where('end', date_format(date_create($event->end), 'H:i:s'))->first();
+            // $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
+            //             ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
+            //             ->where('start', date_format(date_create($event->start), 'H:i:s'))
+            //             ->where('end', date_format(date_create($event->end), 'H:i:s'))->first();
 
             $event->title = $event->pelaksana->rencanaKerja->tugas;
-            $event->tim = $event->pelaksana->rencanaKerja->proyek->timkerja->nama;
-            $event->proyek = $event->pelaksana->rencanaKerja->proyek->nama_proyek;
-            $event->status = $realisasi->status;
-            $event->hasil_kerja = $realisasi->hasil_kerja;
-            $event->catatan = $realisasi->catatan;
+            // $event->aktivitas = $event->aktivitas;
+            // $event->tim = $event->pelaksana->rencanaKerja->proyek->timkerja->nama;
+            // $event->proyek = $event->pelaksana->rencanaKerja->proyek->nama_proyek;
+            // $event->status = $realisasi->status;
+            // $event->hasil_kerja = $realisasi->hasil_kerja;
+            // $event->catatan = $realisasi->catatan;
         }
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
@@ -69,8 +70,20 @@ class AktivitasHarianController extends Controller
     {
         $start = $request->tgl.' '.$request->start;
         $end = $request->tgl.' '.$request->end;
-        $duplicateStart = Event::where('start', '<=', $start)->where('end', '>', $start)->count();
-        $duplicateEnd = Event::where('start', '<=', $end)->where('end', '>', $end)->count();
+        //cek duplikat jam mulai
+        $duplicateStart = Event::whereRelation('pelaksana', function (Builder $query){   
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '<=', $start)->where('end', '>', $start)->count();
+        //cek duplikat jam selesai
+        $duplicateEnd = Event::whereRelation('pelaksana', function (Builder $query){   
+                            $query->where('id_pegawai', auth()->user()->id);
+                        })->where('start', '<', $end)->where('end', '>=', $end)->count();
+        //cek jam antara jam mulai dan jam selesai
+        $duplicateBetween = Event::whereRelation('pelaksana', function (Builder $query){   
+                                $query->where('id_pegawai', auth()->user()->id);
+                            })->where('start', '>=', $start)->where('end', '<=', $end)->count();
+        // $duplicateStart = Event::where('start', '<=', $start)->where('end', '>', $start)->count();
+        // $duplicateEnd = Event::where('start', '<=', $end)->where('end', '>', $end)->count();
         
         $rules = [
             'id_pelaksana'   => 'required',
@@ -78,15 +91,15 @@ class AktivitasHarianController extends Controller
                                         'required',
                                         'date_format:H:i',
                                         'before:end',
-                                        Rule::when($duplicateStart != 0 , ['boolean'])
+                                        Rule::when($duplicateStart != 0 || $duplicateBetween != 0, ['boolean'])
                                    ],
             'end'               => [
                                         'required',
                                         'date_format:H:i',
                                         'after:start',
-                                        Rule::when($duplicateStart != 0 && $duplicateEnd != 0, ['boolean'])
+                                        Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
                                     ],
-            // 'aktivitas'         => 'required',
+            'aktivitas'         => 'required',
         ];
 
         $customMessages = [
@@ -110,8 +123,31 @@ class AktivitasHarianController extends Controller
         }
 
         $validateData = $request->validate($rules);
+
+        $check_tugas = Event::where('id_pelaksana', $request->id_pelaksana)->first();
+
+        if ($check_tugas == null) { //jika tugas belum ada aktivitas, cari warna event baru untuk kalender
+            //kecualikan warna muda
+            $exclude = range(50, 197); 
+            while(in_array(($hue = rand(0,359)), $exclude));
+            
+            //jika ada minimal 212 tugas (jumlah warna max = 212) maka warna boleh tidak unik
+            if (Event::distinct()->count('id_pelaksana') >= 212) $color = 'hsl('.$hue.',100%,50%)'; 
+            else { //jika jumlah tugas < 212 warna harus unik
+                $check_color_duplicate = Event::where('color', 'hsl('.$hue.',100%,50%)')->first();
+
+                if ($check_color_duplicate != null) { 
+                    while ($check_color_duplicate->color == 'hsl('.$hue.',100%,50%)') //selagi warna masih duplikat, terus cari warna
+                        while(in_array(($hue = rand(0,359)), $exclude));
+                } 
+
+                $color = 'hsl('.$hue.',100%,50%)';
+            }
+        } else $color = $check_tugas->color; //jika tugas sudah ada aktivitas, ambil warnanya
+
         $validateData['start'] = $start;
         $validateData['end'] = $end;
+        $validateData['color'] = $color;
 
         Event::create($validateData);
         $request->session()->put('status', 'Berhasil menambahkan aktivitas.');
@@ -193,7 +229,7 @@ class AktivitasHarianController extends Controller
                                     'after:start',
                                     Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
                                 ],
-            // 'aktivitas'         => 'required',
+            'aktivitas'         => 'required',
             'tgl'               => 'required|date_format:Y-m-d',
         ];
 
@@ -218,11 +254,11 @@ class AktivitasHarianController extends Controller
         $validateData['start'] = $start;
         $validateData['end'] = $end; 
 
-        RealisasiKinerja::where('id_pelaksana', $eventEdit->id_pelaksana)
-            ->where('tgl', date_format(date_create($eventEdit->start), 'Y-m-d'))
-            ->where('start', date_format(date_create($eventEdit->start), 'H:i:s'))
-            ->where('end', date_format(date_create($eventEdit->end), 'H:i:s'))
-            ->update($validateData);
+        // RealisasiKinerja::where('id_pelaksana', $eventEdit->id_pelaksana)
+        //     ->where('tgl', date_format(date_create($eventEdit->start), 'Y-m-d'))
+        //     ->where('start', date_format(date_create($eventEdit->start), 'H:i:s'))
+        //     ->where('end', date_format(date_create($eventEdit->end), 'H:i:s'))
+        //     ->update($validateData);
             // ->update(Arr::except($validateData, ['aktivitas']));
         
         $eventEdit->update($validateData);

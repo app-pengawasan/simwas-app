@@ -43,11 +43,11 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="form-group">
+                    <div class="form-group">
                         <label class="form-label" for="aktivitas">Aktivitas</label>
                         <textarea rows="5" class="form-control h-auto" id="edit-aktivitas" name="edit-aktivitas"></textarea>
                         <small id="error-edit-aktivitas" class="text-danger"></small>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">

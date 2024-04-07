@@ -28,7 +28,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        @include('components.flash-error');
+                        @include('components.flash-error')
                         <div id="stepper1" class="bs-stepper">
                             <div class="bs-stepper-header mx-auto" style="width: 30%;">
                                 <div class="step" data-target="#test-l-1">

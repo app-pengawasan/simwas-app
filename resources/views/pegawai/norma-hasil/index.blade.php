@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-end">
-                                <a href="{{ route('norma-hasil.create') }}" id="create-btn" class="btn btn-primary">
+                                <a href="/pegawai/norma-hasil/create" id="create-btn" class="btn btn-primary">
                                     <i class=" fas fa-plus-circle"></i>
                                     Ajukan Usulan Norma Hasil
                                 </a>
@@ -76,7 +76,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('norma-hasil.show', $un->id) }}"
+                                                <a href="/pegawai/norma-hasil/{{ $un->id }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>

@@ -40,15 +40,15 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 if (eDate[4] === 0) return moment(eDate).format('ha');
                 else return moment(eDate).format('h.ma')
             },
-            selectable: true,
-            select: function(selectionInfo) {
-                let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
-                let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
-                let selisih = Date.parse(endDate) - Date.parse(startDate);
-                //jika hanya memilih sehari pindah ke view day, jika memilih berhari-hari pindah ke view week
-                if (selisih == 86400000) calendar.changeView('timeGridDay', startDate); 
-                else calendar.changeView('timeGridWeek', startDate);
-            }
+            // selectable: true,
+            // select: function(selectionInfo) {
+            //     let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
+            //     let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
+            //     let selisih = Date.parse(endDate) - Date.parse(startDate);
+            //     //jika hanya memilih sehari pindah ke view day, jika memilih berhari-hari pindah ke view week
+            //     if (selisih == 86400000) calendar.changeView('timeGridDay', startDate); 
+            //     else calendar.changeView('timeGridWeek', startDate);
+            // }
         },
         timeGrid: {
             eventTimeFormat: {
@@ -68,65 +68,66 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
         let status; let tag;
-        $.get(document.location.origin + '/document/realisasi/' + info.event.extendedProps.hasil_kerja)
-            .done(function() { 
-                tag = '<a href="' + this.url + '" target="_blank">';
-                desc();
-            }).fail(function() { 
-                tag = '<a href ="' + info.event.extendedProps.hasil_kerja + '" target="_blank">';
-                desc();
-            }) 
-        let desc = () => {
-            if (info.event.extendedProps.status == 1) status = tag + '<span class="badge badge-success">Selesai</span></a>';
-            else status = tag + '<span class="badge badge-primary">Belum Selesai</span></a>';
-            $(info.el).popover({ 
-                sanitize: false,
-                title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
-                    '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
-                trigger: 'click',
-                placement: 'right',
-                // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
-                html: true,
-                content: '<h3>' + info.event.title + '</h3>' + 
-                        startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                        + '<table><tbody>'
-                        + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
-                        + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
-                        + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
-                        + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
-                        + '</tbody></table>',
-            });
-        }
+        // $.get(document.location.origin + '/document/realisasi/' + info.event.extendedProps.hasil_kerja)
+        //     .done(function() { 
+        //         tag = '<a href="' + this.url + '" target="_blank">';
+        //         desc();
+        //     }).fail(function() { 
+        //         tag = '<a href ="' + info.event.extendedProps.hasil_kerja + '" target="_blank">';
+        //         desc();
+        //     }) 
+        // let desc = () => {
+        //     if (info.event.extendedProps.status == 1) status = tag + '<span class="badge badge-success">Selesai</span></a>';
+        //     else status = tag + '<span class="badge badge-primary">Belum Selesai</span></a>';
+        $(info.el).popover({ 
+            sanitize: false,
+            title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
+                '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
+            trigger: 'click',
+            placement: 'right',
+            // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+            html: true,
+            content: '<h3>' + info.event.title + '</h3>' + 
+                    startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
+                    + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
+                    // + '<table><tbody>'
+                    // + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
+                    // + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
+                    // + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
+                    // + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
+                    // + '</tbody></table>',
+        });
+        // }
     },
-    // selectable: true,
-    // select: function(selectionInfo) {
-    //     document.forms['myform'].reset();
-    //     $('#error-id_pelaksana').text('');
-    //     $('#error-start').text('');
-    //     $('#error-end').text('');
-    //     $('#error-aktivitas').text('');
+    selectable: true,
+    select: function(selectionInfo) {
+        document.forms['myform'].reset();
+        $('#error-id_pelaksana').text('');
+        $('#error-start').text('');
+        $('#error-end').text('');
+        $('#error-aktivitas').text('');
         
-    //     let start = moment(selectionInfo.start).format("HH:mm");
-    //     let end = moment(selectionInfo.end).format("HH:mm");
-    //     let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
-    //     let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
-    //     let selisih = Date.parse(endDate) - Date.parse(startDate);
-    //     let view = selectionInfo.view.type;
+        let start = moment(selectionInfo.start).format("HH:mm");
+        let end = moment(selectionInfo.end).format("HH:mm");
+        let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
+        let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
+        let selisih = Date.parse(endDate) - Date.parse(startDate);
+        let view = selectionInfo.view.type;
 
-    //     //tidak boleh memilih lebih dari sehari sekaligus
-    //     if ((view != 'dayGridMonth' && startDate != endDate) || (view == 'dayGridMonth' && selisih != 86400000)) {
-    //         calendar.unselect();
-    //         return;
-    //     }
+        //tidak boleh memilih lebih dari sehari sekaligus
+        if ((view != 'dayGridMonth' && startDate != endDate) || (view == 'dayGridMonth' && selisih != 86400000)) {
+            calendar.unselect();
+            return;
+        }
 
-    //     $('#modal-create-aktivitas').modal('toggle');
-    //     if (start != '00:00') {
-    //         $('#start').val(start);
-    //         $('#end').val(end);
-    //     }
-    //     $('#tgl').val(startDate);
-    //     $('#modal-create-aktivitas-label').html('Tambah Aktivitas: ' + moment(selectionInfo.start).format('LL'));
-    // },
+        $('#modal-create-aktivitas').modal('toggle');
+        if (start != '00:00') {
+            $('#start').val(start);
+            $('#end').val(end);
+        }
+        $('#tgl').val(startDate);
+        $('#modal-create-aktivitas-label').html('Tambah Aktivitas: ' + moment(selectionInfo.start).format('LL'));
+    },
 });
 calendar.render();
 
@@ -147,35 +148,46 @@ $('.nav-link').on("click", function () {
     }, 400);
 });
 
-// $(document).on({
-//     mouseenter: function() {
-//         let cellWidth = $('th.fc-col-header-cell').width();
-//         let cellHeight = $(this).height();
-//         let columnCount = $('th.fc-col-header-cell').children().length;
+//ganti warna sel waktu on hover (week & day view)
+$(document).on({
+    mouseenter: function() {
+        let cellWidth = $('th.fc-col-header-cell').width();
+        let cellHeight = $(this).height();
+        let columnCount = $('th.fc-col-header-cell').children().length;
 
-//         if (!$(this).html()) {
-//             for (var i = 0; i < columnCount; i++) {
-//                 $(this).append('<td class="temp-cell" style="border:0px; height:' + (cellHeight - 1) + 'px;width:' + (cellWidth + 3) + 'px"></td>');
-//             }
-//         }
-//         $(this).children('td').each(function() {
-//             $(this).on('mouseenter', function() {
-//                 $(this).html('<div class="current-time h-100">+</div>');
-//             }).on('mouseleave', function() {
-//                 $(this).html('');
-//             });
-//         });
+        if (!$(this).html()) {
+            for (var i = 0; i < columnCount; i++) {
+                $(this).append('<td class="temp-cell" style="border:0px; height:' + (cellHeight - 1) + 'px;width:' + (cellWidth + 3) + 'px"></td>');
+            }
+        }
 
-//     },
+        $(this).children('td').each(function() {
+            $(this).on('mouseenter', function() {
+                $(this).html('<div class="current-time h-100">+</div>');
+            }).on('mouseleave', function() {
+                $(this).html('');
+            });
+        });
 
-//     mouseleave: function() {
-//         $(this).children('.temp-cell').remove();
-//     }
-// }, 'td.fc-timegrid-slot.fc-timegrid-slot-lane');
+    },
+
+    mouseleave: function() {
+        $(this).children('.temp-cell').remove();
+    }
+}, 'td.fc-timegrid-slot.fc-timegrid-slot-lane');
 
 $(".fc-button-group").on("click", function (e) {
     $('.temp-cell').remove();
 })
+
+$('.fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled)').on({
+    mouseenter: function() {
+        $(this).append("<div class='hovermonth'>+</div>");
+    },
+    mouseleave: function() {
+        $('.hovermonth').remove();
+    }
+});
 
 $("#modal-create-aktivitas .close, #modal-create-aktivitas .btn-danger") .on("click", function (e) {
     document.forms['myform'].reset();

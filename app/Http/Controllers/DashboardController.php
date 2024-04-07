@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kompetensi;
 use App\Models\NormaHasil;
+use App\Models\RencanaKerja;
 use App\Models\Sl;
 use App\Models\StKinerja;
 use App\Models\Stp;
@@ -16,6 +17,27 @@ use App\Models\UsulanSuratSrikandi;
 
 class DashboardController extends Controller
 {
+    private $kodeHasilPengawasan = [
+        "110" => 'LHA',
+        "120" => 'LHK',
+        "130" => 'LHT',
+        "140" => 'LHI',
+        "150" => 'LHR',
+        "160" => 'LHE',
+        "170" => 'LHP',
+        "180" => 'LHN',
+        "190" => 'LTA',
+        "200" => 'LTR',
+        "210" => 'LTE',
+        "220" => 'LKP',
+        "230" => 'LKS',
+        "240" => 'LKB',
+        "500" => 'EHP',
+        "510" => 'LTS',
+        "520" => 'PHP',
+        "530" => 'QAP'
+    ];
+
     function pegawai() {
         // $stk = StKinerja::where('user_id', auth()->user()->id)->count();
         // $stp = Stp::where('user_id', auth()->user()->id)->count();
@@ -118,6 +140,15 @@ class DashboardController extends Controller
         $this->authorize('perencana');
         return view('perencana.index', [
             'type_menu' => 'rencana-kerja'
+        ]);
+    }
+
+    function arsiparis() {
+        $this->authorize('arsiparis');
+        $tugas = RencanaKerja::get();
+        return view('arsiparis.index', [
+            'tugas' => $tugas,
+            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
         ]);
     }
 }

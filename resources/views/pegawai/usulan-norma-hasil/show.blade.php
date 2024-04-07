@@ -21,7 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{ route('norma-hasil.update', $usulan->id) }}">
+            <form method="post" action="/pegawai/norma-hasil/{{ $usulan->id }}">
                 <div class="modal-body">
                     @method('PUT')
                     @csrf
@@ -77,7 +77,7 @@
                                                 <i class="fas fa-chevron-circle-left"></i> Kembali
                                             </a>
                                         </div>
-                                        @include('components.norma-hasil.timeline-steps')
+                                        @include('components.timeline.timeline-steps')
                                         <table class="table">
                                             @if ($usulan->status_norma_hasil == 'disetujui')
                                             <tr>
@@ -157,7 +157,7 @@
                                             method="post">
                                             @csrf
                                             @method('POST')
-                                            <input type="hidden" name="norma_hasil" value="{{ $usulan->id }}"">
+                                            <input type="hidden" name="norma_hasil" value="{{ $usulan->id }}">
                                             <button type=" submit" class="btn btn-success">Setujui</button>
                                         </form>
                                     </div>

@@ -18,6 +18,6 @@ class NormaHasilAccepted extends Model
     // one on one to NormaHasil
     public function normaHasil()
     {
-        return $this->belongsTo(NormaHasil::class, 'id', 'id_norma_hasil');
+        return $this->belongsTo(NormaHasil::class, 'id_norma_hasil', 'id');
     }
 }

@@ -17,7 +17,8 @@
     </div>
 
     @elseif ($usulan->status_norma_hasil == 'disetujui' &&
-    $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'diperiksa')
+    ($usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'belum unggah' || 
+    $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'diperiksa'))
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
         <span class="title-prg">Norma Hasil Disetujui Ketua Tim</span>
@@ -38,6 +39,18 @@
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
         <span class="title-prg">Norma Hasil Telah Diverifikasi Arsiparis</span>
+    </div>
+
+    @elseif ($usulan->status_norma_hasil == 'disetujui' &&
+    $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'ditolak')
+    <div class="circle done">
+        <span class="label"><i class="fa-solid fa-check"></i></span>
+        <span class="title-prg">Norma Hasil Disetujui Ketua Tim</span>
+    </div>
+    <span class="bar done"></span>
+    <div class="circle danger">
+        <span class="label"><i class="fa-solid fa-ban"></i></span>
+        <span class="title-prg">Norma Hasil Ditolak Arsiparis</span>
     </div>
 
     @elseif ($usulan->status_norma_hasil == 'ditolak')

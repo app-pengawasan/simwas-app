@@ -48,5 +48,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('perencana', function (User $user) {
             return $user->is_perencana == true;
         });
+        Gate::define('arsiparis', function (User $user) {
+            return $user->is_arsiparis == true;
+        });
     }
 }
