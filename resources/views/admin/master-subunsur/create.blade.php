@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-master-subunsur" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-master-subunsur" data-backdrop="static" data-keyboard="false" 
     aria-labelledby="modal-create-master-SubUnsur-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -15,8 +15,8 @@
                     <div class="form-group">
                         <label class="form-label" for="masterUnsurId">Nama Unsur</label>
                         <div class="">
-                            <select class="form-control" name="masterUnsurId" id="masterUnsurId" required>
-                                <option value="">Pilih Unsur</option>
+                            <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required data-placeholder="Pilih Unsur">
+                                <option value=""></option>
                                 @foreach ($masterUnsurs as $unsur)
                                 <option value="{{ $unsur->id }}">{{ $unsur->nama_unsur }}</option>
                                 @endforeach
@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label class="form-label" for="namaSubUnsur">Nama SubUnsur</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaSubUnsur" id="namaSubUnsur" required>
+                            <input type="text" class="form-control" name="namaSubUnsur" id="namaSubUnsur" required placeholder="Masukkan Nama Subunsur">
                             <small id="error-SubUnsur" class="text-danger"></small>
                         </div>
                     </div>

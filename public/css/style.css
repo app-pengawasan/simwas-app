@@ -1741,7 +1741,7 @@ h6 .badge {
 .btn-outline-secondary.disabled:hover,
 .btn-outline-secondary.disabled:focus,
 .btn-outline-secondary.disabled:active {
-    background-color: #cdd3d8 !important;
+    background-color: #6c757d !important;
     color: #fff !important;
 }
 
@@ -4368,6 +4368,12 @@ footer {
     justify-content: center;
     margin-bottom: 100px;
 }
+/* if mobile view hide prg */
+@media (max-width: 600px) {
+    .prg {
+        display: none;
+    }
+}
 
 .prg .circle,
 .prg .bar {
@@ -4382,7 +4388,7 @@ footer {
 .prg .bar {
     position: relative;
     width: 150px;
-    height: 6px;
+    height: 5px;
     /* top: -2px; */
     /* margin-left: -5px; */
     /* margin-right: -5px; */
@@ -4406,6 +4412,20 @@ footer {
 .prg .bar.done,
 .prg .circle.done {
     background: #eee;
+    border-color: #5cb85c;
+    /* font-weight: bold; */
+}
+
+.prg .circle.warning {
+    border-color: #fc544b;
+    font-weight: bold;
+
+}
+
+.prg .circle.warning .label {
+    border-color: #fc544b;
+    background: #fc544b;
+    color: #fff;
 }
 
 .prg .bar.done {
@@ -4437,6 +4457,11 @@ footer {
 .prg .circle.active .title {
     color: #0c95be;
 }
+.prg .circle.active {
+    border: 1px solid #0c95be;
+    font-weight: bold;
+    /* transform size */
+}
 
 .title-prg {
     /* make center of parent */
@@ -4447,3 +4472,74 @@ footer {
     display: inline-block;
     width: 120px;
 }
+
+
+/* Accordion */
+#faq .card {
+        margin-bottom: 20px;
+        border: 0;
+    }
+
+    #faq .card .card-header {
+        border: 0;
+        -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+        box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+        border-radius: 2px;
+        padding: 0;
+    }
+
+    #faq .card .card-header .btn-header-link {
+        display: block;
+        text-align: left;
+        background: #efefef;
+        color: #222;
+        padding: 20px;
+        border: 1px solid #cccccc;
+        border-radius: 2px;
+    }
+
+    #faq .card .card-header .btn-header-link:hover {
+        background: #F0F0F0;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:active {
+        background: #F2F2F2;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:focus {
+        background: #F2F2F2;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:after {
+        content: "\f106";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        float: right;
+    }
+
+    #faq .card .card-header .btn-header-link.collapsed {
+        background: #F2F2F2;
+    }
+
+
+    #faq .card .card-header .btn-header-link.collapsed:after {
+        content: "\f107";
+    }
+
+    #faq .card .collapsing {
+        /* background: #FFE472; */
+        line-height: 30px;
+    }
+
+    #faq .card .collapse {
+        border: 0;
+    }
+
+    #faq .card .collapse.show {
+        /* background: #FFE472; */
+        line-height: 30px;
+        color: #222;
+    }

@@ -36,7 +36,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex align-items-end">
+                            <div class="d-flex align-items-end justify-content-end">
                                 <a href="{{ route('norma-hasil.create') }}" id="create-btn" class="btn btn-primary">
                                     <i class=" fas fa-plus-circle"></i>
                                     Ajukan Usulan Norma Hasil
@@ -57,7 +57,9 @@
                                     <tbody>
                                         @foreach ($usulan as $un)
                                         <tr>
-                                            <td></td>
+                                            <td class="text-center" style="width: 10px; text-align:center" scope="row">
+                                                {{ $loop->iteration }}
+                                            </td>
                                             <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')

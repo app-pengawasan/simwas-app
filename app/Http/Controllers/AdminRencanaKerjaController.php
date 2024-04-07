@@ -141,6 +141,10 @@ class AdminRencanaKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
+        $proyek = $timKerja[0]->proyek;
+        // dd($proyek
+        // $rencanaKerja2 = $timKerja[0]->proyek[0]->rencanaKerja;
+        // dd($rencanaKerja2);
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
@@ -163,7 +167,8 @@ class AdminRencanaKerjaController extends Controller
             'timKerja'      => $timKerja[0],
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
-            'rencanaKerja'  => $rencanaKerja
+            'rencanaKerja'  => $rencanaKerja,
+            'proyeks'        => $proyek
         ]);
     }
 

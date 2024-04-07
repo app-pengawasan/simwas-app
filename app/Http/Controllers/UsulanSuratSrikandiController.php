@@ -364,6 +364,7 @@ class UsulanSuratSrikandiController extends Controller
 
         UsulanSuratSrikandi::create([
             'pejabat_penanda_tangan' => $request->pejabatPenandaTangan,
+            'rencana_kerja_id' => $request->rencana_id ?? null,
             'jenis_naskah_dinas' => $request->jenisNaskahDinas,
             'jenis_naskah_dinas_penugasan' => $request->jenisNaskahDinasPenugasan,
             'kegiatan' => $request->kegiatan,

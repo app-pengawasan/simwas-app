@@ -37,6 +37,8 @@
                         </a>
                     </li>
                     @endif
+
+                    @if (auth()->user()->timKerja->count() > 0)
                     <li
                         class="{{ Request::is('ketua-tim/rencana-kinerja') || Request::is('ketua-tim/rencana-kinerja/*') || Request::is('ketua-tim/tim-pelaksana/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/ketua-tim/rencana-kinerja">
@@ -49,6 +51,7 @@
                             <span>Usulan Norma Hasil</span>
                         </a>
                     </li>
+                    @endif
                     <li
                         class="{{ Request::is('pegawai/rencana-kinerja') || Request::is('pegawai/rencana-kinerja/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/pegawai/rencana-kinerja">Tugas Saya</a>

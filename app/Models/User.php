@@ -119,4 +119,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(SuratSrikandi::class);
     }
+    public function timKerja()
+    {
+        return $this->hasMany(TimKerja::class, 'id_ketua');
+    }
 }
