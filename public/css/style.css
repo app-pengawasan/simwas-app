@@ -4316,11 +4316,13 @@ body:not(.sidebar-mini)
 
 footer {
     /* make bottom of the page */
-    position: absolute;
-    bottom: 5px;
+    position: fixed;
+    padding: 10px;
+    bottom: 0;
     font-size: 0.8rem;
-    width: 100%;
+    width: 250px;
     text-align: center;
+    background-color: #FFFFFF;
 }
 /* mobile view */
 @media (max-width: 600px) {
@@ -4416,13 +4418,13 @@ footer {
     /* font-weight: bold; */
 }
 
-.prg .circle.warning {
+.prg .circle.danger {
     border-color: #fc544b;
     font-weight: bold;
 
 }
 
-.prg .circle.warning .label {
+.prg .circle.danger .label {
     border-color: #fc544b;
     background: #fc544b;
     color: #fff;

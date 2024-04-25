@@ -12,25 +12,12 @@
                 class="needs-validation" novalidate="">
                 <div class="modal-body">
                     @csrf
-                    <div class="form-group">
-                        <label class="form-label" for="create-id_tujuan">Tujuan</label>
-                        <div class="">
-                            <select class="form-control" name="create-id_tujuan" id="create-id_tujuan" disabled
-                                required>
-                                <option value="" selected disabled></option>
-                                @foreach ($masterTujuan as $tujuan)
-                                    <?php $text = '[' . $tujuan->tahun_mulai . ' - ' . $tujuan->tahun_selesai . '] ' . $tujuan->tujuan; ?>
-                                    <option value="{{ $tujuan->id_tujuan }}" data-mulai="{{ $tujuan->tahun_mulai }}"
-                                        data-selesai="{{ $tujuan->tahun_selesai }}">{{ $text }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+
                     <div class="form-group">
                         <label class="form-label" for="create-sasaran">Sasaran</label>
                         <div class="">
-                            <select class="form-control" name="create-sasaran" id="create-sasaran" required>
-                                <option value="" selected disabled></option>
+                            <select class="form-control select2" name="create-sasaran" id="create-sasaran" required data-placeholder="Pilih Sasaran Inspektorat">
+                                <option value=""></option>
                                 @foreach ($masterSasaran as $sasaran)
                                     <?php $text = '[' . $sasaran->tujuan->tahun_mulai . ' - ' . $sasaran->tujuan->tahun_selesai . '] ' . $sasaran->sasaran; ?>
                                     <option value="{{ $sasaran->id_sasaran }}"
@@ -41,9 +28,22 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="create-id_tujuan">Tujuan</label>
+                        <div class="">
+                            <select class="form-control" name="create-id_tujuan" id="create-id_tujuan" disabled required>
+                                <option value="" selected disabled></option>
+                                @foreach ($masterTujuan as $tujuan)
+                                <?php $text = '[' . $tujuan->tahun_mulai . ' - ' . $tujuan->tahun_selesai . '] ' . $tujuan->tujuan; ?>
+                                <option value="{{ $tujuan->id_tujuan }}" data-mulai="{{ $tujuan->tahun_mulai }}"
+                                    data-selesai="{{ $tujuan->tahun_selesai }}">{{ $text }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="iku">IKU</label>
                         <div class="">
-                            <input type="text" class="form-control" name="iku" id="create-iku" required>
+                            <input type="text" class="form-control" name="iku" id="create-iku" required placeholder="Masukkan Indikator Kinerja Utama">
                             <small id="error-iku" class="text-danger"></small>
                         </div>
                     </div>

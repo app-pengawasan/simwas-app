@@ -22,7 +22,7 @@
     @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
         <div class="section-header">
-            <h1>Formulir Pengajuan Naskah Dinas untuk diproses pada Aplikasi Srikandi</h1>
+            <h1>Pengajuan Naskah Dinas Srikandi</h1>
         </div>
         <div class="row">
             <div class="col-md-12">

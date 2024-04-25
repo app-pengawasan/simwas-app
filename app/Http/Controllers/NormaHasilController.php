@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NormaHasil;
 use App\Http\Requests\StoreNormaHasilRequest;
 use App\Http\Requests\UpdateNormaHasilRequest;
+use App\Models\ObjekNormaHasil;
 use App\Models\StKinerja;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RencanaKerja;
@@ -13,7 +14,7 @@ class NormaHasilController extends Controller
 {
 
 
-     private $kodeHasilPengawasan = [
+    private $kodeHasilPengawasan = [
     "110" => 'LHA',
     "120" => 'LHK',
     "130" => 'LHT',
@@ -65,6 +66,7 @@ class NormaHasilController extends Controller
         return view('pegawai.norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
+            'jenisNormaHasil' => $this->hasilPengawasan
 
         ]);
     }
@@ -128,6 +130,19 @@ class NormaHasilController extends Controller
             'status_norma_hasil' => 'diperiksa'
         ]);
 
+        // get last id from norma_hasil
+        $norma_hasil_id = NormaHasil::latest()->first()->id;
+
+        // objek kegiatan is array, store to objek_norma_hasil
+        if ($request->objek_kegiatan != null) {
+            foreach ($request->objek_kegiatan as $objek) {
+                ObjekNormaHasil::create([
+                    'objek_id' => $objek,
+                    'norma_hasil_id' => $norma_hasil_id
+                ]);
+            }
+        }
+
 
         return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
     }
@@ -142,8 +157,11 @@ class NormaHasilController extends Controller
      */
     public function show(NormaHasil $norma_hasil)
     {
+        $objek = ObjekNormaHasil::where('norma_hasil_id', $norma_hasil->id)->get();
         return view('pegawai.norma-hasil.show', [
-            "usulan" => $norma_hasil
+            "usulan" => $norma_hasil,
+            "objek" => $objek,
+            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
         ]);
     }
 

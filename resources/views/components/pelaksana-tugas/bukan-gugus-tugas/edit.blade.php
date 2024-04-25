@@ -39,7 +39,7 @@
                     <div class="form-group">
                         <label class="form-label" for="edit-pelaksana">Nama</label>
                         <div class="">
-                            <select id="edit-pelaksana" class="form-control" name="edit-pelaksana">
+                            <select id="edit-pelaksana" class="form-control select2" name="edit-pelaksana">
                                 <option value="" selected disabled></option>
                                 @foreach ($pegawai as $p)
                                     <option value="{{ $p->id }}">{{ $p->name }}</option>

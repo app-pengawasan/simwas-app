@@ -6,6 +6,7 @@ use App\Models\NormaHasilAccepted;
 use App\Http\Requests\StoreNormaHasilAcceptedRequest;
 use App\Http\Requests\UpdateNormaHasilAcceptedRequest;
 use App\Models\NormaHasil;
+use App\Models\ObjekNormaHasil;
 
 class NormaHasilAcceptedController extends Controller
 {
@@ -30,7 +31,6 @@ class NormaHasilAcceptedController extends Controller
     "520" => 'PHP',
     "530" => 'QAP'
 ];
-
 private $hasilPengawasan = [
     "110" => "Laporan Hasil Audit Kepatuhan",
     "120" => "Laporan Hasil Audit Kinerja",
@@ -51,6 +51,7 @@ private $hasilPengawasan = [
     "520" => "Pengolahan Hasil Pengawasan",
     "530" => "Penjaminan Kualitas Pengawasan"
     ];
+
     /**
      * Display a listing of the resource.
      *
@@ -69,6 +70,7 @@ private $hasilPengawasan = [
         return view('pegawai.usulan-norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
+            'jenisNormaHasil' => $this->hasilPengawasan,
             'type_menu' => 'rencana-kinerja'
         ]);
     }
@@ -91,11 +93,11 @@ private $hasilPengawasan = [
      */
     public function store(StoreNormaHasilAcceptedRequest $request)
     {
-        // dd($request->all());
-        // nomor norma hasil is increment from norma hasil accepted if its none then 1
-        $nomor_norma_hasil = NormaHasilAccepted::latest()->first();
+
+        $tanggal = date('Y-m-d');
+        $norma_hasil = NormaHasil::find($request->norma_hasil);
+        $nomor_norma_hasil = NormaHasilAccepted::where('kode_norma_hasil', $norma_hasil->jenis_norma_hasil_id)->latest()->first();
         if ($nomor_norma_hasil) {
-            // if year in tanngal_norma_hasil is not same with now then reset nomor_norma_hasil to 1
             if (date('Y', strtotime($nomor_norma_hasil->tanggal_norma_hasil)) != date('Y')) {
                 $nomor_norma_hasil = 1;
             } else {
@@ -104,10 +106,7 @@ private $hasilPengawasan = [
         } else {
             $nomor_norma_hasil = 1;
         }
-        // dd($nomor_norma_hasil);
-        $tanggal = date('Y-m-d');
-        $norma_hasil = NormaHasil::find($request->norma_hasil);
-        // dd($norma_hasil);
+
         NormaHasilAccepted::create([
             'id_norma_hasil' => $request->norma_hasil,
             'nomor_norma_hasil' => $nomor_norma_hasil,
@@ -136,8 +135,11 @@ private $hasilPengawasan = [
     public function show($id)
     {
         $usulan = NormaHasil::find($id);
+        $objek = ObjekNormaHasil::where('norma_hasil_id', $id)->get();
+
         return view('pegawai.usulan-norma-hasil.show', [
             'usulan' => $usulan,
+            'objek' => $objek,
             'type_menu' => 'rencana-kinerja',
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
         ]);

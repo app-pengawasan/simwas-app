@@ -50,6 +50,21 @@
                                         </div>
                                         @enderror
                                     </div>
+                                    {{-- Objek Kegiatan --}}
+                                    <div class="form-group
+                                        @if ($errors->has('objek_kegiatan')) is-invalid @endif">
+                                        <label for="objek_kegiatan">Objek Kegiatan</label>
+                                        <select required id="objek_kegiatan" name="objek_kegiatan[]" disabled multiple="multiple" data-placeholder="Pilih objek kegiatan"
+                                            class="form-control select2">
+                                            <option value="">Pilih objek kegiatan</option>
+                                        </select>
+                                        @if ($errors->has('objek_kegiatan'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('objek_kegiatan') }}
+                                        </div>
+                                        @endif
+                                    </div>
+
                                     {{-- Jenis Norma Hasil --}}
                                     <div class="form-group
                                         @if ($errors->has('jenis_norma_hasil')) is-invalid @endif">
@@ -120,24 +135,6 @@
 <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
-                toggleBackdateInput(isBackdateInput, tanggalInputContainer);
-        });
-
-        function toggleBackdateInput(input, tanggalInputContainer) {
-            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-
-            if (input.value === '1') {
-                tanggalInputContainer.style.display = 'block';
-            } else {
-                tanggalInputContainer.style.display = 'none';
-            }
-        }
-</script>
-<!-- Page Specific JS File -->
+<script src="{{ asset('js') }}/page/pegawai/norma-hasil.js"></script>
 <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush

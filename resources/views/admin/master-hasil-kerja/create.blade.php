@@ -26,9 +26,9 @@
                     <div class="form-group">
                         <label class="form-label" for="masterSubUnsurId">Nama Subunsur</label>
                         <div class="">
-                            <select disabled class="form-control" name="masterSubUnsurId" id="masterSubUnsurId"
-                                required>
-                                <option value="">Pilih Subunsur</option>
+                            <select disabled class="form-control select2" name="masterSubUnsurId" id="masterSubUnsurId"
+                                required data-placeholder="Pilih Subunsur">
+                                <option value=""></option>
                                 @foreach ($masterSubUnsurs as $unsur)
                                 {{-- <option value="{{ $unsur->id }}">{{ $unsur->nama_sub_unsur }}</option> --}}
                                 @endforeach

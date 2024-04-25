@@ -48,8 +48,9 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
-                                            <th style="width: 180px;">Tanggal Usulan</th>
+                                            <th style="width: 180px;">Jenis Norma Hasil</th>
                                             <th style="width: 180px;">Nomor Surat</th>
+                                            <th style="width: 180px;">Tanggal Usulan</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -60,7 +61,7 @@
                                             <td class="text-center" style="width: 10px; text-align:center" scope="row">
                                                 {{ $loop->iteration }}
                                             </td>
-                                            <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
+                                            <td>{{ $jenisNormaHasil[$un->jenis_norma_hasil_id] }}</td>
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')
                                                 <span class="badge badge-primary">
@@ -69,14 +70,34 @@
                                                 </span>
                                                 @endif
                                             </td>
+                                            <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
+                                            @if ($un->status_norma_hasil != 'diperiksa')
                                             <td>
-                                                <span class="badge
-                                                    {{ $un->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
-                                                    {{ $un->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
-                                                    {{ $un->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $un->status_norma_hasil }}
+                                                @if ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'belum unggah')
+                                                <span class="badge badge-dark">Menunggu Upload Laporan</span>
+                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'diperiksa')
+                                                <span class="badge badge-dark">Menunggu Verifikasi Arsiparis</span>
+                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'disetujui')
+                                                <span class="badge badge-success">Telah Diverifikasi
+                                                    Arsiparis</span>
+
+                                                @endif
+                                            </td>
+                                            @else
+                                            <td>
+                                                <span
+                                                    class="badge
+                                                                                                                                                    {{ $un->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
+                                                                                                                                                    {{ $un->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
+                                                                                                                                                    {{ $un->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
+                                                                                                                                                        text-capitalize">{{
+                                                                                                                                                        $un->status_norma_hasil }}
                                                 </span>
                                             </td>
+                                            @endif
                                             <td>
                                                 <a href="/pegawai/norma-hasil/{{ $un->id }}"
                                                     class="btn btn-info btn-sm">

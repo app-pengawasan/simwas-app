@@ -50,7 +50,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Detail Usulan Surat</h1>
+            <h1>Detail Usulan Norma Hasil</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai">Dashboard</a></div>
                 <div class="breadcrumb-item active"><a href="/ketua-tim/norma-hasil">Norma Hasil</a></div>
@@ -78,11 +78,10 @@
                                             </a>
                                         </div>
                                         @include('components.timeline.timeline-steps')
-                                        <table class="table">
+                                        <table class="mb-4 table table-striped responsive" id="table-show">
                                             @if ($usulan->status_norma_hasil == 'disetujui')
                                             <tr>
-                                                <th>Nomor Surat</th>
-                                                <th>:</th>
+                                                <th>Nomor Surat:</th>
                                                 <td>
                                                     <span class="badge badge-primary">
                                                         R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
@@ -92,30 +91,31 @@
                                             </tr>
                                             @endif
                                             <tr>
-                                                <th>Tugas</th>
-                                                <th>:</th>
+                                                <th>Tugas:</th>
                                                 <td>{{ $usulan->rencanaKerja->tugas }}</td>
-
-                                                {{-- Status Disetujui --}}
-                                                @if ($usulan->status_norma_hasil == 'disetujui')
+                                            </tr>
                                             <tr>
-                                                <th>Nomor Surat</th>
-                                                <th>:</th>
-                                                <td>
-                                                    Nanti Ambil Dari Database Norma Hasil Accepted
+                                                <th>Proyek:</th>
+                                                <td>{{ $usulan->rencanaKerja->proyek->nama_proyek }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tim Kerja:</th>
+                                                <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tanggal Usulan:</th>
+                                                <td>{{ \Carbon\Carbon::parse($usulan->tanggal)->format('d F Y') }}</td>
+                                            </tr>
+                                            @if ($usulan->status_norma_hasil == 'disetujui')
+
+                                            <tr>
+                                                <th>Tanggal Persetujuan Ketua Tim:</th>
+                                                <td>{{ \Carbon\Carbon::parse($usulan->normaHasilAccepted->tanggal_norma_hasil)->format('d F Y') }}
                                                 </td>
                                             </tr>
                                             @endif
-
-
                                             <tr>
-                                                <th>Tanggal Usulan</th>
-                                                <th>:</th>
-                                                <td>{{ $usulan->tanggal }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Draft Norma Hasil</th>
-                                                <th>:</th>
+                                                <th>Draft Norma Hasil:</th>
                                                 <td>
                                                     <a target="blank" href="{{ asset($usulan->document_path) }}"
                                                         class="badge btn-primary" download><i
@@ -123,21 +123,47 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th>Status Surat</th>
-                                                <th>:</th>
+                                                <th>Objek:</th>
+                                                <td class="py-2">
+                                                    @foreach ($objek as $objek)
+                                                    <li>{{ $objek->masterObjek->nama }}
+                                                        @endforeach
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status Surat:</th>
+                                                @if ($usulan->status_norma_hasil != 'diperiksa')
+                                                <td>
+                                                    @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                    'belum unggah')
+                                                    <span class="badge badge-primary">Menunggu Upload Laporan</span>
+                                                    @elseif ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                    'diperiksa')
+                                                    <span class="badge badge-primary">Menunggu Verifikasi
+                                                        Arsiparis</span>
+                                                    @elseif ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                    'disetujui')
+                                                    <span class="badge badge-success">Norma Hasil Telah Diverifikasi
+                                                        Arsiparis</span>
+
+                                                    @endif
+                                                </td>
+                                                @else
                                                 <td>
                                                     <span class="badge
-                                                        {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
-                                                        {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
-                                                        {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
-                                                            text-capitalize">{{ $usulan->status_norma_hasil }}
+                                                            {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
+                                                            {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
+                                                            {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
+                                                                text-capitalize">{{
+                                                                $usulan->status_norma_hasil }}
                                                     </span>
                                                 </td>
+                                                @endif
+
                                             </tr>
                                             @if ($usulan->status_norma_hasil == 'ditolak')
                                             <tr>
-                                                <th>Alasan Penolakan</th>
-                                                <th>:</th>
+                                                <th>Alasan Penolakan:</th>
                                                 <td>{{ $usulan->catatan_norma_hasil }}</td>
                                             </tr>
                                             @endif

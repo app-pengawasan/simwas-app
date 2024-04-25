@@ -211,11 +211,11 @@
                 </a>
             </li>
         </ul>
-        @include('components.footer')
         {{-- <div class="hide-sidebar-mini mt-4 mb-4 p-3">
             <a href="/dashboard-general-dashboard" class="btn btn-primary btn-lg btn-block btn-icon-split">
                 <i class="fas fa-rocket"></i> Dashboard Lama
             </a>
         </div> --}}
+        @include('components.footer')
     </aside>
 </div>

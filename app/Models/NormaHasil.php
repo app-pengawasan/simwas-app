@@ -34,4 +34,10 @@ class NormaHasil extends Model
     {
         return $this->hasOne(NormaHasilAccepted::class, 'id_norma_hasil', 'id');
     }
+
+    public function objekNormaHasil()
+    {
+        return $this->hasMany(ObjekNormaHasil::class, 'norma_hasil_id', 'id');
+    }
+
 }

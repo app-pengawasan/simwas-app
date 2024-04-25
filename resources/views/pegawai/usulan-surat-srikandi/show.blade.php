@@ -28,8 +28,8 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="{{ route('usulan-surat-srikandi.index') }}">
-                                    <i class="fas fa-chevron-circle-left"></i> Kembali
+                                <a class="btn btn-outline-primary" href="{{ route('usulan-surat-srikandi.index') }}">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                 </a>
                             </div>
                         </div>

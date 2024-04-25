@@ -23,7 +23,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDetailLabel">Jenis Naskah Dinas</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -54,7 +53,7 @@
     @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
         <div class="section-header">
-            <h1>Formulir Pengajuan Naskah Dinas untuk diproses pada Aplikasi Srikandi</h1>
+            <h1>Pengajuan Naskah Dinas Srikandi</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
                 <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
@@ -314,12 +313,14 @@
 
                                         <div class="text-right">
                                             <button onclick="stepper1.next()" type="button" class="btn btn-primary"
-                                                id="next-form">Next</button>
+                                                id="next-form">Selanjutnya
+                                                <i class="fa-solid fa-arrow-right ml-2"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div id="test-l-2" class="content">
-                                    <div  id="file-upload-wrapper" class="form-group">
+                                    <div id="file-upload-wrapper" class="form-group">
                                         <label for="customFile">Upload Dokumen Naskah Dinas</label>
                                         <div class="custom-file">
                                             <input required name="file" type="file" class="custom-file-input @error('file')
@@ -350,7 +351,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="tim_kerja">Tim Kerja</label>
-                                            <input  type="text" readonly
+                                            <input type="text" readonly
                                                 class="form-control @error('tim_kerja') is-invalid @enderror"
                                                 id="tim_kerja" name="tim_kerja" value="{{ old('tim_kerja') }}">
                                             @error('tim_kerja')
@@ -405,10 +406,14 @@
 
 
                                     <div class="text-right">
-                                        <button type="button" class=" btn btn-primary"
-                                            onclick="stepper1.previous()">Previous</button>
+                                        <button type="button" class=" btn btn-outline-primary"
+                                            onclick="stepper1.previous()">
+                                            <i class="fa-solid fa-arrow-left mr-2"></i>
+                                            Sebelumnya</button>
                                         <button type="submit" class="btn btn-primary"
-                                            onclick="stepper1.next()">Submit</button>
+                                            onclick="stepper1.next()">
+                                            <i class="fa-solid fa-floppy-disk"></i>
+                                            Simpan</button>
                                     </div>
                                 </div>
                             </form>
