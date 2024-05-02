@@ -145,4 +145,17 @@ class ObjekPengawasanController extends Controller
             'message' => 'Berhasil menghapus Objek Pengawasan',
         ]);
     }
+
+    public function getObjekPengawasan()
+
+    {
+        $rencana_id = request()->rencana_id;
+        $objek_pengawasan = ObjekPengawasan::where('id_rencanakerja', $rencana_id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $objek_pengawasan
+        ]);
+    }
+
+
 }

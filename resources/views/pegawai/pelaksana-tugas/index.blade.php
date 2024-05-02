@@ -34,7 +34,8 @@
                 <div class="breadcrumb-item">
                     <a href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">Tim Kerja</a>
                 </div>
-                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">Proyek</a></div>
+                <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">Proyek</a>
+                </div>
                 <div class="breadcrumb-item">Detail Tugas</div>
             </div>
         </div>
@@ -77,33 +78,31 @@
                             </tr>
                             <tr>
                                 <th>Objek</th>
-                                <td>
+                                <td style="padding-right: 0px">
                                     @if (count($rencanaKerja->objekPengawasan))
-                                    <ol>
-                                        <table>
-                                            @foreach ($rencanaKerja->objekPengawasan as $objek)
-                                            <tr>
-                                                <td class="pr-2">
-                                                    <li>{{ $objek->nama }}
-                                                    </li>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-warning btn-edit-objek" type="button"
-                                                        data-toggle="modal" data-target="#modal-edit-objek"
-                                                        data-kategori="{{ $objek->kategori_objek }}"
-                                                        data-id="{{ $objek->id_opengawasan }}"
-                                                        data-idobjek="{{ $objek->id_objek }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-delete-objek" type="button"
-                                                        data-id="{{ $objek->id_opengawasan }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </table>
-                                    </ol>
+                                    <table style="width: 100%">
+                                        @foreach ($rencanaKerja->objekPengawasan as $objek)
+                                        <tr>
+                                            <td class="pr-2">
+                                                <li>{{ $objek->nama }}
+                                                </li>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-warning btn-edit-objek" type="button"
+                                                    data-toggle="modal" data-target="#modal-edit-objek"
+                                                    data-kategori="{{ $objek->kategori_objek }}"
+                                                    data-id="{{ $objek->id_opengawasan }}"
+                                                    data-idobjek="{{ $objek->id_objek }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-delete-objek" type="button"
+                                                    data-id="{{ $objek->id_opengawasan }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
                                     @else
                                     -
                                     @endif
@@ -207,7 +206,7 @@
                                         </td>
                                         <td>
                                             {{
-                                                $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agt + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des
+                                                $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agu + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des
                                                 }}
                                         </td>
                                         <td>

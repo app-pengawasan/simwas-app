@@ -6,6 +6,26 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
         <title>@yield('title') &mdash; SIMWAS</title>
 
+        <!-- HTML Meta Tags -->
+        <title>Sistem Informasi Manajemen Pengawasan</title>
+        <meta name="description"
+            content="Sistem Informasi Manajemen Pengawasan Inspektorat Utama Badan Pusat Statistik">
+
+        <!-- Facebook Meta Tags -->
+        <meta property="og:url" content="{{ env('APP_URL') }}">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Sistem Informasi Manajemen Pengawasan">
+        <meta property="og:description"
+            content="Sistem Informasi Manajemen Pengawasan Inspektorat Utama Badan Pusat Statistik">
+        <meta property="og:image" content="{{ asset('img/open-graph-simwas.png') }}">
+
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ env('APP_URL') }}">
+        <meta name="twitter:title" content="Sistem Informasi Manajemen Pengawasan">
+        <meta name="twitter:description"
+            content="Sistem Informasi Manajemen Pengawasan Inspektorat Utama Badan Pusat Statistik">
+        <meta name="twitter:image" content="{{ asset('img/open-graph-simwas.png') }}">
         <link rel="shortcut icon" href="{{ asset('img/simwas.png') }}" type="image/x-icon">
         <!-- General CSS Files -->
         <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">

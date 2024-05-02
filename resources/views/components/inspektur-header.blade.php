@@ -43,6 +43,11 @@
                     <i class="fas fa-user-shield"></i> Login sebagai Perencana
                 </a>
                 @endif
+                @if (auth()->user()->is_arsiparis)
+                <a href="{{ route('arsiparis-dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Arsiparis
+                </a>
+                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">

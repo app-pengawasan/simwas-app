@@ -74,7 +74,7 @@
                     <span>Rencana Kinerja</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('admin/rencana-kinerja') ? 'active' : '' }}">
+                    <li class="{{ Request::is('admin/rencana-kinerja*') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/rencana-kinerja">Dashboard Kinerja</a>
                     </li>
                     <li class="{{ Request::is('admin/master-tujuan') ? 'active' : '' }}">

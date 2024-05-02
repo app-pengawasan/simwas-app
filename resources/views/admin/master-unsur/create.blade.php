@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-create-master-unsur-label">Form Tambah Unsur Inspektorat</h5>
+                <h5 class="modal-title" id="modal-create-master-unsur-label">Form Tambah Unsur</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,7 +15,7 @@
                     <div class="form-group">
                         <label class="form-label" for="namaUnsur">Nama Unsur</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaUnsur" id="namaUnsur" required>
+                            <input type="text" class="form-control" name="namaUnsur" id="namaUnsur" required placeholder="Masukkan Nama Unsur">
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>

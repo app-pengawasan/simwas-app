@@ -13,8 +13,8 @@
                     <div class="form-group">
                         <label class="form-label" for="tujuan">Tujuan</label>
                         <div class="">
-                            <select class="form-control" name="tujuan" id="create-tujuan" required>
-                                <option value="" selected disabled></option>
+                            <select class="form-control select2" name="tujuan" id="create-tujuan" required data-placeholder="Pilih Tujuan Inspektorat">
+                                <option value=""></option>
                                 @foreach ($masterTujuan as $tujuan)
                                     <?php $text = '[' . $tujuan->tahun_mulai . '-' . $tujuan->tahun_selesai . '] ' . $tujuan->tujuan; ?>
                                     <option value="{{ $tujuan->id_tujuan }}" data-mulai="{{ $tujuan->tahun_mulai }}"
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label class="form-label" for="sasaran">Sasaran</label>
                         <div class="">
-                            <input type="text" class="form-control" name="sasaran" id="create-sasaran" required>
+                            <input type="text" class="form-control" name="sasaran" id="create-sasaran" required placeholder="Masukkan Sasaran Inspektorat">
                             <small id="error-sasaran" class="text-danger"></small>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-mastertujuan" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-mastertujuan" data-backdrop="static" data-keyboard="false"
     aria-labelledby="modal-create-mastertujuan-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label class="form-label" for="tahun_mulai">Tahun Mulai</label>
                         <div class="">
-                            <select class="form-control" id="create-tahun_mulai" name="tahun_mulai" required>
+                            <select class="form-control select2" id="create-tahun_mulai" name="tahun_mulai" required>
                                 <?php $year = date('Y'); ?>
                                 @for ($i = -5; $i < 8; $i++)
                                     <option value="{{ $year + $i }}" {{ $i === old('tahun', 0) ? 'selected' : '' }}>
@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label class="form-label" for="tahun_selesai">Tahun Selesai</label>
                         <div class="">
-                            <select class="form-control" id="create-tahun_selesai" name="tahun_selesai" required>
+                            <select class="form-control select2" id="create-tahun_selesai" name="tahun_selesai" required>
                                 <?php $year = date('Y'); ?>
                                 @for ($i = -1; $i < 12; $i++)
                                     <option value="{{ $year + $i }}" {{ $i === old('tahun', 4) ? 'selected' : '' }}>
@@ -40,7 +40,7 @@
                         <label class="form-label" for="tujuan">Tujuan</label>
                         <div class="">
                             <input type="text" class="form-control" id="create-tujuan" name="tujuan"
-                                value="{{ old('nama') }}" required>
+                                value="{{ old('nama') }}" required placeholder="Masukkan Tujuan Inspektorat">
                             <small id="error-tujuan" class="text-danger"></small>
                         </div>
                     </div>

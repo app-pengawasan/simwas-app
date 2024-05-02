@@ -111,3 +111,28 @@ $(document).on("change", "input[type=radio][name=editStatus]", function () {
         $("#edit-ketuaTim").attr("required", false);
     }
 });
+
+
+
+let table = $("#master-hasil-kerja")
+    .dataTable({
+        dom: "Bfrtip",
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: [
+            {
+                extend: "excel",
+                className: "btn-success",
+                text: '<i class="fas fa-file-excel"></i> Excel',
+                filename: "Master Hasil Kerja",
+            },
+            {
+                extend: "pdf",
+                className: "btn-danger",
+                text: '<i class="fas fa-file-pdf"></i> PDF',
+                filename: "Master Hasil Kerja",
+            },
+        ],
+    })
+    .api();

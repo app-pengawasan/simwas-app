@@ -42,6 +42,7 @@
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
+                        @include('components.rencana-kerja.timeline-steps')
                         <div class="d-flex flex-row flex-wrap justify-content-between">
                             <div class="card col-md-6 p-0 pr-2">
                                 <div class="card-body shadow-sm border p-4">
@@ -161,15 +162,15 @@
                                                 </a>
                                                 {{-- delete form --}}
                                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                <form action="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
-                                                    method="post" class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button class="btn btn-danger btn-sm" type="submit">
-                                                        <i class="fa fa-trash mr-1"></i>Hapus
-                                                    </button>
-                                                </form>
-                                                @endif
+                                                    <form action="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
+                                                        method="post" class="d-inline">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button class="btn btn-danger btn-sm" type="submit">
+                                                            <i class="fa fa-trash mr-1"></i>Hapus
+                                                        </button>
+                                                    </form>
+                                                    @endif
                                             </td>
                                             @endforeach
                                     </tbody>
@@ -199,7 +200,8 @@
                                 </button>
                                 @endif --}}
                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                    <button class="btn btn-success float-right btn-xl mt-4 text-bold" id="btn-send-rencana-kerja">
+                                    <button class="btn btn-success float-right btn-xl mt-4 text-bold"
+                                        id="btn-send-rencana-kerja">
                                         <i class="fa-regular fa-paper-plane mr-1"></i> Kirim
                                     </button>
                                     @endif

@@ -22,13 +22,13 @@
     @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
         <div class="section-header">
-            <h1>Formulir Pengajuan Naskah Dinas untuk diproses pada Aplikasi Srikandi</h1>
+            <h1>Pengajuan Naskah Dinas Srikandi</h1>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        @include('components.flash-error');
+                        @include('components.flash-error')
                         <div id="stepper1" class="bs-stepper">
                             <div class="bs-stepper-header mx-auto" style="width: 30%;">
                                 <div class="step" data-target="#test-l-1">

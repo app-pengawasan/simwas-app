@@ -3,149 +3,138 @@
 @section('title', 'Ajukan Usulan Norma Hasil')
 
 @push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/selectric/public/selectric.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
+<!-- CSS Libraries -->
+<link rel="stylesheet" href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
+<link rel="stylesheet" href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
+<link rel="stylesheet" href="{{ asset('library/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 @endpush
 
 @section('main')
-    @include('components.header')
-    @include('components.pegawai-sidebar')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Form Usulan Norma Hasil</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item active"><a href="/pegawai/norma-hasil">Norma Hasil</a></div>
-                    <div class="breadcrumb-item">Form Usulan</div>
-                </div>
+@include('components.header')
+@include('components.pegawai-sidebar')
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Form Usulan Norma Hasil</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="/pegawai/norma-hasil">Norma Hasil</a></div>
+                <div class="breadcrumb-item">Form Usulan</div>
             </div>
-            <div class="section-body">
-                <div class="row">
-                    <div class="col-12 col-md-6 col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="pt-1 pb-1 m-4">
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="pt-1 pb-1 m-4">
                                 <form action="/pegawai/norma-hasil" method="post" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="status" value="0">
                                     <div class="form-group">
-                                        <label class="d-block">Backdate</label>
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_backdate"
-                                                value="1"
-                                                {{ old('is_backdate') == '1' ? 'checked' : '' }}
-                                                onchange="toggleBackdateInput(this)"
-                                                id="is_backdate_ya"
-                                                class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_backdate_ya">Ya</label>
-                                        </div>
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio"
-                                                name="is_backdate"
-                                                value="0"
-                                                {{ old('is_backdate') == '0' ? 'checked' : '' }}
-                                                onchange="toggleBackdateInput(this)"
-                                                id="is_backdate_tidak"
-                                                class="custom-control-input">
-                                            <label class="custom-control-label"
-                                                for="is_backdate_tidak">Tidak</label>
-                                        </div>
-                                    </div>
-                                    <div id="tanggalInputContainer" style="display: none;" class="form-group">
-                                        <label>Tanggal</label>
-                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
-                                        @error('tanggal')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="st_kinerja_id">ST Kinerja</label>
-                                        <select class="form-control select2 @error('st_kinerja_id') is-invalid @enderror" id="st_kinerja_id" name="st_kinerja_id">
-                                            <option value="">Pilih st kinerja</option>
-                                            @foreach ($stks as $stk)
-                                                <option value="{{ $stk->id }}" {{ old('st_kinerja_id') == $stk->id ? 'selected' : '' }}>{{ $stk->no_surat }}</option>
+                                        <label for="rencana_id">Tugas</label>
+                                        <select required id="rencana_id" name="rencana_id"
+                                            class="form-control select2 @error('rencana_id') is-invalid @enderror">
+                                            <option value="">Pilih tugas</option>
+                                            @foreach ($rencanaKerja as $rencana)
+                                            <option value="{{ $rencana->id_rencanakerja }}"
+                                                {{ old('rencana_id') == $rencana->id_rencanakerja ? 'selected' : '' }}>
+                                                {{ $rencana->tugas }}</option>
                                             @endforeach
                                         </select>
-                                        @error('st_kinerja_id')
+                                        @error('rencana_id')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="hal">Hal</label>
-                                        <input type="text" class="form-control @error('hal') is-invalid @enderror" id="hal" name="hal" value="{{ old('hal') }}">
-                                        @error('hal')
+                                    {{-- Objek Kegiatan --}}
+                                    <div class="form-group
+                                        @if ($errors->has('objek_kegiatan')) is-invalid @endif">
+                                        <label for="objek_kegiatan">Objek Kegiatan</label>
+                                        <select required id="objek_kegiatan" name="objek_kegiatan[]" disabled multiple="multiple" data-placeholder="Pilih objek kegiatan"
+                                            class="form-control select2">
+                                            <option value="">Pilih objek kegiatan</option>
+                                        </select>
+                                        @if ($errors->has('objek_kegiatan'))
                                         <div class="invalid-feedback">
-                                            {{ $message }}
+                                            {{ $errors->first('objek_kegiatan') }}
                                         </div>
-                                        @enderror
+                                        @endif
                                     </div>
-                                    <div class="form-group">
-                                        <label for="draft">Upload draft</label>
-                                        <input type="file" class="form-control @error('draft') is-invalid @enderror" name="draft" accept=".docx, .doc" id="draft" value="{{ old('draft') }}">
-                                        @error('draft')
+
+                                    {{-- Jenis Norma Hasil --}}
+                                    <div class="form-group
+                                        @if ($errors->has('jenis_norma_hasil')) is-invalid @endif">
+                                        <label for="jenis_norma_hasil">Jenis Norma Hasil</label>
+                                        <select required id="jenis_norma_hasil" name="jenis_norma_hasil"
+                                            class="form-control select2">
+                                            <option value="">Pilih jenis norma hasil</option>
+                                            @foreach ($hasilPengawasan as $id => $nama)
+                                            <option value="{{ $id }}"
+                                                {{ old('jenis_norma_hasil') == $id ? 'selected' : '' }}>
+                                                {{ $nama }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('jenis_norma_hasil'))
                                         <div class="invalid-feedback">
-                                            {{ $message }}
+                                            {{ $errors->first('jenis_norma_hasil') }}
                                         </div>
-                                        @enderror
+                                        @endif
                                     </div>
+                                    {{-- text nama dokumen --}}
+                                    <div class="form-group
+                                        @if ($errors->has('nama_dokumen')) is-invalid @endif">
+                                        <label for="nama_dokumen">Nama Dokumen</label>
+                                        <input placeholder="Nama Dokumen" required type="text" id="nama_dokumen"
+                                            name="nama_dokumen" class="form-control" value="{{ old('nama_dokumen') }}">
+                                        @if ($errors->has('nama_dokumen'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('nama_dokumen') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    {{-- upload word Laporan --}}
+                                    <div class="form-group
+                                        @if ($errors->has('file')) is-invalid @endif">
+                                        <label for="file">Upload Dokumen</label>
+                                        <input
+                                        accept=".doc,.docx"
+                                        type="file" id="file" name="file" class="form-control" required>
+                                        @if ($errors->has('file'))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('file') }}
+                                        </div>
+                                        @endif
+                                    </div>
+
+
+
+
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </form>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/cleave.js/dist/cleave.min.js') }}"></script>
-    <script src="{{ asset('library/cleave.js/dist/addons/cleave-phone.us.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
-    <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-                var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-                var isBackdateInput = document.querySelector('input[name="is_backdate"]:checked');
-                toggleBackdateInput(isBackdateInput, tanggalInputContainer);
-        });
-
-        function toggleBackdateInput(input, tanggalInputContainer) {
-            var tanggalInputContainer = document.getElementById('tanggalInputContainer');
-        
-            if (input.value === '1') {
-                tanggalInputContainer.style.display = 'block';
-            } else {
-                tanggalInputContainer.style.display = 'none';
-            }
-        }        
-    </script>
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
+<!-- JS Libraies -->
+<script src="{{ asset('library/cleave.js/dist/cleave.min.js') }}"></script>
+<script src="{{ asset('library/cleave.js/dist/addons/cleave-phone.us.js') }}"></script>
+<script src="{{ asset('library/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
+<script src="{{ asset('library/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
+<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
+<script src="{{ asset('js') }}/page/pegawai/norma-hasil.js"></script>
+<script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush

@@ -4,8 +4,11 @@
     <head>
         <meta charset="UTF-8">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-        <title>@yield('title') &mdash; SIMWAS</title>
+        <title>@yield('title') – SIMWAS</title>
         <link rel="shortcut icon" href="{{ asset('img/simwas.png') }}" type="image/x-icon">
+
+        {{-- Open Graph --}}
+
 
         <!-- General CSS Files -->
         @stack('clockpicker')

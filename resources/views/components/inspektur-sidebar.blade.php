@@ -27,11 +27,15 @@
                     <span>Penilaian Kinerja Pegawai</span>
                 </a>
             </li>
+            {{-- <a class="nav-link" href="/inspektur/st-kinerja">
+                <i class="fas fa-wrench"></i>
+                <span>ST Kinerja</span>
+            </a> --}}
             {{-- <li class="{{ Request::is('inspektur/st-kinerja*') ? 'active' : '' }}">
-                <a class="nav-link" href="/inspektur/st-kinerja">
-                    <i class="fas fa-wrench"></i>
-                    <span>ST Kinerja</span>
-                </a>
+            <a class="nav-link" href="/inspektur/st-kinerja">
+                <i class="fas fa-wrench"></i>
+                <span>ST Kinerja</span>
+            </a>
             </li>
             <li class="{{ Request::is('inspektur/st-pp*') ? 'active' : '' }}">
                 <a class="nav-link" href="/inspektur/st-pp">
@@ -45,20 +49,25 @@
                     <span>ST Perjalanan Dinas</span>
                 </a>
             </li> --}}
+            {{-- <li class="{{ Request::is('inspektur/st-pd*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/st-pd">
+                    <i class="fas fa-road"></i>
+                    <span>ST Perjalanan Dinas</span>
+                </a>
+            </li> --}}
             <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-hourglass-half"></i>
                     <span>Rencana Jam Kerja</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li
-                        class="{{ Request::is('inspektur/rencana-jam-kerja/rekap')  ? 'active' : '' }}">
+                    <li class="{{ Request::is('inspektur/rencana-jam-kerja/rekap')  ? 'active' : '' }}">
                         <a class="nav-link" href="/inspektur/rencana-jam-kerja/rekap">
                             <span>Rekap Jam Kerja</span>
                         </a>
                     </li>
                     <li
-                    class="{{ Request::is('inspektur/rencana-jam-kerja/pool*') || Request::is('inspektur/rencana-jam-kerja/detail*')  ? 'active' : '' }}">
+                        class="{{ Request::is('inspektur/rencana-jam-kerja/pool*') || Request::is('inspektur/rencana-jam-kerja/detail*')  ? 'active' : '' }}">
                         <a class="nav-link" href="/inspektur/rencana-jam-kerja/pool">
                             <span>Pool Jam Kerja</span>
                         </a>
@@ -72,14 +81,13 @@
                     <span>Realisasi Jam Kerja</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li
-                        class="{{ Request::is('inspektur/realisasi-jam-kerja/rekap')  ? 'active' : '' }}">
+                    <li class="{{ Request::is('inspektur/realisasi-jam-kerja/rekap')  ? 'active' : '' }}">
                         <a class="nav-link" href="/inspektur/realisasi-jam-kerja/rekap">
                             <span>Rekap Jam Kerja</span>
                         </a>
                     </li>
                     <li
-                    class="{{ Request::is('inspektur/realisasi-jam-kerja/pool*') || Request::is('inspektur/realisasi-jam-kerja/detail*')  ? 'active' : '' }}">
+                        class="{{ Request::is('inspektur/realisasi-jam-kerja/pool*') || Request::is('inspektur/realisasi-jam-kerja/detail*')  ? 'active' : '' }}">
                         <a class="nav-link" href="/inspektur/realisasi-jam-kerja/pool">
                             <span>Pool Jam Kerja</span>
                         </a>

@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     @endif
-                    <div class="form-group" class="div_create_pp">
+                    <div class="form-group div_create_pp">
                         <label class="form-label" for="pp_id">Jenis Pengembangan Kompetensi</label>
                         <div class="">
                             <select class="form-control pp_id" id="pp_id" name="pp_id" required>
@@ -47,7 +47,7 @@
                         <input type="text" name="pp_lain" id="pp_lain" class="form-control ml-3 pp_lain">
                         <small id="error-pp-lain" class="text-danger"></small>
                     </div>
-                    <div class="form-group" class="div_create_namapp">
+                    <div class="form-group div_create_namapp">
                         <label class="form-label" for="nama_pp_id">Nama Pengembangan Kompetensi</label>
                         <div class="">
                             <select class="form-control nama_pp_id" name="nama_pp_id" id="nama_pp_id" required disabled>

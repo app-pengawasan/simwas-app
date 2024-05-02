@@ -89,6 +89,23 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="aktivitas">Aktivitas</label>
+                                        <div class="col-sm-10">
+                                            <table id="aktivitas">
+                                                <tbody>
+                                                    @foreach ($events as $event)
+                                                        <tr data-tugas="{{ $event->id_pelaksana }}">
+                                                            <td>{{ $event->start }} - {{ $event->end }}</td>
+                                                            <td>: {{ $event->aktivitas }} </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            {{-- <input type="date" name="aktivitas" id="aktivitas" class="form-control" required> --}}
+                                            {{-- <small id="error-tgl" class="text-danger"></small> --}}
+                                        </div>
+                                    </div>
+                                    {{-- <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="tgl">Tanggal</label>
                                         <div class="col-sm-10">
                                             <input type="date" name="tgl" id="tgl" class="form-control" required>
@@ -110,7 +127,7 @@
                                                 <small id="error-end" class="text-danger"></small>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="status">Status</label>
                                         <div class="col-sm-10">
@@ -141,11 +158,11 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="link">Hasil Kerja</label>
+                                        <label class="col-sm-2 col-form-label" for="hasil_kerja">Hasil Kerja</label>
                                         <div class="col-sm-10">
-                                            <input type="url" name="link" id="link" class="form-control" required placeholder="Link Hasil Kerja">
-                                            <small id="error-link" class="text-danger"></small>
-                                            <div class="d-flex mt-3 align-items-center">
+                                            <input type="url" name="hasil_kerja" id="hasil_kerja" class="form-control" required placeholder="Link Hasil Kerja">
+                                            <small id="error-hasil_kerja" class="text-danger"></small>
+                                            {{-- <div class="d-flex mt-3 align-items-center">
                                                 <label for="file" style="color: #34395e; width: 24%" class="mt-2">
                                                     <em>atau upload file</em>
                                                 </label>
@@ -154,7 +171,7 @@
                                                     Clear
                                                 </button>
                                             </div>
-                                            <small id="error-file" class="text-danger"></small>
+                                            <small id="error-file" class="text-danger"></small> --}}
                                             {{-- <div class="invalid-feedback">
                                                 File belum ditambahkan
                                             </div>

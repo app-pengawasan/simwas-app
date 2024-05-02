@@ -39,7 +39,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-nama">Nama Tim</label>
                         <div class="">
-                            <input type="text" class="form-control" id="create-nama" name="create-nama" required>
+                            <input type="text" class="form-control" id="create-nama" name="create-nama" required placeholder="Masukkan Nama Tim Kerja">
                             <small id="error-nama" class="text-danger"></small>
                         </div>
                     </div>

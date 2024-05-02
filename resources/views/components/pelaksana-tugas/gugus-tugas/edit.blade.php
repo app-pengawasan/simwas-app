@@ -34,7 +34,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="edit-pelaksana">Nama</label>
                         <div class="col-sm-10">
-                            <select id="edit-pelaksana" class="form-control" name="edit-pelaksana">
+                            <select id="edit-pelaksana" class="form-control select2" name="edit-pelaksana">
                                 <option value="" selected disabled></option>
                                 @foreach ($pegawai as $p)
                                     <option value="{{ $p->id }}">{{ $p->name }}</option>

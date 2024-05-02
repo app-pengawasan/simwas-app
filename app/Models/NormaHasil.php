@@ -23,4 +23,21 @@ class NormaHasil extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    // belongs to rencana kerjas
+    public function rencanaKerja()
+    {
+        return $this->belongsTo(RencanaKerja::class, 'tugas_id', 'id_rencanakerja');
+    }
+
+    // one on one to NormaHasilAccepted
+    public function normaHasilAccepted()
+    {
+        return $this->hasOne(NormaHasilAccepted::class, 'id_norma_hasil', 'id');
+    }
+
+    public function objekNormaHasil()
+    {
+        return $this->hasMany(ObjekNormaHasil::class, 'norma_hasil_id', 'id');
+    }
+
 }

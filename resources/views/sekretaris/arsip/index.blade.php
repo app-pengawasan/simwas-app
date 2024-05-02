@@ -30,14 +30,56 @@
                 <div class="card">
                     <div class="card-body">
                         {{ session()->forget(['alert-type', 'status']) }}
+                        <div>
+                            <form action="{{ route('usulan-surat-srikandi.index') }}" method="GET">
+                                <div class="d-flex justify-content-between flex-wrap" style="gap:10px">
+                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                        <label for="filter-search" style="margin-bottom: 0;">
+                                            Cari</label>
+                                        <input style="height: 35px" type="text" name="search" id="filter-search"
+                                            class="form-control" placeholder="Cari berdasarkan nomor surat"
+                                            value="{{ request()->search }}">
+                                    </div>
+                                    {{-- filter unit_kerja --}}
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="filter-unit_kerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                        <select name="filter-unit_kerja" id="filter-unit_kerja"
+                                            class="form-control select2">
+                                            <option disabled value="">Pilih Unit Kerja</option>
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $pejabatPenandatangan as $key => $value)
+                                            <option value="{{ $value }}">
+                                                {{ $value }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        {{-- select year --}}
+                                        <label for="filter-year" style="margin-bottom: 0;">Tahun</label>
+                                        <select name="filter-year" id="filter-year" class="form-control select2">
+                                            <option disabled value="">Pilih Tahun</option>
+                                            <option value="Semua">Semua</option>
+                                            @foreach ( $allYears as $year)
+                                            <option value="{{ $year->year }}">
+                                                {{ $year->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
                         <div class="">
                             <table id="table-usulan-surat-srikandi"
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th style="width: 10px;">No</th>
                                         <th>Nomor Surat</th>
                                         <th>Nama Pengaju</th>
-                                        <th>Tanggal Persetujuan</th>
+                                        <th>Tanggal Persetujuan Srikandi</th>
                                         <th>Unit Kerja</th>
                                         <th>Link Srikandi</th>
                                         <th>Aksi</th>
@@ -47,11 +89,23 @@
 
                                     @foreach ($suratSrikandi as $usulan)
                                     <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>
                                             <span class="badge badge-success">{{ $usulan->nomor_surat_srikandi }}</span>
                                         </td>
-                                        <td>{{ $usulan->user_name }}</td>
-                                        <td>{{ $usulan->tanggal_persetujuan_srikandi }}</td>
+                                        <td class="text-capitalize">
+                                            <div
+                                                class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
+                                                <div class="circle mr-2">
+                                                    <span class="initials text-capitalize">
+                                                        {{ substr($usulan->usulanSuratSrikandi->user->name, 0, 1) }}{{ substr(strstr($usulan->usulanSuratSrikandi->user->name, ' '), 1, 1) }}
+                                                    </span>
+                                                </div>
+                                                {{  $usulan->usulanSuratSrikandi->user->name }}
+                                            </div>
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($usulan->tanggal_persetujuan_srikandi)->format('d F Y') }}
+                                        </td>
                                         <td>{{ $usulan->kepala_unit_penandatangan_srikandi }}</td>
                                         <td>
                                             <a target="_blank" class="badge badge-primary"
@@ -101,5 +155,66 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
-<script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script>
+{{-- <script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script> --}}
+<script>
+    let table = $("#table-usulan-surat-srikandi")
+    .dataTable({
+    dom: "Bfrtip",
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    buttons: [
+    ],
+    })
+    .api();
+
+    function filterTable() {
+    let filterYear = $("#filter-year").val();
+    let filterStatus = $("#filter-status").val();
+    let filterSurat = $("#filter-surat").val();
+    let filterSearch = $("#filter-search").val();
+    let filterUnitKerja = $("#filter-unit_kerja").val();
+
+
+    if (filterStatus === "Semua") {
+    filterStatus = "";
+    }
+    if (filterSurat === "Semua") {
+    filterSurat = "";
+    }
+    if (filterYear === "Semua") {
+    filterYear = "";
+    }
+    if (filterUnitKerja === "Semua") {
+    filterUnitKerja = "";
+    }
+
+    table
+    .column(1)
+    .search(filterSearch, true, false)
+    .column(3)
+    .search(filterYear, true, false)
+    .column(4)
+    .search(filterUnitKerja, true, false)
+    .draw();
+
+    // reset numbering in table first column
+    table
+    .column(0, { search: "applied", order: "applied" })
+    .nodes()
+    .each(function (cell, i) {
+    cell.innerHTML = i + 1;
+    });
+    }
+
+    $("#filter-year, #filter-status, #filter-unit_kerja").on("change", function () {
+    filterTable();
+    });
+    $("#filter-search").on("keyup", function () {
+        console.log('test');
+    filterTable();
+    });
+    filterTable();
+    $(".dataTables_filter").hide();
+</script>
 @endpush

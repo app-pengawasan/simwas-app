@@ -78,7 +78,8 @@ class MasterPegawaiController extends Controller
         'is_perencana'  => 'Perencana',
         'is_apkapbn'    => 'APK-APBN',
         'is_opwil'      => 'Operator Wilayah',
-        'is_analissdm'  => 'Analis SDM'
+        'is_analissdm'  => 'Analis SDM',
+        'is_arsiparis'  => 'Arsiparis'
     ];
 
     /**
@@ -151,6 +152,7 @@ class MasterPegawaiController extends Controller
             'is_apkapbn'    => 'required',
             'is_opwil'      => 'required',
             'is_analissdm'  => 'required',
+            'is_arsiparis'  => 'required',
         ]);
 
         $validateData["password"] = bcrypt($request->password);
@@ -227,6 +229,7 @@ class MasterPegawaiController extends Controller
             'is_apkapbn'    => 'required',
             'is_opwil'      => 'required',
             'is_analissdm'  => 'required',
+            'is_arsiparis'  => 'required',
         ];
 
         // if($request->password != ""){

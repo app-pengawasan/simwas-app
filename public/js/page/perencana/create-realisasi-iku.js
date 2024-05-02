@@ -243,6 +243,7 @@ $(document).ready(function () {
             totalTargetTriwulan3 += targetTriwulan3;
             totalTargetTriwulan4 += targetTriwulan4;
         });
+        console.log(totalNilaiY)
 
         $("#target-total-triwulan1").val(totalTargetTriwulan1);
         $("#target-total-triwulan2").val(totalTargetTriwulan2);
@@ -359,7 +360,7 @@ $(document).ready(function () {
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
-        console.log("jumlahObjek", jumlahObjek);
+        // console.log("jumlahObjek", jumlahObjek);
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#tgt-triwulan" + j + "-row" + i).val();
@@ -367,12 +368,12 @@ $(document).ready(function () {
                 $("#tgt-target-triwulan" + j + "-row" + i).val(
                     accumulatedTriwulan
                 );
-                console.log(
-                    "triwulan",
-                    j,
-                    "-row" + i + " = ",
-                    accumulatedTriwulan
-                );
+                // console.log(
+                //     "triwulan",
+                //     j,
+                //     "-row" + i + " = ",
+                //     accumulatedTriwulan
+                // );
             }
             accumulatedTriwulan = 0;
         }

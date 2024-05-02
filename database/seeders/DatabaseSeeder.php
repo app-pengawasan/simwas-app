@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'is_analissdm' => 1,
             'is_sekwil' => 1,
             'is_perencana' => 1,
+            'is_arsiparis' => 1,
             'is_apkapbn' => 1,
             'is_opwil' => 1,
         ]);
@@ -53,6 +54,7 @@ class DatabaseSeeder extends Seeder
             'is_analissdm' => 1,
             'is_sekwil' => 1,
             'is_perencana' => 1,
+            'is_arsiparis' => 1,
             'is_apkapbn' => 1,
             'is_opwil' => 1,
         ]);
@@ -70,6 +72,7 @@ class DatabaseSeeder extends Seeder
             'is_analissdm' => 1,
             'is_sekwil' => 1,
             'is_perencana' => 1,
+            'is_arsiparis' => 1,
             'is_apkapbn' => 1,
             'is_opwil' => 1,
         ]);
@@ -87,6 +90,7 @@ class DatabaseSeeder extends Seeder
             'is_analissdm' => 1,
             'is_sekwil' => 1,
             'is_perencana' => 1,
+            'is_arsiparis' => 1,
             'is_apkapbn' => 1,
             'is_opwil' => 1,
         ]);

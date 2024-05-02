@@ -221,7 +221,7 @@ ol {
 .custom-select,
 .custom-file-label {
     background-color: #fdfdff;
-    border-color: #e4e6fc;
+    border-color: rgb(205, 215, 225);
 }
 .form-control:focus,
 .input-group-text:focus,
@@ -394,8 +394,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .selectgroup-button,
-.selectgroup-button1
-{
+.selectgroup-button1 {
     background-color: #fdfdff;
     border-color: #e4e6fc;
     border-width: 1px;
@@ -415,7 +414,6 @@ select.form-control:not([size]):not([multiple]) {
     line-height: 36px;
     /* border-radius: 5px; */
 }
-
 
 .selectgroup-button-icon {
     padding-left: 0.5rem;
@@ -1303,7 +1301,7 @@ td {
 
 .table:not(.table-sm) thead th {
     border-bottom: none;
-    background-color: #f6f7f8;
+    background-color: #f9fafb;
     color: black;
     padding-top: 15px;
     padding-bottom: 15px;
@@ -1333,7 +1331,7 @@ table tr:hover .table-links {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background: #f9f9f9 !important;
+    /* background: #fafafa !important; */
 }
 
 @media (max-width: 575.98px) {
@@ -1743,7 +1741,7 @@ h6 .badge {
 .btn-outline-secondary.disabled:hover,
 .btn-outline-secondary.disabled:focus,
 .btn-outline-secondary.disabled:active {
-    background-color: #cdd3d8 !important;
+    background-color: #6c757d !important;
     color: #fff !important;
 }
 
@@ -4164,8 +4162,8 @@ body:not(.sidebar-mini)
         display: block;
     }
     .main-content {
-        padding-left: 30px;
-        padding-right: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
         width: 100% !important;
     }
     .main-footer {
@@ -4318,11 +4316,13 @@ body:not(.sidebar-mini)
 
 footer {
     /* make bottom of the page */
-    position: absolute;
-    bottom: 5px;
+    position: fixed;
+    padding: 10px;
+    bottom: 0;
     font-size: 0.8rem;
-    width: 100%;
+    width: 250px;
     text-align: center;
+    background-color: #FFFFFF;
 }
 /* mobile view */
 @media (max-width: 600px) {
@@ -4345,3 +4345,203 @@ footer {
 .segmented-proggress {
     margin: 0 1px;
 }
+/* http://caniuse.com/#search=variables */
+:root {
+    --avatar-size: 1.6rem;
+    /* change this value anything, e.g., 100px, 10rem, etc. */
+}
+
+.circle {
+    background-color: #f0f4f8;
+    border-radius: 50%;
+    height: var(--avatar-size);
+    text-align: center;
+    width: var(--avatar-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prg {
+    margin: 20px auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+/* if mobile view hide prg */
+@media (max-width: 600px) {
+    .prg {
+        display: none;
+    }
+}
+
+.prg .circle,
+.prg .bar {
+    display: inline-block;
+    background: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid #b3b3b3;
+}
+
+.prg .bar {
+    position: relative;
+    width: 150px;
+    height: 5px;
+    /* top: -2px; */
+    /* margin-left: -5px; */
+    /* margin-right: -5px; */
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+}
+
+.prg .circle .label {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 32px;
+    margin-top: 3.5px;
+    color: #b5b5ba;
+    font-size: 17px;
+}
+
+/* Done / Active */
+.prg .bar.done,
+.prg .circle.done {
+    background: #eee;
+    border-color: #5cb85c;
+    /* font-weight: bold; */
+}
+
+.prg .circle.danger {
+    border-color: #fc544b;
+    font-weight: bold;
+
+}
+
+.prg .circle.danger .label {
+    border-color: #fc544b;
+    background: #fc544b;
+    color: #fff;
+}
+
+.prg .bar.done {
+    background: #5cb85c;
+}
+
+.prg .bar.active {
+    background: linear-gradient(to right, #eee 40%, #fff 60%);
+}
+
+.prg .circle.done .label {
+    color: #fff;
+    background: #5cb85c;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.prg .circle.danger .label {
+    color: #fff;
+    background: #fc544b;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.prg .circle.active .label {
+    color: #fff;
+    background: #0c95be;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.prg .circle.active .title {
+    color: #0c95be;
+}
+.prg .circle.active {
+    border: 1px solid #0c95be;
+    font-weight: bold;
+    /* transform size */
+}
+
+.title-prg {
+    /* make center of parent */
+    position: relative;
+    top: 30%;
+    left: -110%;
+    font-size: 0.8rem;
+    display: inline-block;
+    width: 120px;
+}
+
+
+/* Accordion */
+#faq .card {
+        margin-bottom: 20px;
+        border: 0;
+    }
+
+    #faq .card .card-header {
+        border: 0;
+        -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+        box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+        border-radius: 2px;
+        padding: 0;
+    }
+
+    #faq .card .card-header .btn-header-link {
+        display: block;
+        text-align: left;
+        background: #efefef;
+        color: #222;
+        padding: 20px;
+        border: 1px solid #cccccc;
+        border-radius: 2px;
+    }
+
+    #faq .card .card-header .btn-header-link:hover {
+        background: #F0F0F0;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:active {
+        background: #F2F2F2;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:focus {
+        background: #F2F2F2;
+        border: 1px solid #cccccc !important;
+    }
+
+    #faq .card .card-header .btn-header-link:after {
+        content: "\f106";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        float: right;
+    }
+
+    #faq .card .card-header .btn-header-link.collapsed {
+        background: #F2F2F2;
+    }
+
+
+    #faq .card .card-header .btn-header-link.collapsed:after {
+        content: "\f107";
+    }
+
+    #faq .card .collapsing {
+        /* background: #FFE472; */
+        line-height: 30px;
+    }
+
+    #faq .card .collapse {
+        border: 0;
+    }
+
+    #faq .card .collapse.show {
+        /* background: #FFE472; */
+        line-height: 30px;
+        color: #222;
+    }

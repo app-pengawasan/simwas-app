@@ -35,11 +35,14 @@ use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
 use App\Http\Controllers\SuratSrikandiController;
+use App\Http\Controllers\TimNormaHasilController;
+use App\Http\Controllers\TimSuratTugasController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\TimKendaliMutuController;
 use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\DataKepegawaianController;
 use App\Http\Controllers\MasterUnitKerjaController;
@@ -50,19 +53,23 @@ use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\InspekturStKinerjaController;
+use App\Http\Controllers\NormaHasilAcceptedController;
+use App\Http\Controllers\TargetIkuUnitKerjaController;
+use App\Http\Controllers\ArsiparisNormaHasilController;
+use App\Http\Controllers\ArsiparisSuratTugasController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\UsulanSuratSrikandiController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
+use App\Http\Controllers\ArsiparisKendaliMutuController;
 use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\PegawaiLaporanKinerjaController;
+use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
-use App\Http\Controllers\PegawaiLaporanKinerjaController;
-use App\Http\Controllers\RealisasiIkuUnitKerjaController;
-use App\Http\Controllers\TargetIkuUnitKerjaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,6 +163,13 @@ Route::group(['middleware'=>'auth'], function(){
     Route::put('/admin/rencana-kinerja/send/{id}', [AdminRencanaKerjaController::class, 'sendToInspektur']);
     Route::put('/admin/rencana-kinerja/return/{id}', [AdminRencanaKerjaController::class, 'sendBackToKetuaTim']);
     Route::resource('/ketua-tim/rencana-kinerja/proyek', ProyekController::class);
+    Route::resource('/ketua-tim/norma-hasil', NormaHasilAcceptedController::class)->names([
+        'index' => 'usulan-norma-hasil.index',
+        'show' => 'usulan-norma-hasil.show',
+        'update' => 'usulan-norma-hasil.update',
+        'create' => 'usulan-norma-hasil.create',
+        'store' => 'usulan-norma-hasil.store',
+    ]);
 
     /**
      * ---------------------------------------------------------------------------
@@ -270,6 +284,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::resource('/pegawai/tim-pelaksana', PegawaiTugasController::class);
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
+    Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::put('/pegawai/rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
@@ -347,6 +362,13 @@ Route::group(['middleware'=>'auth'], function(){
 
     //Laporan Kinerja
     Route::resource('pegawai/laporan-kinerja', PegawaiLaporanKinerjaController::class);
+
+    //Tugas Tim
+    Route::resource('pegawai/tim/norma-hasil', TimNormaHasilController::class);
+    Route::resource('pegawai/tim/surat-tugas', TimSuratTugasController::class);
+    Route::resource('pegawai/tim/kendali-mutu', TimKendaliMutuController::class);
+
+
     /**
      * ---------------------------------------------------------------------------
      * SEKRETARIS
@@ -374,6 +396,17 @@ Route::group(['middleware'=>'auth'], function(){
     Route::resource('perencana/evaluasi-iku-unit-kerja', EvaluasiIkuUnitKerjaController::class);
 
     Route::put('/perencana/target-iku-unit-kerja/status/{id}', [TargetIkuUnitKerjaController::class, 'editStatus'])->name('target-iku-unit-kerja.status');
+
+
+    /**
+     * ---------------------------------------------------------------------------
+     * ARSIPARIS
+     * ---------------------------------------------------------------------------
+     * */
+    Route::get('/arsiparis', [DashboardController::class, 'arsiparis'])->name('arsiparis-dashboard');
+    Route::resource('arsiparis/norma-hasil', ArsiparisNormaHasilController::class);
+    Route::resource('arsiparis/surat-tugas', ArsiparisSuratTugasController::class);
+    Route::resource('arsiparis/kendali-mutu', ArsiparisKendaliMutuController::class);
 });
 
 

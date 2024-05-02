@@ -70,7 +70,7 @@
                                             <th>Tim</th>
                                             <th>Proyek</th>
                                             <th>Tugas</th>
-                                            <th>Waktu</th>
+                                            <th>Waktu Unggah</th>
                                             <th>Status</th>
                                             <th>Bukti Dukung</th>
                                             <th>Catatan</th>
@@ -85,12 +85,16 @@
                                                 <td>{{ $r->pelaksana->rencanaKerja->proyek->timkerja->nama }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->tugas }}</td>
-                                                <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
+                                                <td>{{ $r->updated_at }}</td>
+                                                {{-- <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
-                                                </td>
+                                                </td> --}}
                                                 <td><span class="badge badge-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</span></td>
                                                 <td>
-                                                    @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
+                                                    <a class="btn btn-primary" href="{{ $r->hasil_kerja }}" target="_blank">
+                                                            <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    {{-- @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
                                                         <a class="btn btn-primary"
                                                         href="{{ asset('document/realisasi/'.$r->hasil_kerja) }}" target="_blank">
                                                             <i class="fas fa-eye"></i>
@@ -100,7 +104,7 @@
                                                         href="{{ $r->hasil_kerja }}" target="_blank">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                                 <td>{{ $r->catatan }}</td>
                                                 <td>

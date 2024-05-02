@@ -16,4 +16,8 @@ class MasterObjek extends Model
     public function kegiatan(){
         return $this->hasMany(ObjekKegiatan::class, "id_objek");
     }
+
+    public function normaHasil(){
+        return $this->hasMany(ObjekNormaHasil::class, "id_objek");
+    }
 }

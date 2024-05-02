@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-pelaksana" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-pelaksana" data-backdrop="static" data-keyboard="false"
     aria-labelledby="modal-create-pelaksana-label" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         <label class="label" for="pelaksana">Nama</label>
                         <div class="">
-                            <select id="pelaksana" class="form-control" name="pelaksana">
+                            <select id="pelaksana" class="form-control select2" name="pelaksana">
                                 <option value="" selected disabled></option>
                                 @foreach ($pegawai as $p)
                                     <?php

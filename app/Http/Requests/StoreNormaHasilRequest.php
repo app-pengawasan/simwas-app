@@ -24,7 +24,12 @@ class StoreNormaHasilRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'rencana_id' => ['required', 'string', 'max:100'],
+            'jenis_norma_hasil' => ['required', 'string', 'max:100'],
+            'nama_dokumen' => ['required', 'string', 'max:100'],
+            // file upload word extension
+            'file' => ['required', 'file', 'mimes:doc,docx,pdf', 'max:2048'],
+
         ];
     }
 }

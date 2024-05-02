@@ -82,8 +82,8 @@
                                             <option{{ $value->satuan == $value1 ? 'selected' : '' }}
                                                 value="{{ $value->satuan }}">
                                                 {{ $value->satuan }}
-                                            </option>
-                                            @endforeach
+                                                </option>
+                                                @endforeach
                                         </select>
                                     </td>
                                     <td><input disabled value="{{ $value->nilai_y_target }}" type="number"
@@ -133,8 +133,9 @@
                                     <td class="text-center align-middle" colspan="2"
                                         style="text-align: center; font-weight: bold;">
                                         Total:</td>
-                                    <td><input disabled type="number" name="total-y" id="total-y" value="0"
-                                            class="form-control"></td>
+                                    <td><input disabled type="number" name="total-y" id="tgt-total-y"
+                                            class="form-control">
+                                    </td>
                                     <td><input disabled type="number" name="total-triwulan1" id="tgt-total-triwulan1"
                                             value="0" class="form-control"></td>
                                     <td><input disabled type="number" name="total-triwulan2" id="tgt-total-triwulan2"
@@ -305,24 +306,28 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input value="{{ $value->nilai_y_realisasi }}" type="number"
-                                                            name="{{ 'nilai-y-row'.$loop->iteration }}"
+                                                    <td><input min="0" max="20" value="{{ $value->nilai_y_realisasi }}"
+                                                            type="number" name="{{ 'nilai-y-row'.$loop->iteration }}"
                                                             id="{{ 'nilai-y-row'.$loop->iteration }}"
                                                             class="form-control nilai-y">
                                                     </td>
-                                                    <td><input type="number" value="{{ $value->realisasi_triwulan_1 }}"
+                                                    <td><input min="0" max="20" type="number"
+                                                            value="{{ $value->realisasi_triwulan_1 }}"
                                                             name="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             class="form-control triwulan1"></td>
-                                                    <td><input type="number" value="{{ $value->realisasi_triwulan_2 }}"
+                                                    <td><input min="0" max="20" type="number"
+                                                            value="{{ $value->realisasi_triwulan_2 }}"
                                                             name="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             class="form-control triwulan2"></td>
-                                                    <td><input type="number" value="{{ $value->realisasi_triwulan_3 }}"
+                                                    <td><input min="0" max="20" type="number"
+                                                            value="{{ $value->realisasi_triwulan_3 }}"
                                                             name="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             class="form-control triwulan3"></td>
-                                                    <td><input type="number" value="{{ $value->realisasi_triwulan_4 }}"
+                                                    <td><input min="0" max="20" type="number"
+                                                            value="{{ $value->realisasi_triwulan_4 }}"
                                                             name="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             class="form-control triwulan4"></td>

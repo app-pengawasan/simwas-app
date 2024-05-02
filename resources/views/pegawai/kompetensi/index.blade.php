@@ -17,8 +17,8 @@
 
     <div class="main-content">
         <!-- Modal -->
-        @include('components.kelola-kompetensi.create');
-        @include('components.kelola-kompetensi.edit');
+        @include('components.kelola-kompetensi.create')
+        @include('components.kelola-kompetensi.edit')
         <section class="section">
             <div class="section-header">
                 <h1>Kelola Kompetensi</h1>
@@ -112,6 +112,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
     </div>
 @endsection

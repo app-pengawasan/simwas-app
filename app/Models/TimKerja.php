@@ -31,4 +31,11 @@ class TimKerja extends Model
     public function rencanaKerja(){
         return $this->hasMany(RencanaKerja::class, 'id_timkerja');
     }
+
+    // has many proyek
+    public function proyek(){
+        return $this->hasMany(Proyek::class, 'id_tim_kerja');
+    }
+
+    
 }

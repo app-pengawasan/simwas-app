@@ -58,8 +58,10 @@
                                     <div class="form-group col">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
-                                            <select class="form-control" name="unit-kerja"
-                                                data-placeholder="Pilih Unit kerja" data-allow-clear="1">
+                                            <select required style="width:100%" class="select2 unitkerja"
+                                                name="unit-kerja" data-placeholder="Pilih Unit kerja"
+                                                data-allow-clear="1">
+                                                <option></option>
                                                 @foreach ($unitKerja as $key => $value)
                                                 <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
@@ -77,7 +79,8 @@
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input value="1" id="jumlah-objek" type="number" class="form-control"
-                                                name="jumlah-objek" required placeholder="Isikan Jumlah Objek">
+                                                name="jumlah-objek" required placeholder="Isikan Jumlah Objek" min="1"
+                                                max="50">
                                         </div>
                                     </div>
                                     <div class="form-group col">
@@ -110,22 +113,24 @@
                                                 <tr id="row-1">
                                                     <td class="text-center align-middle">1</td>
                                                     <td class="text-left">
-                                                        <select  class="select2 satuan" name="satuan-row1" id="satuan-row1">
+                                                        <select required class="select2 satuan" name="satuan-row1"
+                                                            id="satuan-row1" data-placeholder="Pilih Satuan">
+                                                            <option></option>
                                                             @foreach ($kabupaten as $key => $value)
                                                             <option value="{{ $value }}">{{ $value }}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input type="number" name="nilai-y-row1" id="nilai-y-row1"
-                                                            class="form-control nilai-y"></td>
-                                                    <td><input type="number" name="triwulan1-row1" id="triwulan1-row1"
-                                                            class="form-control triwulan1"></td>
-                                                    <td><input type="number" name="triwulan2-row1" id="triwulan2-row1"
-                                                            class="form-control triwulan2"></td>
-                                                    <td><input type="number" name="triwulan3-row1" id="triwulan3-row1"
-                                                            class="form-control triwulan3"></td>
-                                                    <td><input type="number" name="triwulan4-row1" id="triwulan4-row1"
-                                                            class="form-control triwulan4"></td>
+                                                    <td><input type="number" min="0" max="20" name="nilai-y-row1"
+                                                            id="nilai-y-row1" class="form-control nilai-y"></td>
+                                                    <td><input type="number" min="0" max="20" name="triwulan1-row1"
+                                                            id="triwulan1-row1" class="form-control triwulan1"></td>
+                                                    <td><input type="number" min="0" max="20" name="triwulan2-row1"
+                                                            id="triwulan2-row1" class="form-control triwulan2"></td>
+                                                    <td><input type="number" min="0" max="20" name="triwulan3-row1"
+                                                            id="triwulan3-row1" class="form-control triwulan3"></td>
+                                                    <td><input type="number" min="0" max="20" name="triwulan4-row1"
+                                                            id="triwulan4-row1" class="form-control triwulan4"></td>
 
                                                     <td><input disabled type="number" name="target-triwulan1-row1"
                                                             id="target-triwulan1-row1"
@@ -195,9 +200,7 @@
                                             <button type="button" class="btn btn-primary" id="add-objek">Tambah
                                                 Objek</button>
                                         </div>
-
                                     </div>
-
                                     <button type="submit" class="btn btn-success">Submit</button>
                             </form>
                         </div>

@@ -79,6 +79,23 @@
                                     </div>
                                     <input type="hidden" name="id_pelaksana" value="{{ $realisasi->id_pelaksana }}">
                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="edit-aktivitas">Aktivitas</label>
+                                        <div class="col-sm-10">
+                                            <table id="edit-aktivitas">
+                                                <tbody>
+                                                    @foreach ($events as $event)
+                                                        <tr data-tugas="{{ $event->id_pelaksana }}">
+                                                            <td>{{ $event->start }} - {{ $event->end }}</td>
+                                                            <td>: {{ $event->aktivitas }} </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            {{-- <input type="date" name="aktivitas" id="aktivitas" class="form-control" required> --}}
+                                            {{-- <small id="error-tgl" class="text-danger"></small> --}}
+                                        </div>
+                                    </div>
+                                    {{-- <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="tgl">Tanggal</label>
                                         <div class="col-sm-10">
                                             <input type="date" name="tgl" id="tgl" class="form-control" 
@@ -103,7 +120,7 @@
                                                 <small id="error-end" class="text-danger"></small>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="status">Status</label>
                                         <div class="col-sm-10">
@@ -141,12 +158,12 @@
                                         <label class="col-sm-2 col-form-label" for="edit-link">Hasil Kerja</label>
                                         <div class="col-sm-10">
                                             <input type="url" name="edit-link" id="edit-link" class="form-control" placeholder="Link Hasil Kerja"
-                                                @if (!file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
+                                                {{-- @if (!file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja)) --}}
                                                     value="{{ $realisasi->hasil_kerja }}"
-                                                @endif
+                                                {{-- @endif --}}
                                             >
                                             <small id="error-edit-link" class="text-danger"></small>
-                                            <div class="d-flex mt-3">
+                                            {{-- <div class="d-flex mt-3">
                                                 <label for="edit-file" style="color: #34395e; width: 24%" class="mt-2">
                                                     <em>atau upload file</em>
                                                 </label>
@@ -158,7 +175,7 @@
                                                 <button type="button" class="btn btn-primary ml-2 h-100" id="edit-clear">
                                                     Clear
                                                 </button>
-                                            </div>
+                                            </div> --}}
                                             <small id="error-edit-file" class="text-danger"></small>
                                         </div>
                                     </div>
