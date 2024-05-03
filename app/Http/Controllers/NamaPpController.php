@@ -40,6 +40,7 @@ class NamaPpController extends Controller
             'pp_id' => 'required',
             'is_aktif' => 'required',
             'nama' => 'required|unique:nama_pps,nama,NULL,id,pp_id,' . $request->input('pp_id'),
+            'peserta' => 'required_if:pp_id,3'
         ],[
             'required' => 'Wajib diisi.',
             'unique' => 'Nama PP yang dimasukkan sudah ada.'

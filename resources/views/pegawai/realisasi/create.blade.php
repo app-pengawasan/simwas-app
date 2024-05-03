@@ -91,18 +91,38 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="aktivitas">Aktivitas</label>
                                         <div class="col-sm-10">
-                                            <table id="aktivitas">
+                                            <table id="aktivitas" class="table table-striped responsive">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th style="width: 20%">Tanggal</th>
+                                                        <th style="width: 30%">Waktu</th>
+                                                        <th>Aktivitas</th>
+                                                        <td class="d-none">jam</td>
+                                                    </tr>
+                                                </thead>
                                                 <tbody>
-                                                    @foreach ($events as $event)
-                                                        <tr data-tugas="{{ $event->id_pelaksana }}">
-                                                            <td>{{ $event->start }} - {{ $event->end }}</td>
-                                                            <td>: {{ $event->aktivitas }} </td>
+                                                    @foreach ($events as $event) 
+                                                        @php
+                                                            $start = $event->start;
+                                                            $end = $event->end;
+                                                        @endphp
+                                                        <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center">
+                                                            <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
+                                                            <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
+                                                            <td>{{ $event->aktivitas }} </td>
+                                                            <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                             {{-- <input type="date" name="aktivitas" id="aktivitas" class="form-control" required> --}}
                                             {{-- <small id="error-tgl" class="text-danger"></small> --}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="jam">Jam Realisasi</label>
+                                        <div class="col-sm-10 align-self-center" id="jam">
+                                            
                                         </div>
                                     </div>
                                     {{-- <div class="form-group row">
@@ -157,10 +177,10 @@
                                             <small id="error-capaian" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="hasil_kerja">Hasil Kerja</label>
                                         <div class="col-sm-10">
-                                            <input type="url" name="hasil_kerja" id="hasil_kerja" class="form-control" required placeholder="Link Hasil Kerja">
+                                            <input type="url" name="hasil_kerja" id="hasil_kerja" class="form-control" placeholder="Link Hasil Kerja">
                                             <small id="error-hasil_kerja" class="text-danger"></small>
                                             {{-- <div class="d-flex mt-3 align-items-center">
                                                 <label for="file" style="color: #34395e; width: 24%" class="mt-2">
@@ -179,11 +199,18 @@
                                         </div>
                                         {{-- <small id="error-edit-tgl" class="text-danger"></small> --}}
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="catatan">Catatan</label>
                                         <div class="col-sm-10">
                                             <textarea rows="5" class="form-control h-auto" name="catatan" id="catatan"></textarea>
                                             <small id="error-catatan" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row status_change_2">
+                                        <label class="col-sm-2 col-form-label" for="alasan">Alasan</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" name="alasan" id="alasan"></textarea>
+                                            <small id="error-alasan" class="text-danger"></small>
                                         </div>
                                     </div>
                                     <div class="card-footer text-right pr-1">

@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class PpController extends Controller
 {
+    private $peserta = [
+        '100' => 'Pengawasan (Auditor Pertama)',
+        '200' => 'Auditor Muda',
+        '300' => 'Auditor Madya/Utama',
+        '400' => 'Semua Jenjang'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -64,10 +71,12 @@ class PpController extends Controller
     public function show(Pp $pp)
     {
         $this->authorize('analis_sdm');
-        $namaPps = NamaPp::where('pp_id', $pp->id)->get();
+        $namaPps = NamaPp::where('pp_id', $pp->id)->orderBy('peserta')->oldest()->get();
         return view('analis-sdm.master-pp.show', [
             "pp" => $pp,
-            "namaPps" => $namaPps
+            "namaPps" => $namaPps,
+            "peserta" => $this->peserta,
+            "type_menu" => 'kompetensi'
         ]);
     }
 

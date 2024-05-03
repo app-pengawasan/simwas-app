@@ -60,7 +60,7 @@ class ArsiparisSuratTugasController extends Controller
     public function index()
     {
         $this->authorize('arsiparis');
-        $surat = SuratTugasTim::latest()->get();
+        $surat = SuratTugasTim::latest()->get()->groupBy('nomor');
         return view('arsiparis.st.index', [
             'surat' => $surat
         ]);
@@ -84,7 +84,7 @@ class ArsiparisSuratTugasController extends Controller
      */
     public function store(Request $request)
     {
-        $surat = SuratTugasTim::findOrFail($request->surat_tugas);
+        $surat = SuratTugasTim::where('nomor', $request->surat_tugas);
         $surat->update([
             'status' => 'disetujui',
         ]);
@@ -99,11 +99,13 @@ class ArsiparisSuratTugasController extends Controller
      * @param  \App\Models\SuratTugasTim  $suratTugas
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nomor)
     {
-        $surat = SuratTugasTim::findOrFail($id); 
+        $surat = SuratTugasTim::where('nomor', $nomor)->get();
+        $tugas = $surat->pluck('rencanaKerja.tugas'); 
         return view('arsiparis.st.show', [
-            "surat" => $surat,
+            "surat" => $surat->first(),
+            'tugas' => $tugas
         ]);
     }
 
@@ -129,9 +131,9 @@ class ArsiparisSuratTugasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $nomor)
     {
-        $surat = SuratTugasTim::findOrFail($id);
+        $surat = SuratTugasTim::where('nomor', $nomor);
         $surat->update([
             'status' => 'ditolak',
             'catatan' => $request->alasan

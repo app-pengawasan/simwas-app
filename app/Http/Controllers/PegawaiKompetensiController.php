@@ -108,11 +108,13 @@ class PegawaiKompetensiController extends Controller
     public function show($id)
     {
         $kompetensi = Kompetensi::where('id', $id)->get();
+        $peserta = $kompetensi->first()->namaPp->peserta;
 
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Kompetensi',
-            'data'    => $kompetensi
+            'data'    => $kompetensi,
+            'peserta' => $peserta
         ]);
     }
 

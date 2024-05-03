@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Norma Hasil')
+@section('title', 'Surat Tugas')
 
 @push('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -42,32 +42,30 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
-                                            <th>Tugas</th>
                                             <th>Nomor Dokumen</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($surat as $st)
+                                        @foreach ($surat as $nomor => $st)
                                         <tr>
                                             <td></td>
-                                            <td>{{ $st->rencanaKerja->tugas }}</td>
                                             <td>
                                                 <span class="badge badge-primary">
-                                                    {{ $st->nomor }}
+                                                    {{ $st[0]->nomor }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="badge
-                                                    {{ $st->status == 'diperiksa' ? 'badge-primary' : '' }}
-                                                    {{ $st->status == 'disetujui' ? 'badge-success' : '' }}
-                                                    {{ $st->status == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $st->status }}
+                                                    {{ $st[0]->status == 'diperiksa' ? 'badge-primary' : '' }}
+                                                    {{ $st[0]->status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $st[0]->status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    text-capitalize">{{ $st[0]->status }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="/arsiparis/surat-tugas/{{ $st->id }}"
+                                                <a href="/arsiparis/surat-tugas/{{ $nomor }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>

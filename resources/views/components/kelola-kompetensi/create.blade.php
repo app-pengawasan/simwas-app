@@ -47,13 +47,26 @@
                         <input type="text" name="pp_lain" id="pp_lain" class="form-control ml-3 pp_lain">
                         <small id="error-pp-lain" class="text-danger"></small>
                     </div>
+                    <div class="form-group div_create_peserta">
+                        <label class="form-label" for="peserta">Peserta</label>
+                        <div class="">
+                            <select class="form-control peserta" id="peserta" name="peserta" required>
+                                <option value="" disabled selected>Pilih Peserta</option>
+                                <option value="100">Pengawasan (Auditor Pertama)</option>
+                                <option value="200">Auditor Muda</option>
+                                <option value="300">Auditor Madya/Utama</option>
+                                <option value="400">Semua Jenjang</option>
+                            </select>
+                            <small id="error-peserta" class="text-danger"></small>
+                        </div>
+                    </div>
                     <div class="form-group div_create_namapp">
                         <label class="form-label" for="nama_pp_id">Nama Pengembangan Kompetensi</label>
                         <div class="">
                             <select class="form-control nama_pp_id" name="nama_pp_id" id="nama_pp_id" required disabled>
                                 <option value="" selected disabled class="disabled">Pilih Nama Pengembangan</option>
                                 @foreach ($nama_pps as $nama_pp)
-                                    <option value="{{ $nama_pp->id }}" data-pp="{{ $nama_pp->pp_id }}">{{ $nama_pp->nama }}</option>
+                                    <option value="{{ $nama_pp->id }}" data-pp="{{ $nama_pp->pp_id }}" data-peserta="{{ $nama_pp->peserta }}">{{ $nama_pp->nama }}</option>
                                 @endforeach
                                 {{-- <option value="999">Lainnya</option> --}}
                                 <option value="" disabled></option>

@@ -3,13 +3,14 @@ $("#proyek").prop("disabled", true); //disable pilihan proyek
 $('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
 if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
-$("#aktivitas tr").hide();
+if ($('#status').val() != '2') $('.status_change_2').hide(); 
+$("#aktivitas tbody tr").hide();
 
 //hide clockpicker saat discroll
-$(document).on("scroll", function (e) {
-    clockpicker.clockpicker('hide');
-    $('.clockpicker input').trigger('blur');
-});
+// $(document).on("scroll", function (e) {
+//     clockpicker.clockpicker('hide');
+//     $('.clockpicker input').trigger('blur');
+// });
 
 $("#tim").on("change", function () {
     $("#tugas option").hide(); //hide option" tugas
@@ -32,7 +33,7 @@ $("#proyek").on("change", function () {
 });
 
 $("#tugas").on("change", function () {
-    $("#aktivitas tr").hide();
+    $("#aktivitas tbody tr").hide();
     let hasil_kerja = $(this).find(":selected").attr('data-hasil');
     $("#kegiatan").val('Menyusun ' + hasil_kerja);
     $("#kegiatan").removeClass('is-invalid');
@@ -43,14 +44,22 @@ $("#tugas").on("change", function () {
     $("#error-capaian").text("");
     $("#capaian").closest('.form-group').addClass('was-validated');
     $(`#aktivitas tr[data-tugas="${$(this).val()}"]`).show();
+
+    let i = 0;
+    $(`#aktivitas tr[data-tugas="${$(this).val()}"] .jam`).each(function() {
+        i = i + +$(this).text();
+    });
+    $('#jam').text(i + ' jam');
 });
 
 $("#status").on("change", function () {
     if ($(this).val() == '1') {
         let hasil_kerja = $('#tugas').find(":selected").attr('data-hasil');
 
-        $('#catatan').prop("required", false);
+        // $('#catatan').prop("required", false);
+        $('#alasan').prop("required", false);
         $('.status_change').show();
+        $('.status_change_2').hide();
 
         $('#kegiatan').prop("required", true);
         $("#kegiatan").val('Menyusun ' + hasil_kerja);
@@ -65,8 +74,10 @@ $("#status").on("change", function () {
         $("#capaian").closest('.form-group').addClass('was-validated');
     } 
     else {
-        $('#catatan').prop("required", true);
+        // $('#catatan').prop("required", true);
+        $('#alasan').prop("required", true);
         $('.status_change').hide();
+        $('.status_change_2').show();
         $('#kegiatan').prop("required", false);
         $('#capaian').prop("required", false);
     } 

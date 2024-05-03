@@ -214,7 +214,7 @@
 
 @push('scripts')
 <!-- JS Libraies -->
-<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>d
+<script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/perencana/create-target-iku.js') }}"></script>

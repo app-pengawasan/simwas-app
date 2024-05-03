@@ -58,21 +58,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($surat as $st)
+                                        @foreach ($surat as $nomor => $st)
                                         <tr>
                                             <td></td>
-                                            <td><span class="badge badge-primary">{{ $st->nomor }}</span></td>
-                                            <td>{{ $st->nama }}</td>
+                                            <td><span class="badge badge-primary">{{ $nomor }}</span></td>
+                                            <td>{{ $st[0]->nama }}</td>
                                             <td>
                                                 <span class="badge
-                                                    {{ $st->status == 'diperiksa' ? 'badge-primary' : '' }}
-                                                    {{ $st->status == 'disetujui' ? 'badge-success' : '' }}
-                                                    {{ $st->status == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $st->status }}
+                                                    {{ $st[0]->status == 'diperiksa' ? 'badge-primary' : '' }}
+                                                    {{ $st[0]->status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $st[0]->status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    text-capitalize">{{ $st[0]->status }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="/pegawai/tim/surat-tugas/{{ $st->id }}"
+                                                <a href="/pegawai/tim/surat-tugas/{{ $nomor }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>
