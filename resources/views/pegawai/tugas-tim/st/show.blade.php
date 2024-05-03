@@ -21,7 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="/pegawai/tim/surat-tugas/{{ $surat->id }}" enctype="multipart/form-data">
+            <form method="post" action="/pegawai/tim/surat-tugas/{{ $surat->nomor }}" enctype="multipart/form-data">
                 <div class="modal-body">
                     @method('PUT')
                     @csrf
@@ -83,7 +83,7 @@
                                             <tr>
                                                 <th>Tugas</th>
                                                 <th>:</th>
-                                                <td>{{ $surat->rencanaKerja->tugas }}</td>
+                                                <td>{{$tugas->implode(', ') }}</td>
                                             <tr>
                                                 <th>Nomor Surat</th>
                                                 <th>:</th>

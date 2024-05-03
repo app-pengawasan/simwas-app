@@ -113,6 +113,18 @@ const showOtherPp = () => {
     $('.pp_lain').prop("required", true);
 };
 
+const showPeserta = () => {
+    $(".div_create_peserta").addClass("mb-3");
+    $(".div_create_peserta").show();
+    $('.peserta').prop("required", true);
+};
+
+const hidePeserta = () => {
+    $(".div_create_peserta").removeClass("mb-3");
+    $(".div_create_peserta").hide();
+    $('.peserta').prop("required", false);
+};
+
 const showOtherNamapp= () => {
     $(".div_create_namapp").addClass("mb-2");
     $(".form-other-namepp").addClass("mt-3 form-group");
@@ -160,6 +172,7 @@ const disableNamapp = () => {
 document.forms['myform'].reset();
 $("#nama_pp_id").prop("disabled", true);
 hideOthers();
+hidePeserta();
 
 $("#create-btn").on("click", function () {
     document.forms['myform'].reset();
@@ -183,17 +196,29 @@ $(".pp_id").on("change", function () {
         disableNamapp();
         showOtherNamapp();
     }
+
+    if (pp === "3") {
+        showPeserta();    
+        disableNamapp();
+    }
+    else hidePeserta();
 });
 
 $(".nama_pp_id").on("change", function () {
     let nama_pp = $(this).val();
-    console.log(nama_pp);
 
     if (nama_pp === "999") {
         showOtherNamapp();
     } else {
         hideOtherNamapp();
     }
+});
+
+$(".peserta").on("change", function () {
+    let peserta = $(this).val();
+    enableNamapp($('#pp_id').val());
+    $('.nama_pp_id option').hide();
+    $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
 });
 
 $(".submit-btn").on("click", function (e) {
@@ -255,6 +280,7 @@ $(".edit-btn").on("click", function () {
             $("#edit-pegawai").val(response.data[0].pegawai_id);
             $("#edit-pp").val(pp_id);
             $("#edit-catatan").val(response.data[0].catatan);
+            $("#edit-peserta").val(response.peserta);
 
             if (pp_id == 999) {
                 showOtherPp();
@@ -270,6 +296,7 @@ $(".edit-btn").on("click", function () {
                     showOtherNamapp();
                     $('.nama_pp_lain').val(nama_pp_lain);
                 }
+                if (pp_id == 3) showPeserta();
             } else {
                 disableNamapp();
                 showOtherNamapp();

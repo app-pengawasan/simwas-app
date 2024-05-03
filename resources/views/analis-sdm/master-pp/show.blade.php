@@ -31,10 +31,20 @@
                             @csrf  
                             <input type="hidden" name="is_aktif" value="1">
                             <div class="form-group">
-                                <input type="hidden" name="pp_id" value="{{ $pp->id }}">
+                                <input type="hidden" id="pp_id" name="pp_id" value="{{ $pp->id }}">
                                 <label for="pp">Jenis Pengembangan Profesi</label>
                                 <input type="text" class="form-control" disabled value="{{ $pp->jenis }}">
-                                <label for="nama">Nama Pengembangan Profesi</label>
+                                @if ($pp->id == 3)
+                                    <label for="peserta" class="mt-3">Peserta</label>
+                                    <select required id="peserta" name="peserta" class="form-control select2">
+                                        <option value="" selected disabled>Pilih Peserta</option>
+                                        <option value="100">Pengawasan (Auditor Pertama)</option>
+                                        <option value="200">Auditor Muda</option>
+                                        <option value="300">Auditor Madya/Utama</option>
+                                        <option value="400">Semua Jenjang</option>
+                                    </select>
+                                @endif
+                                <label for="nama" class="mt-3">Nama Pengembangan Profesi</label>
                                 <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama') }}">
                                 @error('nama')
                                 <div class="invalid-feedback">
@@ -78,19 +88,45 @@
                                     </div>
                                 </div>
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
+                                    <table class="table table-bordered display responsive" style="background-color: #f6f7f8" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
+                                                @if ($pp->id == 3)
+                                                    <th>Kode Peserta</th>
+                                                    <th>Peserta</th>
+                                                    <th>Kode</th>
+                                                @else
+                                                    <th>No.</th>
+                                                @endif
                                                 <th>Nama Pengembangan Profesi</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $i = 0;
+                                                $kode = 0;   
+                                            @endphp
                                             @foreach ($namaPps as $namaPp)
-                                            <tr>
-                                                <td></td>
+                                            <tr class="table-bordered">
+                                                @if ($pp->id == 3)
+                                                    <td>{{ $namaPp->peserta }}</td>
+                                                    <td>{{ $peserta[$namaPp->peserta] }}</td>
+                                                    @if ($namaPp->peserta != $i)
+                                                        @php
+                                                            $kode = 1;
+                                                            $i = $namaPp->peserta;
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $kode++;
+                                                        @endphp
+                                                    @endif
+                                                    <td>{{ $i + $kode }}</td>
+                                                @else
+                                                    <td></td>
+                                                @endif
                                                 <td>{{ $namaPp->nama }}</td>
                                                 @if ($namaPp->is_aktif == "1")
                                                 <td>Aktif</td>
@@ -150,9 +186,45 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+    {{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
+    <script>
+        let table = $("#table-pengelolaan-dokumen-pegawai");
+        if ($('#pp_id').val() == '3') {
+            table
+            .DataTable({
+                dom: "Bfrtip",
+                // responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [],
+                rowsGroup: [0, 1],
+                // columnDefs: [{
+                //     "targets": 0,
+                //     "createdCell": function (td, cellData, rowData, row, col) {
+                //     $(td).text(row + 1);
+                //     }
+                // }]
+            });
+        } else {
+            table
+            .DataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [],
+                columnDefs: [{
+                    "targets": 0,
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                    $(td).text(row + 1);
+                    }
+                }]
+            });
+        }
+    </script>
 
     @if ($errors->any())
         <script>

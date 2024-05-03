@@ -66,7 +66,8 @@ class TimSuratTugasController extends Controller
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                         $query->where('status', 6);
                     })->get();
-        $surat = SuratTugasTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))->get();
+        $surat = SuratTugasTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
+                ->get()->groupBy('nomor');
         return view('pegawai.tugas-tim.st.index', [
             // 'draf' => $draf,
             'type_menu' => 'tugas-tim',
@@ -95,7 +96,8 @@ class TimSuratTugasController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'tugas' => ['required', 'string', 'max:26'],
+            'tugas' => ['required', 'array'],
+            'tugas.*' => ['string', 'max:26'],
             'nomor_st' => ['required', 'string', 'max:100'],
             'nama' => ['required', 'string', 'max:100'],
             'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
@@ -115,13 +117,15 @@ class TimSuratTugasController extends Controller
         $file->move($path, $fileName);
         $path = 'storage/tim/st/' . $fileName;
 
-        SuratTugasTim::create([
-            'nomor' => $validateData['nomor_st'],
-            'tugas_id' => $validateData['tugas'],
-            'nama' => $validateData['nama'],
-            'path' => $path,
-            'status' => 'diperiksa',
-        ]);
+        foreach ($validateData['tugas'] as $tugas) {
+            SuratTugasTim::create([
+                'nomor' => $validateData['nomor_st'],
+                'tugas_id' => $tugas,
+                'nama' => $validateData['nama'],
+                'path' => $path,
+                'status' => 'diperiksa',
+            ]);
+        }
 
         // return back with success message
         return redirect()->back()->with('success', 'Surat Tugas Berhasil Diunggah');
@@ -135,13 +139,15 @@ class TimSuratTugasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($nomor)
     {
-        $surat = SuratTugasTim::findOrfail($id);
+        $surat = SuratTugasTim::where('nomor', $nomor)->get();
+        $tugas = $surat->pluck('rencanaKerja.tugas');
 
         return view('pegawai.tugas-tim.st.show', [
             'type_menu' => 'tugas-tim',
-            'surat'     => $surat
+            'surat'     => $surat->first(),
+            'tugas'     => $tugas
         ]);
     }
 
@@ -163,7 +169,7 @@ class TimSuratTugasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $nomor)
     {
         $rules = [
             'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
@@ -177,8 +183,8 @@ class TimSuratTugasController extends Controller
 
         $request->validate($rules);
 
-        $surat = SuratTugasTim::findOrFail($id);
-        $path_old = $surat->path;
+        $surat = SuratTugasTim::where('nomor', $nomor);
+        $path_old = $surat->get()->first()->path;
         File::delete(public_path().'/'.$path_old);
 
         $file = $request->file('file'); 

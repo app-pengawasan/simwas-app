@@ -241,9 +241,16 @@ class InspekturPenilaianKinerjaController extends Controller
                                     return $realisasi_jam;
                             });
 
-        $events = Event::whereIn('id_pelaksana', $realisasiDinilai->pluck('id_pelaksana'))->get();
+        // $events = Event::get();
+        $events = Event::whereIn('id_pelaksana', $tugas)->get();
 
         foreach ($events as $event) {
+            $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)->get();
+            if ($realisasi->isEmpty()) $event->color = 'orange';
+            else {
+                if ($realisasi->contains('status', 1)) $event->color = 'green';
+                else $event->color = 'red';
+            }
             // $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
             //             ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
             //             ->where('start', date_format(date_create($event->start), 'H:i:s'))

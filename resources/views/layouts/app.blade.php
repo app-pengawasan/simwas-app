@@ -17,9 +17,9 @@
             integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-        <link rel="stylesheet" href="{{ asset('library') }}/select2/dist/css/select2.min.css">
+        <link rel="stylesheet" href="{{ asset('library') }}/select2/dist/css/select2.css">
         <link rel="stylesheet"
-            href="{{ asset('library') }}/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+            href="{{ asset('library') }}/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css">
         @stack('style')
 
         <!-- Template CSS -->
@@ -50,7 +50,7 @@
             <script src="{{ asset('library/jquery.nicescroll/dist/jquery.nicescroll.min.js') }}"></script>
             <script src="{{ asset('library/moment/min/moment.min.js') }}"></script>
             <script src="{{ asset('js/stisla.js') }}"></script>
-            <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>d
+            <script src="{{ asset('library/select2/dist/js/select2.full.js') }}"></script>
             @stack('scripts')
 
             <!-- Template JS File -->

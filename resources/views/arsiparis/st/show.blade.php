@@ -21,7 +21,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="/arsiparis/surat-tugas/{{ $surat->id }}">
+            <form method="post" action="/arsiparis/surat-tugas/{{ $surat->nomor }}">
                 <div class="modal-body">
                     @method('PUT')
                     @csrf
@@ -84,7 +84,7 @@
                                             <tr>
                                                 <th>Tugas</th>
                                                 <th>:</th>
-                                                <td>{{ $surat->rencanaKerja->tugas }}</td>
+                                                <td>{{$tugas->implode(', ') }}</td>
                                             <tr>
                                                 <th>Nomor Surat</th>
                                                 <th>:</th>
@@ -139,7 +139,7 @@
                                             method="post">
                                             @csrf
                                             @method('POST')
-                                            <input type="hidden" name="surat_tugas" value="{{ $surat->id }}">
+                                            <input type="hidden" name="surat_tugas" value="{{ $surat->nomor }}">
                                             <button type=" submit" class="btn btn-success">Setujui</button>
                                         </form>
                                     </div>

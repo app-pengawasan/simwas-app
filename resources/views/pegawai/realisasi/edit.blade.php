@@ -84,15 +84,26 @@
                                             <table id="edit-aktivitas">
                                                 <tbody>
                                                     @foreach ($events as $event)
+                                                        @php
+                                                            $start = $event->start;
+                                                            $end = $event->end;
+                                                        @endphp
                                                         <tr data-tugas="{{ $event->id_pelaksana }}">
-                                                            <td>{{ $event->start }} - {{ $event->end }}</td>
+                                                            <td>{{ $start }} - {{ $end }}</td>
                                                             <td>: {{ $event->aktivitas }} </td>
+                                                            <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                             {{-- <input type="date" name="aktivitas" id="aktivitas" class="form-control" required> --}}
                                             {{-- <small id="error-tgl" class="text-danger"></small> --}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="jam">Jam Realisasi</label>
+                                        <div class="col-sm-10" id="jam">
+                                            
                                         </div>
                                     </div>
                                     {{-- <div class="form-group row">
@@ -154,7 +165,7 @@
                                             <small id="error-capaian" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="edit-link">Hasil Kerja</label>
                                         <div class="col-sm-10">
                                             <input type="url" name="edit-link" id="edit-link" class="form-control" placeholder="Link Hasil Kerja"
@@ -179,11 +190,18 @@
                                             <small id="error-edit-file" class="text-danger"></small>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row status_change">
                                         <label class="col-sm-2 col-form-label" for="catatan">Catatan</label>
                                         <div class="col-sm-10">
                                             <textarea rows="5" class="form-control h-auto" name="catatan" id="catatan">{{ $realisasi->catatan }}</textarea>
                                             <small id="error-catatan" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row status_change_2">
+                                        <label class="col-sm-2 col-form-label" for="alasan">Alasan</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" name="alasan" id="alasan">{{ $realisasi->alasan }}</textarea>
+                                            <small id="error-alasan" class="text-danger"></small>
                                         </div>
                                     </div>
                                     <div class="card-footer text-right pr-1">
@@ -213,4 +231,11 @@
         document.forms['myeditform'].reset();
     </script>
     <script src="{{ asset('js/page/pegawai/realisasi.js') }}"></script>
+    <script>
+        let i = 0;
+        $(`.jam`).each(function() {
+            i = i + +$(this).text();
+        });
+        $('#jam').text(i);
+    </script>
 @endpush

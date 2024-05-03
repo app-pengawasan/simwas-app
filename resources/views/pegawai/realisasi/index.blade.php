@@ -106,7 +106,11 @@
                                                         </a>
                                                     @endif --}}
                                                 </td>
-                                                <td>{{ $r->catatan }}</td>
+                                                @if ($r->status == 1) 
+                                                    <td>{{ $r->catatan }}</td>
+                                                @else 
+                                                    <td>{{ $r->alasan }}</td>
+                                                @endif
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 

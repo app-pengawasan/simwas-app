@@ -14,8 +14,8 @@
                     <div class="form-group">
                         <label class="form-label" for="tugas">Tugas</label>
                         <div class="">
-                            <select required id="tugas" name="tugas" class="form-control select2">
-                                <option value="" selected disabled>Pilih Tugas</option>
+                            <select required multiple id="tugas" name="tugas[]" class="form-control select2">
+                                {{-- <option value="" selected disabled>Pilih Tugas</option> --}}
                                 @foreach ($tugasSaya as $ts)
                                     @if (!isset($ts->rencanaKerja->suratTugas))
                                         <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>

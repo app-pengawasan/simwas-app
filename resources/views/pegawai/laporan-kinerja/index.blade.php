@@ -104,8 +104,8 @@
                                                                 </a>
                                                             @endif    
                                                         </td>
-                                                        <td>{{ $realisasi->nilai }}</td>
-                                                        <td>{{ $nilai_ins->where('bulan', $month)->where('tahun', $tahun)->first()->nilai }}</td>
+                                                        <td>{{ $realisasi->nilai }}</td> 
+                                                        <td>{{ $nilai_ins->where('bulan', $month)->where('tahun', $tahun)->first()->nilai ?? null }}</td>
                                                         <td>{{ $month }}</td>
                                                         <td>{{ $tahun }}</td>
                                                         <td>

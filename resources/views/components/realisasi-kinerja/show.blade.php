@@ -80,44 +80,62 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Waktu</th>
-                                    <td>
-                                        {{ date("d-m-Y", strtotime($realisasi->tgl)) }}
-                                        ({{ date("H:i", strtotime($realisasi->start)) }} - {{ date("H:i", strtotime($realisasi->end)) }})
-                                    </td>
+                                    <th>Aktivitas</th>
+                                    @foreach ($events as $event)
+                                        @php
+                                            $start = $event->start;
+                                            $end = $event->end;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $start }} - {{ $end }}</td>
+                                            <td>{{ $event->aktivitas }} </td>
+                                            <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tr>
                                 <tr>
-                                    <th>Kegiatan</th>
-                                    <td>{{ $realisasi->kegiatan }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Capaian</th>
-                                    <td>{{ $realisasi->capaian }}</td>
+                                    <th>Jam Realisasi</th>
+                                    <td id="jam"></td>
                                 </tr>
                                 <tr>
                                     <th>Status</th>
                                     <td><span class="badge badge-{{ $colorText[$realisasi->status] }}">{{ $status[$realisasi->status] }}</span></td>
                                 </tr>
-                                <tr>
-                                    <th>Bukti Dukung</th>
-                                    <td>
-                                        @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
-                                            <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
-                                            href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        @else
-                                            <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
-                                            href="{{ $realisasi->hasil_kerja }}" target="_blank">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Catatan</th>
-                                    <td>{{ $realisasi->catatan }}</td>
-                                </tr>
+                                @if ($realisasi->status == 1)
+                                    <tr>
+                                        <th>Kegiatan</th>
+                                        <td>{{ $realisasi->kegiatan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Capaian</th>
+                                        <td>{{ $realisasi->capaian }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bukti Dukung</th>
+                                        <td>
+                                            @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
+                                                <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
+                                                href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            @else
+                                                <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
+                                                href="{{ $realisasi->hasil_kerja }}" target="_blank">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Catatan</th>
+                                        <td>{{ $realisasi->catatan }}</td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <th>Alasan</th>
+                                        <td>{{ $realisasi->alasan }}</td>
+                                    </tr>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -133,4 +151,11 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/pegawai/realisasi.js') }}"></script>
+    <script>
+        let i = 0;
+        $(`.jam`).each(function() {
+            i = i + +$(this).text();
+        });
+        $('#jam').text(i);
+    </script>
 @endpush

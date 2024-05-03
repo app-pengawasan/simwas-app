@@ -37,7 +37,26 @@ class NamaPpSeeder extends Seeder
         ]);
         NamaPp::create([
             'pp_id' => 3,
-            'nama' => 'Audit Investigasi',
+            'peserta' => 100,
+            'nama' => 'Diklat Penyusunan Kertas Kerja Audit',
+            'is_aktif' => true
+        ]);
+        NamaPp::create([
+            'pp_id' => 3,
+            'peserta' => 200,
+            'nama' => 'Diklat Penyusunan Laporan Hasil Audit',
+            'is_aktif' => true
+        ]);
+        NamaPp::create([
+            'pp_id' => 3,
+            'peserta' => 300,
+            'nama' => 'Diklat Manajemen Pengawasan',
+            'is_aktif' => true
+        ]);
+        NamaPp::create([
+            'pp_id' => 3,
+            'peserta' => 400,
+            'nama' => 'Audit TIK',
             'is_aktif' => true
         ]);
         NamaPp::create([

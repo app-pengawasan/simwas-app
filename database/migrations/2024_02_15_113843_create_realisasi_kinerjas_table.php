@@ -18,14 +18,12 @@ return new class extends Migration
             $table->ulid('id')->primary()->default(Ulid::generate());
             $table->string('id_pelaksana', 26);
             $table->foreign('id_pelaksana')->references('id_pelaksana')->on('pelaksana_tugas');
-            $table->date('tgl');
-            $table->time('start');
-            $table->time('end');
             $table->integer('status');
             $table->text('kegiatan')->nullable();
             $table->text('capaian')->nullable();
-            $table->text('hasil_kerja');
+            $table->text('hasil_kerja')->nullable();
             $table->text('catatan')->nullable();
+            $table->text('alasan')->nullable();
             $table->decimal('nilai', 5, 2)->nullable();
             $table->string('penilai', 26)->nullable();
             $table->foreign('penilai')->references('id')->on('users')->onUpdate('cascade');

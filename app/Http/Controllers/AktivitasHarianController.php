@@ -25,11 +25,13 @@ class AktivitasHarianController extends Controller
                   })->get();
 
         foreach ($events as $event) {
-            // $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
-            //             ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
-            //             ->where('start', date_format(date_create($event->start), 'H:i:s'))
-            //             ->where('end', date_format(date_create($event->end), 'H:i:s'))->first();
-
+            $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)->get();
+            if ($realisasi->isEmpty()) $event->color = 'orange';
+            else {
+                if ($realisasi->contains('status', 1)) $event->color = 'green';
+                else $event->color = 'red';
+            }
+            
             $event->title = $event->pelaksana->rencanaKerja->tugas;
             // $event->aktivitas = $event->aktivitas;
             // $event->tim = $event->pelaksana->rencanaKerja->proyek->timkerja->nama;
@@ -124,30 +126,30 @@ class AktivitasHarianController extends Controller
 
         $validateData = $request->validate($rules);
 
-        $check_tugas = Event::where('id_pelaksana', $request->id_pelaksana)->first();
+        // $check_tugas = Event::where('id_pelaksana', $request->id_pelaksana)->first();
 
-        if ($check_tugas == null) { //jika tugas belum ada aktivitas, cari warna event baru untuk kalender
-            //kecualikan warna muda
-            $exclude = range(50, 197); 
-            while(in_array(($hue = rand(0,359)), $exclude));
+        // if ($check_tugas == null) { //jika tugas belum ada aktivitas, cari warna event baru untuk kalender
+        //     //kecualikan warna muda
+        //     $exclude = range(50, 197); 
+        //     while(in_array(($hue = rand(0,359)), $exclude));
             
-            //jika ada minimal 212 tugas (jumlah warna max = 212) maka warna boleh tidak unik
-            if (Event::distinct()->count('id_pelaksana') >= 212) $color = 'hsl('.$hue.',100%,50%)'; 
-            else { //jika jumlah tugas < 212 warna harus unik
-                $check_color_duplicate = Event::where('color', 'hsl('.$hue.',100%,50%)')->first();
+        //     //jika ada minimal 212 tugas (jumlah warna max = 212) maka warna boleh tidak unik
+        //     if (Event::distinct()->count('id_pelaksana') >= 212) $color = 'hsl('.$hue.',100%,50%)'; 
+        //     else { //jika jumlah tugas < 212 warna harus unik
+        //         $check_color_duplicate = Event::where('color', 'hsl('.$hue.',100%,50%)')->first();
 
-                if ($check_color_duplicate != null) { 
-                    while ($check_color_duplicate->color == 'hsl('.$hue.',100%,50%)') //selagi warna masih duplikat, terus cari warna
-                        while(in_array(($hue = rand(0,359)), $exclude));
-                } 
+        //         if ($check_color_duplicate != null) { 
+        //             while ($check_color_duplicate->color == 'hsl('.$hue.',100%,50%)') //selagi warna masih duplikat, terus cari warna
+        //                 while(in_array(($hue = rand(0,359)), $exclude));
+        //         } 
 
-                $color = 'hsl('.$hue.',100%,50%)';
-            }
-        } else $color = $check_tugas->color; //jika tugas sudah ada aktivitas, ambil warnanya
+        //         $color = 'hsl('.$hue.',100%,50%)';
+        //     }
+        // } else $color = $check_tugas->color; //jika tugas sudah ada aktivitas, ambil warnanya
 
         $validateData['start'] = $start;
         $validateData['end'] = $end;
-        $validateData['color'] = $color;
+        // $validateData['color'] = $color;
 
         Event::create($validateData);
         $request->session()->put('status', 'Berhasil menambahkan aktivitas.');
