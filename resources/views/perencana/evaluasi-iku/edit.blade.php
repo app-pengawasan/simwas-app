@@ -136,11 +136,8 @@
                                                 <td class="text-left">
                                                     <select disabled class="form-control" name="satuan-row1"
                                                         class="satuan">
-                                                        @foreach ($kabupaten as $key => $value1)
-                                                        <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                            value="{{ $value }}">
-                                                            {{ $value->satuan }}</option>
-                                                        @endforeach
+                                                        <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                                                                                        }}</option>
                                                     </select>
                                                 </td>
                                                 <td><input value="{{ $value->nilai_y_target }}" disabled type="number"

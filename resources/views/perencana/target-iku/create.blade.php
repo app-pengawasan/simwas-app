@@ -116,8 +116,8 @@
                                                         <select required class="select2 satuan" name="satuan-row1"
                                                             id="satuan-row1" data-placeholder="Pilih Satuan">
                                                             <option></option>
-                                                            @foreach ($kabupaten as $key => $value)
-                                                            <option value="{{ $value }}">{{ $value }}</option>
+                                                            @foreach ($masterUnitKerja as $unitKerja)
+                                                            <option value="{{ $unitKerja->id_objek }}">{{ $unitKerja->nama }}
                                                             @endforeach
                                                         </select>
                                                     </td>

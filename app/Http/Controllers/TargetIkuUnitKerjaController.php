@@ -7,6 +7,7 @@ use App\Models\RealisasiIkuUnitKerja;
 use App\Http\Requests\StoreTargetIkuUnitKerjaRequest;
 use App\Http\Requests\UpdateTargetIkuUnitKerjaRequest;
 use App\Models\ObjekIkuUnitKerja;
+use App\Models\MasterUnitKerja;
 
 class TargetIkuUnitKerjaController extends Controller
 {
@@ -609,11 +610,15 @@ class TargetIkuUnitKerjaController extends Controller
     public function create()
     {
         $this->authorize('perencana');
+        $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
+        // dd($masterUnitKerja);
+
 
         return view('perencana.target-iku.create', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
+            'masterUnitKerja' => $masterUnitKerja,
         ]);
     }
 
@@ -647,7 +652,8 @@ class TargetIkuUnitKerjaController extends Controller
             $id_target = TargetIkuUnitKerja::latest()->first()->id;
             ObjekIkuUnitKerja::create([
                 'id' => (string) \Symfony\Component\Uid\Ulid::generate(),
-                'satuan' => $satuan,
+                // 'satuan' => $satuan,
+                'id_objek' => $satuan,
                 'id_target' => $id_target,
                 'nilai_y_target' => $nilaiY ?? 0,
                 'target_triwulan_1' => $target_triwulan_1 ?? 0,

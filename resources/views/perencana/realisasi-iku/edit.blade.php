@@ -78,12 +78,8 @@
                                     <td class="text-left">
                                         <select disabled class="form-control" name="{{ 'satuan-row'.$loop->iteration }}"
                                             class="satuan">
-                                            @foreach ($kabupaten as $key => $value1)
-                                            <option{{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                value="{{ $value->satuan }}">
-                                                {{ $value->satuan }}
-                                                </option>
-                                                @endforeach
+                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                                                                            }}</option>
                                         </select>
                                     </td>
                                     <td><input disabled value="{{ $value->nilai_y_target }}" type="number"
@@ -300,10 +296,8 @@
                                                             value="{{ $value->id }}">
                                                         <select disabled class="form-control" name="satuan-row1"
                                                             class="satuan">
-                                                            @foreach ($kabupaten as $key => $value1)
-                                                            <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                                value="{{ $value }}">{{ $value->satuan }}</option>
-                                                            @endforeach
+                                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                                                                                            }}</option>
                                                         </select>
                                                     </td>
                                                     <td><input min="0" max="20" value="{{ $value->nilai_y_realisasi }}"

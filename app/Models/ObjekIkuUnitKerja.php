@@ -27,8 +27,15 @@ class ObjekIkuUnitKerja extends Model
         'user_id',
         'nilai_y_target',
         'nilai_y_realisasi',
+        'id_objek'
     ];
 
     use HasFactory;
+
+    // add id_objek that references to id_objek in master_objeks table
+    public function master_objeks()
+    {
+        return $this->belongsTo(MasterObjek::class, 'id_objek', 'id_objek');
+    }
 
 }

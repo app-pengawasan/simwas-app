@@ -10,13 +10,6 @@ use App\Models\ObjekIkuUnitKerja;
 
 class RealisasiIkuUnitKerjaController extends Controller
 {
-    protected $kabupaten = [
-        'Kabupaten Aceh Barat',
-        'Kabupaten Aceh Barat Daya',
-        'Kabupaten Aceh Besar',
-        'Kabupaten Aceh Jaya',
-        'Kabupaten Aceh Selatan',
-    ];
     protected $unitKerja = [
         '8000'    => 'Inspektorat Utama',
         '8010'    => 'Bagian Umum Inspektorat Utama',
@@ -50,7 +43,6 @@ class RealisasiIkuUnitKerjaController extends Controller
 
         return view('perencana.realisasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
@@ -69,7 +61,6 @@ class RealisasiIkuUnitKerjaController extends Controller
 
         return view('perencana.realisasi-iku.create', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
         ]);
     }
@@ -147,7 +138,6 @@ class RealisasiIkuUnitKerjaController extends Controller
         // dd($objekIkuUnitKerja);
         return view('perencana.realisasi-iku.show', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
@@ -170,7 +160,6 @@ class RealisasiIkuUnitKerjaController extends Controller
 
         return view('perencana.realisasi-iku.edit', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
