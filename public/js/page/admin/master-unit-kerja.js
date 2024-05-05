@@ -1,8 +1,8 @@
-let table = $("#master-unit-kerja");
+let table;
 
-$(function () {
-    table
-        .DataTable({
+if ($("#master-unit-kerja").length) {
+    table = $("#master-unit-kerja")
+        .dataTable({
             dom: "Bfrtip",
             responsive: true,
             lengthChange: false,
@@ -13,7 +13,7 @@ $(function () {
                     className: "btn-success",
                     text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1 ,2],
                     },
                 },
                 {
@@ -21,15 +21,49 @@ $(function () {
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1],
+                        columns: [0, 1, 2],
                     },
                 },
             ],
+            oLanguage: {
+                sSearch: "Cari:",
+                sZeroRecords: "Data tidak ditemukan",
+                sEmptyTable: "Data tidak ditemukan",
+                sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                sInfoFiltered: "(disaring dari _MAX_ data)",
+                sLengthMenu: "Tampilkan _MENU_ data",
+                oPaginate: {
+                    sPrevious: "Sebelumnya",
+                    sNext: "Selanjutnya",
+                },
+            },
         })
-        .buttons()
-        .container()
-        .appendTo("#master-unit-kerja_wrapper .col-md-6:eq(0)");
-});
+        .api();
+
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dataTables_filter").appendTo("#filter-search-wrapper");
+        $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
+        $(".dataTables_filter").css("width", "100%");
+        // .dataTables_filter label width 100%
+        $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
+        $(".dataTables_filter input").css("height", "35px");
+        // make label text bold and black
+        $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
+        $(".dataTables_filter label").css("margin-bottom", "0");
+
+        $(".dataTables_filter input").attr(
+            "placeholder",
+            "Cari berdasarkan Kode atau Nama Unit Kerja"
+        );
+        // add padding x 10px to .dataTables_filter input
+        $(".dataTables_filter input").css("padding", "0 10px");
+        $(".dt-buttons").appendTo("#download-button");
+}
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();

@@ -23,20 +23,60 @@
     <section class="section">
         <div class="section-header">
             <h1>Kelola Rencana Kinerja</h1>
-
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                <div class="breadcrumb-item">Rencana Kerja</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <p class="mt-3">
-                            <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Halaman Mengelola Rencana Kinerja Pegawai Inspektorat Utama.
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <p>
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman Mengelola Rencana Kinerja Pegawai Inspektorat Utama.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         {{ session()->forget(['alert-type', 'status']) }}
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-tahun" style="margin-bottom: 0;">
+                                    Tahun</label>
+                                <select name="unit_kerja" id="filter-tahun" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($tahun as $key => $value)
+                                    <option value="{{ $value ->tahun }}">
+                                        {{ $value->tahun }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-unit-kerja" style="margin-bottom: 0;">
+                                    Unit Kerja</label>
+                                <select name="unit_kerja" id="filter-unit-kerja" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($unit_kerja as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->unit_kerja == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
+                            <div style="gap:10px" class="d-flex align-items-end">
                                 <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modal-create-timkerja">
                                     <i class="fas fa-plus-circle"></i>
@@ -48,6 +88,7 @@
                             <table id="tim-kerja" class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th style="width: 15px;">No</th>
                                         <th>Tahun</th>
                                         <th>Unit Kerja</th>
                                         <th>IKU</th>
@@ -60,6 +101,7 @@
                                 <tbody>
                                     @foreach ($timKerja as $tim)
                                     <tr id="index_{{ $tim->id_timkerja }}">
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $tim->tahun }}</td>
                                         <td>{{ $unitKerja[$tim->unitkerja] }}</td>
                                         <td>{{ $tim->iku->iku }}</td>
@@ -71,7 +113,7 @@
                                         </td>
                                         <td>
                                             <a href="/admin/rencana-kinerja/{{ $tim->id_timkerja }}"
-                                                class="btn btn-primary" style="width: 42px">
+                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @if ($tim->status == 0)
@@ -80,8 +122,8 @@
                                             data-toggle="modal" data-target="#modal-edit-masterhasil">
                                             <i class="fas fa-edit"></i>
                                             </a> --}}
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn"
-                                                data-id="{{ $tim->id_timkerja }}" style="width: 42px">
+                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
+                                                data-id="{{ $tim->id_timkerja }}">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                             @endif

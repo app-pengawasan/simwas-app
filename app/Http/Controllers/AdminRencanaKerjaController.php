@@ -95,9 +95,12 @@ class AdminRencanaKerjaController extends Controller
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
         $pegawai = User::all();
+        //
 
-        $timKerja = TimKerja::all();
+        $timKerja = TimKerja::with('ketua', 'iku')->get();
 
+        // get tahun in timkerja distinct
+        $tahun = TimKerja::select('tahun')->distinct()->get();
         return view('admin.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -108,6 +111,8 @@ class AdminRencanaKerjaController extends Controller
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'unit_kerja' => $this->unitkerja,
+            'tahun'     => $tahun
         ]);
     }
 

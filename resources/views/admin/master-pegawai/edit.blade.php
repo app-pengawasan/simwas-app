@@ -138,6 +138,7 @@
                     <hr class="my-1">
                     <div class="d-flex mt-4" style="gap: 10px">
                         <a class="btn btn-outline-primary" href="javascript(0);" id="btn-back">
+                            <i class="fa-solid fa-arrow-left mr-1"></i>
                             Kembali
                         </a>
                         <button class="btn btn-primary">

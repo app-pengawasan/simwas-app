@@ -13,7 +13,7 @@
                     <div class="form-group">
                         <label class="form-label" for="kode_wilayah">Kode Wilayah</label>
                         <div class="">
-                            <input type="text" id="create-kode_wilayah" class="form-control" name="kode_wilayah"
+                            <input type="text" id="create-kode_wilayah" class="form-control" name="kode_wilayah" placeholder="Masukkan 4 Digit Kode Wilayah"
                                 required>
                             <small id="error-kode_wilayah" class="text-danger"></small>
                         </div>
@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label class="form-label" for="nama">Nama</label>
                         <div class="">
-                            <input type="text" id="create-nama" class="form-control" name="nama" required>
+                            <input type="text" id="create-nama" class="form-control" name="nama" required placeholder="Masukkan Nama Wilayah Kerja">
                             <small id="error-nama" class="text-danger"></small>
                         </div>
                     </div>

@@ -83,6 +83,7 @@
                             <div class="d-flex justify-content-between mt-4" style="gap:10px">
                                 <div>
                                     <a class="btn btn-outline-primary" href="javascript(0);" id="btn-back">
+                                        <i class="fa-solid fa-arrow-left mr-1"></i>
                                         Kembali
                                     </a>
                                     <button class="btn btn-primary">

@@ -29,24 +29,47 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="d-flex justify-content-between">
                         <p class="mbt-3">
                             <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
                             Halaman untuk mengelola Pimpinan Inspektorat
                         </p>
+                        <div id="download-button">
+                        </div>
+                        </div>
                         @include('components.flash')
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-jabatan" style="margin-bottom: 0;">
+                                    Jabatan</label>
+                                <select name="jabatan" id="filter-jabatan" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($jabatan_pimpinan as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->jabatan == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="d-flex align-items-end">
                                 <a type="button" class="btn btn-primary" href="/admin/master-pimpinan/create">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
                             </div>
                         </div>
+
                         <div class="">
                             <table id="table-master-pimpinan"
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th style="width: 10px;">No</th>
                                         <th style="width: 100px;">NIP</th>
                                         <th>Nama</th>
                                         <th>Jabatan</th>
@@ -57,22 +80,24 @@
                                 <tbody>
                                     @foreach ($pimpinan as $p)
                                     <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $p->user->nip }}</td>
                                         <td>{{ $p->user->name }}</td>
                                         <td>{{ $jabatan_pimpinan["$p->jabatan"] }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($p->mulai)) }} s.d.
-                                            {{ date('d-m-Y', strtotime($p->selesai)) }}</td>
+                                        <td>
+                                            {{ date('d M Y', strtotime($p->mulai)) }} -
+                                            {{ date('d M Y', strtotime($p->selesai)) }}</td>
                                         <td>
                                             {{-- <a class="btn btn-primary"
                                                         href="/admin/master-pimpinan/{{ $p->id_pimpinan }}"
                                             style="width: 42px">
                                             <i class="fas fa-info"></i>
                                             </a> --}}
-                                            <a class="btn btn-warning"
+                                            <a class="btn btn-warning btn-sm"
                                                 href="/admin/master-pimpinan/{{ $p->id_pimpinan }}/edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn"
+                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
                                                 data-id="{{ $p->id_pimpinan }}">
                                                 <i class="fas fa-trash"></i>
                                             </a>

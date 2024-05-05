@@ -3,85 +3,89 @@
 @section('title', 'Edit Master Anggaran')
 
 @push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
+<!-- CSS Libraries -->
+<link rel="stylesheet" href="{{ asset('library/sweetalert2/dist/sweetalert2.min.css') }}">
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Form Edit Master Anggaran</h1>
+@include('components.admin-header')
+@include('components.admin-sidebar')
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Form Edit Master Anggaran</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
+                </div>
+                <div class="breadcrumb-item">Edit Master Anggaran</div>
             </div>
-            <div class="row">
-                <div class=" col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row mb-4 pb-0">
-                                <div class="col-md-4">
-                                    <a class="btn btn-primary" href="javascript(0);" id="btn-back">
-                                        <i class="fas fa-chevron-circle-left mr-2"></i> Kembali
-                                    </a>
-                                </div>
+        </div>
+        <div class="row">
+            <div class=" col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('master-anggaran.update', $masterAnggaran) }}"
+                            class="needs-validation" novalidate="">
+                            @csrf
+                            @method('put')
+                            <h1 class="h4 text-dark mb-4 header-card">Data Anggaran</h1>
+                            <div class="form-group">
+                                <label for="program">Program</label>
+                                <input type="text" class="form-control" name="program" disabled
+                                    value="{{ old('program', $masterAnggaran->program) }}">
                             </div>
-                            <form method="POST" action="{{ route('master-anggaran.update', $masterAnggaran) }}"
-                                class="needs-validation" novalidate="">
-                                @csrf
-                                @method('put')
-                                <div class="card-body">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="program">Program</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="program" disabled
-                                                value="{{ old('program', $masterAnggaran->program) }}">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="id_kegiatan">Id Kegiatan</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="id_kegiatan"
-                                                value="{{ old('id_kegiatan', $masterAnggaran->id_kegiatan) }}" required>
-                                            @error('id_kegiatan')
-                                                <small class="text-danger">
-                                                    {{ $message }}
-                                                </small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="kegiatan"
-                                                value="{{ old('kegiatan', $masterAnggaran->kegiatan) }}" required>
-                                            @error('kegiatan')
-                                                <small class="text-danger">
-                                                    {{ $message }}
-                                                </small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer text-right">
+                            <div class="form-group">
+                                <label for="id_kegiatan">ID Kegiatan</label>
+                                <input type="text" class="form-control" name="id_kegiatan"
+                                    value="{{ old('id_kegiatan', $masterAnggaran->id_kegiatan) }}" required>
+                                @error('id_kegiatan')
+                                <small class="text-danger">
+                                    {{ $message }}
+                                </small>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="kegiatan">Kegiatan</label>
+                                <input type="text" class="form-control" name="kegiatan"
+                                    value="{{ old('kegiatan', $masterAnggaran->kegiatan) }}" required>
+                                @error('kegiatan')
+                                <small class="text-danger">
+                                    {{ $message }}
+                                </small>
+                                @enderror
+                            </div>
+
+
+                            <hr class="my-1">
+                            <div class="d-flex justify-content-between mt-4">
+                                <div>
+                                    <a class="btn btn-outline-primary mr-2" href="javascript(0);" id="btn-back">
+                                        <i class="fa-solid fa-arrow-left mr-1"></i>
+                                        Kembali
+                                    </a>
                                     <button class="btn btn-primary">
-                                        <i class="fas fa-save mr-1"></i>
+                                        <i class="fas fa-save"></i>
                                         Simpan
                                     </button>
                                 </div>
-                            </form>
-                        </div>
+                                <div>
+                                    <input class="btn btn-outline-secondary" type="reset" value="Reset" />
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<!-- JS Libraies -->
+<script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/admin/master-anggaran.js') }}"></script>
+<!-- Page Specific JS File -->
+<script src="{{ asset('js/page/admin/master-anggaran.js') }}"></script>
 @endpush

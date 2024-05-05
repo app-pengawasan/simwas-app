@@ -19,8 +19,8 @@ class MasterIKUController extends Controller
     {
         $this->authorize('admin');
         $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
-        $masterIku = MasterIKU::all();
+        $masterSasaran = MasterSasaran::with('tujuan')->get();
+        $masterIku = MasterIKU::with('sasaran')->get();
 
         return view('admin.master-iku', [
             'type_menu'     => 'rencana-kinerja',
