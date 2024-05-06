@@ -50,10 +50,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            <h1 class="h4 text-dark mb-4 header-card">Data Target IKU Unit Kerja</h1>
                             <form action="/" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
                                             <select disabled class="form-control" name="unit-kerja"
@@ -65,7 +66,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Nama Kegiatan</label>
                                         <div>
                                             <input disabled value="{{ $targetIkuUnitKerja->nama_kegiatan }}"
@@ -73,7 +74,7 @@
                                                 required placeholder="Isikan Nama Kegiatan IKU">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input disabled value="{{ intval($targetIkuUnitKerja->jumlah_objek) }}"
@@ -81,7 +82,7 @@
                                                 required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
                                                 <tr>
@@ -114,8 +115,7 @@
                                                     <td class="text-left">
                                                         <select disabled class="form-control" name="satuan-row1"
                                                             class="satuan">
-                                                            <option
-                                                                value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
                                                                 }}</option>
                                                         </select>
                                                     </td>
@@ -206,17 +206,23 @@
                                     </div>
                                     {{-- <button type="submit" class="btn btn-success">Submit</button> --}}
                             </form>
-                            @if ($targetIkuUnitKerja->status == 1)
-                            <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
-                                method="post" class="d-inline">
-                                @csrf
-                                @method('put')
-                                <input type="hidden" name="status" value="2">
-                                <button class="btn btn-success" type="submit">
-                                    <i class="fas fa-paper-plane mr-1"></i>Kirim ke realisasi
-                                </button>
-                            </form>
-                            @endif
+                            <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0"
+                                style="gap: 10px">
+                                <a class="btn btn-outline-primary" href="/perencana/target-iku-unit-kerja/">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                </a>
+                                @if ($targetIkuUnitKerja->status == 1)
+                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="status" value="2">
+                                    <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-paper-plane mr-1"></i>Kirim ke realisasi
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
 
                         </div>
                     </div>

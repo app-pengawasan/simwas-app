@@ -30,13 +30,48 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <p class="mt-3">
-                            <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Halaman Mengelola Target Indikator Kinerja Utama Unit Kerja.
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <p>
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman Mengelola Target Indikator Kinerja Utama Unit Kerja.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         {{ session()->forget(['alert-type', 'status']) }}
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-unit-kerja" style="margin-bottom: 0;">
+                                    Unit Kerja</label>
+                                <select name="unit_kerja" id="filter-unit-kerja" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($unit_kerja as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->unit_kerja == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            {{-- status filter --}}
+                            <div class="form-group
+                                {{ request()->status ? 'd-none' : '' }}" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-status" style="margin-bottom: 0;">
+                                    Status</label>
+                                <select name="status" id="filter-status" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($status as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->status == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div style="gap:10px" class="d-flex align-items-end">
                                 <a type="button" class="btn btn-primary"
                                     href="{{ route('target-iku-unit-kerja.create') }}">
                                     <i class="fas fa-plus-circle"></i>
@@ -49,9 +84,9 @@
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Unit Kerja</th>
+                                        <th style="width: 15px;">No</th>
                                         <th>Nama Kegiatan</th>
+                                        <th>Unit Kerja</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -59,29 +94,21 @@
                                 <tbody>
                                     @foreach ($targetIkuUnitKerja as $ti)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $unitKerja[$ti->unit_kerja] }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $ti->nama_kegiatan }}</td>
+                                        <td>{{ $unitKerja[$ti->unit_kerja] }}</td>
                                         <td>
                                             <span class="badge badge-{{ $colorBadge[$ti->status] }}">
                                                 {{ $status[$ti->status] }}
                                             </span>
                                         </td>
                                         <td>
-                                            {{-- <a href="{{ route('target-iku-unit-kerja.edit', $ti->id) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                            </a> --}}
-                                            {{-- delete --}}
+                                            <a href="{{ route('target-iku-unit-kerja.show', $ti->id) }}"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                             @if ($ti->status == 1)
-                                            <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
-                                                method="post" class="d-inline">
-                                                @csrf
-                                                @method('delete')
-                                                <button class="btn btn-danger btn-sm" type="submit">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+
                                             {{-- kirim ke realisasi --}}
                                             <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
                                                 method="post" class="d-inline">
@@ -92,21 +119,17 @@
                                                     <i class="fas fa-paper-plane"></i>
                                                 </button>
                                             </form>
-                                            @endif
-                                            <a href="{{ route('target-iku-unit-kerja.show', $ti->id) }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            {{-- kirim ke realisasi --}}
 
-                                            {{-- <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
-                                            method="post" class="d-inline">
-                                            @csrf
-                                            @method('delete')
-                                            <button class="btn btn-danger btn-sm" type="submit">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                            </form> --}}
+                                            <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
+                                                method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="btn btn-danger btn-sm" type="submit">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+
                                         </td>
                                     </tr>
                                     @endforeach
@@ -164,7 +187,81 @@
     filename: "Master Unsur",
     },
     ],
+    oLanguage: {
+    sSearch: "Cari:",
+    sZeroRecords: "Data tidak ditemukan",
+    sEmptyTable: "Data tidak ditemukan",
+    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+    sInfoFiltered: "(disaring dari _MAX_ data)",
+    sLengthMenu: "Tampilkan _MENU_ data",
+    oPaginate: {
+    sPrevious: "Sebelumnya",
+    sNext: "Selanjutnya",
+    },
+    },
     })
     .api();
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dataTables_filter").appendTo("#filter-search-wrapper");
+    $(".dataTables_filter").find("input").addClass("form-control");
+    // .dataTables_filter width 100%
+    $(".dataTables_filter").css("width", "100%");
+    // .dataTables_filter label width 100%
+    $(".dataTables_filter label").css("width", "100%");
+    // input height 35px
+    $(".dataTables_filter input").css("height", "35px");
+    // make label text bold and black
+    $(".dataTables_filter label").css("font-weight", "bold");
+    // remove bottom margin from .dataTables_filter
+    $(".dataTables_filter label").css("margin-bottom", "0");
+
+    $(".dataTables_filter input").attr(
+    "placeholder",
+    "Cari target iku unit kerja..."
+    );
+    // add padding x 10px to .dataTables_filter input
+    $(".dataTables_filter input").css("padding", "0 10px");
+    $(".dt-buttons").appendTo("#download-button");
+
+    $("#target-iku-unit-kerja").on("search.dt", function () {
+    table
+    .column(0, { search: "applied", order: "applied" })
+    .nodes()
+    .each(function (cell, i) {
+    cell.innerHTML = i + 1;
+    });
+    });
+
+    function filterTable() {
+    let filterUnitKerja = $("#filter-unit-kerja").val();
+    let filterStatus = $("#filter-status").val();
+
+    if (filterStatus == "Semua") {
+    filterStatus = "";
+    }
+    if (filterUnitKerja == "Semua") {
+    filterUnitKerja = "";
+    }
+
+    table
+    .column(2)
+    .search(filterUnitKerja, true, false)
+    .column(3)
+    .search(filterStatus, true, false)
+    .draw();
+
+    // reset numbering in table first column
+    table
+    .column(0, { search: "applied", order: "applied" })
+    .nodes()
+    .each(function (cell, i) {
+    cell.innerHTML = i + 1;
+    });
+    }
+    $("#filter-status, #filter-unit-kerja").on("change", function () {
+    filterTable();
+    });
 </script>
 @endpush

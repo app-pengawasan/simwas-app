@@ -4260,6 +4260,8 @@ body:not(.sidebar-mini)
     color: #a5aec0;
 }
 
+
+
 .dashboard-card a {
     /* remove underline style a */
     text-decoration: none;
@@ -4544,4 +4546,9 @@ footer {
         /* background: #FFE472; */
         line-height: 30px;
         color: #222;
+    }
+
+    /* inside main-content class overflow */
+    .main-content {
+        overflow-x: hidden;
     }

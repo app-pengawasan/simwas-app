@@ -56,6 +56,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
             'status' => $this->status,
+            'unit_kerja' => $this->unitKerja,
         ]);
     }
 
@@ -136,7 +137,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
         $evaluasiIkuUnitKerja = EvaluasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->first();
 
@@ -148,6 +149,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
             'evaluasiIkuUnitKerja' => $evaluasiIkuUnitKerja,
             'kabupaten' => $this->kabupaten,
+            'unitKerja' => $this->unitKerja,
+            'status' => $this->status,
         ]);
     }
 
@@ -162,7 +165,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
         $users = User::all();
         // dd($users);

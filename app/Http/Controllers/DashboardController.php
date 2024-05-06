@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\UsulanSuratSrikandi;
+use App\Models\TimKerja;
 
 class DashboardController extends Controller
 {
@@ -38,25 +39,7 @@ class DashboardController extends Controller
         "530" => 'QAP'
     ];
 
-    function pegawai() {
-        // $stk = StKinerja::where('user_id', auth()->user()->id)->count();
-        // $stp = Stp::where('user_id', auth()->user()->id)->count();
-        // $stpd = Stpd::where('user_id', auth()->user()->id)->count();
-        // $sl = Sl::where('user_id', auth()->user()->id)->count();
-        // $surat = Surat::latest()->where('user_id', auth()->user()->id)->get();
-
-        // return view('pegawai.index', [
-        //     "stk" => $stk,
-        //     "stp" => $stp,
-        //     "stpd" => $stpd,
-        //     "sl" => $sl
-        // ])->with('surat', $surat);
-        $year = request('year');
-        if ($year == null) {
-            $year = date('Y');
-        } else {
-            $year = $year;
-        }
+    function suratSrikandiCount($year){
         $usulanCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'usulan')->count();
         $disetujuiCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'disetujui')->count();
         $ditolakCount= UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('status', 'ditolak')->count();
@@ -72,15 +55,107 @@ class DashboardController extends Controller
             $percentage_ditolak = 0;
         }
 
-        return view('pegawai.index', [
-            'type_menu' => 'usulan-surat-srikandi',
+        return [
             'percentage_usulan' => $percentage_usulan,
             'percentage_disetujui' => $percentage_disetujui,
             'percentage_ditolak' => $percentage_ditolak,
-            'total_usulan' => $usulanCount + $disetujuiCount + $ditolakCount,
             'usulanCount' => $usulanCount,
             'disetujuiCount' => $disetujuiCount,
             'ditolakCount' => $ditolakCount,
+        ];
+    }
+
+    function ketuaTimKerjaCount($year){
+        $id_pegawai = auth()->user()->id;
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', [1,2,3,4])->where('tahun', $year)->get()->count();
+        $timKerjaDiajukanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 5)->where('tahun', $year)->get()->count();
+        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 6)->where('tahun', $year)->get()->count();
+
+        $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get()->count();
+
+        $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
+        $timKerjaPercentageDiajukan = $timKerjaDiajukanCount != 0 ? intval($timKerjaDiajukanCount/($timKerjaTotalCount)*100) : 0;
+        $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;
+
+
+        return [
+            'timKerjaTotalCount' => $timKerjaTotalCount,
+            'timKerjaPenyusunanCount' => $timKerjaPenyusunanCount,
+            'timKerjaDiajukanCount' => $timKerjaDiajukanCount,
+            'timKerjaDiterimaCount' => $timKerjaDiterimaCount,
+            'timKerjaPercentagePenyusunan' => $timKerjaPercentagePenyusunan,
+            'timKerjaPercentageDiajukan' => $timKerjaPercentageDiajukan,
+            'timKerjaPercentageDiterima' => $timKerjaPercentageDiterima,
+        ];
+    }
+
+    function usulanNormaHasilCount($year){
+        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->get();
+        $usulanCount = $usulan->count();
+        $diperiksaCount = $usulan->where('status_norma_hasil', 'diperiksa')->count();
+        $disetujuiCount = $usulan->where('status_norma_hasil', 'disetujui')->count();
+        $ditolakCount = $usulan->where('status_norma_hasil', 'ditolak')->count();
+        return [
+            'usulanCount' => $usulanCount,
+            'disetujuiCount' => $disetujuiCount,
+            'ditolakCount' => $ditolakCount,
+            'diperiksaCount' => $diperiksaCount,
+
+            'percentage_diperiksa' => $diperiksaCount != 0 ? intval($diperiksaCount/($usulanCount)*100) : 0,
+            'percentage_disetujui' => $disetujuiCount != 0 ? intval($disetujuiCount/($usulanCount)*100) : 0,
+            'percentage_ditolak' => $ditolakCount != 0 ? intval($ditolakCount/($usulanCount)*100) : 0,
+        ];
+
+    }
+
+
+
+    function pegawai() {
+
+        $year = request('year');
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+        $suratSrikandiCount = $this->suratSrikandiCount($year);
+        $normaHasilCount = $this->usulanNormaHasilCount($year);
+        $usulanNormaHasilCount = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+            $query->where('id_ketua', auth()->user()->id)->where('status_norma_hasil', 'diperiksa');
+        })->count();
+        $timKerjaCount = $this->ketuaTimKerjaCount($year);
+        // dd($timKerjaCount);
+
+        return view('pegawai.index', [
+            'type_menu' => 'usulan-surat-srikandi',
+            'percentage_usulan' => $suratSrikandiCount['percentage_usulan'],
+            'percentage_disetujui' => $suratSrikandiCount['percentage_disetujui'],
+            'percentage_ditolak' => $suratSrikandiCount['percentage_ditolak'],
+            'total_usulan' => $suratSrikandiCount['usulanCount'],
+            'usulanCount' => $suratSrikandiCount['usulanCount'],
+            'disetujuiCount' => $suratSrikandiCount['disetujuiCount'],
+            'ditolakCount' => $suratSrikandiCount['ditolakCount'],
+
+            'normaHasilCount' => $normaHasilCount['usulanCount'],
+            'normaHasilDisetujui' => $normaHasilCount['disetujuiCount'],
+            'normaHasilDitolak' => $normaHasilCount['ditolakCount'],
+            'normaHasilDiperiksa' => $normaHasilCount['diperiksaCount'],
+            'normaHasilPercentageDiperiksa' => $normaHasilCount['percentage_diperiksa'],
+            'normaHasilPercentageDisetujui' => $normaHasilCount['percentage_disetujui'],
+            'normaHasilPercentageDitolak' => $normaHasilCount['percentage_ditolak'],
+
+            'usulanNormaHasilCount' => $usulanNormaHasilCount,
+
+            'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
+            'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
+            'timKerjaDiajukanCount' => $timKerjaCount['timKerjaDiajukanCount'],
+            'timKerjaDiterimaCount' => $timKerjaCount['timKerjaDiterimaCount'],
+            'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
+            'timKerjaPercentageDiajukan' => $timKerjaCount['timKerjaPercentageDiajukan'],
+            'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
+
+
+
         ]);
     }
 

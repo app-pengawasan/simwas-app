@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <div class="modal-body overflow-scroll">
-                    <div class="form-group col overflow-scroll">
+                    <div class="form-group overflow-scroll">
                         <table class="table table-responsive-md table-bordered overflow-scroll" id="table-iku">
                             <thead>
                                 <tr>
@@ -191,11 +191,12 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
+                            <h1 class="h4 text-dark mb-4 header-card">Data Realisasi IKU Unit Kerja</h1>
                             <form action="{{ route('realisasi-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <input type="hidden" name="id" value="{{ $targetIkuUnitKerja->id }}">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
@@ -209,7 +210,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Nama Kegiatan</label>
                                         <div>
                                             <input disabled value="{{ $targetIkuUnitKerja->nama_kegiatan }}"
@@ -217,7 +218,7 @@
                                                 required placeholder="Isikan Nama Kegiatan IKU">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input type="hidden" name="jumlah_objek"
@@ -227,7 +228,7 @@
                                                 required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="catatan">Catatan</label>
                                         <div>
                                             <input value="{{ $realisasiIkuUnitKerja->catatan ?? '' }}" id="catatan"
@@ -235,7 +236,7 @@
                                                 placeholder="Isikan Dengan catatan">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="catatan">Dokumen Sumber</label>
                                         <div>
                                             <input id="dokumen_sumber" type="file" class="form-control"
@@ -244,12 +245,13 @@
                                     </div>
                                     <div class="form-group d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#targetIKU">Lihat Target
+                                            data-target="#targetIKU"><i class="fa-solid fa-circle-info mr-1"></i>
+                                            Lihat Target
                                             IKU</button>
                                     </div>
 
 
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
                                                 <tr>
@@ -296,8 +298,10 @@
                                                             value="{{ $value->id }}">
                                                         <select disabled class="form-control" name="satuan-row1"
                                                             class="satuan">
-                                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
-                                                                                                                            }}</option>
+                                                            <option value="{{ $value->id_objek }}">
+                                                                {{ $value->master_objeks->nama
+                                                                                                                            }}
+                                                            </option>
                                                         </select>
                                                     </td>
                                                     <td><input min="0" max="20" value="{{ $value->nilai_y_realisasi }}"
@@ -423,10 +427,16 @@
                                         </div> --}}
 
                                     </div>
+                                    <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0"
+                                        style="gap: 10px">
+                                        <a class="btn btn-outline-primary" href="/perencana/realisasi-iku-unit-kerja/">
+                                            <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                        </a>
 
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-save"></i>
-                                        Submit</button>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save"></i>
+                                            Simpan</button>
+                                    </div>
                             </form>
                         </div>
                     </div>

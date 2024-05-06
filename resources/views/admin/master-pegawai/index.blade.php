@@ -136,18 +136,34 @@
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $user->nip }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            <div
+                                                class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
+                                                <div class="circle mr-2">
+                                                    <span class="initials text-capitalize">
+                                                        {{ substr($user->name, 0, 1) }}{{ substr(strstr($user->name, ' '), 1, 1) }}
+                                                    </span>
+                                                </div>
+                                                {{  $user->name }}
+                                            </div>
+                                        </td>
                                         <td>{{ $jabatan["$user->jabatan"] }}</td>
                                         <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
                                         <td style="min-width: 100px;">
-                                            <a class="btn btn-primary btn-sm" href="/admin/master-pegawai/{{ $user->id }}" data-toggle="tooltip" data-placement="top" title="Lihat Detail Pegawai">
+                                            <a class="btn btn-primary btn-sm"
+                                                href="/admin/master-pegawai/{{ $user->id }}" data-toggle="tooltip"
+                                                data-placement="top" title="Lihat Detail Pegawai">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a class="btn btn-warning btn-sm" href="/admin/master-pegawai/{{ $user->id }}/edit" data-toggle="tooltip" data-placement="top" title="Ubah Data Pegawai">
+                                            <a class="btn btn-warning btn-sm"
+                                                href="/admin/master-pegawai/{{ $user->id }}/edit" data-toggle="tooltip"
+                                                data-placement="top" title="Ubah Data Pegawai">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if ($user->id != auth()->user()->id)
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm" data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top" title="Hapus Data Pegawai">
+                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
+                                                data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top"
+                                                title="Hapus Data Pegawai">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                             @endif

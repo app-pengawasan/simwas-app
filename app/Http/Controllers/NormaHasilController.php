@@ -62,11 +62,14 @@ class NormaHasilController extends Controller
     public function index()
     {
 
-        $usulan = NormaHasil::latest()->where('user_id', auth()->user()->id)->get();
+        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->get();
+        // get year from created_at distinct
+        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->get();
         return view('pegawai.norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
-            'jenisNormaHasil' => $this->hasilPengawasan
+            'jenisNormaHasil' => $this->hasilPengawasan,
+            'tahun' => $year
 
         ]);
     }

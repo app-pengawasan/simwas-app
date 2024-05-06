@@ -93,25 +93,20 @@ class KetuaTimRencanaKerjaController extends Controller
      */
     public function index()
     {
-        $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
-        $masterIku = MasterIKU::all();
-        $pegawai = User::all();
-
-
         $id_pegawai = auth()->user()->id;
-        $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
+        $timKerja = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->get();
+        // select raw distinct year from created_at
+
+                $tahun = TimKerja::select('tahun')->distinct()->get();
 
         return view('pegawai.rencana-kinerja.ketua-tim.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
-            'masterTujuan' => $masterTujuan,
-            'masterSasaran' => $masterSasaran,
-            'masterIku' => $masterIku,
-            'pegawai'   => $pegawai,
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'tahun'      => $tahun,
+            'unit_kerja'  => $this->unitkerja,
         ]);
 
         // return $id_pegawai;

@@ -61,17 +61,18 @@ private $hasilPengawasan = [
     {
 
         // find normahasil where rencanakerja->timkerja where id_ketua is this auth
-        $usulan = NormaHasil::latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+        $usulan = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereHas('rencanaKerja.timkerja', function ($query) {
             $query->where('id_ketua', auth()->user()->id);
         })->get();
-
-
+        // get distinct year from usulan created_at
+        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->get();
 
         return view('pegawai.usulan-norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'jenisNormaHasil' => $this->hasilPengawasan,
-            'type_menu' => 'rencana-kinerja'
+            'type_menu' => 'rencana-kinerja',
+            'tahun' => $year,
         ]);
     }
 

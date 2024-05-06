@@ -39,7 +39,7 @@ class RealisasiIkuUnitKerjaController extends Controller
     {
         $this->authorize('perencana');
 
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->get();
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->latest()->get();
 
         return view('perencana.realisasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
@@ -47,6 +47,7 @@ class RealisasiIkuUnitKerjaController extends Controller
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
             'status' => $this->status,
+            'unit_kerja' => $this->unitKerja,
         ]);
     }
 
@@ -129,7 +130,7 @@ class RealisasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
         if (!$realisasiIkuUnitKerja) {
             return redirect()->route('realisasi-iku-unit-kerja.edit', $id)->with('status', 'Anda Belum Mengisi Realisasi IKU Unit Kerja, Silakan Mengisi Realisasi IKU Unit Kerja')
@@ -154,7 +155,7 @@ class RealisasiIkuUnitKerjaController extends Controller
     public function edit($id)
     {
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
 
 

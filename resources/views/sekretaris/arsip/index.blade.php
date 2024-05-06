@@ -115,7 +115,7 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
-                                                class="btn btn-info btn-sm">
+                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
                                                 Detail

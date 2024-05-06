@@ -20,9 +20,7 @@
         <div class="section-header">
             <h1>Hey, {{ explode(' ', auth()->user()->name)[0] }}</h1>
         </div>
-        <div style="gap:15px" class="d-flex flex-row dashboard-card">
             @include('components.pegawai.surat-card')
-        </div>
     </section>
 </div>
 @endsection

@@ -25,6 +25,7 @@
         text-align: center;
         padding: 2px !important;
     }
+
     .table-wrapper {
         overflow-x: auto;
     }
@@ -49,15 +50,13 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-4 pb-0">
-                        </div>
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Unit Kerja</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
                                 <th>Unit Kerja:</th>
-                                <td>{{ $targetIkuUnitKerja->unit_kerja }}</td>
+                                <td>{{ $unitKerja[$targetIkuUnitKerja->unit_kerja]}}</td>
                             </tr>
                             <tr>
                                 <th>Nama Kegiatan:</th>
@@ -65,7 +64,7 @@
                             </tr>
                             <tr>
                                 <th>Status:</th>
-                                <td>{{ $targetIkuUnitKerja->status }}</td>
+                                <td>{{ $status[$targetIkuUnitKerja->status] }}</td>
                             </tr>
                             <tr>
                                 <th>Jumlah Objek:</th>
@@ -89,11 +88,11 @@
                             </tr>
                             <tr>
                                 <th>PIC Tindak Lanjut:</th>
-                                <td>{{ $evaluasiIkuUnitKerja->id_pic }}</td>
+                                <td>{{ $evaluasiIkuUnitKerja->user->name }}</td>
                             </tr>
                             <tr>
                                 <th>Batas Waktu Tindak Lanjut:</th>
-                                <td>{{ \Carbon\Carbon::parse($evaluasiIkuUnitKerja->batas_waktu_tindak_lanjut)->format('d/m/Y') }}
+                                <td>{{ \Carbon\Carbon::parse($evaluasiIkuUnitKerja->batas_waktu_tindak_lanjut)->format('d M Y') }}
                                 </td>
                             </tr>
                             {{-- bukti tindak lanjut --}}
@@ -193,11 +192,9 @@
                                         <td class="text-center align-middle">{{ $key+1 }}</td>
                                         <td class="text-left">
                                             <select disabled class="form-control" name="satuan-row1" class="satuan">
-                                                @foreach ($kabupaten as $key => $value1)
-                                                <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                    value="{{ $value }}">
-                                                    {{ $value->satuan }}</option>
-                                                @endforeach
+                                                <option value="{{ $value->id_objek }}">
+                                                    {{ $value->master_objeks->nama}}
+                                                </option>
                                             </select>
                                         </td>
                                         <td><input value="{{ $value->nilai_y_target }}" disabled type="number"
@@ -243,20 +240,16 @@
                                                 class="form-control triwulan4"></td>
 
 
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian1-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian1-row'.$loop->iteration }}"
                                                 id="{{ 'capaian1-row'.$loop->iteration }}"
                                                 class="form-control triwulan1"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian2-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian2-row'.$loop->iteration }}"
                                                 id="{{ 'capaian2-row'.$loop->iteration }}"
                                                 class="form-control triwulan2"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian3-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian3-row'.$loop->iteration }}"
                                                 id="{{ 'capaian3-row'.$loop->iteration }}"
                                                 class="form-control triwulan3"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian4-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian4-row'.$loop->iteration }}"
                                                 id="{{ 'capaian4-row'.$loop->iteration }}"
                                                 class="form-control triwulan4"></td>
                                     </tr>
@@ -282,8 +275,12 @@
 
                             </table>
                         </div>
+                        <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0" style="gap: 10px">
+                            <a class="btn btn-outline-primary" href="/perencana/evaluasi-iku-unit-kerja/">
+                                <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                            </a>
+                        </div>
                     </div>
-
                 </div>
             </div>
     </section>

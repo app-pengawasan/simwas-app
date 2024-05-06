@@ -45,8 +45,9 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">
-                                    <i class="fas fa-chevron-circle-left"></i> Kembali
+                                <a class="btn btn-outline-primary mr-1"
+                                    href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}">
+                                    <i class="fas fa-arrow-left"></i> Kembali
                                 </a>
                             </div>
                         </div>
@@ -80,29 +81,30 @@
                                 <th>Objek</th>
                                 <td style="padding-right: 0px">
                                     @if (count($rencanaKerja->objekPengawasan))
-                                    <table style="width: 100%">
-                                        @foreach ($rencanaKerja->objekPengawasan as $objek)
-                                        <tr>
-                                            <td class="pr-2">
-                                                <li>{{ $objek->nama }}
-                                                </li>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-warning btn-edit-objek" type="button"
-                                                    data-toggle="modal" data-target="#modal-edit-objek"
-                                                    data-kategori="{{ $objek->kategori_objek }}"
-                                                    data-id="{{ $objek->id_opengawasan }}"
-                                                    data-idobjek="{{ $objek->id_objek }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-danger btn-delete-objek" type="button"
-                                                    data-id="{{ $objek->id_opengawasan }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </table>
+                                    @foreach ($rencanaKerja->objekPengawasan as $objek)
+                                    <div class="d-flex my-2 items-center">
+                                        <div class="d-flex items-center mr-2" style="width: 300px;">
+                                            {{ $loop->iteration }}. &nbsp;
+                                            <span class="mb-0 text-capitalize">
+                                                {{
+                                                    $objek->nama }}
+                                            </span>
+                                        </div>
+                                        <div style="min-width: 100px;">
+                                            <button class="btn btn-warning btn-edit-objek btn-sm" type="button"
+                                                data-toggle="modal" data-target="#modal-edit-objek"
+                                                data-kategori="{{ $objek->kategori_objek }}"
+                                                data-id="{{ $objek->id_opengawasan }}"
+                                                data-idobjek="{{ $objek->id_objek }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-delete-objek btn-sm" type="button"
+                                                data-id="{{ $objek->id_opengawasan }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                     @else
                                     -
                                     @endif
@@ -178,7 +180,7 @@
                                             <i>Belum tersedia</i>
                                             @elseif($i == 0 || isset($rencanaKerja->pelaksana[$i - 1]))
                                             @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                <button class="btn btn-primary btn-create-pelaksana" type="button"
+                                                <button class="btn btn-primary btn-sm btn-create-pelaksana" type="button"
                                                     data-toggle="modal" data-disable=true
                                                     data-target="#modal-create-pelaksana"
                                                     data-hasilkerja={{ $i == 0 ? 1 : 2 }} data-jabatan=<?php
@@ -190,7 +192,7 @@
                                                                         echo 4;
                                                                     }
                                                                     ?>>
-                                                    <i class="fas fa-plus-circle"></i>
+                                                    <i class="fas fa-plus-circle mr-1"></i>Tambah Pelaksana
                                                 </button>
 
                                                 @endif
@@ -211,16 +213,16 @@
                                         </td>
                                         <td>
                                             @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                <button class="btn btn-warning btn-edit-pelaksana" type="button"
+                                                <button class="btn btn-warning btn-edit-pelaksana btn-sm" type="button"
                                                     data-toggle="modal" data-disable=true
                                                     data-target="#modal-edit-pelaksana"
                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
-                                                    <i class="fas fa-edit"></i>
+                                                    <i class="fas fa-edit mr-1"></i>Edit
                                                 </button>
                                                 @if ($i > 2)
-                                                <button class="btn btn-danger btn-delete-pelaksana" type="button"
+                                                <button class="btn btn-danger btn-delete-pelaksana btn-sm" type="button"
                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
-                                                    <i class="fas fa-trash"></i>
+                                                    <i class="fas fa-trash mr-1"></i>Hapus
                                                 </button>
                                                 @endif
                                                 @endif

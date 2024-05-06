@@ -12,8 +12,6 @@ $(document).ready(function () {
     // Add Objek
 
     $("#add-objek").on("click", function () {
-        console.log("add objek");
-
         var jumlahObjek = $("#jumlah-objek").val();
         // if jumlah objek is empty set to 1
         if (jumlahObjek === "") {
@@ -26,7 +24,6 @@ $(document).ready(function () {
 
         // add row to table
         for (var i = 0; i < jumlahObjek; i++) {
-            console.log(i);
             row = parseInt(jumlahObjek) + 1;
             var html = "";
             html += "<tr id='row-" + row + "'>";
@@ -301,18 +298,11 @@ $(document).ready(function () {
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
-        console.log("jumlahObjek", jumlahObjek);
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
                 accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
                 $("#target-triwulan" + j + "-row" + i).val(accumulatedTriwulan);
-                console.log(
-                    "triwulan",
-                    j,
-                    "-row" + i + " = ",
-                    accumulatedTriwulan
-                );
             }
             accumulatedTriwulan = 0;
         }

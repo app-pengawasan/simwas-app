@@ -95,7 +95,7 @@ class PegawaiTugasController extends Controller
      */
     public function show($id)
     {
-        $rencanaKerja = RencanaKerja::where('id_rencanakerja', $id)->get();
+        $rencanaKerja = RencanaKerja::with('pelaksana.user')->where('id_rencanakerja', $id)->get();
         $pegawai = User::all();
         $allHasilKerja = MasterHasil::where('kategori_pelaksana', 'ngt')->get();
         $masterHasilKerja = $this->hasilKerja;

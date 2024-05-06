@@ -471,6 +471,71 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     let okt = $("#create-oktober").val();
     let nov = $("#create-november").val();
     let des = $("#create-desember").val();
+    // if jan - des == null, set to 0
+    jan = jan == "" ? 0 : jan;
+    feb = feb == "" ? 0 : feb;
+    mar = mar == "" ? 0 : mar;
+    apr = apr == "" ? 0 : apr;
+    mei = mei == "" ? 0 : mei;
+    jun = jun == "" ? 0 : jun;
+    jul = jul == "" ? 0 : jul;
+    agu = agu == "" ? 0 : agu;
+    sep = sep == "" ? 0 : sep;
+    okt = okt == "" ? 0 : okt;
+    nov = nov == "" ? 0 : nov;
+    des = des == "" ? 0 : des;
+
+    // if jan - des < 0 or > 200, return error
+    if (jan < 0 || jan > 200) {
+        $("#error-januari").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (feb < 0 || feb > 200) {
+        $("#error-februari").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (mar < 0 || mar > 200) {
+        $("#error-maret").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (apr < 0 || apr > 200) {
+        $("#error-april").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (mei < 0 || mei > 200) {
+        $("#error-mei").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (jun < 0 || jun > 200) {
+        $("#error-juni").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (jul < 0 || jul > 200) {
+        $("#error-juli").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (agu < 0 || agu > 200) {
+        $("#error-agustus").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (sep < 0 || sep > 200) {
+        $("#error-september").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (okt < 0 || okt > 200) {
+        $("#error-oktober").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (nov < 0 || nov > 200) {
+        $("#error-november").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (des < 0 || des > 200) {
+        $("#error-desember").text("0 - 200 Jam Kerja");
+        return;
+    }
+
+
 
 
     $("#error-hasil_kerja").text("");
@@ -607,6 +672,69 @@ $("#btn-edit-pelaksana").on("click", function (e) {
     let okt = $("#edit-oktober").val();
     let nov = $("#edit-november").val();
     let des = $("#edit-desember").val();
+
+    jan = jan == "" ? 0 : jan;
+    feb = feb == "" ? 0 : feb;
+    mar = mar == "" ? 0 : mar;
+    apr = apr == "" ? 0 : apr;
+    mei = mei == "" ? 0 : mei;
+    jun = jun == "" ? 0 : jun;
+    jul = jul == "" ? 0 : jul;
+    agu = agu == "" ? 0 : agu;
+    sep = sep == "" ? 0 : sep;
+    okt = okt == "" ? 0 : okt;
+    nov = nov == "" ? 0 : nov;
+    des = des == "" ? 0 : des;
+
+    // if jan - des < 0 or > 200, return error
+    if (jan < 0 || jan > 200) {
+        $("#error-edit-januari").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (feb < 0 || feb > 200) {
+        $("#error-edit-februari").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (mar < 0 || mar > 200) {
+        $("#error-edit-maret").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (apr < 0 || apr > 200) {
+        $("#error-edit-april").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (mei < 0 || mei > 200) {
+        $("#error-edit-mei").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (jun < 0 || jun > 200) {
+        $("#error-edit-juni").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (jul < 0 || jul > 200) {
+        $("#error-edit-juli").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (agu < 0 || agu > 200) {
+        $("#error-edit-agustus").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (sep < 0 || sep > 200) {
+        $("#error-edit-september").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (okt < 0 || okt > 200) {
+        $("#error-edit-oktober").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (nov < 0 || nov > 200) {
+        $("#error-edit-november").text("0 - 200 Jam Kerja");
+        return;
+    }
+    if (des < 0 || des > 200) {
+        $("#error-edit-desember").text("0 - 200 Jam Kerja");
+        return;
+    }
 
 
     $("#error-hasil_kerja").text("");

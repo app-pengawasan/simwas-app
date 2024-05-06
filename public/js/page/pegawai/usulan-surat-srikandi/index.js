@@ -23,6 +23,19 @@ let table = $("#table-usulan-surat-srikandi")
             //     },
             // },
         ],
+        oLanguage: {
+            sSearch: "Cari:",
+            sZeroRecords: "Data tidak ditemukan",
+            sEmptyTable: "Data tidak ditemukan",
+            sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+            sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+            sInfoFiltered: "(disaring dari _MAX_ data)",
+            sLengthMenu: "Tampilkan _MENU_ data",
+            oPaginate: {
+                sPrevious: "Sebelumnya",
+                sNext: "Selanjutnya",
+            },
+        },
     })
     .api();
 

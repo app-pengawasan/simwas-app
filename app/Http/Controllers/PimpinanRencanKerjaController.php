@@ -98,10 +98,13 @@ class PimpinanRencanKerjaController extends Controller
 
 
         $id_unitkerja = auth()->user()->unit_kerja;
-        $timKerja = TimKerja::where('unitkerja', $id_unitkerja)
+        $timKerja = TimKerja::with('ketua', 'iku')->where('unitkerja', $id_unitkerja)
         ->where('status', 5)
         ->orWhere('status', 6)
         ->get();
+
+        $tahun = TimKerja::select('tahun')->where('unitkerja', $id_unitkerja)->distinct()->get();
+
         return view('pimpinan.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -112,6 +115,8 @@ class PimpinanRencanKerjaController extends Controller
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'tahun'     => $tahun,
+            'unit_kerja' => $this->unitkerja,
         ]);
 
         // return $id_unitkerja;
