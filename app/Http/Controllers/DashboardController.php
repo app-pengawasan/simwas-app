@@ -67,7 +67,7 @@ class DashboardController extends Controller
 
     function ketuaTimKerjaCount($year){
         $id_pegawai = auth()->user()->id;
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', [1,2,3,4])->where('tahun', $year)->get()->count();
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', [0,1,2,3,4])->where('tahun', $year)->get()->count();
         $timKerjaDiajukanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 5)->where('tahun', $year)->get()->count();
         $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 6)->where('tahun', $year)->get()->count();
 
@@ -90,7 +90,7 @@ class DashboardController extends Controller
     }
 
     function usulanNormaHasilCount($year){
-        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->get();
+        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
         $usulanCount = $usulan->count();
         $diperiksaCount = $usulan->where('status_norma_hasil', 'diperiksa')->count();
         $disetujuiCount = $usulan->where('status_norma_hasil', 'disetujui')->count();
@@ -110,21 +110,31 @@ class DashboardController extends Controller
 
 
 
-    function pegawai() {
+    function pegawai(Request $request) {
 
-        $year = request('year');
+        $year = $request->year;
+        $id_unitkerja = auth()->user()->unit_kerja;
+
+        // dd($year);
+
         if ($year == null) {
             $year = date('Y');
         } else {
             $year = $year;
         }
+
         $suratSrikandiCount = $this->suratSrikandiCount($year);
         $normaHasilCount = $this->usulanNormaHasilCount($year);
-        $usulanNormaHasilCount = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+        $usulanNormaHasilCount = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
             $query->where('id_ketua', auth()->user()->id)->where('status_norma_hasil', 'diperiksa');
         })->count();
         $timKerjaCount = $this->ketuaTimKerjaCount($year);
         // dd($timKerjaCount);
+        $usulanPimpinanCount = TimKerja::with(['ketua', 'iku'])
+            ->where('unitkerja', $id_unitkerja)
+            ->whereIn('status', [5])
+            ->where('tahun', $year)
+            ->count();
 
         return view('pegawai.index', [
             'type_menu' => 'usulan-surat-srikandi',
@@ -153,6 +163,8 @@ class DashboardController extends Controller
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
             'timKerjaPercentageDiajukan' => $timKerjaCount['timKerjaPercentageDiajukan'],
             'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
+
+            'usulanPimpinanCount' => $usulanPimpinanCount,
 
 
 

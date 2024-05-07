@@ -129,7 +129,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Status Surat:</th>
-                                                @if ($usulan->status_norma_hasil != 'diperiksa')
+                                                @if ($usulan->status_norma_hasil != 'diperiksa' && $usulan->status_norma_hasil != 'ditolak')
                                                 <td>
                                                     @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
                                                     'belum unggah')

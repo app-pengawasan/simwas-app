@@ -1,3 +1,4 @@
+$(function () {
 let table;
 if ($("#master-tujuan").length) {
     table = $("#master-tujuan")
@@ -70,6 +71,7 @@ $("#master-tujuan").on("search.dt", function () {
         .each(function (cell, i) {
             cell.innerHTML = i + 1;
         });
+});
 });
 
 $("#create-btn").on("click", function (e) {

@@ -87,9 +87,16 @@ class AdminRencanaKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('admin');
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
@@ -97,10 +104,22 @@ class AdminRencanaKerjaController extends Controller
         $pegawai = User::all();
         //
 
-        $timKerja = TimKerja::with('ketua', 'iku')->get();
+        $timKerja = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get();
+        $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('tahun')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['tahun' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('tahun');
 
         // get tahun in timkerja distinct
-        $tahun = TimKerja::select('tahun')->distinct()->get();
         return view('admin.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
@@ -112,7 +131,7 @@ class AdminRencanaKerjaController extends Controller
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
             'unit_kerja' => $this->unitkerja,
-            'tahun'     => $tahun
+            'year'     => $year,
         ]);
     }
 

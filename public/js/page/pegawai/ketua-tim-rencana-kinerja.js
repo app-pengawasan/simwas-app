@@ -441,22 +441,25 @@ for (i = 0; i <= rupiah.length - 1; i++) {
 
 function filterTable() {
     let filterUnitKerja = $("#filter-unit-kerja").val();
-    let filterTahun = $("#filter-tahun").val();
 
     if (filterUnitKerja == "Semua") {
         filterUnitKerja = "";
     }
 
-    if (filterTahun == "Semua") {
-        filterTahun = "";
-    }
 
-    table
-        .column(1)
-        .search(filterTahun, true, false)
-        .column(2)
-        .search(filterUnitKerja, true, false)
-        .draw();
+
+
+    if (filterUnitKerja !== "") {
+        table
+            .column(2)
+            .search("^" + filterUnitKerja + "$", true, false)
+            .draw();
+    } else {
+        table
+            .column(2)
+            .search("")
+            .draw();
+    }
 
     // reset numbering in table first column
     table
@@ -466,6 +469,13 @@ function filterTable() {
             cell.innerHTML = i + 1;
         });
 }
-$("#filter-unit-kerja, #filter-tahun").on("change", function () {
+$("#filter-unit-kerja").on("change", function () {
     filterTable();
+});
+
+$("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").submit();
 });

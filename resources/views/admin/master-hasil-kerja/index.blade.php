@@ -34,7 +34,7 @@
                         <div class="d-flex justify-content-between">
                             <p>
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Halaman Mengelola Subunsur Inspektorat Utama.
+                                Halaman Mengelola Hasil Kerja Inspektorat Utama
                             </p>
                             <div id="download-button">
                             </div>

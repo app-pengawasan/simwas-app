@@ -30,72 +30,72 @@
                 <div class="card">
                     <div class="card-body">
                         {{ session()->forget(['alert-type', 'status']) }}
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-4">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Menampilkan usuulan surat srikandi yang perlu persetujuan sekretaris.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         <div>
-                            <form action="{{ route('usulan-surat-srikandi.index') }}" method="GET">
-                                <div class="d-flex justify-content-between flex-wrap" style="gap:10px">
-                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
-                                        <label for="filter-search" style="margin-bottom: 0;">
-                                            Cari</label>
-                                        <input style="height: 35px" type="text" name="search" id="filter-search"
-                                            class="form-control" placeholder="Cari berdasarkan nama pengaju"
-                                            value="{{ request()->search }}">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 0;">
-                                        {{-- select year --}}
-                                        <label for="filter-year" style="margin-bottom: 0;">Tahun</label>
-                                        <select name="filter-year" id="filter-year" class="form-control select2">
-                                            <option disabled value="">Pilih Tahun</option>
-                                            @foreach ( $allYears as $year)
-                                            <option value="{{ $year->year }}" @if (!request()->year && $year->year
-                                                == date('Y'))
-                                                selected
-                                                @elseif (request()->year == $year->year)
-                                                selected
-                                                @endif
-                                                >
-                                                {{ $year->year }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 0;">
-                                        <label for="filter-month" style="margin-bottom: 0;">Jenis Surat</label>
-                                        <select name="filter-surat" id="filter-surat" class="form-control select2">
-                                            <option value="Semua">Semua</option>
-                                            @foreach ( $jenisNaskahDinasPenugasan as $key => $jenis)
-                                            <option value="{{ $jenis }}">
-                                                {{ $jenis }}
-                                            </option>
-                                            @endforeach
-                                            @foreach ( $jenisNaskahDinasKorespondensi as $key => $jenis)
-                                            <option value="{{ $jenis }}">
-                                                {{ $jenis }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 0;">
-                                        {{-- select year --}}
-                                        <label for="filter-status" style="margin-bottom: 0;">Status</label>
-                                        <select name="filter-status" id="filter-status" class="form-control select2">
-                                            <option value="Semua">Semua</option>
-                                            @foreach ( $allStatus as $status)
-                                            <option value="{{ $status->status }}" @if (!request()->status &&
-                                                $status->status
-                                                == 'all')
-                                                selected
-                                                @elseif (request()->status == $status->status)
-                                                selected
-                                                @endif
-                                                >
-                                                {{ ucwords($status->status) }}
-                                            </option>
-
-                                            @endforeach
-                                        </select>
+                            <div class="d-flex justify-content-between flex-wrap my-2 mb-3 " style="gap:10px">
+                                <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                    <div id="filter-search-wrapper">
                                     </div>
                                 </div>
-                            </form>
+                                <form id="yearForm" action="" method="GET">
+                                    @csrf
+                                    <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                        <label for="filter-tahun" style="margin-bottom: 0;">
+                                            Tahun</label>
+                                        <select name="year" id="yearSelect" class="form-control select2">
+                                            @foreach ($year as $key => $value)
+                                            <option value="{{ $value->year }}"
+                                                {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                                {{ $value->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="filter-month" style="margin-bottom: 0;">Jenis Surat</label>
+                                    <select name="filter-surat" id="filter-surat" class="form-control select2">
+                                        <option value="Semua">Semua</option>
+                                        @foreach ( $jenisNaskahDinasPenugasan as $key => $jenis)
+                                        <option value="{{ $jenis }}">
+                                            {{ $jenis }}
+                                        </option>
+                                        @endforeach
+                                        @foreach ( $jenisNaskahDinasKorespondensi as $key => $jenis)
+                                        <option value="{{ $jenis }}">
+                                            {{ $jenis }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    {{-- select year --}}
+                                    <label for="filter-status" style="margin-bottom: 0;">Status</label>
+                                    <select name="filter-status" id="filter-status" class="form-control select2">
+                                        <option value="Semua">Semua</option>
+                                        @foreach ( $allStatus as $status)
+                                        <option value="{{ $status->status }}" @if (!request()->status &&
+                                            $status->status
+                                            == 'all')
+                                            selected
+                                            @elseif (request()->status == $status->status)
+                                            selected
+                                            @endif
+                                            >
+                                            {{ ucwords($status->status) }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="">
                             <table id="table-usulan-surat-srikandi"
@@ -200,7 +200,8 @@
 <script src="{{ asset('library') }}/letterpic/js/jquery.letterpic.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script>
-    $(".letterpic").letterpic({ fill: 'color', });
+    $(function () {
+
     let table = $("#table-usulan-surat-srikandi")
     .dataTable({
     dom: "Bfrtip",
@@ -208,12 +209,62 @@
     lengthChange: false,
     autoWidth: false,
     buttons: [
+    {
+    extend: "excel",
+    className: "btn-success",
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    exportOptions: {
+    columns: [0, 1, 2, 3, 4],
+    },
+    },
+    {
+    extend: "pdf",
+    className: "btn-danger",
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    exportOptions: {
+    columns: [0, 1, 2, 3, 4],
+    },
+    },
     ],
+    oLanguage: {
+    sSearch: "Cari:",
+    sZeroRecords: "Data tidak ditemukan",
+    sEmptyTable: "Data tidak ditemukan",
+    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+    sInfoFiltered: "(disaring dari _MAX_ data)",
+    sLengthMenu: "Tampilkan _MENU_ data",
+    oPaginate: {
+    sPrevious: "Sebelumnya",
+    sNext: "Selanjutnya",
+    },
+    },
     })
     .api();
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dataTables_filter").appendTo("#filter-search-wrapper");
+    $(".dataTables_filter").find("input").addClass("form-control");
+    // .dataTables_filter width 100%
+    $(".dataTables_filter").css("width", "100%");
+    // .dataTables_filter label width 100%
+    $(".dataTables_filter label").css("width", "100%");
+    // input height 35px
+    $(".dataTables_filter input").css("height", "35px");
+    // make label text bold and black
+    $(".dataTables_filter label").css("font-weight", "bold");
+    // remove bottom margin from .dataTables_filter
+    $(".dataTables_filter label").css("margin-bottom", "0");
+
+    $(".dataTables_filter input").attr(
+    "placeholder",
+    "Cari berdasarkan nama pengaju atau nomor surat"
+    );
+    // add padding x 10px to .dataTables_filter input
+    $(".dataTables_filter input").css("padding", "0 10px");
+    $(".dt-buttons").appendTo("#download-button");
 
     function filterTable() {
-    let filterYear = $("#filter-year").val();
     let filterStatus = $("#filter-status").val();
     let filterSurat = $("#filter-surat").val();
     let filterSearch = $("#filter-search").val();
@@ -226,8 +277,6 @@
     }
 
     table
-    .column(2)
-    .search(filterYear, true, false)
     .column(4)
     .search(filterSurat, true, false)
     .column(5)
@@ -245,7 +294,7 @@
     });
     }
 
-    $("#filter-year, #filter-status, #filter-surat").on("change", function () {
+    $("#filter-status, #filter-surat").on("change", function () {
     filterTable();
     });
     $("#filter-search").on("keyup", function () {
@@ -253,7 +302,14 @@
     });
     filterTable();
 
-    $(".dataTables_filter").hide();
+    });
+
+    $("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").trigger("submit");
+    });
 </script>
 
 {{-- <script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script> --}}

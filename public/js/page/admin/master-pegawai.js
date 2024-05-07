@@ -1,47 +1,48 @@
-let table;
+$(function () {
+    let table;
 
-if ($("#table-master-pegawai").length) {
-    table = $("#table-master-pegawai")
-        .dataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
+    if ($("#table-master-pegawai").length) {
+        table = $("#table-master-pegawai")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "Cari:",
+                    sZeroRecords: "Data tidak ditemukan",
+                    sEmptyTable: "Data tidak ditemukan",
+                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                    sInfoFiltered: "(disaring dari _MAX_ data)",
+                    sLengthMenu: "Tampilkan _MENU_ data",
+                    oPaginate: {
+                        sPrevious: "Sebelumnya",
+                        sNext: "Selanjutnya",
                     },
                 },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
-                    },
-                },
-            ],
-            oLanguage: {
-                sSearch: "Cari:",
-                sZeroRecords: "Data tidak ditemukan",
-                sEmptyTable: "Data tidak ditemukan",
-                sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
-                sInfoFiltered: "(disaring dari _MAX_ data)",
-                sLengthMenu: "Tampilkan _MENU_ data",
-                oPaginate: {
-                    sPrevious: "Sebelumnya",
-                    sNext: "Selanjutnya",
-                },
-            },
-        })
-        .api();
+            })
+            .api();
 
-    // move datatable button to inside download button
+        // move datatable button to inside download button
         $(".dt-buttons").appendTo("#download-button");
         $(".dt-buttons").appendTo("#download-button");
         $(".dataTables_filter").appendTo("#filter-search-wrapper");
@@ -64,15 +65,73 @@ if ($("#table-master-pegawai").length) {
         // add padding x 10px to .dataTables_filter input
         $(".dataTables_filter input").css("padding", "0 10px");
         $(".dt-buttons").appendTo("#download-button");
-}
-// restart numbering if data table is filter input is changed
-$("#table-master-pegawai").on("search.dt", function () {
-    table
-        .column(0, { search: "applied", order: "applied" })
-        .nodes()
-        .each(function (cell, i) {
-            cell.innerHTML = i + 1;
+
+        function filterTable() {
+            let filterJabatan = $("#filter-jabatan").val();
+            let filterUnitKerja = $("#filter-unit-kerja").val();
+
+            if (filterJabatan == "Semua") {
+                filterJabatan = "";
+            }
+            if (filterUnitKerja == "Semua") {
+                filterUnitKerja = "";
+            }
+
+            if (filterJabatan == "" && filterUnitKerja == "") {
+                table
+                    .column(3)
+                    .search(filterJabatan, true, false)
+                    .column(4)
+                    .search(filterUnitKerja, true, false)
+                    .draw();
+            }
+            else if (filterJabatan == "" && filterUnitKerja !== "") {
+                table
+                    .column(3)
+                    .search(filterJabatan, true, false)
+                    .column(4)
+                    .search("^" + filterUnitKerja + "$", true, false)
+                    .draw();
+            }
+            else if (filterJabatan !== "" && filterUnitKerja == "") {
+                table
+                    .column(3)
+                    .search("^" + filterJabatan + "$", true, false)
+                    .column(4)
+                    .search(filterUnitKerja, true, false)
+                    .draw();
+            }
+            else {
+                table
+                    .column(3)
+                    .search("^" + filterJabatan + "$", true, false)
+                    .column(4)
+                    .search("^" + filterUnitKerja + "$", true, false)
+                    .draw();
+            }
+            
+
+            // reset numbering in table first column
+            table
+                .column(0, { search: "applied", order: "applied" })
+                .nodes()
+                .each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+        }
+        $("#filter-jabatan, #filter-unit-kerja").on("change", function () {
+            filterTable();
         });
+    }
+    // restart numbering if data table is filter input is changed
+    $("#table-master-pegawai").on("search.dt", function () {
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    });
 });
 
 // Kembali ke Halaman sebelumnya
@@ -141,34 +200,4 @@ $(".delete-btn").on("click", function (e) {
             });
         }
     });
-});
-
-function filterTable() {
-    let filterJabatan = $("#filter-jabatan").val();
-    let filterUnitKerja = $("#filter-unit-kerja").val();
-
-    if (filterJabatan == "Semua") {
-        filterJabatan = "";
-    }
-    if (filterUnitKerja == "Semua") {
-        filterUnitKerja = "";
-    }
-
-    table
-        .column(3)
-        .search(filterJabatan, true, false)
-        .column(4)
-        .search(filterUnitKerja, true, false)
-        .draw();
-
-    // reset numbering in table first column
-    table
-        .column(0, { search: "applied", order: "applied" })
-        .nodes()
-        .each(function (cell, i) {
-            cell.innerHTML = i + 1;
-        });
-}
-$("#filter-jabatan, #filter-unit-kerja").on("change", function () {
-    filterTable();
 });

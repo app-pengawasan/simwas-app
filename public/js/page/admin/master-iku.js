@@ -1,3 +1,5 @@
+$(function () {
+
 let table;
 if ($("#master-iku").length) {
     table = $("#master-iku")
@@ -63,13 +65,14 @@ if ($("#master-iku").length) {
     $(".dt-buttons").appendTo("#download-button");
 }
 // restart numbering if data table is filter input is changed
-$("#table-master-pegawai").on("search.dt", function () {
+$("#master-iku").on("search.dt", function () {
     table
         .column(0, { search: "applied", order: "applied" })
         .nodes()
         .each(function (cell, i) {
             cell.innerHTML = i + 1;
         });
+});
 });
 
 $("#create-btn").on("click", function (e) {

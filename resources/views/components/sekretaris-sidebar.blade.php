@@ -22,6 +22,11 @@
                 <a class="nav-link" href="{{ route('surat-srikandi.index') }}">
                     <i class="fab fa-regular fa-folder-open"></i>
                     <span>Surat Srikandi</span>
+                    @if ($usulanSuratSrikandiCount > 0)
+                    <div class="bg-primary sidebar-count">
+                        {{ $usulanSuratSrikandiCount }}
+                    </div>
+                    @endif
                 </a>
             </li>
             <li class="{{ Request::is('sekretaris/arsip-surat*') ? 'active' : '' }}">
@@ -49,10 +54,10 @@
             </a>
             </li> --}}
             {{-- <li class="{{ Request::is('sekretaris/usulan-surat*') ? 'active' : '' }}">
-                <a class="nav-link" href="/sekretaris/usulan-surat">
-                    <i class="fas fa-file"></i>
-                    <span>Usulan Surat</span>
-                </a>
+            <a class="nav-link" href="/sekretaris/usulan-surat">
+                <i class="fas fa-file"></i>
+                <span>Usulan Surat</span>
+            </a>
             </li> --}}
 
         </ul>

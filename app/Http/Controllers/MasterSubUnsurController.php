@@ -99,8 +99,12 @@ class MasterSubUnsurController extends Controller
      */
     public function destroy($masterSubUnsur)
     {
-        MasterSubUnsur::destroy($masterSubUnsur);
-        return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        try {
+            MasterSubUnsur::destroy($masterSubUnsur);
+            return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        } catch (\Exception $e) {
+            return redirect()->route('master-subunsur.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+        }
     }
     // api request
     public function getSubUnsurByUnsur($id)

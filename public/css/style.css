@@ -4260,8 +4260,6 @@ body:not(.sidebar-mini)
     color: #a5aec0;
 }
 
-
-
 .dashboard-card a {
     /* remove underline style a */
     text-decoration: none;
@@ -4324,7 +4322,7 @@ footer {
     font-size: 0.8rem;
     width: 250px;
     text-align: center;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 }
 /* mobile view */
 @media (max-width: 600px) {
@@ -4423,7 +4421,6 @@ footer {
 .prg .circle.danger {
     border-color: #fc544b;
     font-weight: bold;
-
 }
 
 .prg .circle.danger .label {
@@ -4477,78 +4474,90 @@ footer {
     width: 120px;
 }
 
-
 /* Accordion */
 #faq .card {
-        margin-bottom: 20px;
-        border: 0;
-    }
+    margin-bottom: 20px;
+    border: 0;
+}
 
-    #faq .card .card-header {
-        border: 0;
-        -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
-        box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
-        border-radius: 2px;
-        padding: 0;
-    }
+#faq .card .card-header {
+    border: 0;
+    -webkit-box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+    box-shadow: 0 0 20px 0 rgba(213, 213, 213, 0.5);
+    border-radius: 2px;
+    padding: 0;
+}
 
-    #faq .card .card-header .btn-header-link {
-        display: block;
-        text-align: left;
-        background: #efefef;
-        color: #222;
-        padding: 20px;
-        border: 1px solid #cccccc;
-        border-radius: 2px;
-    }
+#faq .card .card-header .btn-header-link {
+    display: block;
+    text-align: left;
+    background: #efefef;
+    color: #222;
+    padding: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+}
 
-    #faq .card .card-header .btn-header-link:hover {
-        background: #F0F0F0;
-        border: 1px solid #cccccc !important;
-    }
+#faq .card .card-header .btn-header-link:hover {
+    background: #f0f0f0;
+    border: 1px solid #cccccc !important;
+}
 
-    #faq .card .card-header .btn-header-link:active {
-        background: #F2F2F2;
-        border: 1px solid #cccccc !important;
-    }
+#faq .card .card-header .btn-header-link:active {
+    background: #f2f2f2;
+    border: 1px solid #cccccc !important;
+}
 
-    #faq .card .card-header .btn-header-link:focus {
-        background: #F2F2F2;
-        border: 1px solid #cccccc !important;
-    }
+#faq .card .card-header .btn-header-link:focus {
+    background: #f2f2f2;
+    border: 1px solid #cccccc !important;
+}
 
-    #faq .card .card-header .btn-header-link:after {
-        content: "\f106";
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        float: right;
-    }
+#faq .card .card-header .btn-header-link:after {
+    content: "\f106";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    float: right;
+}
 
-    #faq .card .card-header .btn-header-link.collapsed {
-        background: #F2F2F2;
-    }
+#faq .card .card-header .btn-header-link.collapsed {
+    background: #f2f2f2;
+}
 
+#faq .card .card-header .btn-header-link.collapsed:after {
+    content: "\f107";
+}
 
-    #faq .card .card-header .btn-header-link.collapsed:after {
-        content: "\f107";
-    }
+#faq .card .collapsing {
+    /* background: #FFE472; */
+    line-height: 30px;
+}
 
-    #faq .card .collapsing {
-        /* background: #FFE472; */
-        line-height: 30px;
-    }
+#faq .card .collapse {
+    border: 0;
+}
 
-    #faq .card .collapse {
-        border: 0;
-    }
+#faq .card .collapse.show {
+    /* background: #FFE472; */
+    line-height: 30px;
+    color: #222;
+}
 
-    #faq .card .collapse.show {
-        /* background: #FFE472; */
-        line-height: 30px;
-        color: #222;
-    }
+/* inside main-content class overflow */
+.main-content {
+    overflow-x: hidden;
+}
 
-    /* inside main-content class overflow */
-    .main-content {
-        overflow-x: hidden;
-    }
+.sidebar-count {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 9px;
+    border: 1px solid #0063ce;
+}

@@ -20,7 +20,27 @@
         <div class="section-header">
             <h1>Hey, {{ explode(' ', auth()->user()->name)[0] }}</h1>
         </div>
-            @include('components.pegawai.surat-card')
+        {{-- form action year --}}
+        <form id="yearForm" action="" method="GET" class="col-md-1 px-0">
+            @csrf
+            <div class="form-group">
+                <label for="yearSelect">Pilih Tahun</label>
+                <select name="year" id="yearSelect" class="form-control select2">
+                    @php
+                    $currentYear = date('Y');
+                    $lastThreeYears = range($currentYear, $currentYear - 3);
+                    @endphp
+
+                    @foreach ($lastThreeYears as $year)
+                    <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
+        @include('components.pegawai.pegawai-card')
+        @include('components.pegawai.ketua-tim-card')
+        @include('components.pegawai.pimpinan-card')
     </section>
 </div>
 @endsection
@@ -44,4 +64,14 @@
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
 <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+
+<script>
+    $('#yearSelect').on('change', function() {
+        let year = $(this).val();
+        $('#yearForm').attr('action', `?year=${year}`);
+        $('#yearForm').find('[name="_token"]').remove();
+        $('#yearForm').submit();
+    });
+</script>
+
 @endpush

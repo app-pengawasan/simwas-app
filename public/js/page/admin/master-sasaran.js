@@ -1,3 +1,5 @@
+$(function () {
+
 let table;
 if ($("#master-sasaran").length) {
     table = $("#master-sasaran")
@@ -70,6 +72,7 @@ $("#master-sasaran").on("search.dt", function () {
         .each(function (cell, i) {
             cell.innerHTML = i + 1;
         });
+});
 });
 
 

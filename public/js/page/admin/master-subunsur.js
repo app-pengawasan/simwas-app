@@ -1,3 +1,4 @@
+$(function () {
 // function when edit-button class clicked
 let table;
 if ($("#master-subunsur").length) {
@@ -57,6 +58,7 @@ $("#master-subunsur").on("search.dt", function () {
         .each(function (cell, i) {
             cell.innerHTML = i + 1;
         });
+});
 });
 
 $(document).on("click", ".edit-button", function () {

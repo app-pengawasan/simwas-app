@@ -28,7 +28,7 @@
                         <div class="d-flex justify-content-between">
                             <p class="mb-4">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Menampilkan Rencana Kinerja yang telah Disusun
+                                Menampilkan rencana kinerja yang perlu persetujuan pimpinan.
                             </p>
                             <div id="download-button">
                             </div>
@@ -38,18 +38,21 @@
                                 <div id="filter-search-wrapper">
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
-                                <label for="filter-tahun" style="margin-bottom: 0;">
-                                    Tahun</label>
-                                <select name="unit_kerja" id="filter-tahun" class="form-control select2">
-                                    <option value="">Semua</option>
-                                    @foreach ($tahun as $key => $value)
-                                    <option value="{{ $value ->tahun }}">
-                                        {{ $value->tahun }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <form id="yearForm" action="" method="GET">
+                                @csrf
+                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-tahun" style="margin-bottom: 0;">
+                                        Tahun</label>
+                                    <select name="year" id="yearSelect" class="form-control select2">
+                                        @foreach ($year as $key => $value)
+                                        <option value="{{ $value->tahun }}"
+                                            {{ request()->query('year') == $value->tahun ? 'selected' : '' }}>
+                                            {{ $value->tahun }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
 
                             <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                 <label for="filter-unit-kerja" style="margin-bottom: 0;">
@@ -93,7 +96,7 @@
                                         </td>
                                         <td>
                                             <a href="/pimpinan/rencana-kinerja/{{ $tim->id_timkerja }}"
-                                                class="btn btn-primary" style="width: 42px">
+                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>

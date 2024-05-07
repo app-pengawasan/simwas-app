@@ -1,3 +1,5 @@
+$(function () {
+
 let table;
 if ($("#master-unsur").length) {
     table = $("#master-unsur")
@@ -64,6 +66,7 @@ $("#table-master-pegawai").on("search.dt", function () {
         .each(function (cell, i) {
             cell.innerHTML = i + 1;
         });
+});
 });
 
 // function when edit-button class clicked

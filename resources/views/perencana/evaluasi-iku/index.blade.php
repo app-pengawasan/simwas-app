@@ -44,6 +44,21 @@
                                 <div id="filter-search-wrapper">
                                 </div>
                             </div>
+                            <form id="yearForm" action="" method="GET">
+                                @csrf
+                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-tahun" style="margin-bottom: 0;">
+                                        Tahun</label>
+                                    <select name="year" id="yearSelect" class="form-control select2">
+                                        @foreach ($year as $key => $value)
+                                        <option value="{{ $value->year }}"
+                                            {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                            {{ $value->year }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
                             <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                 <label for="filter-unit-kerja" style="margin-bottom: 0;">
                                     Unit Kerja</label>
@@ -144,6 +159,7 @@
 {{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
 
 <script>
+    $(function () {
     let table = $("#evaluasi-iku-unit-kerja")
     .dataTable({
     dom: "Bfrtip",
@@ -239,6 +255,15 @@
     }
     $("#filter-status, #filter-unit-kerja").on("change", function () {
     filterTable();
+    });
+});
+
+
+    $("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").trigger("submit");
     });
 </script>
 @endpush

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreNormaHasilAcceptedRequest;
 use App\Http\Requests\UpdateNormaHasilAcceptedRequest;
 use App\Models\NormaHasil;
 use App\Models\ObjekNormaHasil;
+use Illuminate\Http\Request;
 
 class NormaHasilAcceptedController extends Controller
 {
@@ -57,22 +58,40 @@ private $hasilPengawasan = [
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
+        $year = request()->year;
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
         // find normahasil where rencanakerja->timkerja where id_ketua is this auth
-        $usulan = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereHas('rencanaKerja.timkerja', function ($query) {
+        $usulan = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
             $query->where('id_ketua', auth()->user()->id);
         })->get();
-        // get distinct year from usulan created_at
-        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->get();
+        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();
+
+        $currentYear = date('Y');
+
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
 
         return view('pegawai.usulan-norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'jenisNormaHasil' => $this->hasilPengawasan,
             'type_menu' => 'rencana-kinerja',
-            'tahun' => $year,
+            'year' => $year,
         ]);
     }
 

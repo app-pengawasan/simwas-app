@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateTargetIkuUnitKerjaRequest;
 use App\Models\MasterHasil;
 use App\Models\ObjekIkuUnitKerja;
 use App\Models\MasterUnitKerja;
+use Illuminate\Http\Request;
 
 class TargetIkuUnitKerjaController extends Controller
 {
@@ -37,11 +38,32 @@ class TargetIkuUnitKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
         $this->authorize('perencana');
-        $targetIkuUnitKerja = TargetIkuUnitKerja::latest()->get();
+        $targetIkuUnitKerja = TargetIkuUnitKerja::latest()->whereYear('created_at', $year)->get();
         // dd($targetIkuUnitKerja);
+        $year = TargetIkuUnitKerja::selectRaw('YEAR(created_at) year')->distinct()->orderBy('year', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('perencana.target-iku.index', [
             'type_menu' => 'iku-unit-kerja',
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
@@ -49,6 +71,7 @@ class TargetIkuUnitKerjaController extends Controller
             'colorBadge' => $this->colorBadge,
             'unitKerja' => $this->unitKerja,
             'unit_kerja' => $this->unitKerja,
+            'year' => $year,
         ]);
     }
 

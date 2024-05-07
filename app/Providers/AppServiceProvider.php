@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades;
+use App\View\Composers\SidebarPegawai;
+use App\View\Composers\SidebarSekretaris;
+use App\View\Composers\SidebarAdmin;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,5 +55,15 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('arsiparis', function (User $user) {
             return $user->is_arsiparis == true;
         });
+
+        Facades\View::composer(
+            'components.sekretaris-sidebar', SidebarSekretaris::class,
+        );
+        Facades\View::composer(
+            'components.pegawai-sidebar', SidebarPegawai::class,
+        );
+        Facades\View::composer(
+            'components.admin-sidebar', SidebarAdmin::class,
+        );
     }
 }

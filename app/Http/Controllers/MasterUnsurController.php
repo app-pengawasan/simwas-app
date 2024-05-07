@@ -95,8 +95,12 @@ class MasterUnsurController extends Controller
      */
     public function destroy(MasterUnsur $masterUnsur)
     {
-        $masterUnsur->delete();
-        return redirect()->route('master-unsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        try {
+            $masterUnsur->delete();
+            return redirect()->route('master-unsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            return redirect()->route('master-unsur.index')->with('status', 'Data gagal dihapus, data masih berhubungan dengan data lain')->with('alert-type', 'danger');
+        }
     }
 
     public function getUnsurBySubUnsur($id)

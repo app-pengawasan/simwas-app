@@ -118,14 +118,10 @@ $("#objek_kegiatan").select2({
 });
 
 function filterTable() {
-    let filterYear = $("#filter-year").val();
     let filterSurat = $("#filter-surat").val();
     let filterStatus = $("#filter-status").val();
     console.log(filterYear, filterSurat, filterStatus);
 
-    if (filterYear == "Semua") {
-        filterYear = "";
-    }
     if (filterSurat == "Semua") {
         filterSurat = "";
     }
@@ -136,8 +132,6 @@ function filterTable() {
     table
         .column(1)
         .search(filterSurat, true, false)
-        .column(3)
-        .search(filterYear, true, false)
         .column(4)
         .search(filterStatus, true, false)
         .draw();
@@ -150,6 +144,13 @@ function filterTable() {
             cell.innerHTML = i + 1;
         });
 }
-$("#filter-year, #filter-surat, #filter-status").on("change", function () {
+$("#filter-surat, #filter-status").on("change", function () {
     filterTable();
+});
+
+$("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").trigger("submit");
 });

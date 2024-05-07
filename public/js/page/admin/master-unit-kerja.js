@@ -1,3 +1,5 @@
+$(function () {
+
 let table;
 
 if ($("#master-unit-kerja").length) {
@@ -64,6 +66,8 @@ if ($("#master-unit-kerja").length) {
         $(".dataTables_filter input").css("padding", "0 10px");
         $(".dt-buttons").appendTo("#download-button");
 }
+
+});
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
@@ -179,6 +183,16 @@ $(".delete-btn").on("click", function () {
                 },
                 success: function (response) {
                     location.reload();
+                },
+                error: function (error) {
+                    swal.fire({
+                        type: "error",
+                        icon: "error",
+                        title: "Gagal",
+                        text: "Gagal menghapus data, Data masih terhubung dengan data lain",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
                 },
             });
         }

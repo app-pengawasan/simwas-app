@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateEvaluasiIkuUnitKerjaRequest;
 use App\Models\ObjekIkuUnitKerja;
 use App\Models\RealisasiIkuUnitKerja;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class EvaluasiIkuUnitKerjaController extends Controller
 {
@@ -44,11 +45,33 @@ class EvaluasiIkuUnitKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('perencana');
 
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->get();
+        $this->authorize('perencana');
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->whereYear('created_at', $year)->get();
+        $year = TargetIkuUnitKerja::selectRaw('YEAR(created_at) year')->whereIn('status', [3, 4])->distinct()->orderBy('year', 'desc')->get();
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('perencana.evaluasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
@@ -57,6 +80,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'colorBadge' => $this->colorBadge,
             'status' => $this->status,
             'unit_kerja' => $this->unitKerja,
+            'year' => $year,
         ]);
     }
 

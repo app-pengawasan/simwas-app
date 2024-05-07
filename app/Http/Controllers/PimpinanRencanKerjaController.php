@@ -89,34 +89,47 @@ class PimpinanRencanKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
-        $masterIku = MasterIKU::all();
-        $pegawai = User::all();
+        $year = $request->year;
 
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
 
         $id_unitkerja = auth()->user()->unit_kerja;
-        $timKerja = TimKerja::with('ketua', 'iku')->where('unitkerja', $id_unitkerja)
-        ->where('status', 5)
-        ->orWhere('status', 6)
-        ->get();
 
-        $tahun = TimKerja::select('tahun')->where('unitkerja', $id_unitkerja)->distinct()->get();
+        $timKerja = TimKerja::with(['ketua', 'iku'])
+            ->where('unitkerja', $id_unitkerja)
+            ->whereIn('status', [5, 6])
+            ->where('tahun', $year)
+            ->get();
+
+        $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('tahun')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['tahun' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('tahun');
+
 
         return view('pimpinan.rencana-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
-            'masterTujuan' => $masterTujuan,
-            'masterSasaran' => $masterSasaran,
-            'masterIku' => $masterIku,
-            'pegawai'   => $pegawai,
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
-            'tahun'     => $tahun,
             'unit_kerja' => $this->unitkerja,
+            'year'     => $year,
         ]);
 
         // return $id_unitkerja;

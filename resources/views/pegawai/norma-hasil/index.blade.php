@@ -53,18 +53,20 @@
                                     </div>
                                 </div>
                                 {{-- tahun from $tahun --}}
-                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
-                                    <label for="filter-year" style="margin-bottom: 0;">
-                                        Tahun</label>
-                                    <select name="tahun" id="filter-year" class="form-control select2">
-                                        <option value="">Semua</option>
-                                        @foreach ($tahun as $t)
-                                        <option value="{{ $t->year }}" {{ request()->tahun == $t ? 'selected' : '' }}>
-                                            {{ $t->year }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <form id="yearForm" action="" method="GET">
+                                    @csrf
+                                    <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                        <label for="filter-tahun" style="margin-bottom: 0;">
+                                            Tahun</label>
+                                        <select name="year" id="yearSelect" class="form-control select2">
+                                            @foreach ($year as $key => $value)
+                                            <option value="{{ $value->year }}" {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                                {{ $value->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
                                 <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                     <label for="filter-surat" style="margin-bottom: 0;">
                                         Jenis</label>

@@ -91,13 +91,32 @@ class KetuaTimRencanaKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
         $id_pegawai = auth()->user()->id;
-        $timKerja = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->get();
+        $timKerja = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get();
         // select raw distinct year from created_at
 
-                $tahun = TimKerja::select('tahun')->distinct()->get();
+        $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('tahun')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['tahun' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('tahun');
 
         return view('pegawai.rencana-kinerja.ketua-tim.index', [
             'type_menu' => 'rencana-kinerja',
@@ -105,7 +124,7 @@ class KetuaTimRencanaKerjaController extends Controller
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
-            'tahun'      => $tahun,
+            'year'      => $year,
             'unit_kerja'  => $this->unitkerja,
         ]);
 

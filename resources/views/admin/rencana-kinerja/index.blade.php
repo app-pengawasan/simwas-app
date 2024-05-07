@@ -48,18 +48,20 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
-                                <label for="filter-tahun" style="margin-bottom: 0;">
-                                    Tahun</label>
-                                <select name="unit_kerja" id="filter-tahun" class="form-control select2">
-                                    <option value="">Semua</option>
-                                    @foreach ($tahun as $key => $value)
-                                    <option value="{{ $value ->tahun }}">
-                                        {{ $value->tahun }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <form id="yearForm" action="" method="GET">
+                                @csrf
+                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-tahun" style="margin-bottom: 0;">
+                                        Tahun</label>
+                                    <select name="year" id="yearSelect" class="form-control select2">
+                                        @foreach ($year as $key => $value)
+                                        <option value="{{ $value->tahun }}" {{ request()->query('year') == $value->tahun ? 'selected' : '' }}>
+                                            {{ $value->tahun }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
 
                             <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                 <label for="filter-unit-kerja" style="margin-bottom: 0;">

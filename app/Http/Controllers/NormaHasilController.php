@@ -9,6 +9,7 @@ use App\Models\ObjekNormaHasil;
 use App\Models\StKinerja;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RencanaKerja;
+use Illuminate\Http\Request;
 
 class NormaHasilController extends Controller
 {
@@ -59,18 +60,35 @@ class NormaHasilController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $year = $request->year;
 
-        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->get();
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
         // get year from created_at distinct
-        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->get();
+        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('pegawai.norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'jenisNormaHasil' => $this->hasilPengawasan,
-            'tahun' => $year
-
+            'year' => $year
         ]);
     }
 
