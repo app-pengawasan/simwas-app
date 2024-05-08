@@ -90,7 +90,7 @@ class MasterPimpinanController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $pimpinan = MasterPimpinan::all();
+        $pimpinan = MasterPimpinan::with('user')->get();
 
         return view('admin.master-pimpinan.index',[
             'type_menu'     => 'master-pimpinan',

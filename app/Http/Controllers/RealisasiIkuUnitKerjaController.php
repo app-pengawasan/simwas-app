@@ -7,16 +7,10 @@ use App\Http\Requests\StoreRealisasiIkuUnitKerjaRequest;
 use App\Http\Requests\UpdateRealisasiIkuUnitKerjaRequest;
 use App\Models\TargetIkuUnitKerja;
 use App\Models\ObjekIkuUnitKerja;
+use Illuminate\Http\Request;
 
 class RealisasiIkuUnitKerjaController extends Controller
 {
-    protected $kabupaten = [
-        'Kabupaten Aceh Barat',
-        'Kabupaten Aceh Barat Daya',
-        'Kabupaten Aceh Besar',
-        'Kabupaten Aceh Jaya',
-        'Kabupaten Aceh Selatan',
-    ];
     protected $unitKerja = [
         '8000'    => 'Inspektorat Utama',
         '8010'    => 'Bagian Umum Inspektorat Utama',
@@ -42,19 +36,42 @@ class RealisasiIkuUnitKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('perencana');
+        $year = $request->year;
 
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->get();
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [2, 3, 4])->whereYear('created_at', $year)->get();
+
+        $year = TargetIkuUnitKerja::selectRaw('YEAR(created_at) year')->whereIn('status', [2, 3, 4])->distinct()->orderBy('year', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
 
         return view('perencana.realisasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
             'status' => $this->status,
+            'unit_kerja' => $this->unitKerja,
+            'year' => $year,
         ]);
     }
 
@@ -69,7 +86,6 @@ class RealisasiIkuUnitKerjaController extends Controller
 
         return view('perencana.realisasi-iku.create', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
         ]);
     }
@@ -138,7 +154,7 @@ class RealisasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
         if (!$realisasiIkuUnitKerja) {
             return redirect()->route('realisasi-iku-unit-kerja.edit', $id)->with('status', 'Anda Belum Mengisi Realisasi IKU Unit Kerja, Silakan Mengisi Realisasi IKU Unit Kerja')
@@ -147,7 +163,6 @@ class RealisasiIkuUnitKerjaController extends Controller
         // dd($objekIkuUnitKerja);
         return view('perencana.realisasi-iku.show', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
@@ -164,13 +179,12 @@ class RealisasiIkuUnitKerjaController extends Controller
     public function edit($id)
     {
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
 
 
         return view('perencana.realisasi-iku.edit', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,

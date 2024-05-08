@@ -69,8 +69,8 @@
 
                                     <div class="col-md-12">
                                         <div class="col-md-4 mb-4">
-                                            <a class="btn btn-primary" href="/pegawai/norma-hasil">
-                                                <i class="fas fa-chevron-circle-left"></i> Kembali
+                                            <a class="btn btn-outline-primary" href="/pegawai/norma-hasil">
+                                                <i class="fas fa-arrow-left mr-1"></i> Kembali
                                             </a>
                                         </div>
 

@@ -75,7 +75,14 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request::is('admin/rencana-kinerja*') ? 'active' : '' }}">
-                        <a class="nav-link" href="/admin/rencana-kinerja">Dashboard Kinerja</a>
+                        <a class="nav-link" href="/admin/rencana-kinerja">
+                            <span>Dashboard Kinerja</span>
+                            @if ($timKerjaPenyusunanCount > 0)
+                            <div class="bg-primary sidebar-count">
+                                {{ $timKerjaPenyusunanCount }}
+                            </div>
+                            @endif
+                        </a>
                     </li>
                     <li class="{{ Request::is('admin/master-tujuan') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-tujuan">Master Tujuan</a>

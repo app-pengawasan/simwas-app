@@ -13,8 +13,8 @@
                     <div class="form-group">
                         <label class="form-label" for="create-okategori">Kategori Objek</label>
                         <div class="">
-                            <select id="create-okategori" class="form-control" name="create-okategori" required>
-                                <option value="" selected disabled></option>
+                            <select id="create-okategori" class="form-control select2" name="create-okategori" required>
+                                <option value="" selected disabled>Pilih Kategori Objek</option>
                                 <option value="1">Unit Kerja</option>
                                 <option value="2">Satuan Kerja</option>
                                 <option value="3">Wilayah</option>
@@ -26,8 +26,8 @@
                     <div class="form-group">
                         <label class="form-label" for="create-objek">Objek</label>
                         <div class="">
-                            <select id="create-objek" class="form-control" name="create-objek" disabled>
-                                <option value="" selected disabled></option>
+                            <select id="create-objek" class="form-control select2" name="create-objek" disabled>
+                                <option value="" selected disabled>Pilih Objek</option>
                             </select>
                             <small id="error-objek" class="text-danger"></small>
                         </div>

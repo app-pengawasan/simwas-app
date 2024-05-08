@@ -1,36 +1,98 @@
-let table = $("#table-pagu-anggaran");
-let rupiah = document.getElementsByClassName("rupiah");
-
 $(function () {
-    table
-        .DataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    let table;
+    if ($("#table-pagu-anggaran").length) {
+        table = $("#table-pagu-anggaran")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        },
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "Cari:",
+                    sZeroRecords: "Data tidak ditemukan",
+                    sEmptyTable: "Data tidak ditemukan",
+                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                    sInfoFiltered: "(disaring dari _MAX_ data)",
+                    sLengthMenu: "Tampilkan _MENU_ data",
+                    oPaginate: {
+                        sPrevious: "Sebelumnya",
+                        sNext: "Selanjutnya",
                     },
                 },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                    },
-                },
-            ],
-        })
-        .buttons()
-        .container()
-        .appendTo("#table-master-anggaran_wrapper .col-md-6:eq(0)");
+            })
+            .api();
+        $(".dataTables_filter").appendTo("#filter-search-wrapper");
+        $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
+        $(".dataTables_filter").css("width", "100%");
+        // .dataTables_filter label width 100%
+        $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
+        $(".dataTables_filter input").css("height", "35px");
+        // make label text bold and black
+        $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
+        $(".dataTables_filter label").css("margin-bottom", "0");
+
+        $(".dataTables_filter input").attr("placeholder", "Lakukan Pencarian");
+        // add padding x 10px to .dataTables_filter input
+        $(".dataTables_filter input").css("padding", "0 10px");
+        $(".dt-buttons").appendTo("#download-button");
+    }
+
+    $("#table-pagu-anggaran").on("search.dt", function () {
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    });
+
+    function filterTable() {
+        let filterKomponen = $("#filter-komponen").val();
+        let filterAkun = $("#filter-akun").val();
+
+        table
+            .column(3)
+            .search(filterKomponen, true, false)
+            .column(4)
+            .search(filterAkun, true, false)
+            .draw();
+
+        // reset numbering in table first column
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    }
+    $("#filter-komponen, #filter-akun").on("change", function () {
+        filterTable();
+    });
 });
+
+let rupiah = document.getElementsByClassName("rupiah");
 
 $(".delete-btn").on("click", function (e) {
     e.preventDefault();

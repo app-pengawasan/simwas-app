@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateEvaluasiIkuUnitKerjaRequest;
 use App\Models\ObjekIkuUnitKerja;
 use App\Models\RealisasiIkuUnitKerja;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class EvaluasiIkuUnitKerjaController extends Controller
 {
@@ -44,11 +45,33 @@ class EvaluasiIkuUnitKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('perencana');
 
-        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->get();
+        $this->authorize('perencana');
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $targetIkuUnitKerja = TargetIkuUnitKerja::whereIn('status', [3,4])->whereYear('created_at', $year)->get();
+        $year = TargetIkuUnitKerja::selectRaw('YEAR(created_at) year')->whereIn('status', [3, 4])->distinct()->orderBy('year', 'desc')->get();
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('perencana.evaluasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
             'kabupaten' => $this->kabupaten,
@@ -56,6 +79,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
             'status' => $this->status,
+            'unit_kerja' => $this->unitKerja,
+            'year' => $year,
         ]);
     }
 
@@ -136,7 +161,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
         $evaluasiIkuUnitKerja = EvaluasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->first();
 
@@ -148,6 +173,8 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
             'evaluasiIkuUnitKerja' => $evaluasiIkuUnitKerja,
             'kabupaten' => $this->kabupaten,
+            'unitKerja' => $this->unitKerja,
+            'status' => $this->status,
         ]);
     }
 
@@ -162,7 +189,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
         $this->authorize('perencana');
 
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
-        $objekIkuUnitKerja = objekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->get();
+        $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->get();
         $users = User::all();
         // dd($users);

@@ -15,7 +15,7 @@
                     <div class="form-group">
                         <label class="form-label" for="kode_wilayah">Kode Wilayah</label>
                         <div class="">
-                            <input type="text" class="form-control" name="kode_wilayah" id="create-kode_wilayah"
+                            <input type="text" class="form-control" name="kode_wilayah" id="create-kode_wilayah" placeholder="Masukkan 2 digit Kode Wilayah"
                                 value="{{ old('kode_wilayah') }}" required>
                             <small id="error-kode_wilayah" class="text-danger"></small>
                         </div>
@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <label class="form-label" for="kode_unitkerja">Kode Unit Kerja</label>
                         <div class="">
-                            <input type="text" class="form-control" name="kode_unitkerja" id="create-kode_unitkerja"
+                            <input type="text" class="form-control" name="kode_unitkerja" id="create-kode_unitkerja" placeholder="Masukkan 4 digit Kode Unit Kerja"
                                 value="{{ old('kode_unitkerja') }}" required>
                             <small id="error-kode_unitkerja" class="text-danger"></small>
                         </div>
@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <label class="form-label" for="nama">Nama</label>
                         <div class="">
-                            <input type="text" class="form-control" name="nama" id="create-nama"
+                            <input type="text" class="form-control" name="nama" id="create-nama" placeholder="Masukkan Nama Unit Kerja"
                                 value="{{ old('nama') }}" required>
                             <small id="error-nama" class="text-danger"></small>
                         </div>

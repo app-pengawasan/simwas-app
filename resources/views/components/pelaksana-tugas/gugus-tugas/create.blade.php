@@ -53,7 +53,7 @@
                                 <label class="form-label
                                 " for="create-januari">Januari</label>
                                 <input type="number" id="create-januari" class="form-control" name="create-januari"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-januari" class="text-danger"></small>
                             </div>
                             {{-- februari --}}
@@ -61,7 +61,7 @@
                                 <label class="form-label
                                 " for="create-februari">Februari</label>
                                 <input type="number" id="create-februari" class="form-control" name="create-februari"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-februari" class="text-danger"></small>
                             </div>
                             {{-- maret --}}
@@ -69,7 +69,7 @@
                                 <label class="form-label
                                 " for="create-maret">Maret</label>
                                 <input type="number" id="create-maret" class="form-control" name="create-maret" required
-                                    style="min-width: 60px;">
+                                    style="min-width: 60px;" min="0" max="200">
                                 <small id="error-maret" class="text-danger"></small>
                             </div>
                             {{-- april --}}
@@ -77,7 +77,7 @@
                                 <label class="form-label
                                 " for="create-april">April</label>
                                 <input type="number" id="create-april" class="form-control" name="create-april" required
-                                    style="min-width: 60px;">
+                                    style="min-width: 60px;" min="0" max="200">
                                 <small id="error-april" class="text-danger"></small>
                             </div>
                             {{-- mei --}}
@@ -85,7 +85,7 @@
                                 <label class="form-label
                                 " for="create-mei">Mei</label>
                                 <input type="number" id="create-mei" class="form-control" name="create-mei" required
-                                    style="min-width: 60px;">
+                                    style="min-width: 60px;" min="0" max="200">
                                 <small id="error-mei" class="text-danger"></small>
                             </div>
                             {{-- juni --}}
@@ -93,7 +93,7 @@
                                 <label class="form-label
                                 " for="create-juni">Juni</label>
                                 <input type="number" id="create-juni" class="form-control" name="create-juni" required
-                                    style="min-width: 60px;">
+                                    style="min-width: 60px;" min="0" max="200">
                                 <small id="error-juni" class="text-danger"></small>
                             </div>
                             {{-- juli --}}
@@ -101,7 +101,7 @@
                                 <label class="form-label
                                 " for="create-juli">Juli</label>
                                 <input type="number" id="create-juli" class="form-control" name="create-juli" required
-                                    style="min-width: 60px;">
+                                    style="min-width: 60px;" min="0" max="200">
                                 <small id="error-juli" class="text-danger"></small>
                             </div>
                             {{-- agustus --}}
@@ -109,7 +109,7 @@
                                 <label class="form-label
                                 " for="create-agustus">Agustus</label>
                                 <input type="number" id="create-agustus" class="form-control" name="create-agustus"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-agustus" class="text-danger"></small>
                             </div>
                             {{-- september --}}
@@ -117,7 +117,7 @@
                                 <label class="form-label
                                 " for="create-september">September</label>
                                 <input type="number" id="create-september" class="form-control" name="create-september"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-september" class="text-danger"></small>
                             </div>
                             {{-- oktober --}}
@@ -125,7 +125,7 @@
                                 <label class="form-label
                                 " for="create-oktober">Oktober</label>
                                 <input type="number" id="create-oktober" class="form-control" name="create-oktober"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-oktober" class="text-danger"></small>
                             </div>
                             {{-- november --}}
@@ -133,7 +133,7 @@
                                 <label class="form-label
                                 " for="create-november">November</label>
                                 <input type="number" id="create-november" class="form-control" name="create-november"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-november" class="text-danger"></small>
                             </div>
                             {{-- desember --}}
@@ -141,7 +141,7 @@
                                 <label class="form-label
                                 " for="create-desember">Desember</label>
                                 <input type="number" id="create-desember" class="form-control" name="create-desember"
-                                    required style="min-width: 60px;">
+                                    required style="min-width: 60px;" min="0" max="200">
                                 <small id="error-desember" class="text-danger"></small>
                             </div>
                         </div>

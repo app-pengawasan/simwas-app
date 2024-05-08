@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <label class="form-label" for="kode_unitkerja">Kegiatan</label>
                         <div class="">
-                            <select id="unit_kerja" class="form-control" name="unit_kerja" required>
+                            <select id="unit_kerja" class="form-control select2" name="unit_kerja" required>
                                 <option value="" disabled selected>Pilih Unit Kerja</option>
                                 @foreach ($master_unitkerja as $unitkerja)
                                     <option value="{{ $unitkerja->kode_unitkerja }}">

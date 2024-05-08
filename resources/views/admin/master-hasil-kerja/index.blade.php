@@ -21,19 +21,31 @@
     <section class="section">
         <div class="section-header">
             <h1>Master Hasil Kerja Inspektorat Utama</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                <div class="breadcrumb-item">Master Hasil Kerja</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <p class="mt-3">
-                            <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Halaman Mengelola Subunsur Inspektorat Utama.
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <p>
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman Mengelola Hasil Kerja Inspektorat Utama
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         {{ session()->forget(['alert-type', 'status']) }}
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+                            <div style="gap:10px" class="d-flex align-items-end">
                                 <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modal-create-master-subunsur">
                                     <i class="fas fa-plus-circle"></i>
@@ -46,7 +58,7 @@
                                 class="table table-bordered table-striped table-striped display responsive">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th style="width: 15px;">No</th>
                                         <th>Nama Hasil Kerja</th>
                                         <th>Nama Subunsur</th>
                                         <th style="min-width: 98px">Aksi</th>
@@ -55,29 +67,27 @@
                                 <tbody>
                                     @foreach ($masterHasilKerjas as $hasilKerja)
                                     <tr id="index_{{ $hasilKerja->id }}">
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $hasilKerja->nama_hasil_kerja }}</td>
                                         <td>{{ $hasilKerja->masterSubUnsur->nama_sub_unsur}}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <button type="button"
-                                                    class="btn btn-icon btn-warning btn-sm edit-button"
+                                                    class="btn btn-warning btn-sm edit-button"
                                                     data-toggle="modal" data-target="#modal-edit-master-subunsur"
-                                                    data-id="{{ $hasilKerja->id }}"
-                                                    >
-                                                    <i class=" fas fa-edit mr-1"></i>Edit
+                                                    data-id="{{ $hasilKerja->id }}">
+                                                    <i class=" fas fa-edit"></i>
                                                 </button>
-                                                <form action="{{ route('master-hasil-kerja.destroy', $hasilKerja->id) }}"
+                                                <form
+                                                    action="{{ route('master-hasil-kerja.destroy', $hasilKerja->id) }}"
                                                     id="form-{{ $hasilKerja->id }}" method="post">
                                                     @csrf
                                                     @method('DELETE')
                                                     {{-- <input type="hidden" name="id" value="{{ hasilKerja->id }}">
                                                     --}}
                                                     <button type="button" data-id="{{ $hasilKerja->id }}"
-                                                        class="btn btn-icon btn-danger btn-sm ml-2 hapus-button">
-                                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                                        class="btn btn-danger btn-sm ml-2 hapus-button">
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
 

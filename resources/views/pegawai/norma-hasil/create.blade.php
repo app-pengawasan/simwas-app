@@ -30,92 +30,103 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="pt-1 pb-1 m-4">
-                                <form action="/pegawai/norma-hasil" method="post" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="rencana_id">Tugas</label>
-                                        <select required id="rencana_id" name="rencana_id"
-                                            class="form-control select2 @error('rencana_id') is-invalid @enderror">
-                                            <option value="">Pilih tugas</option>
-                                            @foreach ($rencanaKerja as $rencana)
-                                            <option value="{{ $rencana->id_rencanakerja }}"
-                                                {{ old('rencana_id') == $rencana->id_rencanakerja ? 'selected' : '' }}>
-                                                {{ $rencana->tugas }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('rencana_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
+                            <form action="/pegawai/norma-hasil" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <h1 class="h4 text-dark mb-4 header-card">Data Norma Hasil</h1>
+                                <div class="form-group">
+                                    <label for="rencana_id">Tugas</label>
+                                    <select required id="rencana_id" name="rencana_id"
+                                        class="form-control select2 @error('rencana_id') is-invalid @enderror">
+                                        <option value="">Pilih tugas</option>
+                                        @foreach ($rencanaKerja as $rencana)
+                                        <option value="{{ $rencana->id_rencanakerja }}"
+                                            {{ old('rencana_id') == $rencana->id_rencanakerja ? 'selected' : '' }}>
+                                            {{ $rencana->tugas }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('rencana_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                    {{-- Objek Kegiatan --}}
-                                    <div class="form-group
+                                    @enderror
+                                </div>
+                                {{-- Objek Kegiatan --}}
+                                <div class="form-group
                                         @if ($errors->has('objek_kegiatan')) is-invalid @endif">
-                                        <label for="objek_kegiatan">Objek Kegiatan</label>
-                                        <select required id="objek_kegiatan" name="objek_kegiatan[]" disabled multiple="multiple" data-placeholder="Pilih objek kegiatan"
-                                            class="form-control select2">
-                                            <option value="">Pilih objek kegiatan</option>
-                                        </select>
-                                        @if ($errors->has('objek_kegiatan'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('objek_kegiatan') }}
-                                        </div>
-                                        @endif
+                                    <label for="objek_kegiatan">Objek Kegiatan</label>
+                                    <select required id="objek_kegiatan" name="objek_kegiatan[]" disabled
+                                        multiple="multiple" data-placeholder="Pilih objek kegiatan"
+                                        class="form-control select2">
+                                        <option value="">Pilih objek kegiatan</option>
+                                    </select>
+                                    @if ($errors->has('objek_kegiatan'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('objek_kegiatan') }}
                                     </div>
+                                    @endif
+                                </div>
 
-                                    {{-- Jenis Norma Hasil --}}
-                                    <div class="form-group
+                                {{-- Jenis Norma Hasil --}}
+                                <div class="form-group
                                         @if ($errors->has('jenis_norma_hasil')) is-invalid @endif">
-                                        <label for="jenis_norma_hasil">Jenis Norma Hasil</label>
-                                        <select required id="jenis_norma_hasil" name="jenis_norma_hasil"
-                                            class="form-control select2">
-                                            <option value="">Pilih jenis norma hasil</option>
-                                            @foreach ($hasilPengawasan as $id => $nama)
-                                            <option value="{{ $id }}"
-                                                {{ old('jenis_norma_hasil') == $id ? 'selected' : '' }}>
-                                                {{ $nama }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('jenis_norma_hasil'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('jenis_norma_hasil') }}
-                                        </div>
-                                        @endif
+                                    <label for="jenis_norma_hasil">Jenis Norma Hasil</label>
+                                    <select required id="jenis_norma_hasil" name="jenis_norma_hasil"
+                                        class="form-control select2">
+                                        <option value="">Pilih jenis norma hasil</option>
+                                        @foreach ($hasilPengawasan as $id => $nama)
+                                        <option value="{{ $id }}"
+                                            {{ old('jenis_norma_hasil') == $id ? 'selected' : '' }}>
+                                            {{ $nama }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('jenis_norma_hasil'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('jenis_norma_hasil') }}
                                     </div>
-                                    {{-- text nama dokumen --}}
-                                    <div class="form-group
+                                    @endif
+                                </div>
+                                {{-- text nama dokumen --}}
+                                <div class="form-group
                                         @if ($errors->has('nama_dokumen')) is-invalid @endif">
-                                        <label for="nama_dokumen">Nama Dokumen</label>
-                                        <input placeholder="Nama Dokumen" required type="text" id="nama_dokumen"
-                                            name="nama_dokumen" class="form-control" value="{{ old('nama_dokumen') }}">
-                                        @if ($errors->has('nama_dokumen'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('nama_dokumen') }}
-                                        </div>
-                                        @endif
+                                    <label for="nama_dokumen">Nama Dokumen</label>
+                                    <input placeholder="Nama Dokumen" required type="text" id="nama_dokumen"
+                                        name="nama_dokumen" class="form-control" value="{{ old('nama_dokumen') }}">
+                                    @if ($errors->has('nama_dokumen'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('nama_dokumen') }}
                                     </div>
-                                    {{-- upload word Laporan --}}
-                                    <div class="form-group
+                                    @endif
+                                </div>
+                                {{-- upload word Laporan --}}
+                                <div class="form-group
                                         @if ($errors->has('file')) is-invalid @endif">
-                                        <label for="file">Upload Dokumen</label>
-                                        <input
-                                        accept=".doc,.docx"
-                                        type="file" id="file" name="file" class="form-control" required>
-                                        @if ($errors->has('file'))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('file') }}
-                                        </div>
-                                        @endif
+                                    <label for="file">Upload Dokumen</label>
+                                    <input accept=".doc,.docx" type="file" id="file" name="file" class="form-control"
+                                        required>
+                                    @if ($errors->has('file'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('file') }}
+                                    </div>
+                                    @endif
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex justify-content-between mt-4">
+                                    <div>
+                                        <a class="btn btn-outline-primary mr-2" href="/pegawai/norma-hasil" id="btn-back2">
+                                            <i class="fa-solid fa-arrow-left mr-1"></i>
+                                            Kembali
+                                        </a>
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-save mr-1"></i>
+                                            Simpan
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <input class="btn btn-outline-secondary" type="reset" value="Reset" />
                                     </div>
 
-
-
-
-                                    <button type="submit" class="btn btn-success">Submit</button>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

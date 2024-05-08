@@ -13,4 +13,10 @@ class EvaluasiIkuUnitKerja extends Model
     protected $guarded = ['id'];
     public $incrementing = false;
 
+    // user relationship
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_pic', 'id');
+    }
+
 }

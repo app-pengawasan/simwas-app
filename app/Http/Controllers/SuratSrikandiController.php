@@ -6,6 +6,7 @@ use App\Models\UsulanSuratSrikandi;
 use App\Models\SuratSrikandi;
 use App\Http\Requests\StoreSuratSrikandiRequest;
 use App\Http\Requests\UpdateSuratSrikandiRequest;
+use Illuminate\Http\Request;
 
 class SuratSrikandiController extends Controller
 {
@@ -126,10 +127,17 @@ class SuratSrikandiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+
     {
-        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->get();
-        $allYear = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->get();
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->whereYear('created_at', $year)->get();
         $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
 
         foreach ($usulanSuratSrikandi as $usulan) {
@@ -140,10 +148,24 @@ class SuratSrikandiController extends Controller
             $usulan->tanggal = date('d F Y', strtotime($usulan->updated_at));
         }
 
+        $year = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->orderBy('year', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('sekretaris.surat-srikandi.index', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'allYears' => $allYear,
+            'year' => $year,
             'allStatus' => $allStatus,
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
@@ -340,22 +362,29 @@ class SuratSrikandiController extends Controller
         // dd($suratSrikandi);
     }
 
-    public function arsip()
+    public function arsip(Request $request)
     {
-        $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->latest()->get();
+        $year = $request->year;
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereYear('created_at', $year)->get();
 
 
 
         foreach ($suratSrikandi as $surat) {
             $surat->tanggal = date('d F Y', strtotime($surat->updated_at));
         }
-        $allYear = SuratSrikandi::selectRaw('YEAR(tanggal_persetujuan_srikandi) year')->distinct()->get();
+        $year = SuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->orderBy('year', 'desc')->get();
 
         return view('sekretaris.arsip.index', [
             'type_menu' => 'surat-srikandi',
             'suratSrikandi' => $suratSrikandi,
             'pejabatPenandatangan' => $this->pejabatPenandaTangan,
-            'allYears' => $allYear,
+            'year' => $year,
         ]);
     }
 }

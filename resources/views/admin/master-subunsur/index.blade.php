@@ -21,19 +21,31 @@
     <section class="section">
         <div class="section-header">
             <h1>Master Subunsur Inspektorat Utama</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                <div class="breadcrumb-item">Master Subunsur</div>
+            </div>
         </div>
         <div class="row">
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <p class="mt-3">
-                            <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Halaman Mengelola Subunsur Inspektorat Utama.
-                        </p>
+                        <div class="d-flex justify-content-between">
+                            <p>
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Halaman Mengelola Subunsur Inspektorat Utama.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         {{ session()->forget(['alert-type', 'status']) }}
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+                            <div style="gap:10px" class="d-flex align-items-end">
                                 <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modal-create-master-subunsur">
                                     <i class="fas fa-plus-circle"></i>
@@ -46,7 +58,7 @@
                                 class="table table-bordered table-striped table-striped display responsive">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th style="width: 15px;">No</th>
                                         <th>Nama Subunsur</th>
                                         <th>Nama Unsur</th>
                                         <th style="min-width: 98px">Aksi</th>
@@ -55,21 +67,19 @@
                                 <tbody>
                                     @foreach ($masterSubUnsurs as $subunsur)
                                     <tr id="index_{{ $subunsur->id }}">
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $subunsur->nama_sub_unsur }}</td>
                                         <td>{{ $subunsur->masterUnsur->nama_unsur }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <button type="button"
-                                                    class="btn btn-icon btn-warning btn-sm edit-button"
+                                                    class="btn btn-warning btn-sm edit-button"
                                                     data-toggle="modal" data-target="#modal-edit-master-subunsur"
                                                     data-id="{{ $subunsur->id }}"
                                                     data-nama="{{ $subunsur->nama_sub_unsur }}"
                                                     data-id-unsur="{{ $subunsur->master_unsur_id }}"
                                                     data-nama-unsur="{{ $subunsur->master_unsur_name }}">
-                                                    <i class=" fas fa-edit mr-1"></i>Edit
+                                                    <i class=" fas fa-edit"></i>
                                                 </button>
                                                 <form action="{{ route('master-subunsur.destroy', $subunsur->id) }}"
                                                     id="form-{{ $subunsur->id }}" method="post">
@@ -78,8 +88,8 @@
                                                     {{-- <input type="hidden" name="id" value="{{ $subunsur->id }}">
                                                     --}}
                                                     <button type="button" data-id="{{ $subunsur->id }}"
-                                                        class="btn btn-icon btn-danger btn-sm ml-2 hapus-button">
-                                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                                        class="btn btn-danger btn-sm ml-2 hapus-button">
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
 

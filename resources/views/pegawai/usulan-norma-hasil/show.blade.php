@@ -68,15 +68,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            <a class="btn btn-outline-primary" href="{{ route('usulan-norma-hasil.index') }}">
+                                <i class="fas fa-arrow-left mr-1"></i> Kembali
+                            </a>
                             <div class="container">
                                 <div class="row">
-
                                     <div class="col-md-12">
-                                        <div class="col-md-4 mb-4">
-                                            <a class="btn btn-primary" href="{{ route('usulan-norma-hasil.index') }}">
-                                                <i class="fas fa-chevron-circle-left"></i> Kembali
-                                            </a>
-                                        </div>
                                         @include('components.timeline.timeline-steps')
                                         <table class="mb-4 table table-striped responsive" id="table-show">
                                             @if ($usulan->status_norma_hasil == 'disetujui')
@@ -132,7 +129,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Status Surat:</th>
-                                                @if ($usulan->status_norma_hasil != 'diperiksa')
+                                                @if ($usulan->status_norma_hasil != 'diperiksa' && $usulan->status_norma_hasil != 'ditolak')
                                                 <td>
                                                     @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
                                                     'belum unggah')
@@ -175,16 +172,18 @@
                                     </div>
                                     @if ($usulan->status_norma_hasil == 'diperiksa')
                                     <div class="d-flex align-content-end w-100 justify-content-end" style="gap: 10px;">
+
                                         <button type="button" class="btn btn-danger" data-toggle="modal"
                                             data-target="#staticBackdrop">
-                                            Tolak
+                                            <i class="fa-regular fa-circle-xmark mr-1"></i>Tolak
                                         </button>
                                         <form action="{{ route('usulan-norma-hasil.store', $usulan->id) }}"
                                             method="post">
                                             @csrf
                                             @method('POST')
                                             <input type="hidden" name="norma_hasil" value="{{ $usulan->id }}">
-                                            <button type=" submit" class="btn btn-success">Setujui</button>
+                                            <button type=" submit" class="btn btn-success"><i
+                                                    class="fa-regular fa-circle-check mr-1"></i>Setujui</button>
                                         </form>
                                     </div>
                                     @endif

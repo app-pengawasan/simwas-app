@@ -27,8 +27,8 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="/admin/rencana-kinerja">
-                                    <i class="fas fa-chevron-circle-left"></i> Kembali
+                                <a class="btn btn-outline-primary" href="/admin/rencana-kinerja">
+                                    <i class="fas fa-arrow-left"></i> Kembali
                                 </a>
                             </div>
                         </div>
