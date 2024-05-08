@@ -19,6 +19,24 @@
         <div class="section-header">
             <h1>Perencana Dashboard</h1>
         </div>
+        <form id="yearForm" action="" method="GET" class="col-md-1 px-0">
+            @csrf
+            <div class="form-group">
+                <label for="yearSelect">Pilih Tahun</label>
+                <select name="year" id="yearSelect" class="form-control select2">
+                    @php
+                    $currentYear = date('Y');
+                    $lastThreeYears = range($currentYear, $currentYear - 3);
+                    @endphp
+
+                    @foreach ($lastThreeYears as $year)
+                    <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
+        @include('components.perencana.perencana-card')
     </section>
 </div>
 @endsection
@@ -44,11 +62,12 @@
 <!-- Page Specific JS File -->
 <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 
-@if ($errors->any())
 <script>
-    $(document).ready(function() {
-                $('#staticBackdrop').modal('show');
-            });
+    $('#yearSelect').on('change', function() {
+        let year = $(this).val();
+        $('#yearForm').attr('action', `?year=${year}`);
+        $('#yearForm').find('[name="_token"]').remove();
+        $('#yearForm').submit();
+    });
 </script>
-@endif
 @endpush

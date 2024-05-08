@@ -102,9 +102,8 @@ Route::group(['middleware'=>'auth'], function(){
      * ADMIN
      * ---------------------------------------------------------------------------
      * */
-    Route::get('/admin', function () {
-        return view('admin.index', ['type_menu' => 'dashboard']);
-    })->name('admin-dashboard');
+        Route::get('/admin', [DashboardController::class, 'admin'])->name('admin-dashboard');
+
 
     //Kelola-anggaran
     //1.Master Anggaran

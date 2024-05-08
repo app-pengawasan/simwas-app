@@ -10,6 +10,7 @@ use Illuminate\Support\Facades;
 use App\View\Composers\SidebarPegawai;
 use App\View\Composers\SidebarSekretaris;
 use App\View\Composers\SidebarAdmin;
+use App\View\Composers\SidebarPerencana;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -64,6 +65,9 @@ class AppServiceProvider extends ServiceProvider
         );
         Facades\View::composer(
             'components.admin-sidebar', SidebarAdmin::class,
+        );
+        Facades\View::composer(
+            'components.perencana-sidebar', SidebarPerencana::class,
         );
     }
 }

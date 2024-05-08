@@ -69,6 +69,7 @@ class NormaHasilController extends Controller
         } else {
             $year = $year;
         }
+        $currentYear = date('Y');
 
         $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
         // get year from created_at distinct
