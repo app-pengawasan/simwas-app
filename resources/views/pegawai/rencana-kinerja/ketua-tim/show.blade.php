@@ -163,7 +163,7 @@
                                                 {{-- delete form --}}
                                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
                                                     <form action="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
-                                                        method="post" class="d-inline">
+                                                        method="post" class="d-inline delete-form">
                                                         @csrf
                                                         @method('delete')
                                                         <button class="btn btn-danger btn-sm" type="submit">
@@ -266,4 +266,25 @@
 <!-- Page Specific JS File -->
 <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
 <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: "var(--primary)",
+                cancelButtonColor: "var(--danger)",
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    });
+</script>
 @endpush

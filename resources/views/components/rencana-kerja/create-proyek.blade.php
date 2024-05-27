@@ -11,6 +11,7 @@
             {{-- <form method="post" action="/ketua-tim/rencana-kinerja" enctype="multipart/form-data"
                 class="needs-validation" novalidate=""> --}}
             <form enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id_timkerja" value="{{ $timKerja->id_timkerja }}">
                     <div class="form-group">
@@ -39,10 +40,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                    <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
                         <i class="fas fa-exclamation-triangle"></i>Batal
                     </button>
-                    <button type="button" id="btn-create-proyek" class="btn btn-icon icon-left btn-primary">
+                    <button type="submit" id="btn-create-proyek" class="btn btn-icon icon-left btn-primary">
                         <i class="fas fa-save"></i>Simpan
                     </button>
                 </div>

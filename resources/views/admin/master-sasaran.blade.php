@@ -61,7 +61,7 @@
                                         <th>Tahun</th>
                                         <th>Tujuan</th>
                                         <th>Sasaran</th>
-                                        <th>Aksi</th>
+                                        <th style="min-width: 98px">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>

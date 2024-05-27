@@ -8,14 +8,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('master-hasil-kerja.store') }}" enctype="multipart/form-data"
-                class="needs-validation" novalidate="">
+            <form method="POST" action="{{ route('master-hasil-kerja.store') }}" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
-                    @csrf
                     <div class="form-group">
                         <label class="form-label" for="masterUnsurId">Nama Unsur</label>
                         <div class="">
-                            <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required data-placeholder="Pilih Unsur">
+                            <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required
+                                data-placeholder="Pilih Unsur">
                                 <option value=""></option>
                                 @foreach ($masterUnsurs as $unsur)
                                 <option value="{{ $unsur->id }}">{{ $unsur->nama_unsur }}</option>
@@ -38,7 +38,8 @@
                     <div class="form-group">
                         <label class="form-label" for="namaHasilKerja">Nama Hasil Kerja</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required placeholder="Masukkan Nama Hasil Kerja">
+                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required
+                                placeholder="Masukkan Nama Hasil Kerja">
                             <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
@@ -46,7 +47,8 @@
                     <div class="form-group">
                         <label class="form-label" for="hasilKerjaTim">Hasil Kerja Tim</label>
                         <div class="">
-                            <input type="text" class="form-control" name="hasilKerjaTim" id="hasilKerjaTim" required placeholder="Masukkan Hasil Kerja Tim">
+                            <input type="text" class="form-control" name="hasilKerjaTim" id="hasilKerjaTim" required
+                                placeholder="Masukkan Hasil Kerja Tim">
                             <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
@@ -80,7 +82,7 @@
                             <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
-                    <div style="display: none" id="picKoordinator" class="form-group">
+                    <div style="display: none" id="pic-koordinator" class="form-group">
                         <label class="form-label" for="picKoordinator">PIC/Koordinator</label>
                         <div class="">
                             <input type="text" class="form-control" name="picKoordinator" id="picKoordinator">

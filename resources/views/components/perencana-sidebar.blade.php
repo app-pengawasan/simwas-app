@@ -25,9 +25,15 @@
                 </a>
                 <ul class="dropdown-menu">
                     {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, III', 'Kabag Umum'] --}}
-                    <li class="{{ Request::is('perencana/target-iku-unit-kerja/*') || Request::is('perencana/target-iku-unit-kerja') ? 'active' : '' }}">
+                    <li
+                        class="{{ Request::is('perencana/target-iku-unit-kerja/*') || Request::is('perencana/target-iku-unit-kerja') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('target-iku-unit-kerja.index') }}">
                             <span>Target</span>
+                            @if ($targetIkuUnitKerjaCount > 0)
+                            <div class="bg-primary sidebar-count">
+                                {{ $targetIkuUnitKerjaCount }}
+                            </div>
+                            @endif
                         </a>
                     </li>
                     <li

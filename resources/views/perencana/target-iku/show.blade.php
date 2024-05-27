@@ -82,6 +82,11 @@
                                                 required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
+                                    <div class="form-group d-flex justify-content-end">
+                                        <button type="button" class="btn btn-success" id="btn-export">
+                                            <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                                        </button>
+                                    </div>
                                     <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
@@ -187,21 +192,20 @@
                                                 <tr>
                                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                                         Target Kinerja (Persen)</td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center"></td>
                                                 </tr>
                                             </tfoot>
-
                                         </table>
                                     </div>
                                     {{-- <button type="submit" class="btn btn-success">Submit</button> --}}
@@ -212,6 +216,10 @@
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                 </a>
                                 @if ($targetIkuUnitKerja->status == 1)
+                                <a href="{{ route('target-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                    class="btn btn-warning">
+                                    <i class="fa-solid fa-edit mr-1"></i>Edit
+                                </a>
                                 <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
                                     method="post" class="d-inline">
                                     @csrf
@@ -222,6 +230,14 @@
                                     </button>
                                 </form>
                                 @endif
+                                <form action="{{ route('target-iku-unit-kerja.destroy', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline" id="delete-button">
+                                    @csrf
+                                    @method('delete')
+                                    <button class="btn btn-danger" type="submit">
+                                        <i class="fa-solid fa-trash mr-1"></i>Hapus
+                                    </button>
+                                </form>
                             </div>
 
                         </div>
@@ -239,5 +255,52 @@
 
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/perencana/create-target-iku.js') }}"></script>
-<!-- Latest compiled and minified CSS -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"
+    integrity="sha512-XmZS54be9JGMZjf+zk61JZaLZyjTRgs41JLSmx5QlIP5F+sSGIyzD2eJyxD4K6kGGr7AsVhaitzZ2WTfzpsQzg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'target-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+
+
+        $('#delete-button').on('click', function (e) {
+        e.preventDefault();
+        Swal.fire({
+        title: 'Apakah Anda Yakin Menghapus Target, Realisasi, dan Evaluasi?',
+        text: 'Data yang dihapus tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        }).then((result) => {
+        if (result.isConfirmed) {
+        $(this).submit();
+        }
+        });
+    });
+</script>
 @endpush

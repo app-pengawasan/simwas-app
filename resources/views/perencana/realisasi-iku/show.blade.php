@@ -3,6 +3,7 @@
 @section('title', 'Detail Realisasi IKU Unit Kerja')
 
 @push('style')
+<link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 <!-- CSS Libraries -->
 <style>
     /* Chrome, Safari, Edge, Opera */
@@ -154,14 +155,18 @@
                                 <tr>
                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                         Target Kinerja (Persen)</td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan1"
-                                            id="tgt-presentase-target-triwulan1" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan2"
-                                            id="tgt-presentase-target-triwulan2" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan3"
-                                            id="tgt-presentase-target-triwulan3" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan4"
-                                            id="tgt-presentase-target-triwulan4" value="0" class="form-control"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan1"
+                                            id="tgt-presentase-target-triwulan1" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan2"
+                                            id="tgt-presentase-target-triwulan2" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan3"
+                                            id="tgt-presentase-target-triwulan3" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan4"
+                                            id="tgt-presentase-target-triwulan4" value="0"
+                                            class="form-control text-center"></td>
                             </tfoot>
 
                         </table>
@@ -298,22 +303,22 @@
                                                             class="form-control nilai-y">
                                                     </td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_1 }}"
+                                                            value="{{ $value->realisasi_triwulan_1 ?? 0 }}"
                                                             name="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             class="form-control triwulan1"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_2 }}"
+                                                            value="{{ $value->realisasi_triwulan_2 ?? 0 }}"
                                                             name="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             class="form-control triwulan2"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_3 }}"
+                                                            value="{{ $value->realisasi_triwulan_3 ?? 0 }}"
                                                             name="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             class="form-control triwulan3"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_4 }}"
+                                                            value="{{ $value->realisasi_triwulan_4 ?? 0 }}"
                                                             name="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             class="form-control triwulan4"></td>
@@ -387,18 +392,18 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center font-weight-bold"></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -419,6 +424,24 @@
                                 <a class="btn btn-outline-primary" href="/perencana/realisasi-iku-unit-kerja/">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                 </a>
+                                <button type="button" class="btn btn-success" id="btn-export">
+                                    <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                                </button>
+                                @if ($targetIkuUnitKerja->status == '2')
+                                <a href="{{ route('realisasi-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                    class="btn btn-warning">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </a>
+                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline submit-button">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="status" value="3">
+                                    <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-paper-plane mr-1"></i>Kirim ke Evaluasi
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -431,4 +454,46 @@
 
 @push('scripts')
 <script src="{{ asset('js/page/perencana/create-realisasi-iku.js') }}"></script>
+<script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'realisasi-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+    $(".submit-button").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+    title: "Apakah Anda Yakin Mengirim ke Evaluasi?",
+    text: "Data yang dikirim tidak dapat diubah kembali!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, Kirim!",
+    cancelButtonText: "Batal",
+    }).then((result) => {
+    if (result.isConfirmed) {
+    $(this).submit();
+    }
+    });
+    });
+</script>
 @endpush

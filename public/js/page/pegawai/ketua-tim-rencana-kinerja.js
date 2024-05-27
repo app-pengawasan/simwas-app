@@ -91,11 +91,13 @@ $("#create-hasilkerja").on("change", function () {
 });
 
 $("#btn-tambah-tugas").on("click", function (e) {
-    e.preventDefault();
+    // e.preventDefault();
     $("#error-tugas").text("");
     $("#error-mulai").text("");
     $("#error-selesai").text("");
     $("#error-hasilkerja").text("");
+
+
     let token = $("meta[name='csrf-token']").attr("content");
     let id_timkerja = $("#id_timkerja").val();
     let tugas = $("#create-tugas").val();
@@ -109,6 +111,19 @@ $("#btn-tambah-tugas").on("click", function (e) {
     let melaksanakan = $("#create-melaksanakan").val();
     let capaian = $("#create-capaian").val();
     let id_proyek = $("#id_proyek").val();
+
+    if (tugas == "" || hasilkerja== "" ||melaksanakan == "" || capaian == "") {
+        return;
+    }
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/ketua-tim/rencana-kinerja`,
@@ -388,6 +403,19 @@ $("#btn-create-proyek").on("click", function () {
     let rk_anggota = $("#create-rk_anggota").val();
     let iki_anggota = $("#create-iki_anggota").val();
     let token = $("meta[name='csrf-token']").attr("content");
+    if (nama_proyek == "" || rk_anggota == "" || iki_anggota == "") {
+        return;
+    }
+    // swal loading
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/ketua-tim/rencana-kinerja/proyek`,
@@ -404,7 +432,7 @@ $("#btn-create-proyek").on("click", function () {
             location.reload();
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -446,19 +474,13 @@ function filterTable() {
         filterUnitKerja = "";
     }
 
-
-
-
     if (filterUnitKerja !== "") {
         table
             .column(2)
             .search("^" + filterUnitKerja + "$", true, false)
             .draw();
     } else {
-        table
-            .column(2)
-            .search("")
-            .draw();
+        table.column(2).search("").draw();
     }
 
     // reset numbering in table first column

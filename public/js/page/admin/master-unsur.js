@@ -80,8 +80,18 @@ $(document).on("click", ".edit-button", function () {
     $("#edit-form").attr("action", "/admin/master-unsur/" + id);
 });
 
+$(".submit-btn").click(function () {
+    // return if namaUnsur input value is empty and give error message
+    if ($('input[name="namaUnsur"]').val() == "") {
+        return;
+    }
+    $(this).attr("disabled", true);
+    $(this).closest("form").submit();
+});
+
 $(document).on("click", ".hapus-button", function () {
     var id = $(this).data("id");
+
 
     Swal.fire({
         title: "Apakah Anda Yakin?",

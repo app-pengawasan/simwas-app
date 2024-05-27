@@ -38,12 +38,14 @@
         aria-labelledby="targetIKULabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="targetIKULabel">Target IKU</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body overflow-scroll">
                     <div class="form-group overflow-scroll">
                         <table class="table table-responsive-md table-bordered overflow-scroll" id="table-iku">
@@ -157,14 +159,18 @@
                                 <tr>
                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                         Target Kinerja (Persen)</td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan1"
-                                            id="tgt-presentase-target-triwulan1" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan2"
-                                            id="tgt-presentase-target-triwulan2" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan3"
-                                            id="tgt-presentase-target-triwulan3" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan4"
-                                            id="tgt-presentase-target-triwulan4" value="0" class="form-control"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan1"
+                                            id="tgt-presentase-target-triwulan1" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan2"
+                                            id="tgt-presentase-target-triwulan2" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan3"
+                                            id="tgt-presentase-target-triwulan3" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan4"
+                                            id="tgt-presentase-target-triwulan4" value="0"
+                                            class="form-control text-center"></td>
                             </tfoot>
 
                         </table>
@@ -237,11 +243,27 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        @if ($realisasiIkuUnitKerja->dokumen_sumber_path??'')
+                                        <div class="form-group mt-2">
+                                            <a href="{{ asset('storage/realisasi-iku-unit-kerja/'.$realisasiIkuUnitKerja->dokumen_sumber_path ) }}"
+                                                target="_blank" class="btn btn-primary">
+                                                <i class="fas fa-file-pdf mr-1"></i>
+                                                Lihat Dokumen Sumber</a>
+                                        </div>
+                                        <div>
+                                            <label for="catatan">Ubah Dokumen Sumber</label>
+                                            <div>
+                                                <input id="dokumen_sumber" type="file" class="form-control"
+                                                    name="dokumen_sumber" accept="application/pdf">
+                                            </div>
+                                        </div>
+                                        @else
                                         <label for="catatan">Dokumen Sumber</label>
                                         <div>
                                             <input id="dokumen_sumber" type="file" class="form-control"
                                                 name="dokumen_sumber" required accept="application/pdf">
                                         </div>
+                                        @endif
                                     </div>
                                     <div class="form-group d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -250,7 +272,9 @@
                                             IKU</button>
                                     </div>
 
-
+                                    <div class="alert alert-info">
+                                        <strong>Info!</strong> Jika nilai tidak diisi, maka akan dianggap 0.
+                                    </div>
                                     <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
@@ -403,18 +427,18 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center"></td>
                                                 </tr>
                                             </tfoot>
 
@@ -433,9 +457,10 @@
                                             <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                         </a>
 
-                                        <button type="submit" class="btn btn-success">
+                                        <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save"></i>
                                             Simpan</button>
+
                                     </div>
                             </form>
                         </div>

@@ -80,7 +80,7 @@
                                     @foreach ($master_wilayahkerja as $wilayahkerja)
                                     <tr id="index_{{ $wilayahkerja->id_objek }}">
                                         <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $wilayahkerja->kode_wilayah }}</td>
+                                        <td class="text-center">{{ $wilayahkerja->kode_wilayah }}</td>
                                         <td>{{ $wilayahkerja->nama }}</td>
                                         <td>
                                             <a href="javascript:void(0)" class="btn btn-warning edit-btn btn-sm"

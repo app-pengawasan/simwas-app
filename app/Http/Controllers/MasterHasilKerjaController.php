@@ -48,17 +48,26 @@ class MasterHasilKerjaController extends Controller
      */
     public function store(StoreMasterHasilKerjaRequest $request)
     {
-        MasterHasilKerja::create([
-            'master_subunsur_id' => $request->masterSubUnsurId,
-            'nama_hasil_kerja' => $request->namaHasilKerja,
-            'hasil_kerja_tim' => $request->hasilKerjaTim,
-            'pengendali_teknis' => $request->status == '1' ? $request->pengendaliTeknis : null,
-            'ketua_tim' => $request->status == '1' ? $request->ketuaTim : null,
-            'anggota_tim' => $request->anggotaTim,
-            'pic' => $request->status != '1' ? $request->picKoordinator : null,
-            'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
-        ]);
-        return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        try {
+            MasterHasilKerja::create([
+                'master_subunsur_id' => $request->masterSubUnsurId,
+                'nama_hasil_kerja' => $request->namaHasilKerja,
+                'hasil_kerja_tim' => $request->hasilKerjaTim,
+                'pengendali_teknis' => $request->status == '1' ? $request->pengendaliTeknis : null,
+                'ketua_tim' => $request->status == '1' ? $request->ketuaTim : null,
+                'anggota_tim' => $request->anggotaTim,
+                'pic' => $request->status != '1' ? $request->picKoordinator : null,
+                'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
+            ]);
+            return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-hasil-kerja.index')->with('status', 'Data gagal ditambahkan, data sudah ada')->with('alert-type', 'danger');
+            } else {
+            return redirect()->route('master-hasil-kerja.index')->with('status', 'Data gagal ditambahkan, Periksa lagi data anda')->with('alert-type', 'danger');
+            }
+        }
+
     }
 
     /**
@@ -92,17 +101,25 @@ class MasterHasilKerjaController extends Controller
      */
     public function update(UpdateMasterHasilKerjaRequest $request, MasterHasilKerja $masterHasilKerja)
     {
-        $masterHasilKerja->update([
-            'master_subunsur_id' => $request->editMasterSubUnsurId,
-            'nama_hasil_kerja' => $request->editNamaHasilKerja,
-            'hasil_kerja_tim' => $request->editHasilKerjaTim,
-            'pengendali_teknis' => $request->editPengendaliTeknis,
-            'pengendali_mutu' => $request->editPengendaliMutu,
-            'ketua_tim' => $request->editKetuaTim,
-            'anggota_tim' => $request->editAnggotaTim,
-            'pic' => $request->editPicKoordinator,
-        ]);
-        return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success');
+        try {
+            $masterHasilKerja->update([
+                'master_subunsur_id' => $request->editMasterSubUnsurId,
+                'nama_hasil_kerja' => $request->editNamaHasilKerja,
+                'hasil_kerja_tim' => $request->editHasilKerjaTim,
+                'pengendali_teknis' => $request->editPengendaliTeknis,
+                'pengendali_mutu' => $request->editPengendaliMutu,
+                'ketua_tim' => $request->editKetuaTim,
+                'anggota_tim' => $request->editAnggotaTim,
+                'pic' => $request->editPicKoordinator,
+            ]);
+            return redirect()->route('master-hasil-kerja.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-hasil-kerja.index')->with('status', 'Data gagal diubah, data sudah ada')->with('alert-type', 'danger');
+            } else {
+                return redirect()->route('master-hasil-kerja.index')->with('status', 'Data gagal diubah, silakan periksa data lagi')->with('alert-type', 'danger');
+            }
+        }
     }
 
     /**
