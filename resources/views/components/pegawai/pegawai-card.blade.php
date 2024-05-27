@@ -1,9 +1,9 @@
-@if ($total_usulan != 0 || $normaHasilCount != 0)
+@if ($suratCount != 0 || $normaHasilCount != 0)
 
 <div style="gap:5px" class="d-flex flex-column dashboard-card my-4">
     <h2 class="font-weight-normal text-dark h5 mb-1">Pegawai</h2>
     <div class="d-flex flex-row dashboard-card flex-wrap" style="gap:15px">
-        @if ($total_usulan != 0)
+        @if ($suratCount != 0)
         <div class="card p-4 mb-2 col-md-3">
             {{-- as pegawai --}}
             <div class="d-flex justify-content-between">

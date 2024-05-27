@@ -249,8 +249,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Tolak</button>
+                    <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                        <i class="fas fa-exclamation-triangle"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-icon icon-left btn-primary submit-btn">
+                        <i class="fas fa-save"></i>Simpan
+                    </button>
                 </div>
             </form>
         </div>
@@ -402,8 +406,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Setujui</button>
+                    <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                        <i class="fas fa-exclamation-triangle"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-icon icon-left btn-primary submit-btn">
+                        <i class="fas fa-save"></i>Simpan
+                    </button>
                 </div>
             </form>
         </div>

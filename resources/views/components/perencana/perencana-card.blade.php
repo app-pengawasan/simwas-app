@@ -8,7 +8,7 @@
                     <h6 class="mb-0 text-dark">IKU Unit Kerja</h6>
                 </div>
             </div>
-            <a href="/ketua-tim/rencana-kinerja" class="arrow-button-card" type="button" class="rounded-circle"><i
+            <a href="/perencana/target-iku-unit-kerja" class="arrow-button-card" type="button" class="rounded-circle"><i
                     class="fa-solid fa-arrow-right"></i></a>
         </div>
         <div style="width:100%" class="mt-3 d-flex">

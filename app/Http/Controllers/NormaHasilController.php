@@ -71,7 +71,11 @@ class NormaHasilController extends Controller
         }
         $currentYear = date('Y');
 
-        $usulan = NormaHasil::with('normaHasilAccepted')->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
+        $usulan = NormaHasil::with('normaHasilAccepted')
+            ->where('user_id', auth()->user()->id)
+            ->whereYear('created_at', $year)
+            ->latest()
+            ->get();
         // get year from created_at distinct
         $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();
 
@@ -133,7 +137,7 @@ class NormaHasilController extends Controller
         // dd($request->all());
         // store file to storage
         $file = $request->file('file');
-        $fileName = time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
+        $fileName = $request->nama_dokumen . "-" .time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
         $path = public_path('storage/norma-hasil');
         $file->move($path, $fileName);
         $document_path = 'storage/norma-hasil/' . $fileName;

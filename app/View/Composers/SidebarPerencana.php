@@ -17,11 +17,13 @@ class SidebarPerencana
     public function compose(View $view): void
     {
         $year = date('Y');
+        $targetIkuUnitKerjaCount = TargetIkuUnitKerja::latest()->whereYear('created_at', $year)->where('status', 1)->count();
         $realisasiIkuUnitKerjaCount = TargetIkuUnitKerja::latest()->whereYear('created_at', $year)->where('status', 2)->count();
         $evaluasiIkuUnitKerjaCount = TargetIkuUnitKerja::latest()->whereYear('created_at', $year)->where('status', 3)->count();
 
         $view->with(
             [
+                'targetIkuUnitKerjaCount' => $targetIkuUnitKerjaCount,
                 'realisasiIkuUnitKerjaCount' => $realisasiIkuUnitKerjaCount,
                 'evaluasiIkuUnitKerjaCount' => $evaluasiIkuUnitKerjaCount
             ]

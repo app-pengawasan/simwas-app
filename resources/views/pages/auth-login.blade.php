@@ -44,11 +44,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-7 col-lg-6 ml-auto">
-            <div class="col-lg-12 mx-auto">
-                @include('components.flash')
-            </div>
-        </div>
+        @include('components.flash')
     </div>
 </div>
 @endsection

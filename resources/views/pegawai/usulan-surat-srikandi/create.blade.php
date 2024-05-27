@@ -334,7 +334,11 @@
                                             <label for="rencana_id">Tugas</label>
                                             <select required id="rencana_id" name="rencana_id"
                                                 class="form-control select2 @error('rencana_id') is-invalid @enderror">
+                                                @if ($rencanaKerja->isEmpty())
+                                                <option disabled selected value="">Anda belum memiliki tugas</option>
+                                                @else
                                                 <option value="">Pilih tugas</option>
+                                                @endif
                                                 @foreach ($rencanaKerja as $rencana)
                                                 <option value="{{ $rencana->id_rencanakerja }}"
                                                     {{ old('rencana_id') == $rencana->id_rencanakerja ? 'selected' : '' }}>
@@ -408,8 +412,7 @@
                                             onclick="stepper1.previous()">
                                             <i class="fa-solid fa-arrow-left mr-2"></i>
                                             Sebelumnya</button>
-                                        <button type="submit" class="btn btn-primary"
-                                            onclick="stepper1.next()">
+                                        <button type="submit" class="btn btn-primary" onclick="stepper1.next()">
                                             <i class="fa-solid fa-floppy-disk"></i>
                                             Simpan</button>
                                     </div>

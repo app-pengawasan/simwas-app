@@ -14,7 +14,7 @@ $(document).ready(function () {
         var table = $("table tbody");
         // add row to table
         for (var i = 0; i < jumlahObjek; i++) {
-            row = parseInt(jumlahObjek) + 1;
+            row = parseFloat(jumlahObjek) + 1;
             var html = "";
             html += "<tr id='row-" + row + "'>";
             html += '<td class="text-center align-middle">' + row + "</td>";
@@ -85,7 +85,7 @@ $(document).ready(function () {
         }
         table.append(html);
 
-        jumlahObjek = parseInt(jumlahObjek) + 1;
+        jumlahObjek = parseFloat(jumlahObjek) + 1;
         $("#jumlah-objek").val(jumlahObjek);
     });
 
@@ -183,6 +183,7 @@ $(document).ready(function () {
         $("#presentase-target-triwulan3").val(0);
         $("#presentase-target-triwulan4").val(0);
     });
+
     function calculateTotal() {
         // get id of changed input
         var id = $(this).attr("id");
@@ -192,7 +193,7 @@ $(document).ready(function () {
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
-                accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
+                accumulatedTriwulan += triwulan ? parseFloat(triwulan) : 0;
                 var y = $("#nilai-y-row" + i).val();
                 var targetTriwulan = (triwulan / y).toFixed(2); // Format the calculated value with two decimal places
                 $("#target-triwulan" + j + "-row" + i).val(targetTriwulan);
@@ -213,24 +214,23 @@ $(document).ready(function () {
 
         $("table tbody tr").each(function () {
             var triwulan1 = $(this).find(".triwulan1").val();
-            triwulan1 = triwulan1 ? parseInt(triwulan1) : 0; // Handle empty input values
+            triwulan1 = triwulan1 ? parseFloat(triwulan1) : 0; // Handle empty input values
             var triwulan2 = $(this).find(".triwulan2").val();
-            triwulan2 = triwulan2 ? parseInt(triwulan2) : 0; // Handle empty input values
+            triwulan2 = triwulan2 ? parseFloat(triwulan2) : 0; // Handle empty input values
             var triwulan3 = $(this).find(".triwulan3").val();
-            triwulan3 = triwulan3 ? parseInt(triwulan3) : 0; // Handle empty input values
+            triwulan3 = triwulan3 ? parseFloat(triwulan3) : 0; // Handle empty input values
             var triwulan4 = $(this).find(".triwulan4").val();
-            triwulan4 = triwulan4 ? parseInt(triwulan4) : 0; // Handle empty input values
+            triwulan4 = triwulan4 ? parseFloat(triwulan4) : 0; // Handle empty input values
             var nilaiY = $(this).find(".nilai-y").val();
-            nilaiY = nilaiY ? parseInt(nilaiY) : 0; // Handle empty input values
-
+            nilaiY = nilaiY ? parseFloat(nilaiY) : 0; // Handle empty input values
             var targetTriwulan1 = $(this).find(".target-triwulan1").val();
-            targetTriwulan1 = targetTriwulan1 ? parseInt(targetTriwulan1) : 0; // Handle empty input values
+            targetTriwulan1 = targetTriwulan1 ? parseFloat(targetTriwulan1) : 0; // Handle empty input values
             var targetTriwulan2 = $(this).find(".target-triwulan2").val();
-            targetTriwulan2 = targetTriwulan2 ? parseInt(targetTriwulan2) : 0; // Handle empty input values
+            targetTriwulan2 = targetTriwulan2 ? parseFloat(targetTriwulan2) : 0; // Handle empty input values
             var targetTriwulan3 = $(this).find(".target-triwulan3").val();
-            targetTriwulan3 = targetTriwulan3 ? parseInt(targetTriwulan3) : 0; // Handle empty input values
+            targetTriwulan3 = targetTriwulan3 ? parseFloat(targetTriwulan3) : 0; // Handle empty input values
             var targetTriwulan4 = $(this).find(".target-triwulan4").val();
-            targetTriwulan4 = targetTriwulan4 ? parseInt(targetTriwulan4) : 0; // Handle empty input values
+            targetTriwulan4 = targetTriwulan4 ? parseFloat(targetTriwulan4) : 0; // Handle empty input values
 
             totalTriwulan1 += triwulan1;
             totalTriwulan2 += triwulan2;
@@ -243,8 +243,8 @@ $(document).ready(function () {
             totalTargetTriwulan3 += targetTriwulan3;
             totalTargetTriwulan4 += targetTriwulan4;
         });
-        console.log(totalNilaiY)
 
+        console.log("totalTriwulan1", totalTargetTriwulan1);
         $("#target-total-triwulan1").val(totalTargetTriwulan1);
         $("#target-total-triwulan2").val(totalTargetTriwulan2);
         $("#target-total-triwulan3").val(totalTargetTriwulan3);
@@ -271,32 +271,32 @@ $(document).ready(function () {
         );
 
         $("#presentase-target-triwulan1").val(
-            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan2").val(
             (
-                ((totalTargetTriwulan1 + totalTargetTriwulan2) / totalNilaiY) *
-                100
-            ).toFixed(2)
+            ((totalTargetTriwulan1 + totalTargetTriwulan2) / totalNilaiY) *
+            100
+            ).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan3").val(
             (
-                ((totalTargetTriwulan1 +
-                    totalTargetTriwulan2 +
-                    totalTargetTriwulan3) /
-                    totalNilaiY) *
-                100
-            ).toFixed(2)
+            ((totalTargetTriwulan1 +
+            totalTargetTriwulan2 +
+            totalTargetTriwulan3) /
+            totalNilaiY) *
+            100
+            ).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan4").val(
             (
-                ((totalTargetTriwulan1 +
-                    totalTargetTriwulan2 +
-                    totalTargetTriwulan3 +
-                    totalTargetTriwulan4) /
-                    totalNilaiY) *
-                100
-            ).toFixed(2)
+            ((totalTargetTriwulan1 +
+            totalTargetTriwulan2 +
+            totalTargetTriwulan3 +
+            totalTargetTriwulan4) /
+            totalNilaiY) *
+            100
+            ).toFixed(2).replace(/\.00$/, "") + "%"
         );
     }
     function calculateTotalTarget() {
@@ -307,7 +307,7 @@ $(document).ready(function () {
         // if (id.includes("triwulan1")) {
         //     row = id.replace("triwulan1-row", "");
         //     // if val is empty set to enable
-        //     value = parseInt($(this).val()) || 0;
+        //     value = parseFloat($(this).val()) || 0;
         //     if (value === 0) {
         //         $("#triwulan2-row" + row).removeAttr("disabled");
         //         $("#triwulan3-row" + row).removeAttr("disabled");
@@ -320,7 +320,7 @@ $(document).ready(function () {
         // }
         // if (id.includes("triwulan2")) {
         //     row = id.replace("triwulan2-row", "");
-        //     value = parseInt($(this).val()) || 0;
+        //     value = parseFloat($(this).val()) || 0;
         //     if (value === 0) {
         //         $("#triwulan1-row" + row).removeAttr("disabled");
         //         $("#triwulan3-row" + row).removeAttr("disabled");
@@ -333,7 +333,7 @@ $(document).ready(function () {
         // }
         // if (id.includes("triwulan3")) {
         //     row = id.replace("triwulan3-row", "");
-        //     value = parseInt($(this).val()) || 0;
+        //     value = parseFloat($(this).val()) || 0;
         //     if (value === 0) {
         //         $("#triwulan1-row" + row).removeAttr("disabled");
         //         $("#triwulan2-row" + row).removeAttr("disabled");
@@ -346,7 +346,7 @@ $(document).ready(function () {
         // }
         // if (id.includes("triwulan4")) {
         //     row = id.replace("triwulan4-row", "");
-        //     value = parseInt($(this).val()) || 0;
+        //     value = parseFloat($(this).val()) || 0;
         //     if (value === 0) {
         //         $("#triwulan1-row" + row).removeAttr("disabled");
         //         $("#triwulan2-row" + row).removeAttr("disabled");
@@ -364,7 +364,7 @@ $(document).ready(function () {
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#tgt-triwulan" + j + "-row" + i).val();
-                accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
+                accumulatedTriwulan += triwulan ? parseFloat(triwulan) : 0;
                 $("#tgt-target-triwulan" + j + "-row" + i).val(
                     accumulatedTriwulan
                 );
@@ -391,24 +391,24 @@ $(document).ready(function () {
 
         $("table tbody tr").each(function () {
             var triwulan1 = $(this).find(".tgt-triwulan1").val();
-            triwulan1 = triwulan1 ? parseInt(triwulan1) : 0; // Handle empty input values
+            triwulan1 = triwulan1 ? parseFloat(triwulan1) : 0; // Handle empty input values
             var triwulan2 = $(this).find(".tgt-triwulan2").val();
-            triwulan2 = triwulan2 ? parseInt(triwulan2) : 0; // Handle empty input values
+            triwulan2 = triwulan2 ? parseFloat(triwulan2) : 0; // Handle empty input values
             var triwulan3 = $(this).find(".tgt-triwulan3").val();
-            triwulan3 = triwulan3 ? parseInt(triwulan3) : 0; // Handle empty input values
+            triwulan3 = triwulan3 ? parseFloat(triwulan3) : 0; // Handle empty input values
             var triwulan4 = $(this).find(".tgt-triwulan4").val();
-            triwulan4 = triwulan4 ? parseInt(triwulan4) : 0; // Handle empty input values
+            triwulan4 = triwulan4 ? parseFloat(triwulan4) : 0; // Handle empty input values
             var nilaiY = $(this).find(".tgt-nilai-y").val();
-            nilaiY = nilaiY ? parseInt(nilaiY) : 0; // Handle empty input values
+            nilaiY = nilaiY ? parseFloat(nilaiY) : 0; // Handle empty input values
 
             var targetTriwulan1 = $(this).find(".tgt-target-triwulan1").val();
-            targetTriwulan1 = targetTriwulan1 ? parseInt(targetTriwulan1) : 0; // Handle empty input values
+            targetTriwulan1 = targetTriwulan1 ? parseFloat(targetTriwulan1) : 0; // Handle empty input values
             var targetTriwulan2 = $(this).find(".tgt-target-triwulan2").val();
-            targetTriwulan2 = targetTriwulan2 ? parseInt(targetTriwulan2) : 0; // Handle empty input values
+            targetTriwulan2 = targetTriwulan2 ? parseFloat(targetTriwulan2) : 0; // Handle empty input values
             var targetTriwulan3 = $(this).find(".tgt-target-triwulan3").val();
-            targetTriwulan3 = targetTriwulan3 ? parseInt(targetTriwulan3) : 0; // Handle empty input values
+            targetTriwulan3 = targetTriwulan3 ? parseFloat(targetTriwulan3) : 0; // Handle empty input values
             var targetTriwulan4 = $(this).find(".tgt-target-triwulan4").val();
-            targetTriwulan4 = targetTriwulan4 ? parseInt(targetTriwulan4) : 0; // Handle empty input values
+            targetTriwulan4 = targetTriwulan4 ? parseFloat(targetTriwulan4) : 0; // Handle empty input values
 
             totalTriwulan1 += triwulan1;
             totalTriwulan2 += triwulan2;
@@ -420,6 +420,7 @@ $(document).ready(function () {
             totalTargetTriwulan2 += targetTriwulan2;
             totalTargetTriwulan3 += targetTriwulan3;
             totalTargetTriwulan4 += targetTriwulan4;
+
         });
 
         $("#tgt-target-total-triwulan1").val(totalTargetTriwulan1);
@@ -434,16 +435,24 @@ $(document).ready(function () {
         $("#tgt-total-y").val(totalNilaiY);
 
         $("#tgt-presentase-target-triwulan1").val(
-            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan1 / totalNilaiY) * 100)
+                .toFixed(2)
+                .replace(/\.00$/, "") + "%"
         );
         $("#tgt-presentase-target-triwulan2").val(
-            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan2 / totalNilaiY) * 100)
+                .toFixed(2)
+                .replace(/\.00$/, "") + "%"
         );
         $("#tgt-presentase-target-triwulan3").val(
-            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan3 / totalNilaiY) * 100)
+                .toFixed(2)
+                .replace(/\.00$/, "") + "%"
         );
         $("#tgt-presentase-target-triwulan4").val(
-            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan4 / totalNilaiY) * 100)
+                .toFixed(2)
+                .replace(/\.00$/, "") + "%"
         );
     }
 

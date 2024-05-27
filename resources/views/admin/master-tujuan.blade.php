@@ -62,7 +62,7 @@
                                         <th style="width: 15px;">No</th>
                                         <th>Tahun</th>
                                         <th>Tujuan</th>
-                                        <th>Aksi</th>
+                                        <th style="min-width: 98px">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,8 +73,8 @@
                                         <td>{{ $tujuan->tujuan }}</td>
                                         <td>
                                             <a href="javascript:void(0)" class="btn btn-warning edit-btn btn-sm"
-                                                data-id="{{ $tujuan->id_tujuan }}"
-                                                data-toggle="modal" data-target="#modal-edit-mastertujuan">
+                                                data-id="{{ $tujuan->id_tujuan }}" data-toggle="modal"
+                                                data-target="#modal-edit-mastertujuan">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"

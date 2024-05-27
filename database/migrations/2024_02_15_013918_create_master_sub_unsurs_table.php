@@ -18,7 +18,7 @@ return new class extends Migration
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
             $table->ulid('master_unsur_id');
             $table->foreign('master_unsur_id')->references('id')->on('master_unsurs')->onDelete('cascade');
-            $table->string('nama_sub_unsur');
+            $table->string('nama_sub_unsur')->unique();
             $table->timestamps();
         });
     }

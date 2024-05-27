@@ -70,6 +70,26 @@
                                 <th>Jumlah Objek:</th>
                                 <td id="jumlah-objek">{{ $targetIkuUnitKerja->jumlah_objek }}</td>
                             </tr>
+                            <tr>
+                                <th>Target Kinerja:</th>
+                                <td><a class="badge badge-primary"
+                                        href="/perencana/target-iku-unit-kerja/{{ $targetIkuUnitKerja->id }}"
+                                        target="_blank">Lihat Target Kinerja
+                                        <i class="fa-solid fa-up-right-from-square ml-1"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{-- realisasi --}}
+                            <tr>
+                                <th>Realisasi Kinerja:</th>
+                                <td><a class="badge badge-primary"
+                                        href="/perencana/realisasi-iku-unit-kerja/{{ $targetIkuUnitKerja->id }}"
+                                        target="_blank">Lihat Realisasi Kinerja
+                                        <i class="fa-solid fa-up-right-from-square ml-1"></i>
+                                    </a>
+                                </td>
+
+
                         </table>
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Evaluasi</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
@@ -154,6 +174,7 @@
                                         Dokument Notulen</a>
                                 </td>
                             </tr>
+
                         </table>
                         <div class="form-group col overflow-scroll table-wrapper">
                             <table class="table table-responsive-md table-bordered " id="table-iku">
@@ -274,11 +295,15 @@
                                 </tfoot>
 
                             </table>
+
                         </div>
                         <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0" style="gap: 10px">
                             <a class="btn btn-outline-primary" href="/perencana/evaluasi-iku-unit-kerja/">
                                 <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                             </a>
+                            <button type="button" class="btn btn-success" id="btn-export">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -292,6 +317,31 @@
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script> --}}
 <script src="{{ asset('js') }}/page/perencana/evaluasi-iku.js"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'evaluasi-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+        // Set your file name a.click(); }); });
+</script>
 
 <!-- Bootstrap is required -->
 @endpush

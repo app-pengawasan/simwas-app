@@ -121,7 +121,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
-                                                method="post" class="d-inline">
+                                                method="post" class="d-inline submit-button">
                                                 @csrf
                                                 @method('put')
                                                 <input type="hidden" name="status" value="3">
@@ -167,6 +167,23 @@
 {{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
 
 <script>
+    $(".submit-button").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+    title: "Apakah Anda Yakin Mengirim ke Evaluasi?",
+    text: "Data yang dikirim tidak dapat diubah kembali!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, Kirim!",
+    cancelButtonText: "Batal",
+    }).then((result) => {
+    if (result.isConfirmed) {
+    $(this).submit();
+    }
+    });
+    });
     $(function () {
     let table = $("#realisasi-iku-unit-kerja")
     .dataTable({

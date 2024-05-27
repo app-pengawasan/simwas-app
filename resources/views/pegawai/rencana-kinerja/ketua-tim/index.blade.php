@@ -77,7 +77,9 @@
                                         <th style="width: 15px;">No</th>
                                         <th>Tahun</th>
                                         <th>Unit Kerja</th>
-                                        <th>IKU</th>
+                                        <th
+                                        style="width: 400px;"
+                                        >IKU</th>
                                         <th>Kegiatan</th>
                                         <th>Ketua Tim</th>
                                         <th>Status</th>
