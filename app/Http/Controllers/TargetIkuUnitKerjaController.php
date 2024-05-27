@@ -84,7 +84,7 @@ class TargetIkuUnitKerjaController extends Controller
     public function create()
     {
         $this->authorize('perencana');
-        $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
+        $masterUnitKerja = MasterUnitKerja::where('kategori', 2)->get();
         // dd($masterUnitKerja);
 
 
@@ -173,7 +173,7 @@ class TargetIkuUnitKerjaController extends Controller
     {
         // dd($targetIkuUnitKerja);
         $this->authorize('perencana');
-        $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
+        $masterUnitKerja = MasterUnitKerja::where('kategori', 2)->get();
 
 
         $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
