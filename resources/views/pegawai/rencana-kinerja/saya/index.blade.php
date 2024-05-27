@@ -49,7 +49,7 @@
                                         <th>Tim</th>
                                         <th>Proyek</th>
                                         <th>Tugas</th>
-                                        <th>Jabatan</th>
+                                        <th>Peran</th>
                                         <th>Hasil kerja</th>
                                         <th id="title">Rencana Jam Kerja</th>
                                         <th>Status</th>

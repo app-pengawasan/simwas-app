@@ -21,7 +21,7 @@ class RealisasiController extends Controller
 
     protected $status = [
         1   => 'Selesai',
-        2   => 'Tidak dilaksanakan'
+        2   => 'Dibatalkan'
     ];
 
     protected $hasilKerja = [
@@ -144,6 +144,8 @@ class RealisasiController extends Controller
         
         $rules = [
             'tugas'         => 'required',
+            'tim'         => 'required',
+            'proyek'         => 'required',
             // 'tgl'           => 'required|date_format:Y-m-d',
             // 'start'         => [
             //                     'required',
@@ -171,11 +173,8 @@ class RealisasiController extends Controller
         //                          : $timeMessage = 'Sudah ada aktivitas pada jam ini';
 
         $customMessages = [
-            // 'boolean' => $timeMessage,
             'required' => ':attribute harus diisi',
-            // 'date_format' => 'Format jam harus JJ:MM',
-            // 'before' => 'Jam mulai harus sebelum jam selesai',
-            // 'after' => 'Jam selesai harus setelah jam mulai',
+            'required_if' => ':attribute harus diisi'
         ];
         
         $validator = Validator::make($request->all(), $rules, $customMessages);
@@ -336,7 +335,7 @@ class RealisasiController extends Controller
             'status'        => 'required',
             'kegiatan'      => 'required_if:status,1',
             'capaian'       => 'required_if:status,1',
-            'edit-link'     => 'nullable|url',
+            'edit-link'     => 'required_if:status,1|url',
             // 'edit-file'     => 'nullable|mimes:pdf|max:500',
             // 'catatan'       => 'required_if:status,2',
             'alasan'       => 'required_if:status,2',
@@ -345,15 +344,13 @@ class RealisasiController extends Controller
         // ($duplicateBetween != 0) ? $timeMessage = 'Ada aktivitas di antara jam mulai dan selesai ini'
         //                          : $timeMessage = 'Sudah ada aktivitas pada jam ini';
 
-        // $customMessages = [
-        //     'boolean' => $timeMessage,
-        //     'required' => ':attribute harus diisi',
-        //     'date_format' => 'Format jam harus JJ:MM',
-        //     'before' => 'Jam mulai harus sebelum jam selesai',
-        //     'after' => 'Jam selesai harus setelah jam mulai',
-        // ];
+        $customMessages = [
+            'required' => ':attribute harus diisi',
+            'required_if' => ':attribute harus diisi',
+            'url' => ':attribute harus berupa url/link',
+        ];
         
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $customMessages, ['edit-link' => 'hasil kerja']);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);

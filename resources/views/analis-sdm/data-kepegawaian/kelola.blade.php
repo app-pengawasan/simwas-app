@@ -48,6 +48,33 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="editModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Nilai</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form enctype="multipart/form-data" name="myeditform" id="myeditform">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" id="data_id" name="data_id">
+                                <label for="nilai" class="mt-3">Nilai</label>
+                                <input type="number" min="0" max="100" step=".01" class="form-control" id="nilai" name="nilai" required>
+                                <small id="error-nilai" class="text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-success edit-submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <section class="section">
             <div class="section-header">
                 <h1>Data Kepegawaian
@@ -84,7 +111,7 @@
                                             <th>Nama Pegawai</th>
                                             <th>Jenis Data Kepegawaian</th>
                                             <th>Nilai</th>
-                                            {{-- <th>Aksi</th> --}}
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,6 +121,12 @@
                                                 <td>{{ $data->user->name }}</td>
                                                 <td>{{ $data->masterdk->jenis }}</td>
                                                 <td>{{ $data->nilai }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning edit-btn" 
+                                                    data-toggle="modal" data-target="#editModal"
+                                                    data-id="{{ $data->id }}" data-nilai="{{ $data->nilai }}">
+                                                    <i class="fas fa-edit"></i> Edit</button>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -131,5 +164,107 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/admin/master-pegawai.js') }}"></script>
+    <script>
+        table = $("#table-master-pegawai")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4],
+                        },
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "Cari:",
+                    sZeroRecords: "Data tidak ditemukan",
+                    sEmptyTable: "Data tidak ditemukan",
+                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                    sInfoFiltered: "(disaring dari _MAX_ data)",
+                    sLengthMenu: "Tampilkan _MENU_ data",
+                    oPaginate: {
+                        sPrevious: "Sebelumnya",
+                        sNext: "Selanjutnya",
+                    },
+                },
+            })
+            .api();
+        
+        $(".dataTables_filter input").attr(
+            "placeholder",
+            "Cari berdasarkan NIP, Nama, atau Jenis"
+        );
+
+        $(".dataTables_filter").appendTo("#filter-search-wrapper");
+        $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
+        $(".dataTables_filter").css("width", "100%");
+        $(".dataTables_filter").css("margin-top", "15px");
+        // .dataTables_filter label width 100%
+        $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
+        $(".dataTables_filter input").css("height", "35px");
+        $(".dataTables_filter input").css("width", "40%");
+        // make label text bold and black
+        $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
+        $(".dataTables_filter label").css("margin-bottom", "0");
+        // add padding x 10px to .dataTables_filter input
+        $(".dataTables_filter input").css("padding", "0 10px");
+
+        $(".edit-btn").on("click", function () {
+            let dataId = $(this).attr("data-id");
+            let nilai = $(this).attr("data-nilai");
+            $('#data_id').val(dataId);
+            $('#nilai').val(nilai);
+        });
+
+        $(".edit-submit").on("click", function (e) {
+            e.preventDefault();
+            
+            let id = $('#data_id').val();
+            let token = $("meta[name='csrf-token']").attr("content");
+            $.ajax({
+                url: `/analis-sdm/data-kepegawaian/editNilai/${id}`,
+                type: "PUT",
+                cache: false,
+                data: {
+                    _token: token,
+                    nilai: $('#nilai').val(),
+                    // _method: 'PUT'
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (error) {
+                    $('form').removeClass('was-validated');
+                    $('.form-group').addClass('was-validated');
+
+                    let errorResponses = error.responseJSON;
+                    let errors = Object.entries(errorResponses.errors);
+
+                    errors.forEach(([key, value]) => {
+                        console.log(errors);
+                        let errorMessage = document.getElementById(`error-${key}`);
+                        errorMessage.innerText = `${value}`;
+                    });
+                },
+            });
+        });
+    </script>
 @endpush

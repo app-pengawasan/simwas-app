@@ -267,10 +267,17 @@ class PegawaiRencanaKerjaController extends Controller
         ]);
     }
 
-    public function rencanaJamKerja() {
+    public function rencanaJamKerja(Request $request) {
+        $year = $request->year;
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
         $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
-                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                    $query->where('status', 6);
+                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                    $query->where('status', 6)->where('tahun', $year);
                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
                   ->get();
 

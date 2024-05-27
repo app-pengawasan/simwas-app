@@ -27,7 +27,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
+            <h1>Detail Tugas {{ str_ireplace('tugas ', '', $rencanaKerja->tugas) }}</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
                 <div class="breadcrumb-item"><a href="/ketua-tim/rencana-kinerja">Kelola Rencana Kinerja</a></div>
@@ -153,7 +153,7 @@
                                 <table class="table table-striped">
                                     <tr>
                                         <th>Nama</th>
-                                        <th>Jabatan</th>
+                                        <th>Peran</th>
                                         <th>Hasil Kerja</th>
                                         <th>Total Jam Kerja</th>
                                         <th>Aksi</th>

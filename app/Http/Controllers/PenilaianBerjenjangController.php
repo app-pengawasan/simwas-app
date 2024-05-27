@@ -295,6 +295,7 @@ class PenilaianBerjenjangController extends Controller
     public function detail($id)
     {
         $realisasi = RealisasiKinerja::findOrfail($id);
+        $events = Event::where('id_pelaksana', $realisasi->id_pelaksana)->get();
 
         return view('components.realisasi-kinerja.show', [
             'type_menu'     => 'realisasi-kinerja',
@@ -302,7 +303,8 @@ class PenilaianBerjenjangController extends Controller
             'status'        => $this->status,
             'colorText'     => $this->colorText,
             'hasilKerja'    => $this->hasilKerja,
-            'kembali'       => 'nilai'
+            'kembali'       => 'nilai',
+            'events'        => $events
             ])
             ->with('realisasi', $realisasi);
     }    
@@ -328,8 +330,12 @@ class PenilaianBerjenjangController extends Controller
     public function update(Request $request, $id)
     {
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
+        $message = [
+            'decimal' => 'Nilai maksimal memiliki 2 angka desimal. Contoh: 98.67',
+            'between' => 'Nilai harus antara 0-100'
+        ];
 
-        $validateData = request()->validate($rule);
+        $validateData = request()->validate($rule, $message);
         $validateData['penilai'] = auth()->user()->id;
         $validateData['catatan_penilai'] = $request->catatan;
 

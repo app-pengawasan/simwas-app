@@ -69,6 +69,20 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            <div class="form-group mb-2">
+                                <label for="yearSelect">Tahun Pengajuan</label>
+                                <select name="year" id="yearSelect" class="form-control select2 col-md-1">
+                                    @php
+                                    $currentYear = date('Y');
+                                    $lastThreeYears = range($currentYear, $currentYear - 3);
+                                    @endphp
+                
+                                    @foreach ($lastThreeYears as $year)
+                                    <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped display responsive"
                                     id="table-pengelolaan-dokumen-pegawai">
@@ -80,6 +94,7 @@
                                             <th>Status</th>
                                             <th>Catatan</th>
                                             <th>Aksi</th>
+                                            <th class="never">tahun</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,6 +137,7 @@
                                                 </form>
                                                 @endif
                                             </td>
+                                            <td>{{ date("Y",strtotime($km->created_at)) }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -167,8 +183,34 @@
     </script> --}}
 
 <!-- Page Specific JS File -->
-<script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 <script>
+    let table = $("#table-pengelolaan-dokumen-pegawai")
+        .dataTable({
+            dom: "Bfrtip",
+            responsive: true,
+            lengthChange: false,
+            autoWidth: false,
+            buttons: [],
+            columnDefs: [{
+                "targets": 0,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).text(row + 1);
+                }
+            }]
+        }).api();
+
+    $('#yearSelect').on("change", function () {
+        table.draw();
+    });
+    
+    $.fn.dataTableExt.afnFiltering.push(
+        function (setting, data, index) {
+            var selectedYear = $('select#yearSelect option:selected').val();
+            if (data[6] == selectedYear) return true;
+            else return false;
+        }
+    );
+
     $('.tolak').on("click", function () {
         $('#km_id').val($(this).attr('data-id'));
     });

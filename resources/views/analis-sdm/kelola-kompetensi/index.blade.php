@@ -29,6 +29,33 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
+                            <div class="d-flex mb-2 row" style="gap:10px">
+                                <div class="form-group col pr-0" style="margin-bottom: 0;">
+                                    <label for="filterUnitKerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                    <select class="form-control" id="filterUnitKerja" autocomplete="off">
+                                        <option value="all">Semua</option>
+                                        <option value="8000">Inspektorat Utama</option>
+                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
+                                        <option value="8100">Inspektorat Wilayah I</option>
+                                        <option value="8200">Inspektorat Wilayah II</option>
+                                        <option value="8300">Inspektorat Wilayah III</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                    <label for="filterTahun" style="margin-bottom: 0;">Jenis Kompetensi</label>
+                                    <select class="form-control" id="filterJenis" name="filterJenis">
+                                        <option value="all">Semua</option>
+                                        <option value="1">Sertifikasi</option>
+                                        <option value="2">Diklat Penjenjangan</option>
+                                        <option value="3">Diklat Subtantif</option>
+                                        <option value="4">Pelatihan</option>
+                                        <option value="5">Workshop</option>
+                                        <option value="6">Seminar</option>
+                                        <option value="7">Pelatihan di Kantor Sendiri</option>
+                                        <option value="999">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
@@ -52,6 +79,8 @@
                                             <th>Status</th>
                                             <th>Aksi</th>
                                             <th class="never">sertifikat_link</th>
+                                            <th class="never">unit kerja</th>
+                                            <th class="never">kode jenis</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,7 +103,7 @@
                                                 <td>
                                                     <a class="btn btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
-                                                        <i class="fas fa-eye"></i>
+                                                        <i class="fas fa-download"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ $k->catatan }}</td>
@@ -122,6 +151,8 @@
                                                     </div>
                                                 </td>
                                                 <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
+                                                <td>{{ $k->pegawai->unit_kerja }}</td>
+                                                <td>{{ $k->pp->id }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

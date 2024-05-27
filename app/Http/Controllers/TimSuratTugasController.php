@@ -103,7 +103,14 @@ class TimSuratTugasController extends Controller
             'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'required' => ':attribute harus diisi',
+            'max' => 'Jumlah karakter maksimal 100',
+            'file.max' => 'Ukuran file maksimal 1MB',
+            'mimes' => 'Format file harus pdf'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);

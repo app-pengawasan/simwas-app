@@ -128,6 +128,25 @@ class DataKepegawaianController extends Controller
         //
     }
 
+    public function editNilai(Request $request, $id)
+    {
+        $this->authorize('analis_sdm');
+
+        $rule = ['nilai' => 'decimal:0,2|between:0,100'];
+
+        $validateData = request()->validate($rule);
+
+        DataKepegawaian::where('id', $id)->update($validateData);
+
+        $request->session()->put('status', 'Berhasil mengedit nilai.');
+        $request->session()->put('alert-type', 'success');
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Data Berhasil Diperbarui'
+        ]);
+    }
+
     public function nonaktif() {
         $this->authorize('analis_sdm');
         $masters = MasterDataKepegawaian::all()->where('is_aktif', false);
@@ -164,7 +183,7 @@ class DataKepegawaianController extends Controller
         $header = (new HeadingRowImport)->toArray(storage_path('/document/upload/').$file_name);
         $rules = [
             'nip',
-            'jenis_data_kepegawaian',
+            'id_jenis_data_kepegawaian',
             'nilai',
         ];
 
@@ -191,6 +210,7 @@ class DataKepegawaianController extends Controller
                 }
                 $error = $error.'<br>';
             }
+            File::delete(storage_path('/document/upload/').$file_name);
             return back()
                 ->with('status', $error)
                 ->with('alert-type', 'danger');
@@ -200,7 +220,7 @@ class DataKepegawaianController extends Controller
 
         if (session()->has('duplikat')) {
             session()->forget('duplikat');
-            return back()->with('status', 'Gagal mengimpor data, data duplikat.')->with('alert-type', 'danger');
+            return back()->with('status', 'Gagal mengimpor data, nilai pegawai ini sudah ada.')->with('alert-type', 'danger');
         }
 
         return back()->with('status', 'Berhasil mengimpor data pegawai.')->with('alert-type', 'success');
@@ -221,7 +241,9 @@ class DataKepegawaianController extends Controller
         $sheetjenis = $spreadsheet->getSheet(2);
         $jenis_data_kepegawaian = MasterDataKepegawaian::all();
         foreach ($jenis_data_kepegawaian as $key => $jenis) {
-            $sheetjenis->setCellValue('A'.$key + 2, $jenis->jenis);
+            $row = $key + 2;
+            $sheetjenis->setCellValue('A'.$row, $jenis->id);
+            $sheetjenis->setCellValue('B'.$row, $jenis->jenis);
         }
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

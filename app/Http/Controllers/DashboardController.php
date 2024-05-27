@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kompetensi;
-use App\Models\MasterUnitKerja;
-use App\Models\NormaHasil;
-use App\Models\RencanaKerja;
 use App\Models\Sl;
-use App\Models\StKinerja;
 use App\Models\Stp;
 use App\Models\Stpd;
-use App\Models\Surat;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\UsulanSuratSrikandi;
+use App\Models\Surat;
 use App\Models\TimKerja;
+use App\Models\StKinerja;
+use App\Models\Kompetensi;
+use App\Models\NormaHasil;
+use App\Models\RencanaKerja;
+use Illuminate\Http\Request;
+use App\Models\MasterUnitKerja;
 use App\Models\TargetIkuUnitKerja;
+use App\Models\UsulanSuratSrikandi;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
 {
@@ -269,9 +270,20 @@ class DashboardController extends Controller
         ]);
     }
 
-    function arsiparis() {
+    function arsiparis(Request $request) {
         $this->authorize('arsiparis');
-        $tugas = RencanaKerja::get();
+
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $tugas = RencanaKerja::whereRelation('proyek.timKerja', function (Builder $query) use ($year) {
+                    $query->where('tahun', $year);
+                 })->get();
         return view('arsiparis.index', [
             'tugas' => $tugas,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,

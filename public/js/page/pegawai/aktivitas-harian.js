@@ -128,7 +128,19 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         $('#tgl').val(startDate);
         $('#modal-create-aktivitas-label').html('Tambah Aktivitas: ' + moment(selectionInfo.start).format('LL'));
     },
+    datesSet: function (dateInfo) {
+        // tampilan hover sel untuk monthview
+        $('.fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled)').on({
+            mouseenter: function() {
+                $(this).append("<div class='hovermonth'>+</div>");
+            },
+            mouseleave: function() {
+                $('.hovermonth').remove();
+            }
+        });
+    }
 });
+
 calendar.render();
 
 //tutup popover event saat klik di luar atau buka modal
@@ -148,7 +160,7 @@ $('.nav-link').on("click", function () {
     }, 400);
 });
 
-//ganti warna sel waktu on hover (week & day view)
+//tampilam sel waktu saat hover (week & day view)
 $(document).on({
     mouseenter: function() {
         let cellWidth = $('th.fc-col-header-cell').width();
@@ -170,7 +182,6 @@ $(document).on({
         });
 
     },
-
     mouseleave: function() {
         $(this).children('.temp-cell').remove();
     }
@@ -179,15 +190,6 @@ $(document).on({
 $(".fc-button-group").on("click", function (e) {
     $('.temp-cell').remove();
 })
-
-$('.fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled)').on({
-    mouseenter: function() {
-        $(this).append("<div class='hovermonth'>+</div>");
-    },
-    mouseleave: function() {
-        $('.hovermonth').remove();
-    }
-});
 
 $("#modal-create-aktivitas .close, #modal-create-aktivitas .btn-danger") .on("click", function (e) {
     document.forms['myform'].reset();

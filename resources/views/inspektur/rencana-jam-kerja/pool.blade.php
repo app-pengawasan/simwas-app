@@ -31,6 +31,23 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
+                                    <form id="yearForm" action="" method="GET" class="px-0">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label for="yearSelect">Pilih Tahun</label>
+                                            <select name="year" id="yearSelect" class="form-control select2 col-md-1">
+                                                @php
+                                                $currentYear = date('Y');
+                                                $lastThreeYears = range($currentYear, $currentYear - 3);
+                                                @endphp
+                            
+                                                @foreach ($lastThreeYears as $year)
+                                                <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </form>
                                     <table class="table table-bordered table-striped display responsive" id="table-inspektur-kinerja">
                                         <thead>
                                             <tr>
@@ -55,8 +72,8 @@
                                                 <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
                                                 <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/inspektur/rencana-jam-kerja/pool/{{ $key }}"
+                                                    <a class="btn btn-primary detail"
+                                                        href="/inspektur/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
@@ -116,11 +133,15 @@
             }],
         });
 
-        //update ukuran kalender saat ukuran sidebar berubah
-        // $('.nav-link').on("click", function () {
-        //     setTimeout( function () {
-        //         datatable.columns.adjust();
-        //     }, 500);
-        // });
+        $('#yearSelect').on('change', function() {
+            let year = $(this).val();
+            $('#yearForm').attr('action', `?year=${year}`);
+            $('#yearForm').find('[name="_token"]').remove();
+            $('#yearForm').submit();
+        });
+
+        $(".detail").attr('href', function(_, el){
+            return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
+        });
     </script>
 @endpush

@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="card-body">
                     <div class="form-group">
-                        <label class="form-label" for="pt-jabatan">Jabatan</label>
+                        <label class="form-label" for="pt-jabatan">Peran</label>
                         <div class="">
                             <select id="pt-jabatan" class="form-control" name="pt-jabatan" disabled required>
                                 <option value="1">Pengendali Teknis</option>

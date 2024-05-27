@@ -13,7 +13,7 @@
                 <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
             </a>
         </div>
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" style="margin-bottom: 30px">
             <li class="{{ Request::is('pegawai/dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dashboard') }}">
                     <i class="fab fa-solid fa-house"></i>
@@ -105,7 +105,7 @@
             </li>
             <li class="nav-item dropdown {{ $type_menu === 'tugas-tim' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-file-signature"></i>
+                    <i class="fas fa-people-group"></i>
                     <span>Tugas Tim</span>
                 </a>
                 <ul class="dropdown-menu">
@@ -219,11 +219,11 @@
                     <span>Surat Eksternal</span>
                 </a>
             </li> --}}
-            <li class="menu-header">Kelola Kompetensi</li>
+            <li class="menu-header">Pengembangan Kompetensi</li>
             <li class="{{ Request::is('pegawai/kompetensi*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/kompetensi">
-                    <i class="fas fa-file"></i>
-                    <span>Pengembangan Kompetensi</span>
+                    <i class="fas fa-award"></i>
+                    <span>Kelola Kompetensi</span>
                 </a>
             </li>
         </ul>

@@ -23,13 +23,13 @@
             </li>
             <li class="nav-item dropdown {{ $type_menu === 'kompetensi' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fab fa-stumbleupon-circle"></i>
+                    <i class="fas fa-award"></i>
                     <span>Kompetensi Pegawai</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request::is('analis-sdm/pp*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('analis-sdm-pp') }}">
-                            <span>Master Pengembangan Profesi</span>
+                            <span>Master Kompetensi Pegawai</span>
                         </a>
                     </li>
                     <li

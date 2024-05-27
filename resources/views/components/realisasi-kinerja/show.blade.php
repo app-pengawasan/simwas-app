@@ -46,7 +46,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <table class="mb-4 table table-striped responsive" id="table-show">
+                            <table class="mb-4 table table-striped responsive">
                                 <tr>
                                     <th>Tim</th>
                                     <td>{{ $realisasi->pelaksana->rencanaKerja->proyek->timkerja->nama }}</td>
@@ -81,7 +81,7 @@
                                 </tr>
                                 <tr>
                                     <th>Aktivitas</th>
-                                    @foreach ($events as $event)
+                                    {{-- @foreach ($events as $event)
                                         @php
                                             $start = $event->start;
                                             $end = $event->end;
@@ -91,7 +91,33 @@
                                             <td>{{ $event->aktivitas }} </td>
                                             <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
+                                    <td>    
+                                        <table id="aktivitas" class="table table-striped responsive mt-3">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th style="width: 20%">Tanggal</th>
+                                                    <th style="width: 30%">Waktu</th>
+                                                    <th>Aktivitas</th>
+                                                    <td class="d-none">jam</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($events as $event) 
+                                                    @php
+                                                        $start = $event->start;
+                                                        $end = $event->end;
+                                                    @endphp
+                                                    <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center show">
+                                                        <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
+                                                        <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
+                                                        <td>{{ $event->aktivitas }} </td>
+                                                        <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Jam Realisasi</th>
@@ -116,7 +142,7 @@
                                             @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                 <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
                                                 href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                    <i class="fas fa-eye"></i>
+                                                    <i class="fa fa-download"></i>
                                                 </a>
                                             @else
                                                 <a class="btn btn-primary h-75 d-flex align-items-center justify-content-center" style="width: 10%"
@@ -157,5 +183,7 @@
             i = i + +$(this).text();
         });
         $('#jam').text(i);
+
+        $('.show').show();
     </script>
 @endpush

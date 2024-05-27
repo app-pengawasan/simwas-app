@@ -81,16 +81,25 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="edit-aktivitas">Aktivitas</label>
                                         <div class="col-sm-10">
-                                            <table id="edit-aktivitas">
+                                            <table id="edit-aktivitas" class="table table-striped responsive">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th style="width: 20%">Tanggal</th>
+                                                        <th style="width: 30%">Waktu</th>
+                                                        <th>Aktivitas</th>
+                                                        <td class="d-none">jam</td>
+                                                    </tr>
+                                                </thead>
                                                 <tbody>
-                                                    @foreach ($events as $event)
+                                                    @foreach ($events as $event) 
                                                         @php
                                                             $start = $event->start;
                                                             $end = $event->end;
                                                         @endphp
-                                                        <tr data-tugas="{{ $event->id_pelaksana }}">
-                                                            <td>{{ $start }} - {{ $end }}</td>
-                                                            <td>: {{ $event->aktivitas }} </td>
+                                                        <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center">
+                                                            <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
+                                                            <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
+                                                            <td>{{ $event->aktivitas }} </td>
                                                             <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                                         </tr>
                                                     @endforeach

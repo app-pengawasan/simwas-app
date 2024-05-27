@@ -96,11 +96,20 @@ class TimKendaliMutuController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'tugas' => ['required', 'string', 'max:26'],
-            'file' => ['required', 'file', 'mimes:rar,zip', 'max:5120'],
+            'tugas' => ['required', 'string'],
+            'file' => ['required_if:link,0', 'file', 'mimes:rar,zip', 'max:5120'],
+            'link' => ['required_if:file,0', 'url']
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'required' => ':attribute harus diisi',
+            'require_if' => ':attribute harus diisi',
+            'max' => 'Ukuran file maksimal 5MB',
+            'url' => 'Isi berupa url/link valid atau pilih file rar/zip',
+            'mimes' => 'Format file harus rar/zip'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -108,11 +117,13 @@ class TimKendaliMutuController extends Controller
 
         $validateData = $request->validate($rules);
 
-        $file = $request->file('file');
-        $fileName = time() . '-kendali-mutu.' . $file->getClientOriginalExtension();
-        $path = public_path('storage/tim/km');
-        $file->move($path, $fileName);
-        $path = 'storage/tim/km/' . $fileName;
+        if (isset($validateData['file'])) {
+            $file = $request->file('file');
+            $fileName = time() . '-kendali-mutu.' . $file->getClientOriginalExtension();
+            $path = public_path('storage/tim/km');
+            $file->move($path, $fileName);
+            $path = 'storage/tim/km/' . $fileName;
+        } else $path = $validateData['link'];
 
         KendaliMutuTim::create([
             'tugas_id' => $validateData['tugas'],
@@ -163,26 +174,36 @@ class TimKendaliMutuController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'file' => ['required', 'file', 'mimes:rar,zip', 'max:5120'],
+            'edit-file' => ['required_if:edit-link,0', 'file', 'mimes:rar,zip', 'max:5120'],
+            'edit-link' => ['required_if:edit-file,0', 'url']
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'require_if' => ':attribute harus diisi',
+            'max' => 'Ukuran file maksimal 5MB',
+            'url' => 'Isi berupa url/link valid atau pilih file rar/zip',
+            'mimes' => 'Format file harus rar/zip'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $request->validate($rules);
+        $validateData = $request->validate($rules);
 
         $surat = KendaliMutuTim::findOrFail($id);
         $path_old = $surat->path;
         File::delete(public_path().'/'.$path_old);
 
-        $file = $request->file('file'); 
-        $fileName = time() . '-kendali-mutu.' . $file->getClientOriginalExtension();
-        $path = public_path('storage/tim/km');
-        $file->move($path, $fileName);
-        $path_new = 'storage/tim/km/' . $fileName;
+        if (isset($validateData['edit-file'])) {
+            $file = $request->file('edit-file'); 
+            $fileName = time() . '-kendali-mutu.' . $file->getClientOriginalExtension();
+            $path = public_path('storage/tim/km');
+            $file->move($path, $fileName);
+            $path_new = 'storage/tim/km/' . $fileName;
+        } else $path_new = $validateData['edit-link'];
 
         $surat->update([
             'path' => $path_new,

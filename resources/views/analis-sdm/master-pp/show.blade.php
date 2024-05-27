@@ -21,7 +21,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Nama Pengembangan Profesi</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Nama Kompetensi Pegawai</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -32,7 +32,7 @@
                             <input type="hidden" name="is_aktif" value="1">
                             <div class="form-group">
                                 <input type="hidden" id="pp_id" name="pp_id" value="{{ $pp->id }}">
-                                <label for="pp">Jenis Pengembangan Profesi</label>
+                                <label for="pp">Jenis Kompetensi Pegawai</label>
                                 <input type="text" class="form-control" disabled value="{{ $pp->jenis }}">
                                 @if ($pp->id == 3)
                                     <label for="peserta" class="mt-3">Peserta</label>
@@ -44,7 +44,7 @@
                                         <option value="400">Semua Jenjang</option>
                                     </select>
                                 @endif
-                                <label for="nama" class="mt-3">Nama Pengembangan Profesi</label>
+                                <label for="nama" class="mt-3">Nama Kompetensi Pegawai</label>
                                 <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama') }}">
                                 @error('nama')
                                 <div class="invalid-feedback">
@@ -61,26 +61,58 @@
                 </div>
             </div>
         </div>
-        <section class="section">
-            <div class="section-header">
-                <h1>Pengembangan Profesi {{ $pp->jenis }}</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
-                    <div class="breadcrumb-item">Master Pengembangan Profesi</div>
+        <div class="modal fade" id="editModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+            aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Nama Kompetensi Pegawai</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form enctype="multipart/form-data" name="myeditform" id="myeditform">
+                        <div class="modal-body">
+                            <input type="hidden" name="is_aktif" value="1">
+                            <div class="form-group">
+                                <input type="hidden" id="nama_pp_id" name="nama_pp_id">
+                                <label for="nama" class="mt-3">Nama Kompetensi Pegawai</label>
+                                <input type="text" class="form-control @error('nama') is-invalid @enderror" id="namaEdit" name="namaEdit" required>
+                                @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-success edit-submit">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            @if (session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
+        </div>
+        <section class="section">
+            <div class="section-header">
+                <h1>Kompetensi Pegawai {{ $pp->jenis }}</h1>
+                <div class="section-header-breadcrumb">
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Master Kompetensi Pegawai</div>
                 </div>
-            @endif
+            </div>
             
             <div class="section-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
+                                @include('components.flash')
+                                {{ session()->forget(['alert-type', 'status']) }}
+                                <a class="btn btn-primary mr-2" href="/analis-sdm/pp" id="btn-back2">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i>
+                                    Kembali
+                                </a>
                                 <div class="pt-1 pb-1 m-4">
                                     <div class="btn btn-success btn-lg btn-round" data-toggle="modal"
                                     data-target="#staticBackdrop">
@@ -98,7 +130,7 @@
                                                 @else
                                                     <th>No.</th>
                                                 @endif
-                                                <th>Nama Pengembangan Profesi</th>
+                                                <th>Nama Kompetensi Pegawai</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -113,38 +145,52 @@
                                                 @if ($pp->id == 3)
                                                     <td>{{ $namaPp->peserta }}</td>
                                                     <td>{{ $peserta[$namaPp->peserta] }}</td>
-                                                    @if ($namaPp->peserta != $i)
-                                                        @php
-                                                            $kode = 1;
-                                                            $i = $namaPp->peserta;
-                                                        @endphp
-                                                    @else
-                                                        @php
-                                                            $kode++;
-                                                        @endphp
+                                                    @if ($namaPp->is_aktif == "1")
+                                                        @if ($namaPp->peserta != $i)
+                                                            @php
+                                                                $kode = 1;
+                                                                $i = $namaPp->peserta;
+                                                            @endphp
+                                                        @else
+                                                            @php
+                                                                $kode++;
+                                                            @endphp
+                                                        @endif
+                                                        <td>{{ $i + $kode }}</td>
+                                                    @else <td></td>
                                                     @endif
-                                                    <td>{{ $i + $kode }}</td>
                                                 @else
                                                     <td></td>
                                                 @endif
                                                 <td>{{ $namaPp->nama }}</td>
                                                 @if ($namaPp->is_aktif == "1")
-                                                <td>Aktif</td>
-                                                <td>
-                                                    <form method="post" action="/analis-sdm/namaPp/{{ $namaPp->id }}">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <input type="hidden" name="nonaktifkan" value="1">
-                                                        <input type="hidden" name="is_aktif" value="0">
-                                                        <input type="hidden" name="pp_id" value="{{ $pp->id }}">
-                                                        <input type="hidden" name="id" value="{{ $namaPp->id }}">
-                                                        <button type="submit" class="btn btn-sm btn-danger">Nonaktifkan</button>
-                                                    </form>
-                                                </td>
-                                                @else
-                                                    <td>Nonatif</td>
+                                                    <td>Aktif</td>
                                                     <td>
-                                                        <form method="post" action="/analis-sdm/namaPp/{{ $namaPp->id }}">
+                                                        <div class="btn-group dropdown">
+                                                            <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                            data-id="{{ $namaPp->id }}">
+                                                                {{-- <i class="fas fa-stamp"></i> --}}...
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                                <a class="dropdown-item aktivasi-btn" href="javascript:void(0)"
+                                                                data-id="{{ $namaPp->id }}" status-id="2" pp-id="{{ $pp->id }}">
+                                                                    <i class="far fa-circle-xmark text-danger mr-2"></i>
+                                                                    Nonaktifkan
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item edit-btn"
+                                                                    data-id="{{ $namaPp->id }}" data-nama="{{ $namaPp->nama }}"
+                                                                    data-toggle="modal" data-target="#editModal">
+                                                                    <i class="fas fa-edit text-warning mr-2"></i>
+                                                                    Edit
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                @else
+                                                    <td>Nonaktif</td>
+                                                    <td>
+                                                        {{-- <form method="post" action="/analis-sdm/namaPp/{{ $namaPp->id }}">
                                                             @csrf
                                                             @method('PUT')
                                                             <input type="hidden" name="aktifkan" value="1">
@@ -152,7 +198,27 @@
                                                             <input type="hidden" name="pp_id" value="{{ $pp->id }}">
                                                             <input type="hidden" name="id" value="{{ $namaPp->id }}">
                                                             <button type="submit" class="btn btn-sm btn-info">Aktifkan</button>
-                                                        </form>
+                                                        </form> --}}
+                                                        <div class="btn-group dropdown">
+                                                            <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                            data-id="{{ $namaPp->id }}">
+                                                                {{-- <i class="fas fa-stamp"></i> --}}...
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                                <a class="dropdown-item aktivasi-btn" href="javascript:void(0)"
+                                                                data-id="{{ $namaPp->id }}" status-id="1" pp-id="{{ $pp->id }}">
+                                                                    <i class="far fa-check-circle text-success mr-2"></i>
+                                                                    Aktifkan
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item edit-btn"
+                                                                    data-id="{{ $namaPp->id }}" data-nama="{{ $namaPp->nama }}"
+                                                                    data-toggle="modal" data-target="#editModal">
+                                                                    <i class="fas fa-edit text-warning mr-2"></i>
+                                                                    Edit
+                                                                </a>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 @endif
                                             </tr>
@@ -224,6 +290,55 @@
                 }]
             });
         }
+
+        $(".aktivasi-btn").on("click", function () {
+            let dataId = $(this).attr("data-id");
+            let ppId = $(this).attr("pp-id");
+            let is_aktif = $(this).attr("status-id");
+            let token = $("meta[name='csrf-token']").attr("content");
+
+            $.ajax({
+                url: `/analis-sdm/namaPp/${dataId}`,
+                type: "PUT",
+                cache: false,
+                data: {
+                    _token: token,
+                    aktivasi: true,
+                    is_aktif: is_aktif,
+                    ppId: ppId
+                },
+                success: function (response) {
+                    location.reload();
+                },
+            });
+        });
+
+        $(".edit-btn").on("click", function () {
+            let dataId = $(this).attr("data-id");
+            let nama = $(this).attr("data-nama");
+            $('#nama_pp_id').val(dataId);
+            $('#namaEdit').val(nama);
+        });
+
+        $(".edit-submit").on("click", function (e) {
+            e.preventDefault();
+            
+            let id = $('#nama_pp_id').val();
+            let token = $("meta[name='csrf-token']").attr("content");
+            $.ajax({
+                url: `/analis-sdm/namaPp/${id}`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    nama: $('#namaEdit').val(),
+                    _method: 'PUT'
+                },
+                success: function (response) {
+                    location.reload();
+                },
+            });
+        });
     </script>
 
     @if ($errors->any())

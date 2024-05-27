@@ -29,8 +29,9 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div class="d-flex float-left col-6 p-0 pr-2">
-                                <div class="ml-auto my-2 col-12 p-0">
+                            <div class="d-flex mb-2 row" style="gap:10px">
+                                <div class="form-group col pr-0" style="margin-bottom: 0;">
+                                    <label for="filterBulan" style="margin-bottom: 0;">Bulan Unggah</label>
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -47,18 +48,18 @@
                                         <option value="12">Desember</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="d-flex float-right col-6 p-0 pl-2">
-                                <div class="ml-auto my-2 col-12 p-0">
-                                    <select class="form-control" id="filterTahun">
+                                <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                    <label for="filterTahun" style="margin-bottom: 0;">Tahun Unggah</label>
+                                    <select class="form-control" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
-                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
+                                            <option value="{{ $year + $i }}">
+                                                {{ $year + $i }}</option>
                                         @endfor
                                     </select>
                                 </div>
                             </div>
-                            <div style="margin-top: 5rem">
+                            <div style="margin-top: 2rem">
                                 <table id="table-daftar-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
@@ -84,8 +85,8 @@
                                                         <td>{{ $jumlah_tugas }}</td>
                                                         <td>{{ $values['rencana_jam'][$bulan] }}</td>
                                                         <td>{{ $values['realisasi_jam'][$bulan] }}</td>
-                                                        <td>{{ $values['avg'][$bulan] }}</td> 
-                                                        <td>{{ isset($values['nilai_ins'][$bulan]) ? round($values['nilai_ins'][$bulan], 2) : 0 }}</td>
+                                                        <td>{{ isset($values['avg'][$bulan]) ? $values['avg'][$bulan] : '-' }}</td> 
+                                                        <td>{{ isset($values['nilai_ins'][$bulan]) ? round($values['nilai_ins'][$bulan], 2) : '-' }}</td>
                                                         <td>{{ $bulan == 'all' ? '' : (isset($values['catatan']) ? $values['catatan'][$bulan] ?? '' : '') }}</td>
                                                         <td>
                                                             @if ($bulan == 'all')

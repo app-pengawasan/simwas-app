@@ -73,7 +73,11 @@
                                                     {{ $lnm->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
                                                     {{ $lnm->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
                                                     {{ $lnm->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $lnm->status_verifikasi_arsiparis }}
+                                                    text-capitalize"><i class="
+                                                        {{ $lnm->status_verifikasi_arsiparis == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $lnm->status_verifikasi_arsiparis == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $lnm->status_verifikasi_arsiparis == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                    "></i>{{ $lnm->status_verifikasi_arsiparis }}
                                                 </span>
                                             </td>
                                             <td>
@@ -130,4 +134,41 @@
 
 <!-- Page Specific JS File -->
 <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+
+<script>
+    document.forms['formNHtim'].reset();
+    
+    $(".submit-btn").on("click", function (e) {
+        e.preventDefault();
+
+        $("#error-nomor").text("");
+        $("#error-file").text("");
+        
+        let data = new FormData($('#formNHtim')[0]);
+        let token = $("meta[name='csrf-token']").attr("content");
+        data.append('_token', token);
+
+        $.ajax({
+            url: `/pegawai/tim/norma-hasil`,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            cache: false,
+            data: data,
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                let errorResponses = error.responseJSON;
+                let errors = Object.entries(errorResponses.errors);
+
+                errors.forEach(([key, value]) => {
+                    let errorMessage = document.getElementById(`error-${key}`);
+                    errorMessage.innerText = `${value}`;
+                });
+                console.log(errors);
+            },
+        });
+    });
+</script>
 @endpush

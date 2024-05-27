@@ -68,7 +68,11 @@
                                                     {{ $st[0]->status == 'diperiksa' ? 'badge-primary' : '' }}
                                                     {{ $st[0]->status == 'disetujui' ? 'badge-success' : '' }}
                                                     {{ $st[0]->status == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $st[0]->status }}
+                                                    text-capitalize"><i class="
+                                                        {{ $st[0]->status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $st[0]->status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $st[0]->status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                    "></i>{{ $st[0]->status }}
                                                 </span>
                                             </td>
                                             <td>
@@ -125,4 +129,42 @@
 
 <!-- Page Specific JS File -->
 <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+<script>
+    document.forms['formNHtim'].reset();
+    
+    $(".submit-btn").on("click", function (e) {
+        e.preventDefault();
+
+        $("#error-tugas").text("");
+        $("#error-nomor_st").text("");
+        $("#error-nama").text("");
+        $("#error-file").text("");
+        
+        let data = new FormData($('#formNHtim')[0]);
+        let token = $("meta[name='csrf-token']").attr("content");
+        data.append('_token', token);
+
+        $.ajax({
+            url: `/pegawai/tim/surat-tugas`,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            cache: false,
+            data: data,
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                let errorResponses = error.responseJSON;
+                let errors = Object.entries(errorResponses.errors);
+
+                errors.forEach(([key, value]) => {
+                    let errorMessage = document.getElementById(`error-${key}`);
+                    errorMessage.innerText = `${value}`;
+                });
+                console.log(errors);
+            },
+        });
+    });
+</script>
 @endpush

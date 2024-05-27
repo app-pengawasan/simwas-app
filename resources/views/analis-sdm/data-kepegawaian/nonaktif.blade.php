@@ -42,7 +42,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Jenis Pengembangan Profesi</th>
+                                                <th>Jenis Kompetensi Pegawai</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>

@@ -174,14 +174,14 @@
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <th>Waktu</th>
                                                         <td>:</td>
                                                         <td class="">
                                                             {{ strftime('%A, %d %B %Y', strtotime($tugas->mulai)) }} -
                                                             {{ strftime('%A, %d %B %Y', strtotime($tugas->selesai)) }}
                                                         </td>
-                                                    </tr>
+                                                    </tr> --}}
                                                 </table>
                                                 <p class="font-weight-bold">
                                                     Pelaksana
@@ -190,7 +190,7 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Nama</th>
-                                                        <th>Jabatan</th>
+                                                        <th>Peran</th>
                                                         <th>Hasil Kerja</th>
                                                     </tr>
                                                     @if (count($tugas->pelaksana) > 0)
