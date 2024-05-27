@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('master_unsurs', function (Blueprint $table) {
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
-            $table->string('nama_unsur');
+            $table->string('nama_unsur')->unique();
             $table->timestamps();
         });
     }

@@ -116,6 +116,7 @@ class DashboardController extends Controller
 
         return view('pegawai.index', [
             'type_menu' => 'usulan-surat-srikandi',
+            // Surat Srikandi
             'percentage_usulan' => $suratSrikandiCount['percentage_usulan'],
             'percentage_disetujui' => $suratSrikandiCount['percentage_disetujui'],
             'percentage_ditolak' => $suratSrikandiCount['percentage_ditolak'],
@@ -123,7 +124,8 @@ class DashboardController extends Controller
             'usulanCount' => $suratSrikandiCount['usulanCount'],
             'disetujuiCount' => $suratSrikandiCount['disetujuiCount'],
             'ditolakCount' => $suratSrikandiCount['ditolakCount'],
-
+            'suratCount' => $suratSrikandiCount['totalCount'],
+            // Norma Hasil
             'normaHasilCount' => $normaHasilCount['usulanCount'],
             'normaHasilDisetujui' => $normaHasilCount['disetujuiCount'],
             'normaHasilDitolak' => $normaHasilCount['ditolakCount'],
@@ -131,9 +133,8 @@ class DashboardController extends Controller
             'normaHasilPercentageDiperiksa' => $normaHasilCount['percentage_diperiksa'],
             'normaHasilPercentageDisetujui' => $normaHasilCount['percentage_disetujui'],
             'normaHasilPercentageDitolak' => $normaHasilCount['percentage_ditolak'],
-
             'usulanNormaHasilCount' => $usulanNormaHasilCount,
-
+            // Tim Kerja - Ketua Tim Kerja
             'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
             'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
             'timKerjaDiajukanCount' => $timKerjaCount['timKerjaDiajukanCount'],
@@ -141,7 +142,7 @@ class DashboardController extends Controller
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
             'timKerjaPercentageDiajukan' => $timKerjaCount['timKerjaPercentageDiajukan'],
             'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
-
+            // Tim Kerja - Pimpinan
             'usulanPimpinanCount' => $usulanPimpinanCount,
 
 
@@ -359,6 +360,7 @@ class DashboardController extends Controller
             'usulanCount' => $usulanCount,
             'disetujuiCount' => $disetujuiCount,
             'ditolakCount' => $ditolakCount,
+            'totalCount' => $usulanCount+$disetujuiCount+$ditolakCount
         ];
     }
 

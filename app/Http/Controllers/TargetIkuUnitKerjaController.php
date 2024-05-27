@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\TargetIkuUnitKerja;
-use App\Models\RealisasiIkuUnitKerja;
 use App\Http\Requests\StoreTargetIkuUnitKerjaRequest;
 use App\Http\Requests\UpdateTargetIkuUnitKerjaRequest;
 use App\Models\MasterHasil;
 use App\Models\ObjekIkuUnitKerja;
 use App\Models\MasterUnitKerja;
 use Illuminate\Http\Request;
+use App\Models\RealisasiIkuUnitKerja;
+use App\Models\EvaluasiIkuUnitKerja;
 
 class TargetIkuUnitKerjaController extends Controller
 {
@@ -172,6 +173,8 @@ class TargetIkuUnitKerjaController extends Controller
     {
         // dd($targetIkuUnitKerja);
         $this->authorize('perencana');
+        $masterUnitKerja = MasterUnitKerja::where('kategori', 1)->get();
+
 
         $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         // dd($objekIkuUnitKerja);
@@ -180,6 +183,7 @@ class TargetIkuUnitKerjaController extends Controller
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
+            'masterUnitKerja' => $masterUnitKerja,
         ]);
     }
 
@@ -201,6 +205,7 @@ class TargetIkuUnitKerjaController extends Controller
                 'status' => '1',
                 'user_id' => auth()->user()->id,
             ]);
+            ObjekIkuUnitKerja::where('id_target', $targetIkuUnitKerja->id)->delete();
         $jumlahObjek = $request->input('jumlah-objek');
         for ($i = 1; $i <= $jumlahObjek; $i++) {
             $satuan = $request->input('satuan-row' . $i);
@@ -212,19 +217,21 @@ class TargetIkuUnitKerjaController extends Controller
             $status = '1';
             $user_id = auth()->user()->id;
             $id_target = $targetIkuUnitKerja->id;
-            $objekIkuUnitKerja = ObjekIkuUnitKerja::updateOrCreate(
-                ['id_target' => $id_target],
-                [
-                    'satuan' => $satuan,
-                    'nilai_y_target' => $nilaiY ?? 0,
-                    'target_triwulan_1' => $target_triwulan_1 ?? 0,
-                    'target_triwulan_2' => $target_triwulan_2 ?? 0,
-                    'target_triwulan_3' => $target_triwulan_3 ?? 0,
-                    'target_triwulan_4' => $target_triwulan_4 ?? 0,
-                    'status' => $status,
-                    'user_id' => $user_id,
-                ]
-            );
+            // delete old objek
+            ObjekIkuUnitKerja::create([
+                'id' => (string) \Symfony\Component\Uid\Ulid::generate(),
+                // 'satuan' => $satuan,
+                'id_objek' => $satuan,
+                'id_target' => $id_target,
+                'nilai_y_target' => $nilaiY ?? 0,
+                'target_triwulan_1' => $target_triwulan_1 ?? 0,
+                'target_triwulan_2' => $target_triwulan_2 ?? 0,
+                'target_triwulan_3' => $target_triwulan_3 ?? 0,
+                'target_triwulan_4' => $target_triwulan_4 ?? 0,
+                'status' => $status,
+                'user_id' => $user_id,
+            ]);
+
 
         }
         return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Target IKU Unit Kerja')
@@ -240,7 +247,12 @@ class TargetIkuUnitKerjaController extends Controller
     public function destroy(TargetIkuUnitKerja $targetIkuUnitKerja)
     {
         // delete
+
+        EvaluasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->delete();
+        RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $targetIkuUnitKerja->id)->delete();
+
         $targetIkuUnitKerja->delete();
+
         return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Menghapus Target IKU Unit Kerja')
             ->with('alert-type', 'success');
     }

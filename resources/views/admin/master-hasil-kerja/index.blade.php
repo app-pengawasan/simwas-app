@@ -60,6 +60,7 @@
                                     <tr>
                                         <th style="width: 15px;">No</th>
                                         <th>Nama Hasil Kerja</th>
+                                        <th>Status</th>
                                         <th>Nama Subunsur</th>
                                         <th style="min-width: 98px">Aksi</th>
                                     </tr>
@@ -69,11 +70,14 @@
                                     <tr id="index_{{ $hasilKerja->id }}">
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $hasilKerja->nama_hasil_kerja }}</td>
+                                        <td>{{
+                                        $hasilKerja->kategori_pelaksana == 'gt' ? 'Gugus Tugas' : 'Non Gugus Tugas'
+
+                                        }}</td>
                                         <td>{{ $hasilKerja->masterSubUnsur->nama_sub_unsur}}</td>
                                         <td>
                                             <div class="d-flex">
-                                                <button type="button"
-                                                    class="btn btn-warning btn-sm edit-button"
+                                                <button type="button" class="btn btn-warning btn-sm edit-button"
                                                     data-toggle="modal" data-target="#modal-edit-master-subunsur"
                                                     data-id="{{ $hasilKerja->id }}">
                                                     <i class=" fas fa-edit"></i>

@@ -126,7 +126,7 @@
 
                                             {{-- kirim ke realisasi --}}
                                             <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
-                                                method="post" class="d-inline">
+                                                method="post" class="d-inline submit-button">
                                                 @csrf
                                                 @method('put')
                                                 <input type="hidden" name="status" value="2">
@@ -136,7 +136,7 @@
                                             </form>
 
                                             <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
-                                                method="post" class="d-inline">
+                                                method="post" class="d-inline delete-button">
                                                 @csrf
                                                 @method('delete')
                                                 <button class="btn btn-danger btn-sm" type="submit">
@@ -181,6 +181,42 @@
 {{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
 
 <script>
+    $(".submit-button").on("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "Apakah Anda Yakin Mengirim Target ke Realisasi?",
+            text: "Data yang dikirim tidak dapat diubah kembali!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Kirim!",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).submit();
+            }
+        });
+    });
+
+    $('.delete-button').on('click', function (e) {
+    e.preventDefault();
+    Swal.fire({
+    title: 'Apakah Anda Yakin Menghapus Target, Realisasi, dan Evaluasi?',
+    text: 'Data yang dihapus tidak dapat dikembalikan!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, Hapus!',
+    cancelButtonText: 'Batal',
+    }).then((result) => {
+    if (result.isConfirmed) {
+    $(this).submit();
+    }
+    });
+    });
+
     $(function () {
     let table = $("#target-iku-unit-kerja")
     .dataTable({

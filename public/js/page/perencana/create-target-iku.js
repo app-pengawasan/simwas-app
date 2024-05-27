@@ -363,21 +363,34 @@ $(document).ready(function () {
         $("#total-y").val(totalNilaiY);
 
         $("#presentase-target-triwulan1").val(
-            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan2").val(
-            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan3").val(
-            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan4").val(
-            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
     }
 
     // change total every change in triwulan
     $("table tbody").on("change", "input", function () {
         calculateTotal();
+    });
+});
+
+$("#form-target").on("submit", function (e) {
+    // swal loading
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
     });
 });

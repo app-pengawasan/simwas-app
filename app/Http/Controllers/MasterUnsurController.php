@@ -44,10 +44,19 @@ class MasterUnsurController extends Controller
     public function store(StoreMasterUnsurRequest $request)
     {
 
-        MasterUnsur::create([
-            'nama_unsur' => $request->namaUnsur,
-        ]);
-        return redirect()->route('master-unsur.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        try {
+            MasterUnsur::create([
+                'nama_unsur' => $request->namaUnsur,
+            ]);
+            return redirect()->route('master-unsur.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            // if duplicate entry
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-unsur.index')->with('status', 'Data gagal ditambahkan, data sudah ada')->with('alert-type', 'danger');
+            } else {
+                return redirect()->route('master-unsur.index')->with('status', 'Data gagal ditambahkan, silakan periksa data lagi')->with('alert-type', 'danger');
+            }
+        }
     }
 
     /**
@@ -81,10 +90,19 @@ class MasterUnsurController extends Controller
      */
     public function update(UpdateMasterUnsurRequest $request, MasterUnsur $masterUnsur)
     {
-        $masterUnsur->update([
-            'nama_unsur' => $request->editNamaUnsur,
-        ]);
-        return redirect()->route('master-unsur.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success');
+        try {
+            $masterUnsur->update([
+                'nama_unsur' => $request->editNamaUnsur,
+            ]);
+            return redirect()->route('master-unsur.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            // if duplicate entry
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-unsur.index')->with('status', 'Data gagal diubah, data sudah ada')->with('alert-type', 'danger');
+            } else {
+                return redirect()->route('master-unsur.index')->with('status', 'Data gagal diubah, silakan periksa data lagi')->with('alert-type', 'danger');
+            }
+        }
     }
 
     /**

@@ -16,7 +16,6 @@ $(document).on("click", ".edit-button", function () {
             $("#editPicKoordinator").val(data.pic);
             $("#editAnggotaTim").val(data.anggota_tim);
 
-            console.log($("#editAnggotaTim").val());
             if (data.pic != null) {
                 $("#editStatus1").prop("checked", true);
                 $("#edit-picKoordinator").show();
@@ -78,14 +77,14 @@ $(document).on("change", "#masterUnsurId", function () {
 $(document).on("change", "input[type=radio][name=status]", function () {
     var value = $(this).val();
     if (value == "1") {
-        $("#picKoordinator").hide();
+        $("#pic-koordinator").hide();
         $("#picKoordinator").attr("required", false);
         $("#pengendali-teknis").show();
         $("#ketua-tim").show();
         $("#pengendaliTeknis").attr("required", true);
         $("#ketuaTim").attr("required", true);
     } else {
-        $("#picKoordinator").show();
+        $("#pic-koordinator").show();
         $("#picKoordinator").attr("required", true);
         $("#pengendali-teknis").hide();
         $("#ketua-tim").hide();
@@ -172,4 +171,28 @@ $(function () {
                 cell.innerHTML = i + 1;
             });
     });
+});
+
+$(".submit-btn").on("click", function () {
+    // disable button after click
+    if (
+        $("#masterUnsurId").val() == "" ||
+        $("#namaHasilKerja").val() == "" ||
+        $("#hasilKerjaTim").val() == "" ||
+        $("#status").val() == "" ||
+        $("#anggotaTim").val() == ""
+    ) {
+        return;
+    }
+    if ("input[type=radio][name=status]" == "1") {
+        if ($("#picKoordinator").val() == "") {
+            return;
+        }
+    } else  {
+        if ($("#pengendaliTeknis").val() == "" || $("#ketuaTim").val() == "") {
+            return;
+        }
+    }
+    $(this).attr("disabled", true);
+    $(this).closest("form").submit();
 });

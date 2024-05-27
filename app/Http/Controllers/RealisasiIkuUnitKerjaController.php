@@ -110,20 +110,18 @@ class RealisasiIkuUnitKerjaController extends Controller
                 'realisasi_triwulan_4' => $request->input('triwulan4-row' . $i),
             ]);
         }
-        $dokumenSumberPath = $request->file('dokumen_sumber');
-        // change file name
-        $dokumenSumberPathName = 'realisasi-iku-unit-kerja-' . time() . '.' . $dokumenSumberPath->getClientOriginalExtension();
-        // store file
-        $dokumenSumberPath->move(public_path('storage/realisasi-iku-unit-kerja'), $dokumenSumberPathName);
-        // create
-        // find realisasi iku unit kerja with id_target_iku_unit_kerja = $request->input('id')
+        if ($request->file('dokumen_sumber') != null) {
+            $dokumenSumberPath = $request->file('dokumen_sumber');
+            $dokumenSumberPathName = 'realisasi-iku-unit-kerja-' . time() . '.' . $dokumenSumberPath->getClientOriginalExtension();
+            $dokumenSumberPath->move(public_path('storage/realisasi-iku-unit-kerja'), $dokumenSumberPathName);
+        }
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $request->input('id'))->first();
         // if realisasi iku unit kerja is exist
         if ($realisasiIkuUnitKerja) {
             // update
             $realisasiIkuUnitKerja->update([
                 'catatan' => $request->input('catatan'),
-                'dokumen_sumber_path' => $dokumenSumberPathName,
+                'dokumen_sumber_path' => $dokumenSumberPathName ?? $realisasiIkuUnitKerja->dokumen_sumber_path,
             ]);
             return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Realisasi IKU Unit Kerja');
         }

@@ -17,11 +17,8 @@ return new class extends Migration
         Schema::table('rencana_kerjas', function (Blueprint $table) {
             $table->string('id_proyek')->nullable()->after('id_timkerja');
             $table->foreign('id_proyek')->references('id')->on('proyeks')->onDelete('cascade');
-            // change id_hasilkerja tp foreign key to master_hasil_kerjas id
-            // $table->dropColumn('id_hasilkerja');
-            // $table->string('id_hasilkerja')->after('id_proyek');
+
             $table->foreign('id_hasilkerja')->references('id')->on('master_hasil_kerjas')->onDelete('cascade');
-            // remove mulai and selesai column
             $table->dropColumn('mulai');
             $table->dropColumn('selesai');
         });
@@ -34,6 +31,14 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('rencana_kerjas', function (Blueprint $table) {
+            $table->dropForeign(['id_proyek']);
+            $table->dropForeign(['id_hasilkerja']);
+            $table->dropColumn('id_proyek');
+            $table->dropColumn('id_hasilkerja');
+
+            $table->date('mulai')->nullable();
+            $table->date('selesai')->nullable();
+        });
     }
 };

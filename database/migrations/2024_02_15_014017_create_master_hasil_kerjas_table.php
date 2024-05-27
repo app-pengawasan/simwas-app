@@ -19,7 +19,7 @@ return new class extends Migration
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
             $table->ulid('master_subunsur_id');
             $table->foreign('master_subunsur_id')->references('id')->on('master_sub_unsurs')->onDelete('cascade');
-            $table->string('nama_hasil_kerja');
+            $table->string('nama_hasil_kerja')->unique();
             $table->string('hasil_kerja_tim');
             $table->string('pengendali_teknis')->nullable();
             $table->string('ketua_tim')->nullable();

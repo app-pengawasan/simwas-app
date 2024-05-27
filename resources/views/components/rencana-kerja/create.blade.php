@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-tugas" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-tugas" data-backdrop="static" data-keyboard="false"
     aria-labelledby="modal-create-tugas-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -10,15 +10,16 @@
             </div>
             {{-- <form method="post" action="/ketua-tim/rencana-kinerja" enctype="multipart/form-data"
                 class="needs-validation" novalidate=""> --}}
-            <form enctype="multipart/form-data" method="POST" action="/ketua-tim/rencana-kinerja/tugas"
-                class="needs-validation" novalidate>
+            <form enctype="multipart/form-data" method="POST" action="/ketua-tim/rencana-kinerja/tugas">
+                @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
                     <input type="hidden" name="id_proyek" id="id_proyek" value="{{ $proyek->id }}">
                     <div class="form-group">
                         <label class="form-label" for="create-tugas">Nama Tugas</label>
                         <div class="">
-                            <input type="text" id="create-tugas" class="form-control" name="create-tugas" required>
+                            <input placeholder="Masukkan Nama Tugas" type="text" id="create-tugas" class="form-control"
+                                name="create-tugas" required>
                             <small id="error-tugas" class="text-danger"></small>
                         </div>
                     </div>
@@ -26,7 +27,7 @@
                         <label class="form-label
                             " for="create-hasil_kerja">Hasil Kerja</label>
                         <div class="">
-                            <select class="form-control" name="create-hasil_kerja" id="create-hasil_kerja" required>
+                            <select class="form-control select2" name="create-hasil_kerja" id="create-hasil_kerja" required>
                                 <option value="" selected disabled>Pilih Hasil Kerja</option>
                                 @foreach ($masterHasil as $hasil_kerja)
                                 <option value="{{ $hasil_kerja->id }}">{{ $hasil_kerja->nama_hasil_kerja }}</option>
@@ -51,21 +52,24 @@
                     <div class="form-group">
                         <label class="form-label" for="pelaksana-tugas">Pelaksana Tugas</label>
                         <div class="">
-                            <input disabled type="text" id="pelaksana-tugas" class="form-control" name="pelaksana-tugas" required>
+                            <input disabled type="text" id="pelaksana-tugas" class="form-control" name="pelaksana-tugas"
+                                required>
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="create-melaksanakan">Melaksanakan</label>
                         <div class="">
-                            <input type="text" id="create-melaksanakan" class="form-control" name="create-melaksanakan" required>
+                            <input placeholder="Masukkan Melaksanakan" type="text" id="create-melaksanakan"
+                                class="form-control" name="create-melaksanakan" required>
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="create-capaian">Capaian</label>
                         <div class="">
-                            <input type="text" id="create-capaian" class="form-control" name="create-capaian" required>
+                            <input placeholder="Masukkan Capaian" type="text" id="create-capaian" class="form-control"
+                                name="create-capaian" required>
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>
