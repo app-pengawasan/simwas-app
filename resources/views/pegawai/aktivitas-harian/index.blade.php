@@ -33,6 +33,14 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
+                            <ul class="legend">
+                                {{-- <li><span class="jingga"></span> Sedang Dikerjakan</li>
+                                <li><span class="hijau"></span> Selesai</li>
+                                <li><span class="merah"></span> Dibatalkan</li> --}}
+                                <li><span class="badge jingga">Sedang Dikerjakan</span></li>
+                                <li><span class="badge hijau">Selesai</span></li>
+                                <li><span class="badge merah">Dibatalkan</span></li>
+                            </ul>
                             <div id='calendar' style="90%"></div>
                         </div>
                     </div>

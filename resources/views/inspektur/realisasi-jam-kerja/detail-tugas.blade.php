@@ -17,7 +17,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Detail Tugas {{ $rencanaKerja->tugas }}</h1>
+                <h1>Detail Tugas {{ str_ireplace('tugas ', '', $rencanaKerja->tugas) }}</h1>
                 
             </div>
             <div class="row">
@@ -26,14 +26,14 @@
                         <div class="card-body">
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="/inspektur/realisasi-jam-kerja/pool/{{ $tugas->user->id }}">
+                                    <a class="btn btn-primary" href="/inspektur/realisasi-jam-kerja/pool/{{ $tugas->user->id }}/{{ $tugas->rencanaKerja->timKerja->tahun }}">
                                         <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mx-auto">
-                                    <table class="mb-4">
+                                    <table class="mb-4 table table-striped responsive">
                                         <tr>
                                             <th style="min-width: 94pt">Tujuan</th>
                                             <td>: </td>
@@ -92,14 +92,14 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <th>Tanggal</th>
                                             <td>:</td>
                                             <td class="">
                                                 {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->mulai)) }} -
                                                 {{ strftime('%A, %d %B %Y', strtotime($rencanaKerja->selesai)) }}
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </table>
                                     <p class="font-weight-bold">Pelaksana</p>
                                     <table class="table table-striped">
@@ -107,7 +107,7 @@
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Nama</th>
-                                                <th>Jabatan</th>
+                                                <th>Peran</th>
                                                 <th>Hasil Kerja</th>
                                             </tr>
                                         </thead>

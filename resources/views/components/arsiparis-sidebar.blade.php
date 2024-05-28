@@ -20,19 +20,19 @@
             </li>
             <li class="{{ Request::is('arsiparis/surat-tugas*') ? 'active' : '' }}">
                 <a class="nav-link" href="/arsiparis/surat-tugas">
-                    <i class="fab fa-solid fa-house"></i>
+                    <i class="fas fa-solid fa-envelope"></i>
                     <span>Surat Tugas</span>
                 </a>
             </li>
             <li class="{{ Request::is('arsiparis/norma-hasil*') ? 'active' : '' }}">
                 <a class="nav-link" href="/arsiparis/norma-hasil">
-                    <i class="fab fa-solid fa-house"></i>
+                    <i class="fas fa-check"></i>
                     <span>Norma Hasil</span>
                 </a>
             </li>
             <li class="{{ Request::is('arsiparis/kendali-mutu*') ? 'active' : '' }}">
                 <a class="nav-link" href="/arsiparis/kendali-mutu">
-                    <i class="fab fa-solid fa-house"></i>
+                    <i class="fas fa-magnifying-glass"></i>
                     <span>Kendali Mutu</span>
                 </a>
             </li>

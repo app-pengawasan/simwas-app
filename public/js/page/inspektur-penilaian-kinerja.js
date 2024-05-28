@@ -70,7 +70,6 @@ $('.submit-btn').on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(errors);
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
@@ -298,14 +297,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 placement: 'right',
                 // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
                 html: true,
-                content: '<h3>' + info.event.title + '</h3>'
-                        + startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                        + '<table><tbody>'
-                        + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
-                        + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
-                        + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
-                        + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
-                        + '</tbody></table>',
+                content: '<h3>' + info.event.title + '</h3>' + 
+                    startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
+                    + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
             });
         }
     },

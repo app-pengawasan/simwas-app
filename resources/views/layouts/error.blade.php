@@ -29,10 +29,10 @@
                     @yield('main')
 
                     <!-- Footer -->
-                    @include('components.error-footer')
+                    {{-- @include('components.error-footer') --}}
                 </div>
             </section>
-            @include('components.changelog')
+            {{-- @include('components.changelog') --}}
         </div>
 
         <!-- General JS Scripts -->

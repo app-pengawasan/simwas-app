@@ -45,6 +45,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <small id="error-tim" class="text-danger"></small>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -59,6 +60,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <small id="error-proyek" class="text-danger"></small>
                                         </div>
                                     </div>
                                     <div class="form-group row">

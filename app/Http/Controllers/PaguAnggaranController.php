@@ -44,12 +44,14 @@ class PaguAnggaranController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $paguAnggaran = PaguAnggaran::all();
+        $paguAnggaran = PaguAnggaran::with('masterAnggaran')->get();
 
         return view('admin.pagu-anggaran.index', [
             'type_menu'     => 'anggaran',
             'paguAnggaran'  => $paguAnggaran,
-            'satuan'        => $this->satuan
+            'satuan'        => $this->satuan,
+            'akun'          => $this->akun,
+            'komponen'      => $this->komponen,
         ]);
     }
 
@@ -113,6 +115,7 @@ class PaguAnggaranController extends Controller
      */
     public function show(PaguAnggaran $paguAnggaran)
     {
+        // dd($paguAnggaran);
         return view('admin.pagu-anggaran.show',[
             'type_menu'         => 'anggaran',
             'kegiatan'          => $this->kegiatan_manggaran,

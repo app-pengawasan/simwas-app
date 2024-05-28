@@ -26,6 +26,23 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
+                                <form id="yearForm" action="" method="GET" class="px-0">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="yearSelect">Pilih Tahun</label>
+                                        <select name="year" id="yearSelect" class="form-control select2 col-md-1">
+                                            @php
+                                            $currentYear = date('Y');
+                                            $lastThreeYears = range($currentYear, $currentYear - 3);
+                                            @endphp
+                        
+                                            @foreach ($lastThreeYears as $year)
+                                            <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
                                 <div class="mt-3">
                                     <table class="table table-bordered table-striped display responsive" id="table-pegawai-kinerja">
                                         <thead>
@@ -34,7 +51,7 @@
                                                 <th rowspan="2" class="align-middle">Tim</th>
                                                 <th rowspan="2" class="align-middle">Proyek</th>
                                                 <th rowspan="2" class="align-middle">Tugas</th>
-                                                <th rowspan="2" class="align-middle">Jabatan</th>
+                                                <th rowspan="2" class="align-middle">Peran</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
                                                 <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
                                             </tr>
@@ -177,6 +194,13 @@
                 $(this).text($(this).attr('value'));
             });
             $('#title').text('Rencana Jam Kerja');
+        });
+
+        $('#yearSelect').on('change', function() {
+            let year = $(this).val();
+            $('#yearForm').attr('action', `?year=${year}`);
+            $('#yearForm').find('[name="_token"]').remove();
+            $('#yearForm').submit();
         });
     </script>
 @endpush

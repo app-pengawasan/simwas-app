@@ -50,10 +50,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+                            <h1 class="h4 text-dark mb-4 header-card">Data Target IKU Unit Kerja</h1>
                             <form action="/" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
                                             <select disabled class="form-control" name="unit-kerja"
@@ -65,7 +66,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Nama Kegiatan</label>
                                         <div>
                                             <input disabled value="{{ $targetIkuUnitKerja->nama_kegiatan }}"
@@ -73,7 +74,7 @@
                                                 required placeholder="Isikan Nama Kegiatan IKU">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input disabled value="{{ intval($targetIkuUnitKerja->jumlah_objek) }}"
@@ -81,7 +82,12 @@
                                                 required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group d-flex justify-content-end">
+                                        <button type="button" class="btn btn-success" id="btn-export">
+                                            <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
                                                 <tr>
@@ -114,10 +120,8 @@
                                                     <td class="text-left">
                                                         <select disabled class="form-control" name="satuan-row1"
                                                             class="satuan">
-                                                            @foreach ($kabupaten as $key => $value1)
-                                                            <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                                value="{{ $value }}">{{ $value->satuan }}</option>
-                                                            @endforeach
+                                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                                }}</option>
                                                         </select>
                                                     </td>
                                                     <td><input value="{{ $value->nilai_y_target }}" disabled
@@ -188,36 +192,53 @@
                                                 <tr>
                                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                                         Target Kinerja (Persen)</td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center"></td>
                                                 </tr>
                                             </tfoot>
-
                                         </table>
                                     </div>
                                     {{-- <button type="submit" class="btn btn-success">Submit</button> --}}
                             </form>
-                            @if ($targetIkuUnitKerja->status == 1)
-                            <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
-                                method="post" class="d-inline">
-                                @csrf
-                                @method('put')
-                                <input type="hidden" name="status" value="2">
-                                <button class="btn btn-success" type="submit">
-                                    <i class="fas fa-paper-plane mr-1"></i>Kirim ke realisasi
-                                </button>
-                            </form>
-                            @endif
+                            <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0"
+                                style="gap: 10px">
+                                <a class="btn btn-outline-primary" href="/perencana/target-iku-unit-kerja/">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                </a>
+                                @if ($targetIkuUnitKerja->status == 1)
+                                <a href="{{ route('target-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                    class="btn btn-warning">
+                                    <i class="fa-solid fa-edit mr-1"></i>Edit
+                                </a>
+                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="status" value="2">
+                                    <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-paper-plane mr-1"></i>Kirim ke realisasi
+                                    </button>
+                                </form>
+                                @endif
+                                <form action="{{ route('target-iku-unit-kerja.destroy', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline" id="delete-button">
+                                    @csrf
+                                    @method('delete')
+                                    <button class="btn btn-danger" type="submit">
+                                        <i class="fa-solid fa-trash mr-1"></i>Hapus
+                                    </button>
+                                </form>
+                            </div>
 
                         </div>
                     </div>
@@ -234,5 +255,52 @@
 
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/perencana/create-target-iku.js') }}"></script>
-<!-- Latest compiled and minified CSS -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"
+    integrity="sha512-XmZS54be9JGMZjf+zk61JZaLZyjTRgs41JLSmx5QlIP5F+sSGIyzD2eJyxD4K6kGGr7AsVhaitzZ2WTfzpsQzg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'target-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+
+
+        $('#delete-button').on('click', function (e) {
+        e.preventDefault();
+        Swal.fire({
+        title: 'Apakah Anda Yakin Menghapus Target, Realisasi, dan Evaluasi?',
+        text: 'Data yang dihapus tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        }).then((result) => {
+        if (result.isConfirmed) {
+        $(this).submit();
+        }
+        });
+    });
+</script>
 @endpush

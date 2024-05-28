@@ -1,35 +1,63 @@
-let table = $("#master-satuan-kerja");
+if ($("#master-satuan-kerja").length) {
+    $(function () {
+        let table = $("#master-satuan-kerja")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3],
+                        },
+                    },
+                ],
+            })
+            .api();
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dataTables_filter").appendTo("#filter-search-wrapper");
+        $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
+        $(".dataTables_filter").css("width", "100%");
+        // .dataTables_filter label width 100%
+        $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
+        $(".dataTables_filter input").css("height", "35px");
+        // make label text bold and black
+        $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
+        $(".dataTables_filter label").css("margin-bottom", "0");
 
-$(function () {
-    table
-        .DataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2],
-                    },
-                },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1, 2],
-                    },
-                },
-            ],
-        })
-        .buttons()
-        .container()
-        .appendTo("#master-satuan-kerja_wrapper .col-md-6:eq(0)");
-});
+        $(".dataTables_filter input").attr(
+            "placeholder",
+            "Cari berdasarkan kode atau nama satuan kerja"
+        );
+        // add padding x 10px to .dataTables_filter input
+        $(".dataTables_filter input").css("padding", "0 10px");
+        $(".dt-buttons").appendTo("#download-button");
+        $("#master-satuan-kerja").on("search.dt", function () {
+            table
+                .column(0, { search: "applied", order: "applied" })
+                .nodes()
+                .each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+        });
+    });
+}
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
@@ -138,6 +166,17 @@ $(".delete-btn").on("click", function () {
                 },
                 success: function (response) {
                     location.reload();
+                },
+                error: function (error) {
+                    Swal.fire({
+                        type: "error",
+                        icon: "error",
+                        title: "Gagal",
+                        text: "Gagal menghapus data, data masih terhubung dengan data lain",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                    console.log(error);
                 },
             });
         }

@@ -25,10 +25,10 @@ class DataKepegawaianImport implements ToModel, WithHeadingRow, WithValidation, 
     */
     public function model(array $row)
     {
-        $jenis = MasterDataKepegawaian::where('jenis', $row['jenis_data_kepegawaian'])->value('id');
+        $jenis = MasterDataKepegawaian::where('id', $row['id_jenis_data_kepegawaian'])->value('id');
         $id_pegawai = User::where('nip', $row['nip'])->value('id');
         $data = DataKepegawaian::where('id_pegawai', $id_pegawai)->where('jenis', $jenis)->first();
-        if($data){
+        if  ($data) {
             session()->put('duplikat', 'danger');
             return null;
         }
@@ -42,8 +42,8 @@ class DataKepegawaianImport implements ToModel, WithHeadingRow, WithValidation, 
     public function rules(): array
     {
         return [
-            'nip' => 'required|max:18',
-            'jenis_data_kepegawaian' => 'required|exists:master_data_kepegawaians,jenis',
+            'nip' => 'required|max:18|exists:users,nip',
+            'id_jenis_data_kepegawaian' => 'required|exists:master_data_kepegawaians,id',
             'nilai' => [
                 'required',
                 function (string $attribute, mixed $value, Closure $fail) {

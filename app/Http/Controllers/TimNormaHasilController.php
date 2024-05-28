@@ -103,10 +103,17 @@ class TimNormaHasilController extends Controller
     {
         $rules = [
             'nomor' => ['required', 'string', 'max:26'],
-            'nama' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+            'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+        ]; 
+
+        $messages = [
+            'required' => ':attribute harus diisi',
+            'max' => 'Jumlah karakter maksimal 26',
+            'file.max' => 'Ukuran file maksimal 1MB',
+            'mimes' => 'Format file harus pdf'
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -114,7 +121,7 @@ class TimNormaHasilController extends Controller
 
         $validateData = $request->validate($rules);
 
-        $file = $request->file('nama');
+        $file = $request->file('file');
         $fileName = time() . '-laporan-norma-hasil.' . $file->getClientOriginalExtension();
         $path = public_path('storage/tim/norma-hasil');
         $file->move($path, $fileName);

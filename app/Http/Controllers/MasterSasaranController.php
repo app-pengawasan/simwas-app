@@ -19,7 +19,7 @@ class MasterSasaranController extends Controller
         $this->authorize('admin');
 
         $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
+        $masterSasaran = MasterSasaran::with('tujuan')->get();
 
         return view('admin.master-sasaran', [
             'type_menu'     => 'rencana-kinerja',

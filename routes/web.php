@@ -102,9 +102,8 @@ Route::group(['middleware'=>'auth'], function(){
      * ADMIN
      * ---------------------------------------------------------------------------
      * */
-    Route::get('/admin', function () {
-        return view('admin.index', ['type_menu' => 'dashboard']);
-    })->name('admin-dashboard');
+        Route::get('/admin', [DashboardController::class, 'admin'])->name('admin-dashboard');
+
 
     //Kelola-anggaran
     //1.Master Anggaran
@@ -222,6 +221,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('analis-sdm/data-kepegawaian', [DataKepegawaianController::class, 'kelola']);
     Route::post('analis-sdm/data-kepegawaian/import', [DataKepegawaianController::class, 'import']);
     Route::get('analis-sdm/data-kepegawaian/export', [DataKepegawaianController::class, 'export']);
+    Route::put('analis-sdm/data-kepegawaian/editNilai/{id}', [DataKepegawaianController::class, 'editNilai']);
 
 
 
@@ -248,13 +248,13 @@ Route::group(['middleware'=>'auth'], function(){
     //Rencana Jam Kerja
     Route::get('/inspektur/rencana-jam-kerja/rekap', [InspekturRencanaJamKerjaController::class, 'rekap']);
     Route::get('/inspektur/rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
-    Route::get('/inspektur/rencana-jam-kerja/pool/{id}', [InspekturRencanaJamKerjaController::class, 'show']);
+    Route::get('/inspektur/rencana-jam-kerja/pool/{id}/{year}', [InspekturRencanaJamKerjaController::class, 'show']);
     Route::get('/inspektur/rencana-jam-kerja/detail/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
 
     //Realisasi Jam Kerja
     Route::get('/inspektur/realisasi-jam-kerja/rekap', [InspekturRealisasiJamKerjaController::class, 'rekap']);
     Route::get('/inspektur/realisasi-jam-kerja/pool', [InspekturRealisasiJamKerjaController::class, 'pool']);
-    Route::get('/inspektur/realisasi-jam-kerja/pool/{id}', [InspekturRealisasiJamKerjaController::class, 'show']);
+    Route::get('/inspektur/realisasi-jam-kerja/pool/{id}/{year}', [InspekturRealisasiJamKerjaController::class, 'show']);
     Route::get('/inspektur/realisasi-jam-kerja/detail/{id}', [InspekturRealisasiJamKerjaController::class, 'detailTugas']);
 
     //Penilaian Kinerja Pegawai

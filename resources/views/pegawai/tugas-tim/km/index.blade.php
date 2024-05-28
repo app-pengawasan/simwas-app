@@ -34,13 +34,20 @@
                     <div class="modal-body">
                         {{-- @csrf --}}
                         <div class="form-group">
-                            <label for="file">File Kendali Mutu</label>
-                            <input type="file" name="file" id="file" class="form-control" accept=".rar, .zip" required>
-                            @error('file')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                            <label for="edit-link">File Kendali Mutu</label>
+                            <input type="url" name="edit-link" id="edit-link" class="form-control link" placeholder="Link File Kendali Mutu" required>
+                            <small id="error-edit-link" class="text-danger"></small>
+
+                            <div class="d-flex mt-2 align-items-center">
+                                <label for="edit-file" style="color: #34395e; width: 24%" class="mt-2">
+                                    <em>atau upload file</em>
+                                </label>
+                                <input type="file" name="edit-file" id="edit-file" class="form-control file" accept=".rar, .zip" required>
+                                <button type="button" class="btn btn-primary ml-2 h-100 clear" id="edit-clear">
+                                    Clear
+                                </button>
                             </div>
-                            @enderror
+                            <small id="error-edit-file" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -106,7 +113,11 @@
                                                     {{ $km->status == 'diperiksa' ? 'badge-primary' : '' }}
                                                     {{ $km->status == 'disetujui' ? 'badge-success' : '' }}
                                                     {{ $km->status == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $km->status }}
+                                                    text-capitalize"><i class="
+                                                        {{ $km->status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $km->status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $km->status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                    "></i>{{ $km->status }}
                                                 </span>
                                             </td>
                                             <td>{{ $km->catatan }}</td>
@@ -165,6 +176,7 @@
 <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
 <script>
     $('#myeditform')[0].reset();
+    $('#formNHtim')[0].reset();
 
     $('.edit-btn').on("click", function () {
         $('#km_id').val($(this).attr('data-id'));
@@ -177,7 +189,12 @@
         let id = $('#km_id').val();
         data.append('_token', token);
         data.append('_method', "PUT");
-        console.log(data);
+        
+        $("#error-edit-file").text("");
+        $("#error-edit-link").text("");
+
+        if ($('#edit-file').val() != '' && $('#edit-file')[0].files[0].size / 1024 > 5120)
+            $('#error-edit-file').text('Ukuran file maksimal 5MB');
 
         $.ajax({
             url: `/pegawai/tim/kendali-mutu/${id}`,
@@ -198,6 +215,74 @@
                 errors.forEach(([key, value]) => {
                     let errorMessage = document.getElementById(`error-${key}`);
                     errorMessage.innerText = value.join('\n');
+                });
+            },
+        });
+    });
+
+    $(".link").on("input", function () {
+        if ($(this).val() != '') {
+            $(".file").prop("disabled", true);
+            $('.file').prop("required", false);
+            $(`.file`).removeClass('is-invalid');
+        }
+        else {
+            $(".file").prop("disabled", false);
+            $('.file').prop("required", true);
+        }
+    });
+
+    $(".file").on("change", function () {
+        if ($(this).val() != '') {
+            $(".link").prop("disabled", true);
+            $('.link').prop("required", false);
+            $(`.link`).removeClass('is-invalid');
+        } 
+        else {
+            $(".link").prop("disabled", false);
+            $('.link').prop("required", true);
+        }
+    });
+
+    $(".clear").on("click", function () {
+        $(`.file`).removeClass('is-invalid');
+        $('.file').val('');
+        $(".link").prop("disabled", false);
+        $('.link').prop("required", true);
+    });
+
+    $(".submit-btn").on("click", function (e) {
+        e.preventDefault();
+        let data = new FormData($('#formNHtim')[0]);
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        data.append('_token', token);
+
+        // Reset invalid message while modal open
+        $("#error-tugas").text("");
+        $("#error-file").text("");
+        $("#error-link").text("");
+
+        if ($('#file').val() != '' && $('#file')[0].files[0].size / 1024 > 5120)
+            $('#error-file').text('Ukuran file maksimal 5MB');
+
+        $.ajax({
+            url: '/pegawai/tim/kendali-mutu',
+            contentType: false,
+            processData: false,
+            type: "POST",
+            cache: false,
+            data: data,
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                let errorResponses = error.responseJSON;
+                let errors = Object.entries(errorResponses.errors);
+
+                errors.forEach(([key, value]) => {
+                    let errorMessage = document.getElementById(`error-${key}`);
+                    errorMessage.innerText = `${value}`;
                 });
             },
         });

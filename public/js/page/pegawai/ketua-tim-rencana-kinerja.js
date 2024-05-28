@@ -1,24 +1,65 @@
-let table = $("#table-proyek");
-// Index Rencana Kinerja
-$(function () {
-    table
-        .DataTable({
+let table;
+if ($("#tim-kerja").length) {
+    table = $("#tim-kerja")
+        .dataTable({
             dom: "Bfrtip",
             responsive: true,
             lengthChange: false,
             autoWidth: false,
-            searching: false, // Remove search input
-            lengthChange: false, // Remove page length options
-            buttons: [],
-            paging: false,
-            info: false,
-            "bInfo": false,
-
+            buttons: [
+                {
+                    extend: "excel",
+                    className: "btn-success",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6],
+                    },
+                },
+                {
+                    extend: "pdf",
+                    className: "btn-danger",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6],
+                    },
+                },
+            ],
+            oLanguage: {
+                sSearch: "Cari:",
+                sZeroRecords: "Data tidak ditemukan",
+                sEmptyTable: "Data tidak ditemukan",
+                sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                sInfoFiltered: "(disaring dari _MAX_ data)",
+                sLengthMenu: "Tampilkan _MENU_ data",
+                oPaginate: {
+                    sPrevious: "Sebelumnya",
+                    sNext: "Selanjutnya",
+                },
+            },
         })
-        .buttons()
-        .container()
-        .appendTo("#master-iku_wrapper .col-md-6:eq(0)");
-});
+        .api();
+
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dataTables_filter").appendTo("#filter-search-wrapper");
+    $(".dataTables_filter").find("input").addClass("form-control");
+    // .dataTables_filter width 100%
+    $(".dataTables_filter").css("width", "100%");
+    // .dataTables_filter label width 100%
+    $(".dataTables_filter label").css("width", "100%");
+    // input height 35px
+    $(".dataTables_filter input").css("height", "35px");
+    // make label text bold and black
+    $(".dataTables_filter label").css("font-weight", "bold");
+    // remove bottom margin from .dataTables_filter
+    $(".dataTables_filter label").css("margin-bottom", "0");
+
+    $(".dataTables_filter input").attr("placeholder", "Cari rencana kerja");
+    // add padding x 10px to .dataTables_filter input
+    $(".dataTables_filter input").css("padding", "0 10px");
+    $(".dt-buttons").appendTo("#download-button");
+}
 
 // Show rencana kinerja
 $("#btn-modal-create-tugas").on("click", function () {
@@ -50,11 +91,13 @@ $("#create-hasilkerja").on("change", function () {
 });
 
 $("#btn-tambah-tugas").on("click", function (e) {
-    e.preventDefault();
+    // e.preventDefault();
     $("#error-tugas").text("");
     $("#error-mulai").text("");
     $("#error-selesai").text("");
     $("#error-hasilkerja").text("");
+
+
     let token = $("meta[name='csrf-token']").attr("content");
     let id_timkerja = $("#id_timkerja").val();
     let tugas = $("#create-tugas").val();
@@ -68,6 +111,19 @@ $("#btn-tambah-tugas").on("click", function (e) {
     let melaksanakan = $("#create-melaksanakan").val();
     let capaian = $("#create-capaian").val();
     let id_proyek = $("#id_proyek").val();
+
+    if (tugas == "" || hasilkerja== "" ||melaksanakan == "" || capaian == "") {
+        return;
+    }
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/ketua-tim/rencana-kinerja`,
@@ -347,6 +403,19 @@ $("#btn-create-proyek").on("click", function () {
     let rk_anggota = $("#create-rk_anggota").val();
     let iki_anggota = $("#create-iki_anggota").val();
     let token = $("meta[name='csrf-token']").attr("content");
+    if (nama_proyek == "" || rk_anggota == "" || iki_anggota == "") {
+        return;
+    }
+    // swal loading
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/ketua-tim/rencana-kinerja/proyek`,
@@ -363,7 +432,7 @@ $("#btn-create-proyek").on("click", function () {
             location.reload();
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -397,3 +466,38 @@ for (i = 0; i <= rupiah.length - 1; i++) {
     let tmp = rupiah[i].innerText.toString();
     rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
 }
+
+function filterTable() {
+    let filterUnitKerja = $("#filter-unit-kerja").val();
+
+    if (filterUnitKerja == "Semua") {
+        filterUnitKerja = "";
+    }
+
+    if (filterUnitKerja !== "") {
+        table
+            .column(2)
+            .search("^" + filterUnitKerja + "$", true, false)
+            .draw();
+    } else {
+        table.column(2).search("").draw();
+    }
+
+    // reset numbering in table first column
+    table
+        .column(0, { search: "applied", order: "applied" })
+        .nodes()
+        .each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+}
+$("#filter-unit-kerja").on("change", function () {
+    filterTable();
+});
+
+$("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").submit();
+});

@@ -26,8 +26,9 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div class="d-flex col-12 p-0">
-                                <div class="ml-auto my-2 col-6 p-0">
+                            <div class="d-flex mb-2 row" style="gap:10px">
+                                <div class="form-group col pr-0" style="margin-bottom: 0;">
+                                    <label for="filterBulan" style="margin-bottom: 0;">Bulan</label>
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -44,8 +45,9 @@
                                         <option value="12">Desember</option>
                                     </select>
                                 </div>
-                                <div class="d-flex my-2 col-6 pr-2 mb-3">
-                                    <select class="form-control" id="filterTahun" name="filterTahun" required>
+                                <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                    <label for="filterTahun" style="margin-bottom: 0;">Tahun</label>
+                                    <select class="form-control" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
                                             <option value="{{ $year + $i }}">
@@ -92,7 +94,7 @@
                                                 <td><span class="badge badge-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</span></td>
                                                 <td>
                                                     <a class="btn btn-primary" href="{{ $r->hasil_kerja }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fa fa-download"></i>
                                                     </a>
                                                     {{-- @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
                                                         <a class="btn btn-primary"

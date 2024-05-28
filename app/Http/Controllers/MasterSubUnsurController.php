@@ -46,11 +46,19 @@ class MasterSubUnsurController extends Controller
     public function store(StoreMasterSubUnsurRequest $request)
     {
         // dd($request->all());
-        MasterSubUnsur::create([
-            'master_unsur_id' => $request->masterUnsurId,
-            'nama_sub_unsur' => $request->namaSubUnsur,
-        ]);
-        return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        try {
+            MasterSubUnsur::create([
+                'master_unsur_id' => $request->masterUnsurId,
+                'nama_sub_unsur' => $request->namaSubUnsur,
+            ]);
+            return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-subunsur.index')->with('status', 'Data gagal ditambahkan, nama subunsur sudah ada')->with('alert-type', 'danger');
+            } else {
+                return redirect()->route('master-subunsur.index')->with('status', 'Data gagal ditambahkan')->with('alert-type', 'danger');
+            }
+        }
     }
 
     /**
@@ -84,11 +92,19 @@ class MasterSubUnsurController extends Controller
      */
     public function update($masterSubUnsur)
     {
-        MasterSubUnsur::where('id', $masterSubUnsur)->update([
-            'master_unsur_id' => request()->editMasterUnsurId,
-            'nama_sub_unsur' => request()->editNamaSubUnsur,
-        ]);
-        return(redirect()->route('master-subunsur.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success'));
+        try {
+            MasterSubUnsur::where('id', $masterSubUnsur)->update([
+                'master_unsur_id' => request()->editMasterUnsurId,
+                'nama_sub_unsur' => request()->editNamaSubUnsur,
+            ]);
+            return(redirect()->route('master-subunsur.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success'));
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1062) {
+                return redirect()->route('master-subunsur.index')->with('status', 'Data gagal diubah, nama subunsur sudah ada')->with('alert-type', 'danger');
+            } else {
+                return redirect()->route('master-subunsur.index')->with('status', 'Data gagal diubah')->with('alert-type', 'danger');
+            }
+        }
     }
 
     /**
@@ -99,8 +115,12 @@ class MasterSubUnsurController extends Controller
      */
     public function destroy($masterSubUnsur)
     {
-        MasterSubUnsur::destroy($masterSubUnsur);
-        return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        try {
+            MasterSubUnsur::destroy($masterSubUnsur);
+            return redirect()->route('master-subunsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        } catch (\Exception $e) {
+            return redirect()->route('master-subunsur.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+        }
     }
     // api request
     public function getSubUnsurByUnsur($id)

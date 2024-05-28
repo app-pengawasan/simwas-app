@@ -8,8 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formNHtim" action="/pegawai/tim/surat-tugas" method="post" enctype="multipart/form-data">
-                @csrf
+            <form id="formNHtim" name="formNHtim" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="tugas">Tugas</label>
@@ -22,44 +21,28 @@
                                     @endif
                                 @endforeach
                             </select>
-                            @if ($errors->has('tugas'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('tugas') }}
-                            </div>
-                            @endif
+                            <small id="error-tugas" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="nomor_st">Nomor Dokumen</label>
                         <div class="">
                             <input type="text" name="nomor_st" id="nomor_st" class="form-control" required>
-                            @if ($errors->has('nomor_st'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('nomor_st') }}
-                            </div>
-                            @endif
+                            <small id="error-nomor_st" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="nama">Nama Dokumen</label>
                         <div class="">
                             <input type="text" name="nama" id="nama" class="form-control" required>
-                            @if ($errors->has('nama'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('nama') }}
-                            </div>
-                            @endif
+                            <small id="error-nama" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="file">File Surat Tugas</label>
                         <div class="">
                             <input type="file" name="file" id="file" class="form-control" accept=".pdf" required>
-                            @if ($errors->has('file'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('file') }}
-                            </div>
-                            @endif
+                            <small id="error-file" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

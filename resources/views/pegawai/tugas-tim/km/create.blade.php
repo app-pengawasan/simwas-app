@@ -8,8 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formNHtim" action="/pegawai/tim/kendali-mutu" method="post" enctype="multipart/form-data">
-                @csrf
+            <form id="formNHtim" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="tugas">Tugas</label>
@@ -22,22 +21,25 @@
                                     @endif
                                 @endforeach
                             </select>
-                            @if ($errors->has('tugas'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('tugas') }}
-                            </div>
-                            @endif
+                            <small id="error-tugas" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="file">File Kendali Mutu</label>
                         <div class="">
-                            <input type="file" name="file" id="file" class="form-control" accept=".rar, .zip" required>
-                            @if ($errors->has('file'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('file') }}
+                            <input type="url" name="link" id="link" class="form-control link" placeholder="Link File Kendali Mutu" required>
+                            <small id="error-link" class="text-danger"></small>
+
+                            <div class="d-flex mt-2 align-items-center">
+                                <label for="file" style="color: #34395e; width: 24%" class="mt-2">
+                                    <em>atau upload file</em>
+                                </label>
+                                <input type="file" name="file" id="file" class="form-control file" accept=".rar, .zip" required>
+                                <button type="button" class="btn btn-primary ml-2 h-100 clear" id="clear">
+                                    Clear
+                                </button>
                             </div>
-                            @endif
+                            <small id="error-file" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

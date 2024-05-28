@@ -30,46 +30,50 @@
                 <div class="card">
                     <div class="card-body">
                         {{ session()->forget(['alert-type', 'status']) }}
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-4">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Menampilkan arsip surat srikandi yang telah diusulkan.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
                         <div>
-                            <form action="{{ route('usulan-surat-srikandi.index') }}" method="GET">
-                                <div class="d-flex justify-content-between flex-wrap" style="gap:10px">
-                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
-                                        <label for="filter-search" style="margin-bottom: 0;">
-                                            Cari</label>
-                                        <input style="height: 35px" type="text" name="search" id="filter-search"
-                                            class="form-control" placeholder="Cari berdasarkan nomor surat"
-                                            value="{{ request()->search }}">
+                            <div class="d-flex justify-content-between flex-wrap my-2 mb-4" style="gap:10px">
+                                <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                    <div id="filter-search-wrapper">
                                     </div>
-                                    {{-- filter unit_kerja --}}
-                                    <div class="form-group" style="margin-bottom: 0;">
-                                        <label for="filter-unit_kerja" style="margin-bottom: 0;">Unit Kerja</label>
-                                        <select name="filter-unit_kerja" id="filter-unit_kerja"
-                                            class="form-control select2">
-                                            <option disabled value="">Pilih Unit Kerja</option>
-                                            <option value="Semua">Semua</option>
-                                            @foreach ( $pejabatPenandatangan as $key => $value)
-                                            <option value="{{ $value }}">
-                                                {{ $value }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 0;">
-                                        {{-- select year --}}
-                                        <label for="filter-year" style="margin-bottom: 0;">Tahun</label>
-                                        <select name="filter-year" id="filter-year" class="form-control select2">
-                                            <option disabled value="">Pilih Tahun</option>
-                                            <option value="Semua">Semua</option>
-                                            @foreach ( $allYears as $year)
-                                            <option value="{{ $year->year }}">
-                                                {{ $year->year }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
                                 </div>
-                            </form>
+                                {{-- filter unit_kerja --}}
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="filter-unit_kerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                    <select name="filter-unit_kerja" id="filter-unit_kerja"
+                                        class="form-control select2">
+                                        <option disabled value="">Pilih Unit Kerja</option>
+                                        <option value="Semua">Semua</option>
+                                        @foreach ( $pejabatPenandatangan as $key => $value)
+                                        <option value="{{ $value }}">
+                                            {{ $value }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <form id="yearForm" action="" method="GET">
+                                    @csrf
+                                    <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                        <label for="filter-tahun" style="margin-bottom: 0;">
+                                            Tahun</label>
+                                        <select name="year" id="yearSelect" class="form-control select2">
+                                            @foreach ($year as $key => $value)
+                                            <option value="{{ $value->year }}"
+                                                {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                                {{ $value->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <div class="">
                             <table id="table-usulan-surat-srikandi"
@@ -115,7 +119,7 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
-                                                class="btn btn-info btn-sm">
+                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
                                                 Detail
@@ -157,6 +161,7 @@
 
 {{-- <script src="{{ asset('js/page/pegawai/usulan-surat-srikandi/index.js') }}"></script> --}}
 <script>
+    $(function () {
     let table = $("#table-usulan-surat-srikandi")
     .dataTable({
     dom: "Bfrtip",
@@ -164,39 +169,81 @@
     lengthChange: false,
     autoWidth: false,
     buttons: [
+    {
+    extend: "excel",
+    className: "btn-success",
+    text: '<i class="fas fa-file-excel"></i> Excel',
+    exportOptions: {
+    columns: [0, 1, 2, 3, 4],
+    },
+    },
+    {
+    extend: "pdf",
+    className: "btn-danger",
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    exportOptions: {
+    columns: [0, 1, 2, 3, 4],
+    },
+    },
     ],
+    oLanguage: {
+    sSearch: "Cari:",
+    sZeroRecords: "Data tidak ditemukan",
+    sEmptyTable: "Data tidak ditemukan",
+    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+    sInfoFiltered: "(disaring dari _MAX_ data)",
+    sLengthMenu: "Tampilkan _MENU_ data",
+    oPaginate: {
+    sPrevious: "Sebelumnya",
+    sNext: "Selanjutnya",
+    },
+    },
     })
     .api();
 
+
+
+
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dt-buttons").appendTo("#download-button");
+    $(".dataTables_filter").appendTo("#filter-search-wrapper");
+    $(".dataTables_filter").find("input").addClass("form-control");
+    // .dataTables_filter width 100%
+    $(".dataTables_filter").css("width", "100%");
+    // .dataTables_filter label width 100%
+    $(".dataTables_filter label").css("width", "100%");
+    // input height 35px
+    $(".dataTables_filter input").css("height", "35px");
+    // make label text bold and black
+    $(".dataTables_filter label").css("font-weight", "bold");
+    // remove bottom margin from .dataTables_filter
+    $(".dataTables_filter label").css("margin-bottom", "0");
+
+    $(".dataTables_filter input").attr(
+    "placeholder",
+    "Cari Rencana Kerja..."
+    );
+    // add padding x 10px to .dataTables_filter input
+    $(".dataTables_filter input").css("padding", "0 10px");
+    $(".dt-buttons").appendTo("#download-button");
+
     function filterTable() {
-    let filterYear = $("#filter-year").val();
-    let filterStatus = $("#filter-status").val();
-    let filterSurat = $("#filter-surat").val();
-    let filterSearch = $("#filter-search").val();
     let filterUnitKerja = $("#filter-unit_kerja").val();
 
 
-    if (filterStatus === "Semua") {
-    filterStatus = "";
-    }
-    if (filterSurat === "Semua") {
-    filterSurat = "";
-    }
-    if (filterYear === "Semua") {
-    filterYear = "";
-    }
     if (filterUnitKerja === "Semua") {
     filterUnitKerja = "";
     }
-
+    if (filterUnitKerja != "") {
+    table.column(4).search("^" + filterUnitKerja + "$", true, false).draw();
+    }
+    else {
     table
-    .column(1)
-    .search(filterSearch, true, false)
-    .column(3)
-    .search(filterYear, true, false)
     .column(4)
     .search(filterUnitKerja, true, false)
     .draw();
+    }
 
     // reset numbering in table first column
     table
@@ -207,14 +254,16 @@
     });
     }
 
-    $("#filter-year, #filter-status, #filter-unit_kerja").on("change", function () {
+    $("#filter-unit_kerja").on("change", function () {
     filterTable();
     });
-    $("#filter-search").on("keyup", function () {
-        console.log('test');
-    filterTable();
+
+    $("#yearSelect").on("change", function () {
+    let year = $(this).val();
+    $("#yearForm").attr("action", `?year=${year}`);
+    $("#yearForm").find('[name="_token"]').remove();
+    $("#yearForm").trigger("submit");
     });
-    filterTable();
-    $(".dataTables_filter").hide();
+});
 </script>
 @endpush

@@ -45,7 +45,7 @@
                                                 <th rowspan="2" class="align-middle">Tim</th>
                                                 <th rowspan="2" class="align-middle">Proyek</th>
                                                 <th rowspan="2" class="align-middle">Tugas</th>
-                                                <th rowspan="2" class="align-middle">Jabatan</th>
+                                                <th rowspan="2" class="align-middle">Peran</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
                                                 <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
                                             </tr>

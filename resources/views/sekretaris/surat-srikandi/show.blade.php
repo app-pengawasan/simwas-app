@@ -28,13 +28,7 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-4 pb-0">
-                            <div class="col-md-4">
-                                <a class="btn btn-primary" href="{{ route('surat-srikandi.index') }}">
-                                    <i class="fas fa-chevron-circle-left"></i> Kembali
-                                </a>
-                            </div>
-                        </div>
+
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         @if ($usulanSuratSrikandi->status == 'disetujui')
@@ -109,7 +103,7 @@
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
                                     @else
                                     <span class="badge badge-light"><i
-                                            class="fa-regular fa-clock mr-1"></i>Menunggu</span>
+                                            class="fa-regular fa-clock mr-1"></i>Menunggu Persetujuan</span>
                                     @endif
                                 </td>
                             </tr>
@@ -207,17 +201,23 @@
                             </tr>
                         </table>
                         {{-- edit and delete button --}}
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-between mt-4">
+                            <div class="col-md-4">
+                                <a class="btn btn-outline-primary mr-2" href="{{ route('surat-srikandi.index') }}">
+                                    <i class="fas fa-arrow-left mr-1"></i> Kembali
+                                </a>
                                 {{-- button to open modal to setujui or tolak --}}
                                 {{-- if status not tolak and setuju --}}
                                 @if ($usulanSuratSrikandi->status == 'usulan')
-                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                <button type="button" class="btn btn-danger mr-2" data-toggle="modal"
                                     data-target="#modalTolakSurat">
+                                    <i class="fa-regular fa-circle-xmark mr-1"></i>
                                     Tolak
                                 </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                <button type="button" class="btn btn-success mr-2" data-toggle="modal"
                                     data-target="#modalSetujuiSurat">
+                                    <i class="fa-regular fa-circle-check mr-1"></i>
                                     Setujui
                                 </button>
                                 @endif
@@ -249,8 +249,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Tolak</button>
+                    <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                        <i class="fas fa-exclamation-triangle"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-icon icon-left btn-primary submit-btn">
+                        <i class="fas fa-save"></i>Simpan
+                    </button>
                 </div>
             </form>
         </div>
@@ -402,8 +406,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Setujui</button>
+                    <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                        <i class="fas fa-exclamation-triangle"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-icon icon-left btn-primary submit-btn">
+                        <i class="fas fa-save"></i>Simpan
+                    </button>
                 </div>
             </form>
         </div>

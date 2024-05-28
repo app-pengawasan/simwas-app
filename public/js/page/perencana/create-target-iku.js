@@ -12,8 +12,6 @@ $(document).ready(function () {
     // Add Objek
 
     $("#add-objek").on("click", function () {
-        console.log("add objek");
-
         var jumlahObjek = $("#jumlah-objek").val();
         // if jumlah objek is empty set to 1
         if (jumlahObjek === "") {
@@ -26,7 +24,6 @@ $(document).ready(function () {
 
         // add row to table
         for (var i = 0; i < jumlahObjek; i++) {
-            console.log(i);
             row = parseInt(jumlahObjek) + 1;
             var html = "";
             html += "<tr id='row-" + row + "'>";
@@ -301,18 +298,11 @@ $(document).ready(function () {
 
         var jumlahObjek = $("#jumlah-objek").val() || 1;
         var accumulatedTriwulan = 0;
-        console.log("jumlahObjek", jumlahObjek);
         for (i = 1; i <= jumlahObjek; i++) {
             for (j = 1; j <= 4; j++) {
                 var triwulan = $("#triwulan" + j + "-row" + i).val();
                 accumulatedTriwulan += triwulan ? parseInt(triwulan) : 0;
                 $("#target-triwulan" + j + "-row" + i).val(accumulatedTriwulan);
-                console.log(
-                    "triwulan",
-                    j,
-                    "-row" + i + " = ",
-                    accumulatedTriwulan
-                );
             }
             accumulatedTriwulan = 0;
         }
@@ -373,21 +363,34 @@ $(document).ready(function () {
         $("#total-y").val(totalNilaiY);
 
         $("#presentase-target-triwulan1").val(
-            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan1 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan2").val(
-            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan2 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan3").val(
-            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan3 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
         $("#presentase-target-triwulan4").val(
-            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2)
+            ((totalTargetTriwulan4 / totalNilaiY) * 100).toFixed(2).replace(/\.00$/, "") + "%"
         );
     }
 
     // change total every change in triwulan
     $("table tbody").on("change", "input", function () {
         calculateTotal();
+    });
+});
+
+$("#form-target").on("submit", function (e) {
+    // swal loading
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
     });
 });

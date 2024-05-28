@@ -25,9 +25,26 @@
                     <div class="card-header">
                         <h4>Monitoring Kelengkapan Tugas Tim</h4>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped display responsive"
+                    <div class="card-body" style="padding-top: 5px;">
+                        <div class="">
+                            <form id="yearForm" action="" method="GET" class="px-0">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="yearSelect">Pilih Tahun</label>
+                                    <select name="year" id="yearSelect" class="form-control select2 col-md-1">
+                                        @php
+                                        $currentYear = date('Y');
+                                        $lastThreeYears = range($currentYear, $currentYear - 3);
+                                        @endphp
+                    
+                                        @foreach ($lastThreeYears as $year)
+                                        <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                            <table class="table table-bordered table-striped display w-100"
                                 id="table-dashboard-arsiparis">
                                 <thead>
                                     <tr>
@@ -40,13 +57,13 @@
                                         <th>Status Norma Hasil</th>
                                         <th>Kendali Mutu</th>
                                         <th>Verifikasi Arsiparis</th>
-                                        <th class="never">Nomor Surat Tugas</th>
-                                        <th class="never">File Surat Tugas</th>
-                                        <th class="never">Nomor Norma Hasil</th>
-                                        <th class="never">File Norma Hasil</th>
-                                        <th class="never">Status Norma Hasil</th>
-                                        <th class="never">Kendali Mutu</th>
-                                        <th class="never">Verifikasi Arsiparis</th>
+                                        <th>Nomor Surat Tugas</th>
+                                        <th>File Surat Tugas</th>
+                                        <th>Nomor Norma Hasil</th>
+                                        <th>File Norma Hasil</th>
+                                        <th>Status Norma Hasil</th>
+                                        <th>Kendali Mutu</th>
+                                        <th>Verifikasi Arsiparis</th>
                                     </tr>
                                 </thead>
                                 @php $i = 0; @endphp
@@ -134,8 +151,8 @@
                                                 </td>
                                             @endif
 
-                                            <td>{{ $t->suratTugas->nomor ?? 'Belum Ada' }}</td>
-                                            <td>{{ isset($t->suratTugas->path) ? url('/').'/'.$t->suratTugas->path : 'Belum Ada' }}</td>
+                                            <td>{{ $t->suratTugas->nomor ?? '-' }}</td>
+                                            <td>{{ isset($t->suratTugas->path) ? url('/').'/'.$t->suratTugas->path : '-' }}</td>
 
                                             @if (isset($t->normaHasil[0]->normaHasilAccepted))
                                                 <td>
@@ -143,11 +160,11 @@
                                                     $t->normaHasil[0]->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
                                                     $kodeHasilPengawasan[$t->normaHasil[0]->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($t->normaHasil[0]->normaHasilAccepted->tanggal_norma_hasil)) }}
                                                 </td>
-                                            @else <td>Belum Ada</td>
+                                            @else <td>-</td>
                                             @endif
 
                                             <td>{{ isset($t->normaHasil[0]->normaHasilAccepted->laporan_path) ? 
-                                                    url('/').'/'.$t->normaHasil[0]->normaHasilAccepted->laporan_path : 'Belum Ada' }}</td>
+                                                    url('/').'/'.$t->normaHasil[0]->normaHasilAccepted->laporan_path : '-' }}</td>
                                             
                                             @if (isset($t->normaHasil[0]))
                                                 @if ($t->normaHasil[0]->status_norma_hasil != 'disetujui')
@@ -155,10 +172,10 @@
                                                 @else
                                                 <td>{{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis }}</td>
                                                 @endif
-                                            @else <td>Belum Ada</td>
+                                            @else <td>-</td>
                                             @endif
 
-                                            <td>{{ isset($t->kendaliMutu->path) ? url('/').'/'.$t->kendaliMutu->path : 'Belum Ada' }}</td>
+                                            <td>{{ isset($t->kendaliMutu->path) ? url('/').'/'.$t->kendaliMutu->path : '-' }}</td>
 
                                             @if (isset($t->suratTugas) && $t->suratTugas->status == 'disetujui' && 
                                                  isset($t->kendaliMutu) && $t->kendaliMutu->status == 'disetujui' &&
@@ -202,9 +219,8 @@
     let table = $("#table-dashboard-arsiparis")
         .dataTable({
             dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
+            responsive: false,
+            scrollX: 'true',
             buttons: [
                 {
                     extend: "excel",
@@ -219,6 +235,7 @@
                 },
                 {
                     extend: "pdf",
+                    orientation: 'landscape',
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
@@ -230,5 +247,21 @@
                 },
             ],
         }).api();
+    
+    table.columns([9,10,11,12,13,14,15]).visible(false);
+
+    //update ukuran tabel saat ukuran sidebar berubah
+    $('.nav-link').on("click", function () {
+        setTimeout( function () {
+            table.columns.adjust();
+        }, 500);
+    });
+
+    $('#yearSelect').on('change', function() {
+        let year = $(this).val();
+        $('#yearForm').attr('action', `?year=${year}`);
+        $('#yearForm').find('[name="_token"]').remove();
+        $('#yearForm').submit();
+    });
 </script>
 @endpush

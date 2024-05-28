@@ -60,7 +60,7 @@
                                         <tr>
                                             <th class="bulan">Bulan</th>
                                             <th>Tugas</th>
-                                            <th>Jabatan</th>
+                                            <th>Peran</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
                                             <th>Bukti Dukung</th>
@@ -95,12 +95,12 @@
                                                             @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                                 <a class="btn btn-primary"
                                                                 href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                                    <i class="fas fa-eye"></i>
+                                                                    <i class="fa fa-download"></i>
                                                                 </a>
                                                             @else
                                                                 <a class="btn btn-primary"
                                                                 href="{{ $realisasi->hasil_kerja }}" target="_blank">
-                                                                    <i class="fas fa-eye"></i>
+                                                                    <i class="fa fa-download"></i>
                                                                 </a>
                                                             @endif    
                                                         </td>

@@ -37,8 +37,8 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-primary" href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">
-                                    <i class="fas fa-chevron-circle-left"></i> Kembali
+                                <a class="btn btn-outline-primary mr-1" href="/ketua-tim/rencana-kinerja/{{ $timKerja->id_timkerja }}">
+                                    <i class="fas fa-arrow-left"></i> Kembali
                                 </a>
                             </div>
                         </div>
@@ -62,6 +62,9 @@
                                         <th>IKI Anggota</th>
                                         <td>{{ $proyek->iki_anggota }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Jumlah Tugas</th>
+                                        <td>{{ $rencanaKerjas->count() }} Tugas</td>
                                 </table>
                             </div>
                         </div>
@@ -84,7 +87,11 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $tugas->tugas }}</td>
-                                            <td>{{ $tugas->kategori_pelaksanatugas }}</td>
+                                            <td>
+                                                {{
+                                                    $tugas->kategori_pelaksanatugas == 'gt' ? "Gugus Tugas" :  "Non Gugus Tugas"
+                                                 }}
+</td>
                                             <td>{{ $tugas->melaksanakan }}</td>
                                             <td>{{ $tugas->capaian }}</td>
                                             <td>

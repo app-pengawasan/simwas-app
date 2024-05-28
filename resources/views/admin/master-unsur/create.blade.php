@@ -8,14 +8,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{ route('master-unsur.store') }}" enctype="multipart/form-data"
-                class="needs-validation" novalidate="">
+            <form method="post" action="{{ route('master-unsur.store') }}" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body">
                     @csrf
                     <div class="form-group">
                         <label class="form-label" for="namaUnsur">Nama Unsur</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaUnsur" id="namaUnsur" required placeholder="Masukkan Nama Unsur">
+                            <input type="text" class="form-control" name="namaUnsur" id="namaUnsur" required
+                                placeholder="Masukkan Nama Unsur">
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>

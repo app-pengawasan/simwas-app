@@ -14,22 +14,23 @@
                         <label class="form-label" for="kode_wilayah">Kode Wilayah</label>
                         <div class="">
                             <input type="text" id="create-kode_wilayah" class="form-control" name="kode_wilayah"
-                                required>
+                                required placeholder="Masukkan 2 Digit Kode Wilayah">
                             <small id="error-kode_wilayah" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="kode_satuankerja">Kode Satuan Kerja</label>
                         <div class="">
-                            <input type="text" id="create-kode_satuankerja" class="form-control"
-                                name="kode_satuankerja" required>
+                            <input type="text" id="create-kode_satuankerja" class="form-control" name="kode_satuankerja"
+                                required placeholder="Masukkan 4 Digit Kode Satuan Kerja">
                             <small id="error-kode_satuankerja" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="nama">Nama</label>
+                        <label class="form-label" for="nama">Nama Satuan Kerja</label>
                         <div class="">
-                            <input type="text" id="create-nama" class="form-control" name="nama" required>
+                            <input type="text" id="create-nama" class="form-control" name="nama" required
+                                placeholder="Nama Satuan Kerja">
                             <small id="error-nama" class="text-danger"></small>
                         </div>
                     </div>

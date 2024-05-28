@@ -80,22 +80,51 @@ class NamaPpController extends Controller
      * @param  \App\Models\NamaPp  $namaPp
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, NamaPp $namaPp)
+    public function update(Request $request, $id)
     {
         $this->authorize('analis_sdm');
-        if ($request->has('nonaktifkan')) {
-            $validatedData = $request->validate([
-                'is_aktif' => 'required'
+
+        if($request->aktivasi) {
+            NamaPp::where('id', $id)->update([
+                'is_aktif' => $request->is_aktif
             ]);
-            NamaPp::where('id', $request->input('id'))->update($validatedData);
-            return redirect('analis-sdm/pp/'.$request->input('pp_id'))->with('success', 'Berhasil menonaktifkan nama pengembangan profesi!');
-        } elseif ($request->has('aktifkan')) {
-            $validatedData = $request->validate([
-                'is_aktif' => 'required'
+
+            if ($request->is_aktif == "1") $str = "mengaktifkan";
+            else $str = "menonaktifkan";
+
+            $request->session()->put('status', 'Berhasil '.$str.' nama kompetensi.');
+            $request->session()->put('alert-type', 'success');
+
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Data Berhasil Diperbarui'
             ]);
-            NamaPp::where('id', $request->input('id'))->update($validatedData);
-            return redirect('analis-sdm/pp/'.$request->input('pp_id'))->with('success', 'Berhasil mengaktifkan nama pengembangan profesi!');
+        } else { 
+            NamaPp::where('id', $id)->update([
+                'nama' => $request->nama
+            ]);
+    
+            $request->session()->put('status', 'Berhasil mengedit nama kompetensi.');
+            $request->session()->put('alert-type', 'success');
+    
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Data Berhasil Diperbarui'
+            ]);
         }
+        // if ($request->has('nonaktifkan')) {
+        //     $validatedData = $request->validate([
+        //         'is_aktif' => 'required'
+        //     ]);
+        //     NamaPp::where('id', $request->input('id'))->update($validatedData);
+        //     return redirect('analis-sdm/pp/'.$request->input('pp_id'))->with('success', 'Berhasil menonaktifkan nama pengembangan profesi!');
+        // } elseif ($request->has('aktifkan')) {
+        //     $validatedData = $request->validate([
+        //         'is_aktif' => 'required'
+        //     ]);
+        //     NamaPp::where('id', $request->input('id'))->update($validatedData);
+        //     return redirect('analis-sdm/pp/'.$request->input('pp_id'))->with('success', 'Berhasil mengaktifkan nama pengembangan profesi!');
+        // }
     }
 
     /**

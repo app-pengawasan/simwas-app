@@ -24,18 +24,20 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex float-right col-4 p-0 pl-2">
-                                <div class="ml-auto my-2 col-12 p-0">
-                                    <select class="form-control" id="filterTahun">
-                                        <?php $year = date('Y'); ?>
-                                        @for ($i = -5; $i < 8; $i++)
-                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
-                                        @endfor
+                            <div class="d-flex mb-2 row" style="gap:10px">
+                                <div class="form-group col pr-0" style="margin-bottom: 0;">
+                                    <label for="filterUnitKerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                    <select class="form-control" id="filterUnitKerja" autocomplete="off">
+                                        <option value="all">Semua</option>
+                                        <option value="8000">Inspektorat Utama</option>
+                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
+                                        <option value="8100">Inspektorat Wilayah I</option>
+                                        <option value="8200">Inspektorat Wilayah II</option>
+                                        <option value="8300">Inspektorat Wilayah III</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="d-flex float-right col-4 p-0 pr-1 pl-1">
-                                <div class="ml-auto my-2 col-12 p-0">
+                                <div class="form-group col pl-0 pr-0" style="margin-bottom: 0;">
+                                    <label for="filterBulan" style="margin-bottom: 0;">Bulan Unggah</label>
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -52,20 +54,17 @@
                                         <option value="12">Desember</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="d-flex float-left col-4 p-0 pr-2">
-                                <div class="ml-auto my-2 col-12 p-0">
-                                    <select class="form-control" id="filterUnitKerja" autocomplete="off">
-                                        <option value="all">Semua Unit Kerja</option>
-                                        <option value="8000">Inspektorat Utama</option>
-                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
-                                        <option value="8100">Inspektorat Wilayah I</option>
-                                        <option value="8200">Inspektorat Wilayah II</option>
-                                        <option value="8300">Inspektorat Wilayah III</option>
+                                <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                    <label for="filterTahun" style="margin-bottom: 0;">Tahun Unggah</label>
+                                    <select class="form-control" id="filterTahun">
+                                        <?php $year = date('Y'); ?>
+                                        @for ($i = -5; $i < 8; $i++)
+                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
+                                        @endfor
                                     </select>
                                 </div>
                             </div>
-                            <div style="margin-top: 5rem">
+                            <div style="margin-top: 2rem">
                                 <table id="table-daftar-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>

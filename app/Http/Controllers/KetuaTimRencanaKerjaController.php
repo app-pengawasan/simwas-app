@@ -91,27 +91,41 @@ class KetuaTimRencanaKerjaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $masterTujuan = MasterTujuan::all();
-        $masterSasaran = MasterSasaran::all();
-        $masterIku = MasterIKU::all();
-        $pegawai = User::all();
+        $year = $request->year;
 
-
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
         $id_pegawai = auth()->user()->id;
-        $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
+        $timKerja = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get();
+        // select raw distinct year from created_at
+
+        $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('tahun')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['tahun' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('tahun');
 
         return view('pegawai.rencana-kinerja.ketua-tim.index', [
             'type_menu' => 'rencana-kinerja',
             'unitKerja' => $this->unitkerja,
-            'masterTujuan' => $masterTujuan,
-            'masterSasaran' => $masterSasaran,
-            'masterIku' => $masterIku,
-            'pegawai'   => $pegawai,
             'timKerja'  => $timKerja,
             'statusTim'  => $this->statusTim,
             'colorText'  => $this->colorText,
+            'year'      => $year,
+            'unit_kerja'  => $this->unitkerja,
         ]);
 
         // return $id_pegawai;

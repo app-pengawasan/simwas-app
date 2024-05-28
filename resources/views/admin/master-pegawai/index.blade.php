@@ -54,7 +54,7 @@
             </h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                <div class="breadcrumb-item">Master Pegawasi</div>
+                <div class="breadcrumb-item">Master Pegawai</div>
             </div>
         </div>
         <div class="row">
@@ -62,16 +62,51 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <p class="mt-3">
-                            <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                            Untuk melakukan import pegawai silahkan download format
-                            <a href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
-                                class="link-primary font-weight-bold" download>
-                                <i class="fas fa-download"></i> disini
-                            </a>.
-                        </p>
-                        <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-3">
+                                <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                Untuk melakukan import pegawai silahkan download format
+                                <a href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
+                                    class="link-primary font-weight-bold" download>
+                                    <i class="fas fa-download"></i> disini
+                                </a>.
+                            </p>
+                            <div id="download-button">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                            <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                <div id="filter-search-wrapper">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-jabatan" style="margin-bottom: 0;">
+                                    Jabatan</label>
+                                <select name="jabatan" id="filter-jabatan" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($jabatan as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->jabatan == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            {{-- unit kerja --}}
+                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-unit-kerja" style="margin-bottom: 0;">
+                                    Unit Kerja</label>
+                                <select name="unit_kerja" id="filter-unit-kerja" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    @foreach ($unit_kerja as $key => $value)
+                                    <option value="{{ $value }}" {{ request()->unit_kerja == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div style="gap:10px" class="d-flex align-items-end">
                                 <a type="button" class="btn btn-primary" href="/admin/master-pegawai/create">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
@@ -88,6 +123,7 @@
                                 class="table table-bordered table-striped display responsive">
                                 <thead>
                                     <tr>
+                                        <th style="width: 15px;">No</th>
                                         <th style="width: 100px;">NIP</th>
                                         <th>Nama</th>
                                         <th>Jabatan</th>
@@ -98,22 +134,36 @@
                                 <tbody>
                                     @foreach ($users as $user)
                                     <tr>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $user->nip }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            <div
+                                                class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
+                                                <div class="circle mr-2">
+                                                    <span class="initials text-capitalize">
+                                                        {{ substr($user->name, 0, 1) }}{{ substr(strstr($user->name, ' '), 1, 1) }}
+                                                    </span>
+                                                </div>
+                                                {{  $user->name }}
+                                            </div>
+                                        </td>
                                         <td>{{ $jabatan["$user->jabatan"] }}</td>
                                         <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
-                                        <td>
-                                            <a class="btn btn-primary" href="/admin/master-pegawai/{{ $user->id }}"
-                                                style="width: 42px">
+                                        <td style="min-width: 100px;">
+                                            <a class="btn btn-primary btn-sm"
+                                                href="/admin/master-pegawai/{{ $user->id }}" data-toggle="tooltip"
+                                                data-placement="top" title="Lihat Detail Pegawai">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a class="btn btn-warning" href="/admin/master-pegawai/{{ $user->id }}/edit"
-                                                style="width: 42px">
+                                            <a class="btn btn-warning btn-sm"
+                                                href="/admin/master-pegawai/{{ $user->id }}/edit" data-toggle="tooltip"
+                                                data-placement="top" title="Ubah Data Pegawai">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if ($user->id != auth()->user()->id)
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn"
-                                                style="width: 42px" data-id="{{ $user->id }}">
+                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
+                                                data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top"
+                                                title="Hapus Data Pegawai">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                             @endif

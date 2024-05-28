@@ -63,7 +63,8 @@ class PegawaiLaporanKinerjaController extends Controller
 
         $realisasiAll = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query){
                             $query->where('id_pegawai', auth()->user()->id);
-                        })->get();
+                        })->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
+                        ->get(); 
 
         $jamRealisasi = $realisasiAll->groupBy('id_pelaksana')
                             ->map(function ($items) {
@@ -78,7 +79,7 @@ class PegawaiLaporanKinerjaController extends Controller
 
         $realisasiDone = $realisasiDone->map->groupBy(function ($realisasi) {
                             return date("m",strtotime($realisasi->updated_at));
-                        });
+                        }); 
 
         $nilai_ins = NilaiInspektur::where('id_pegawai', auth()->user()->id)->get(); 
         return view('pegawai.laporan-kinerja.index', [

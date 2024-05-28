@@ -9,6 +9,7 @@ use App\Models\ObjekNormaHasil;
 use App\Models\StKinerja;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RencanaKerja;
+use Illuminate\Http\Request;
 
 class NormaHasilController extends Controller
 {
@@ -59,15 +60,40 @@ class NormaHasilController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $year = $request->year;
 
-        $usulan = NormaHasil::latest()->where('user_id', auth()->user()->id)->get();
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+        $currentYear = date('Y');
+
+        $usulan = NormaHasil::with('normaHasilAccepted')
+            ->where('user_id', auth()->user()->id)
+            ->whereYear('created_at', $year)
+            ->latest()
+            ->get();
+        // get year from created_at distinct
+        $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
         return view('pegawai.norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
-            'jenisNormaHasil' => $this->hasilPengawasan
-
+            'jenisNormaHasil' => $this->hasilPengawasan,
+            'year' => $year
         ]);
     }
 
@@ -111,7 +137,7 @@ class NormaHasilController extends Controller
         // dd($request->all());
         // store file to storage
         $file = $request->file('file');
-        $fileName = time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
+        $fileName = $request->nama_dokumen . "-" .time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
         $path = public_path('storage/norma-hasil');
         $file->move($path, $fileName);
         $document_path = 'storage/norma-hasil/' . $fileName;

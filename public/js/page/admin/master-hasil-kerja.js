@@ -16,7 +16,6 @@ $(document).on("click", ".edit-button", function () {
             $("#editPicKoordinator").val(data.pic);
             $("#editAnggotaTim").val(data.anggota_tim);
 
-            console.log($("#editAnggotaTim").val());
             if (data.pic != null) {
                 $("#editStatus1").prop("checked", true);
                 $("#edit-picKoordinator").show();
@@ -78,14 +77,14 @@ $(document).on("change", "#masterUnsurId", function () {
 $(document).on("change", "input[type=radio][name=status]", function () {
     var value = $(this).val();
     if (value == "1") {
-        $("#picKoordinator").hide();
+        $("#pic-koordinator").hide();
         $("#picKoordinator").attr("required", false);
         $("#pengendali-teknis").show();
         $("#ketua-tim").show();
         $("#pengendaliTeknis").attr("required", true);
         $("#ketuaTim").attr("required", true);
     } else {
-        $("#picKoordinator").show();
+        $("#pic-koordinator").show();
         $("#picKoordinator").attr("required", true);
         $("#pengendali-teknis").hide();
         $("#ketua-tim").hide();
@@ -112,27 +111,88 @@ $(document).on("change", "input[type=radio][name=editStatus]", function () {
     }
 });
 
+$(function () {
+    let table;
 
+    if ($("#master-hasil-kerja").length) {
+        table = $("#master-hasil-kerja")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        filename: "Master Hasil Kerja",
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        filename: "Master Hasil Kerja",
+                    },
+                ],
+            })
+            .api();
 
-let table = $("#master-hasil-kerja")
-    .dataTable({
-        dom: "Bfrtip",
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
-        buttons: [
-            {
-                extend: "excel",
-                className: "btn-success",
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                filename: "Master Hasil Kerja",
-            },
-            {
-                extend: "pdf",
-                className: "btn-danger",
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                filename: "Master Hasil Kerja",
-            },
-        ],
-    })
-    .api();
+        // move datatable button to inside download button
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dt-buttons").appendTo("#download-button");
+        $(".dataTables_filter").appendTo("#filter-search-wrapper");
+        $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
+        $(".dataTables_filter").css("width", "100%");
+        // .dataTables_filter label width 100%
+        $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
+        $(".dataTables_filter input").css("height", "35px");
+        // make label text bold and black
+        $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
+        $(".dataTables_filter label").css("margin-bottom", "0");
+
+        $(".dataTables_filter input").attr(
+            "placeholder",
+            "Cari berdasarkan hasil kerja atau subunsur"
+        );
+        // add padding x 10px to .dataTables_filter input
+        $(".dataTables_filter input").css("padding", "0 10px");
+        $(".dt-buttons").appendTo("#download-button");
+    }
+    // restart numbering if data table is filter input is changed
+    $("#master-hasil-kerja").on("search.dt", function () {
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    });
+});
+
+$(".submit-btn").on("click", function () {
+    // disable button after click
+    if (
+        $("#masterUnsurId").val() == "" ||
+        $("#namaHasilKerja").val() == "" ||
+        $("#hasilKerjaTim").val() == "" ||
+        $("#status").val() == "" ||
+        $("#anggotaTim").val() == ""
+    ) {
+        return;
+    }
+    if ("input[type=radio][name=status]" == "1") {
+        if ($("#picKoordinator").val() == "") {
+            return;
+        }
+    } else  {
+        if ($("#pengendaliTeknis").val() == "" || $("#ketuaTim").val() == "") {
+            return;
+        }
+    }
+    $(this).attr("disabled", true);
+    $(this).closest("form").submit();
+});

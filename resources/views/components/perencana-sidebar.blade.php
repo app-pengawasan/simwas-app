@@ -25,21 +25,37 @@
                 </a>
                 <ul class="dropdown-menu">
                     {{-- Menu Untuk Pimpinan ['Inspektur Wilayah I,II, III', 'Kabag Umum'] --}}
-                    <li class="{{ Request::is('perencana/target-iku-unit-kerja/*') || Request::is('perencana/target-iku-unit-kerja') ? 'active' : '' }}">
+                    <li
+                        class="{{ Request::is('perencana/target-iku-unit-kerja/*') || Request::is('perencana/target-iku-unit-kerja') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('target-iku-unit-kerja.index') }}">
                             <span>Target</span>
+                            @if ($targetIkuUnitKerjaCount > 0)
+                            <div class="bg-primary sidebar-count">
+                                {{ $targetIkuUnitKerjaCount }}
+                            </div>
+                            @endif
                         </a>
                     </li>
                     <li
                         class="{{ Request::is('perencana/realisasi-iku-unit-kerja/*') || Request::is('perencana/realisasi-iku-unit-kerja') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('realisasi-iku-unit-kerja.index') }}">
                             <span>Realisasi</span>
+                            @if ($realisasiIkuUnitKerjaCount > 0)
+                            <div class="bg-primary sidebar-count">
+                                {{ $realisasiIkuUnitKerjaCount }}
+                            </div>
+                            @endif
                         </a>
                     </li>
                     <li
                         class="{{ Request::is('perencana/evaluasi-iku-unit-kerja/*') || Request::is('perencana/evaluasi-iku-unit-kerja') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('evaluasi-iku-unit-kerja.index') }}">
                             <span>Evaluasi</span>
+                            @if ($evaluasiIkuUnitKerjaCount > 0)
+                            <div class="bg-primary sidebar-count">
+                                {{ $evaluasiIkuUnitKerjaCount }}
+                            </div>
+                            @endif
                         </a>
                     </li>
                 </ul>

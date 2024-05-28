@@ -21,23 +21,19 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="/pegawai/tim/surat-tugas/{{ $surat->nomor }}" enctype="multipart/form-data">
+            <form method="post" name="myform" action="/pegawai/tim/surat-tugas/{{ $surat->nomor }}" enctype="multipart/form-data">
                 <div class="modal-body">
                     @method('PUT')
                     @csrf
                     <div class="form-group">
                         <label for="file">File Surat Tugas</label>
                         <input type="file" name="file" id="file" class="form-control" accept=".pdf" required>
-                        @error('file')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                        <small id="error-file" class="text-danger"></small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Kirim</button>
+                    <button type="submit" class="btn btn-success btn-edit">Kirim</button>
                 </div>
             </form>
         </div>
@@ -156,5 +152,16 @@
 
 <!-- Page Specific JS File -->
 <script src="{{ asset('js/page/modules-datatables.js') }}"></script>
+
+<script>
+    document.forms['myform'].reset();
+
+    $('.btn-edit').on("click", function (e) {
+        if ($('#file').val() != '' && $('#file')[0].files[0].size / 1024 > 1024) {
+            $('#error-file').text('Ukuran file maksimal 1MB');
+            e.preventDefault();
+        }
+    });
+</script>
 
 @endpush

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Event;
+use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
 use Illuminate\Database\Eloquent\Builder;
@@ -98,18 +99,28 @@ class InspekturRealisasiJamKerjaController extends Controller
         //
     }
     
-    public function rekap()
+    public function rekap(Request $request)
     {
         $this->authorize('inspektur');
 
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
-            $realisasiDone = RealisasiKinerja::where('status', 1)->select('id_pelaksana');
+            $realisasiDone = RealisasiKinerja::where('status', 1)
+                            ->whereYear('updated_at', $year)->select('id_pelaksana');
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
                                 $query->where('unit_kerja', auth()->user()->unit_kerja);
-                            })->where('status', 1)->select('id_pelaksana');
+                            })->where('status', 1)->whereYear('updated_at', $year)
+                            ->select('id_pelaksana');
         } 
         
         $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
@@ -147,18 +158,28 @@ class InspekturRealisasiJamKerjaController extends Controller
         ])->with('jam_kerja', $jam_kerja);
     }
 
-    public function pool()
+    public function pool(Request $request)
     {
         $this->authorize('inspektur');
 
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $pegawai = User::get();
-            $realisasiDone = RealisasiKinerja::where('status', 1)->select('id_pelaksana');
+            $realisasiDone = RealisasiKinerja::where('status', 1)
+                            ->whereYear('updated_at', $year)->select('id_pelaksana');
         } else {
             $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
                                 $query->where('unit_kerja', auth()->user()->unit_kerja);
-                            })->where('status', 1)->select('id_pelaksana');
+                            })->where('status', 1)->whereYear('updated_at', $year)
+                            ->select('id_pelaksana');
         } 
         
         $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
@@ -195,13 +216,13 @@ class InspekturRealisasiJamKerjaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, $year)
     {
         $this->authorize('inspektur');
 
         $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query) use ($id) {
                             $query->where('id_pegawai', $id);
-                        })->where('status', 1)->select('id_pelaksana');
+                        })->where('status', 1)->whereYear('updated_at', $year)->select('id_pelaksana');
 
         $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
                     ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
@@ -220,6 +241,7 @@ class InspekturRealisasiJamKerjaController extends Controller
                             'tim' => $items[0]->pelaksana->rencanaKerja->proyek->timkerja->nama,
                             'proyek' => $items[0]->pelaksana->rencanaKerja->proyek->nama_proyek,
                             'tugas' => $items[0]->pelaksana->rencanaKerja->tugas,
+                            'id_pelaksana' => $items[0]->pelaksana->id_pelaksana,
                             'jabatan' => $items[0]->pelaksana->pt_jabatan,
                             'realisasi_jam' => $items->groupBy(function ($item) {
                                                             return date("m",strtotime($item->updated_at));

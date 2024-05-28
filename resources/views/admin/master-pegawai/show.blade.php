@@ -55,7 +55,7 @@
                             </tr>
                             <tr>
                                 <th>Role/Group:</th>
-                                <td>
+                                <td class="py-2">
                                     @if (
                                     !(
                                     $user->is_admin ||
@@ -70,7 +70,7 @@
                                     @else
                                     @foreach ($role as $key => $value)
                                     @if ($user["$key"])
-                                    <span class="badge badge-success">{{ $value }}</span>
+                                    <span class="badge badge-success my-1">{{ $value }}</span>
                                     @endif
                                     @endforeach
                                     @endif

@@ -25,6 +25,7 @@
         text-align: center;
         padding: 2px !important;
     }
+
     .table-wrapper {
         overflow-x: auto;
     }
@@ -49,15 +50,13 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-4 pb-0">
-                        </div>
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Unit Kerja</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
                                 <th>Unit Kerja:</th>
-                                <td>{{ $targetIkuUnitKerja->unit_kerja }}</td>
+                                <td>{{ $unitKerja[$targetIkuUnitKerja->unit_kerja]}}</td>
                             </tr>
                             <tr>
                                 <th>Nama Kegiatan:</th>
@@ -65,12 +64,32 @@
                             </tr>
                             <tr>
                                 <th>Status:</th>
-                                <td>{{ $targetIkuUnitKerja->status }}</td>
+                                <td>{{ $status[$targetIkuUnitKerja->status] }}</td>
                             </tr>
                             <tr>
                                 <th>Jumlah Objek:</th>
                                 <td id="jumlah-objek">{{ $targetIkuUnitKerja->jumlah_objek }}</td>
                             </tr>
+                            <tr>
+                                <th>Target Kinerja:</th>
+                                <td><a class="badge badge-primary"
+                                        href="/perencana/target-iku-unit-kerja/{{ $targetIkuUnitKerja->id }}"
+                                        target="_blank">Lihat Target Kinerja
+                                        <i class="fa-solid fa-up-right-from-square ml-1"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{-- realisasi --}}
+                            <tr>
+                                <th>Realisasi Kinerja:</th>
+                                <td><a class="badge badge-primary"
+                                        href="/perencana/realisasi-iku-unit-kerja/{{ $targetIkuUnitKerja->id }}"
+                                        target="_blank">Lihat Realisasi Kinerja
+                                        <i class="fa-solid fa-up-right-from-square ml-1"></i>
+                                    </a>
+                                </td>
+
+
                         </table>
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Evaluasi</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
@@ -89,11 +108,11 @@
                             </tr>
                             <tr>
                                 <th>PIC Tindak Lanjut:</th>
-                                <td>{{ $evaluasiIkuUnitKerja->id_pic }}</td>
+                                <td>{{ $evaluasiIkuUnitKerja->user->name }}</td>
                             </tr>
                             <tr>
                                 <th>Batas Waktu Tindak Lanjut:</th>
-                                <td>{{ \Carbon\Carbon::parse($evaluasiIkuUnitKerja->batas_waktu_tindak_lanjut)->format('d/m/Y') }}
+                                <td>{{ \Carbon\Carbon::parse($evaluasiIkuUnitKerja->batas_waktu_tindak_lanjut)->format('d M Y') }}
                                 </td>
                             </tr>
                             {{-- bukti tindak lanjut --}}
@@ -155,6 +174,7 @@
                                         Dokument Notulen</a>
                                 </td>
                             </tr>
+
                         </table>
                         <div class="form-group col overflow-scroll table-wrapper">
                             <table class="table table-responsive-md table-bordered " id="table-iku">
@@ -193,11 +213,9 @@
                                         <td class="text-center align-middle">{{ $key+1 }}</td>
                                         <td class="text-left">
                                             <select disabled class="form-control" name="satuan-row1" class="satuan">
-                                                @foreach ($kabupaten as $key => $value1)
-                                                <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                    value="{{ $value }}">
-                                                    {{ $value->satuan }}</option>
-                                                @endforeach
+                                                <option value="{{ $value->id_objek }}">
+                                                    {{ $value->master_objeks->nama}}
+                                                </option>
                                             </select>
                                         </td>
                                         <td><input value="{{ $value->nilai_y_target }}" disabled type="number"
@@ -243,20 +261,16 @@
                                                 class="form-control triwulan4"></td>
 
 
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian1-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian1-row'.$loop->iteration }}"
                                                 id="{{ 'capaian1-row'.$loop->iteration }}"
                                                 class="form-control triwulan1"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian2-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian2-row'.$loop->iteration }}"
                                                 id="{{ 'capaian2-row'.$loop->iteration }}"
                                                 class="form-control triwulan2"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian3-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian3-row'.$loop->iteration }}"
                                                 id="{{ 'capaian3-row'.$loop->iteration }}"
                                                 class="form-control triwulan3"></td>
-                                        <td><input type="number" disabled
-                                                name="{{ 'capaian4-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled name="{{ 'capaian4-row'.$loop->iteration }}"
                                                 id="{{ 'capaian4-row'.$loop->iteration }}"
                                                 class="form-control triwulan4"></td>
                                     </tr>
@@ -281,9 +295,17 @@
                                 </tfoot>
 
                             </table>
+
+                        </div>
+                        <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0" style="gap: 10px">
+                            <a class="btn btn-outline-primary" href="/perencana/evaluasi-iku-unit-kerja/">
+                                <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                            </a>
+                            <button type="button" class="btn btn-success" id="btn-export">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                            </button>
                         </div>
                     </div>
-
                 </div>
             </div>
     </section>
@@ -295,6 +317,31 @@
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script> --}}
 <script src="{{ asset('js') }}/page/perencana/evaluasi-iku.js"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'evaluasi-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+        // Set your file name a.click(); }); });
+</script>
 
 <!-- Bootstrap is required -->
 @endpush

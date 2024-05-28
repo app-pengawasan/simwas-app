@@ -8,8 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formNHtim" action="/pegawai/tim/norma-hasil" method="post" enctype="multipart/form-data">
-                @csrf
+            <form id="formNHtim" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="nomor">Nomor Dokumen</label>
@@ -33,9 +32,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="nama">File Laporan</label>
+                        <label class="form-label" for="file">File Laporan</label>
                         <div class="">
-                            <input type="file" name="nama" id="nama" class="form-control" accept=".pdf" required>
+                            <input type="file" name="file" id="file" class="form-control" accept=".pdf" required>
                             <small id="error-file" class="text-danger"></small>
                         </div>
                     </div>

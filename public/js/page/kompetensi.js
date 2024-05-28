@@ -1,7 +1,5 @@
-let table = $("#table-kompetensi");
-
-table
-    .DataTable({
+let table = $("#table-kompetensi")
+    .dataTable({
         dom: "Bfrtip",
         responsive: true,
         lengthChange: false,
@@ -24,10 +22,27 @@ table
                 },
             },
         ],
-    })
-    .buttons()
-    .container()
-    .appendTo("#master-pimpinan_wrapper .col-md-6:eq(0)");
+    }).api();
+
+if ($('#role').val() == 'analis sdm') {
+    $('#filterUnitKerja').on("change", function () {
+        table.draw();
+    });
+    
+    $('#filterJenis').on("change", function () {
+        table.draw();
+    });
+    
+    $.fn.dataTableExt.afnFiltering.push(
+        function (setting, data, index) {
+            var selectedUnit = $('select#filterUnitKerja option:selected').val();
+            var selectedJenis = $('select#filterJenis option:selected').val();
+            if ((data[8] == selectedUnit || selectedUnit == 'all') && 
+                (data[9] == selectedJenis || selectedJenis == 'all')) return true;
+            else return false;
+        }
+    );
+}
 
 let tabled = $("#table-dashboard-analis").dataTable({
     dom: "Bfrtip",
@@ -61,6 +76,8 @@ let tabled = $("#table-dashboard-analis").dataTable({
 }).api()
 
 $('#filterPegawai').on("change", function () {
+    tabled.draw();
+
     $('#sertifikasi').html(0);
     $('#jenjang').html(0);
     $('#teknis').html(0);
@@ -70,7 +87,9 @@ $('#filterPegawai').on("change", function () {
     $('#sertifikasi').html(countArr['1']);
     $('#jenjang').html(countArr['2']);
     $('#teknis').html(countArr['3']);
+});
 
+$('#filterJenis').on("change", function () {
     tabled.draw();
 });
 
@@ -85,7 +104,10 @@ $.fn.dataTableExt.afnFiltering.push(
         }
         
         var selected = $('select#filterPegawai option:selected').val();
-        if (data[3] == selected) return true;
+        var selectedJenis = $('select#filterJenis option:selected').val();
+        if (data[3] == selected && (data[5] == selectedJenis || selectedJenis == 'all')) {
+            return true;
+        }
         else return false;
     }
 );

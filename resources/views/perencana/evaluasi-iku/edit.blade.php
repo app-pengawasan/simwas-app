@@ -59,11 +59,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-
+                            <h1 class="h4 text-dark mb-4 header-card">Data Evaluasi IKU Unit Kerja</h1>
                             <form action="{{ route('evaluasi-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <input type="hidden" name="id" value="{{ $targetIkuUnitKerja->id }}">
                                     <label for="nama-kegiatan">Unit Kerja</label>
                                     <div>
@@ -77,7 +77,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="nama-kegiatan">Nama Kegiatan</label>
                                     <div>
                                         <input disabled value="{{ $targetIkuUnitKerja->nama_kegiatan }}"
@@ -85,7 +85,7 @@
                                             required placeholder="Isikan Nama Kegiatan IKU">
                                     </div>
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="jumlah-objek">Jumlah Objek</label>
                                     <div>
                                         <input type="hidden" name="jumlah_objek"
@@ -95,7 +95,7 @@
                                             required placeholder="Isikan Jumlah Objek">
                                     </div>
                                 </div>
-                                <div class="form-group col overflow-auto table-wrapper">
+                                <div class="form-group overflow-auto table-wrapper">
                                     <table class="table table-responsive-md table-bordered " id="table-iku">
                                         <thead>
                                             <tr>
@@ -134,78 +134,54 @@
                                             <tr id="row-1">
                                                 <td class="text-center align-middle">{{ $key+1 }}</td>
                                                 <td class="text-left">
-                                                    <select disabled class="form-control" name="satuan-row1"
-                                                        class="satuan">
-                                                        @foreach ($kabupaten as $key => $value1)
-                                                        <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                            value="{{ $value }}">
-                                                            {{ $value->satuan }}</option>
-                                                        @endforeach
+                                                    <select disabled class="form-control" name="satuan-row1" class="satuan">
+                                                        <option value="{{ $value->id_objek }}">
+                                                            {{ $value->master_objeks->nama}}
+                                                        </option>
                                                     </select>
                                                 </td>
-                                                <td><input value="{{ $value->nilai_y_target }}" disabled type="number"
-                                                        name="nilai-y-row1" id="nilai-y-row1"
+                                                <td><input value="{{ $value->nilai_y_target }}" disabled type="number" name="nilai-y-row1" id="nilai-y-row1"
                                                         class="form-control nilai-y"></td>
-                                                <td><input value="{{ $value->target_triwulan_1 }}" disabled
-                                                        type="number" name="triwulan1-row1"
-                                                        id="{{ 'triwulan1-row'.$loop->iteration }}"
-                                                        class="form-control triwulan1"></td>
-                                                <td><input
-                                                        value="{{ $value->target_triwulan_1 + $value->target_triwulan_2  }}"
-                                                        disabled type="number" name="triwulan2-row1"
-                                                        id="{{ 'triwulan2-row'.$loop->iteration }}"
-                                                        class="form-control triwulan2">
-                                                </td>
-                                                <td><input
-                                                        value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 }}"
-                                                        disabled type="number" name="triwulan3-row1"
-                                                        id="{{ 'triwulan3-row'.$loop->iteration }}"
+                                                <td><input value="{{ $value->target_triwulan_1 }}" disabled type="number" name="triwulan1-row1"
+                                                        id="{{ 'triwulan1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
+                                                <td><input value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 }}" disabled type="number"
+                                                        name="triwulan2-row1" id="{{ 'triwulan2-row'.$loop->iteration }}" class="form-control triwulan2"></td>
+                                                <td><input value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 }}"
+                                                        disabled type="number" name="triwulan3-row1" id="{{ 'triwulan3-row'.$loop->iteration }}"
                                                         class="form-control triwulan3"></td>
                                                 <td><input
                                                         value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 + $value->target_triwulan_4 }}"
-                                                        disabled type="number" name="triwulan4-row1"
-                                                        id="{{ 'triwulan4-row'.$loop->iteration }}"
+                                                        disabled type="number" name="triwulan4-row1" id="{{ 'triwulan4-row'.$loop->iteration }}"
                                                         class="form-control triwulan4"></td>
 
+                                                @php
+                                                $realisasi1 = $value->nilai_y_realisasi != 0 ? number_format($value->realisasi_triwulan_1 /
+                                                $value->nilai_y_realisasi, 2) : 0;
+                                                $realisasi2 = $value->nilai_y_realisasi != 0 ? number_format($value->realisasi_triwulan_2 /
+                                                $value->nilai_y_realisasi, 2) : 0;
+                                                $realisasi3 = $value->nilai_y_realisasi != 0 ? number_format($value->realisasi_triwulan_3 /
+                                                $value->nilai_y_realisasi, 2) : 0;
+                                                $realisasi4 = $value->nilai_y_realisasi != 0 ? number_format($value->realisasi_triwulan_4 /
+                                                $value->nilai_y_realisasi, 2) : 0;
+                                                @endphp
 
-                                                <td><input type="number" disabled
-                                                        value="{{ number_format($value->realisasi_triwulan_1/$value->nilai_y_realisasi, 2) }}"
-                                                        name="{{ 'triwulan1-row'.$loop->iteration }}"
-                                                        id="{{ 'real-triwulan1-row'.$loop->iteration }}"
-                                                        class="form-control triwulan1"></td>
-                                                <td><input type="number" disabled
-                                                        value="{{ number_format($value->realisasi_triwulan_2/$value->nilai_y_realisasi, 2) }}"
-                                                        name="{{ 'triwulan2-row'.$loop->iteration }}"
-                                                        id="{{ 'real-triwulan2-row'.$loop->iteration }}"
-                                                        class="form-control triwulan2"></td>
-                                                <td><input type="number" disabled
-                                                        value="{{ number_format($value->realisasi_triwulan_3/$value->nilai_y_realisasi, 2) }}"
-                                                        name="{{ 'triwulan3-row'.$loop->iteration }}"
-                                                        id="{{ 'real-triwulan3-row'.$loop->iteration }}"
-                                                        class="form-control triwulan3"></td>
-                                                <td><input type="number" disabled
-                                                        value="{{ number_format($value->realisasi_triwulan_4/$value->nilai_y_realisasi, 2) }}"
-                                                        name="{{ 'triwulan4-row'.$loop->iteration }}"
-                                                        id="{{ 'real-triwulan4-row'.$loop->iteration }}"
-                                                        class="form-control triwulan4"></td>
+                                                <td><input type="number" disabled value="{{ $realisasi1 }}" name="{{ 'triwulan1-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
+                                                <td><input type="number" disabled value="{{ $realisasi2 }}" name="{{ 'triwulan2-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan2-row'.$loop->iteration }}" class="form-control triwulan2"></td>
+                                                <td><input type="number" disabled value="{{ $realisasi3 }}" name="{{ 'triwulan3-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan3-row'.$loop->iteration }}" class="form-control triwulan3"></td>
+                                                <td><input type="number" disabled value="{{ $realisasi4 }}" name="{{ 'triwulan4-row'.$loop->iteration }}"
+                                                        id="{{ 'real-triwulan4-row'.$loop->iteration }}" class="form-control triwulan4"></td>
 
-
-                                                <td><input type="number" disabled
-                                                        name="{{ 'capaian1-row'.$loop->iteration }}"
-                                                        id="{{ 'capaian1-row'.$loop->iteration }}"
-                                                        class="form-control triwulan1"></td>
-                                                <td><input type="number" disabled
-                                                        name="{{ 'capaian2-row'.$loop->iteration }}"
-                                                        id="{{ 'capaian2-row'.$loop->iteration }}"
-                                                        class="form-control triwulan2"></td>
-                                                <td><input type="number" disabled
-                                                        name="{{ 'capaian3-row'.$loop->iteration }}"
-                                                        id="{{ 'capaian3-row'.$loop->iteration }}"
-                                                        class="form-control triwulan3"></td>
-                                                <td><input type="number" disabled
-                                                        name="{{ 'capaian4-row'.$loop->iteration }}"
-                                                        id="{{ 'capaian4-row'.$loop->iteration }}"
-                                                        class="form-control triwulan4"></td>
+                                                <td><input type="number" disabled name="{{ 'capaian1-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
+                                                <td><input type="number" disabled name="{{ 'capaian2-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian2-row'.$loop->iteration }}" class="form-control triwulan2"></td>
+                                                <td><input type="number" disabled name="{{ 'capaian3-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian3-row'.$loop->iteration }}" class="form-control triwulan3"></td>
+                                                <td><input type="number" disabled name="{{ 'capaian4-row'.$loop->iteration }}"
+                                                        id="{{ 'capaian4-row'.$loop->iteration }}" class="form-control triwulan4"></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -230,73 +206,83 @@
                                     </table>
                                 </div>
                                 {{-- create table with no, Satuan = Select Option, Y=number, Triwulan 1 =number, Triwulan 2 =number , Triwulan 3 =number, Triwulan 4 =number--}}
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="kendala">Kendala</label>
                                     <input id="kendala" type="text" class="form-control" name="kendala" required
                                         placeholder="Isikan kendala yang dihadapi">
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="solusi">Solusi</label>
                                     <input id="solusi" type="text" class="form-control" name="solusi" required
                                         placeholder="Masukkan solusi">
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="tindak_lanjut">Tindak Lanjut</label>
                                     <input id="tindak_lanjut" type="text" class="form-control" name="tindak_lanjut"
                                         required placeholder="Masukkan tindak lanjut">
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="pic_tindak_lanjut">PIC Tindak Lanjut</label>
-                                    <select name="pic_tindak_lanjut" id="pic_tindak_lanjut" class="form-control">
+                                    <select name="pic_tindak_lanjut" id="pic_tindak_lanjut" class="form-control select2"
+                                        data-placeholder="Pilih PIC Tindak Lanjut" required>
+                                        <option value=""></option>
                                         @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="batas_waktu">Batas Waktu Tindak Lanjut</label>
                                     <input type="date" class="form-control" name="batas_waktu" id="batas_waktu"
                                         required>
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="bukti_tindak_lanjut">Bukti Tindak Lanjut</label>
                                     <input id="bukti_tindak_lanjut" type="text" class="form-control"
                                         name="bukti_tindak_lanjut" required placeholder="Masukkan bukti tindak lanjut">
                                 </div>
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="link_bukti_tindak_lanjut">Link Bukti Tindak Lanjut</label>
-                                    <input id="link_bukti_tindak_lanjut" type="text" class="form-control"
+                                    <input id="link_bukti_tindak_lanjut" type="url"
+                                    class="form-control"
                                         name="link_bukti_tindak_lanjut" required
                                         placeholder="Masukkan link/tautan bukti tindak lanjut, contoh : https://www.bukti-pendukung.com">
                                 </div>
                                 {{-- file upload  undangan (pdf) --}}
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="undangan">Dokumen Undangan</label>
                                     <input type="file" class="form-control" name="undangan" id="undangan" required
                                         accept="application/pdf">
                                 </div>
                                 {{-- daftar hadir pdf --}}
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="daftar_hadir">Dokumen Daftar Hadir</label>
                                     <input type="file" class="form-control" name="daftar_hadir" id="daftar_hadir"
                                         required accept="application/pdf">
                                 </div>
                                 {{-- notulen --}}
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="notulen">Dokumen Notulen</label>
                                     <input type="file" class="form-control" name="notulen" id="notulen" required
                                         accept="application/pdf">
                                 </div>
                                 {{-- laporan kinerja --}}
-                                <div class="form-group col">
+                                <div class="form-group">
                                     <label for="laporan_kinerja">Dokumen Laporan Kinerja</label>
                                     <input type="file" class="form-control" name="laporan_kinerja" id="laporan_kinerja"
                                         required accept="application/pdf">
                                 </div>
-                                <button class="btn btn-success float-right" type="submit">
-                                    <i class="fas fa-save"></i>
-                                    Simpan
-                                </button>
+                                <hr class="my-1">
+                                <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0"
+                                    style="gap: 10px">
+                                    <a class="btn btn-outline-primary" href="/perencana/evaluasi-iku-unit-kerja/">
+                                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                    </a>
+                                    <button class="btn btn-primary float-right" type="submit">
+                                        <i class="fas fa-save"></i>
+                                        Simpan
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>

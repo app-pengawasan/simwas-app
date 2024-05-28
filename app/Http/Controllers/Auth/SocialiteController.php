@@ -30,7 +30,7 @@ class SocialiteController extends Controller
             Auth()->login($authUser, true);
         }else{
             return redirect()->route('login')
-                    ->with('status', 'Akun tidak terdaftar.')
+                    ->with('status', 'Akun belum terdaftar, silahkan hubungi admin')
                     ->with('alert-type', 'danger');
         }
 
@@ -38,7 +38,7 @@ class SocialiteController extends Controller
         return redirect()->route('dashboard');
     }
     // get avatar from socialite
-    
+
 
     public function findOrCreateUser($socialUser, $provider)
     {

@@ -186,8 +186,12 @@ class InspekturPenilaianKinerjaController extends Controller
         $this->authorize('inspektur');
 
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
+        $message = [
+            'decimal' => 'Nilai maksimal memiliki 2 angka desimal. Contoh: 98.67',
+            'between' => 'Nilai harus antara 0-100'
+        ];
 
-        $validateData = request()->validate($rule);
+        $validateData = request()->validate($rule, $message);
         $validateData['id_pegawai'] = $request->id_pegawai;
         $validateData['bulan'] = $request->bulan;
         $validateData['tahun'] = $request->tahun;
@@ -279,6 +283,7 @@ class InspekturPenilaianKinerjaController extends Controller
         $this->authorize('inspektur');
 
         $realisasi = RealisasiKinerja::findOrfail($id);
+        $events = Event::where('id_pelaksana', $realisasi->id_pelaksana)->get();
 
         return view('components.realisasi-kinerja.show', [
             'type_menu'     => 'realisasi-kinerja',
@@ -286,7 +291,8 @@ class InspekturPenilaianKinerjaController extends Controller
             'status'        => $this->status,
             'colorText'     => $this->colorText,
             'hasilKerja'    => $this->hasilKerja,
-            'kembali'       => 'nilai-inspektur'
+            'kembali'       => 'nilai-inspektur',
+            'events'        => $events
             ])
             ->with('realisasi', $realisasi);
     }    
@@ -314,8 +320,12 @@ class InspekturPenilaianKinerjaController extends Controller
         $this->authorize('inspektur');
 
         $rule = ['nilai' => 'decimal:0,2|between:0,100'];
+        $message = [
+            'decimal' => 'Nilai maksimal memiliki 2 angka desimal. Contoh: 98.67',
+            'between' => 'Nilai harus antara 0-100'
+        ];
 
-        $validateData = request()->validate($rule);
+        $validateData = request()->validate($rule, $message);
         $validateData['catatan'] = $request->catatan;
 
         NilaiInspektur::where('id', $id)->update($validateData);

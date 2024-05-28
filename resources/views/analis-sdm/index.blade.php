@@ -87,7 +87,23 @@
                     <div class="card-header">
                         <h4>Daftar Kompetensi</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="padding-top: 5px;">
+                        <div class="d-flex mb-3 row" style="gap:10px">
+                            <div class="form-group col-4" style="margin-bottom: 0;">
+                                <label for="filterTahun" style="margin-bottom: 0;">Jenis Kompetensi</label>
+                                <select class="form-control" id="filterJenis" name="filterJenis">
+                                    <option value="all">Semua</option>
+                                    <option value="1">Sertifikasi</option>
+                                    <option value="2">Diklat Penjenjangan</option>
+                                    <option value="3">Diklat Subtantif</option>
+                                    <option value="4">Pelatihan</option>
+                                    <option value="5">Workshop</option>
+                                    <option value="6">Seminar</option>
+                                    <option value="7">Pelatihan di Kantor Sendiri</option>
+                                    <option value="999">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped display responsive"
                                 id="table-dashboard-analis">
@@ -98,6 +114,7 @@
                                         <th>Sertifikat</th>
                                         <th class="never">pegawai</th>
                                         <th class="never">sertifikat_link</th>
+                                        <th class="never">kode jenis</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,6 +138,7 @@
                                             <td>{{ $k->pegawai_id }}</td>
 
                                             <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
+                                            <td>{{ $k->pp->id }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

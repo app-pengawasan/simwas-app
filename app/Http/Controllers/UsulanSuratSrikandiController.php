@@ -195,19 +195,47 @@ class UsulanSuratSrikandiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
+        $year = $request->year;
 
-        $allYear = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->get();
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
         $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
-        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->get();
-        // dd($usulanSuratSrikandi);
-        // dd($allYear);
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
+
+
+        $year = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->get();
+
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
+
+
+
+
         return view('pegawai.usulan-surat-srikandi.index', [
             'type_menu' => 'usulan-surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'allYears' => $allYear,
+            'year' => $year,
             'allStatus' => $allStatus,
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,

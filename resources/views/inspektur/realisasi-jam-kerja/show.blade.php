@@ -77,7 +77,7 @@
                                                 <td>{{ $jabatan[$c['jabatan']] }}</td>
                                                 <td>
                                                     <a class="btn btn-primary"
-                                                        href="/inspektur/realisasi-jam-kerja/detail/{{ $key }}"
+                                                        href="/inspektur/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>

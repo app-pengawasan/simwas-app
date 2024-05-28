@@ -145,7 +145,6 @@ $("#kegiatan").change(function () {
 
 $("#rencana_id").change(function () {
     var selectedRencanaKerja = $(this).val();
-    console.log(selectedRencanaKerja);
     $.ajax({
         url: "/tugas",
         method: "GET",
@@ -153,7 +152,6 @@ $("#rencana_id").change(function () {
             rencana_id: selectedRencanaKerja,
         },
         success: function (response) {
-            console.log(response);
             var timKerja = response.tim_kerja;
             var objekPengawasan = response.objek_pengawasan;
 
@@ -182,7 +180,6 @@ $("#rencana_id").change(function () {
             if (anggota !== 0) {
                 pelaksanaTugas = pelaksanaTugas.concat(anggota);
             }
-            console.log(pelaksanaTugas);
             // add pelaksana tugas to li in ul pelaksana-tugas
             $("#pelaksana-tugas").empty();
             pelaksanaTugas.forEach((element) => {
@@ -207,3 +204,4 @@ $("#rencana_id").change(function () {
         },
     });
 });
+

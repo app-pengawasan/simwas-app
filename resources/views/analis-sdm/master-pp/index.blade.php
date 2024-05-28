@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Master Pengembangan Profesi')
+@section('title', 'Master Kompetensi Pegawai')
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,7 +21,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Pengembangan Profesi</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Kompetensi Pegawai</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -31,7 +31,7 @@
                             @csrf  
                             <input type="hidden" name="is_aktif" value="1">
                             <div class="form-group">
-                                <label for="jenis">Jenis Pengembangan Profesi</label>
+                                <label for="jenis">Jenis Kompetensi Pegawai</label>
                                 <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="jenis" value="{{ old('jenis') }}">
                                 @error('jenis')
                                 <div class="invalid-feedback">
@@ -50,10 +50,10 @@
         </div>
         <section class="section">
             <div class="section-header">
-                <h1>Master Pengembangan Profesi</h1>
+                <h1>Master Kompetensi Pegawai</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
-                    <div class="breadcrumb-item">Master Pengembangan Profesi</div>
+                    <div class="breadcrumb-item">Master Kompetensi Pegawai</div>
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Jenis Pengembangan Profesi</th>
+                                                <th>Jenis Kompetensi Pegawai</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>

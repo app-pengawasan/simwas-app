@@ -3,6 +3,7 @@
 @section('title', 'Detail Realisasi IKU Unit Kerja')
 
 @push('style')
+<link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 <!-- CSS Libraries -->
 <style>
     /* Chrome, Safari, Edge, Opera */
@@ -45,7 +46,7 @@
                     </button>
                 </div>
                 <div class="modal-body overflow-scroll">
-                    <div class="form-group col overflow-scroll">
+                    <div class="form-group overflow-scroll">
                         <table class="table table-responsive-md table-bordered overflow-scroll" id="table-iku">
                             <thead>
                                 <tr>
@@ -77,32 +78,33 @@
                                     <td class="text-left">
                                         <select disabled class="form-control" name="{{ 'satuan-row'.$loop->iteration }}"
                                             class="satuan">
-                                            @foreach ($kabupaten as $key => $value1)
-                                            <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                value="{{ $value->satuan }}">
-                                                {{ $value->satuan }}
-                                            </option>
-                                            @endforeach
+                                            <option value="{{ $value->id_objek }}">{{ $value->master_objeks->nama
+                                                                                                            }}</option>
                                         </select>
                                     </td>
                                     <td><input disabled value="{{ $value->nilai_y_target }}" type="number"
                                             name="{{ 'nilai-y-row'.$loop->iteration }}"
-                                            id="{{ 'tgt-nilai-y-row'.$loop->iteration }}" class="form-control tgt-nilai-y"></td>
+                                            id="{{ 'tgt-nilai-y-row'.$loop->iteration }}"
+                                            class="form-control tgt-nilai-y"></td>
                                     <td><input disabled value="{{ $value->target_triwulan_1 }}" type="number"
                                             name="{{ 'triwulan1-row'.$loop->iteration }}"
-                                            id="{{ 'tgt-triwulan1-row'.$loop->iteration }}" class="form-control tgt-triwulan1">
+                                            id="{{ 'tgt-triwulan1-row'.$loop->iteration }}"
+                                            class="form-control tgt-triwulan1">
                                     </td>
                                     <td><input disabled value="{{ $value->target_triwulan_2 }}" type="number"
                                             name="{{ 'triwulan2-row'.$loop->iteration }}"
-                                            id="{{ 'tgt-triwulan2-row'.$loop->iteration }}" class="form-control tgt-triwulan2">
+                                            id="{{ 'tgt-triwulan2-row'.$loop->iteration }}"
+                                            class="form-control tgt-triwulan2">
                                     </td>
                                     <td><input disabled value="{{ $value->target_triwulan_3 }}" type="number"
                                             name="{{ 'triwulan3-row'.$loop->iteration }}"
-                                            id="{{ 'tgt-triwulan3-row'.$loop->iteration }}" class="form-control tgt-triwulan3">
+                                            id="{{ 'tgt-triwulan3-row'.$loop->iteration }}"
+                                            class="form-control tgt-triwulan3">
                                     </td>
                                     <td><input disabled value="{{ $value->target_triwulan_4 }}" type="number"
                                             name="{{ 'triwulan4-row'.$loop->iteration }}"
-                                            id="{{ 'tgt-triwulan4-row'.$loop->iteration }}" class="form-control tgt-triwulan4">
+                                            id="{{ 'tgt-triwulan4-row'.$loop->iteration }}"
+                                            class="form-control tgt-triwulan4">
                                     </td>
 
                                     <td><input disabled type="number" name="target-triwulan1-row1"
@@ -153,14 +155,18 @@
                                 <tr>
                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                         Target Kinerja (Persen)</td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan1"
-                                            id="tgt-presentase-target-triwulan1" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan2"
-                                            id="tgt-presentase-target-triwulan2" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan3"
-                                            id="tgt-presentase-target-triwulan3" value="0" class="form-control"></td>
-                                    <td><input disabled type="number" name="presentase-target-triwulan4"
-                                            id="tgt-presentase-target-triwulan4" value="0" class="form-control"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan1"
+                                            id="tgt-presentase-target-triwulan1" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan2"
+                                            id="tgt-presentase-target-triwulan2" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan3"
+                                            id="tgt-presentase-target-triwulan3" value="0"
+                                            class="form-control text-center"></td>
+                                    <td><input disabled type="text" name="presentase-target-triwulan4"
+                                            id="tgt-presentase-target-triwulan4" value="0"
+                                            class="form-control text-center"></td>
                             </tfoot>
 
                         </table>
@@ -185,12 +191,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-
+                            <h1 class="h4 text-dark mb-4 header-card">Data Realisasi IKU Unit Kerja</h1>
                             <form action="{{ route('realisasi-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
                                             <select disabled class="form-control" name="unit-kerja"
@@ -203,7 +209,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Nama Kegiatan</label>
                                         <div>
                                             <input disabled value="{{ $targetIkuUnitKerja->nama_kegiatan }}"
@@ -211,7 +217,7 @@
                                                 required placeholder="Isikan Nama Kegiatan IKU">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input type="hidden" name="jumlah_objek"
@@ -221,7 +227,7 @@
                                                 required placeholder="Isikan Jumlah Objek">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="catatan">Catatan</label>
                                         <div>
                                             <input disabled value="{{ $realisasiIkuUnitKerja->catatan ?? '' }}"
@@ -230,7 +236,7 @@
                                         </div>
                                     </div>
                                     @if ($realisasiIkuUnitKerja->dokumen_sumber_path != null)
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="catatan">Dokumen Sumber</label>
                                         <div>
                                             <a href="{{ asset('storage/realisasi-iku-unit-kerja/'.$realisasiIkuUnitKerja->dokumen_sumber_path ) }}"
@@ -243,11 +249,12 @@
                                     <div class="form-group
                                         d-flex justify-content-end">
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#targetIKU">Lihat Target
-                                            IKU</button>
+                                            data-target="#targetIKU">
+                                            <i class="fa-solid fa-circle-info mr-1"></i>
+                                            Lihat Target IKU</button>
                                     </div>
 
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
                                                 <tr>
@@ -284,10 +291,10 @@
                                                             value="{{ $value->id }}">
                                                         <select disabled class="form-control" name="satuan-row1"
                                                             class="satuan">
-                                                            @foreach ($kabupaten as $key => $value1)
-                                                            <option {{ $value->satuan == $value1 ? 'selected' : '' }}
-                                                                value="{{ $value }}">{{ $value->satuan }}</option>
-                                                            @endforeach
+                                                            <option value="{{ $value->id_objek }}">
+                                                                {{ $value->master_objeks->nama
+                                                                                                                            }}
+                                                            </option>
                                                         </select>
                                                     </td>
                                                     <td><input disabled value="{{ $value->nilai_y_realisasi }}"
@@ -296,22 +303,22 @@
                                                             class="form-control nilai-y">
                                                     </td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_1 }}"
+                                                            value="{{ $value->realisasi_triwulan_1 ?? 0 }}"
                                                             name="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan1-row'.$loop->iteration }}"
                                                             class="form-control triwulan1"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_2 }}"
+                                                            value="{{ $value->realisasi_triwulan_2 ?? 0 }}"
                                                             name="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan2-row'.$loop->iteration }}"
                                                             class="form-control triwulan2"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_3 }}"
+                                                            value="{{ $value->realisasi_triwulan_3 ?? 0 }}"
                                                             name="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan3-row'.$loop->iteration }}"
                                                             class="form-control triwulan3"></td>
                                                     <td><input type="number" disabled
-                                                            value="{{ $value->realisasi_triwulan_4 }}"
+                                                            value="{{ $value->realisasi_triwulan_4 ?? 0 }}"
                                                             name="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             id="{{ 'triwulan4-row'.$loop->iteration }}"
                                                             class="form-control triwulan4"></td>
@@ -385,18 +392,18 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center font-weight-bold"></td>
+                                                    <td><input disabled type="text" name="presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center font-weight-bold"></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -408,8 +415,34 @@
                                                 Objek</button>
                                         </div> --}}
                                     </div>
+
                                     {{-- <button type="submit" class="btn btn-success">Submit</button> --}}
                             </form>
+                            <hr class="my-1">
+                            <div class="d-flex justify-content-start align-content-end mb-0 mt-4 pb-0"
+                                style="gap: 10px">
+                                <a class="btn btn-outline-primary" href="/perencana/realisasi-iku-unit-kerja/">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
+                                </a>
+                                <button type="button" class="btn btn-success" id="btn-export">
+                                    <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
+                                </button>
+                                @if ($targetIkuUnitKerja->status == '2')
+                                <a href="{{ route('realisasi-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                    class="btn btn-warning">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </a>
+                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                    method="post" class="d-inline submit-button">
+                                    @csrf
+                                    @method('put')
+                                    <input type="hidden" name="status" value="3">
+                                    <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-paper-plane mr-1"></i>Kirim ke Evaluasi
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -421,4 +454,46 @@
 
 @push('scripts')
 <script src="{{ asset('js/page/perencana/create-realisasi-iku.js') }}"></script>
+<script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script>
+    $(document).ready(function() {
+            $('#btn-export').on('click', function (e) {
+                let table = document.getElementById('table-iku');
+                let html = table.outerHTML;
+                // remove select input in html and replace with selected value
+                let select = table.getElementsByTagName('select');
+                for (let i = 0; i < select.length; i++) {
+                    let value = select[i].options[select[i].selectedIndex].text;
+                    html = html.replace(select[i].outerHTML, value);
+                }
+                // remove text input in html and replace with value
+                let input = table.getElementsByTagName('input');
+                for (let i = 0; i < input.length; i++) {
+                    html = html.replace(input[i].outerHTML, input[i].value);
+                }
+                let url = 'data:application/vnd.ms-excel,' + escape(html); // Set your html table into url
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'realisasi-iku-unit-kerja.xls'; // Set your file name
+                a.click();
+            });
+        });
+    $(".submit-button").on("click", function (e) {
+    e.preventDefault();
+    Swal.fire({
+    title: "Apakah Anda Yakin Mengirim ke Evaluasi?",
+    text: "Data yang dikirim tidak dapat diubah kembali!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, Kirim!",
+    cancelButtonText: "Batal",
+    }).then((result) => {
+    if (result.isConfirmed) {
+    $(this).submit();
+    }
+    });
+    });
+</script>
 @endpush

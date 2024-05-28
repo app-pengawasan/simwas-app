@@ -28,6 +28,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <ul class="legend">
+                            {{-- <li><span class="jingga"></span> Sedang Dikerjakan</li>
+                            <li><span class="hijau"></span> Selesai</li>
+                            <li><span class="merah"></span> Dibatalkan</li> --}}
+                            <li><span class="badge jingga">Sedang Dikerjakan</span></li>
+                            <li><span class="badge hijau">Selesai</span></li>
+                            <li><span class="badge merah">Dibatalkan</span></li>
+                        </ul>
                         <center><div id='calendar' style="width: 90%"></div></center>
                     </div>
                 </div>
@@ -58,7 +66,7 @@
                                     <thead>
                                         <tr>
                                             <th>Tugas</th>
-                                            <th>Jabatan</th>
+                                            <th>Peran</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
                                             <th>Bukti Dukung</th>
@@ -89,12 +97,12 @@
                                                     @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                         <a class="btn btn-primary"
                                                         href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fa fa-download"></i>
                                                         </a>
                                                     @else
                                                         <a class="btn btn-primary"
                                                         href="{{ $realisasi->hasil_kerja }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fa fa-download"></i>
                                                         </a>
                                                     @endif    
                                                 </td>

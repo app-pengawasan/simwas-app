@@ -51,11 +51,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('target-iku-unit-kerja.store') }}" method="post"
+                            <form id="form-target" action="{{ route('target-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
+                                <h1 class="h4 text-dark mb-4 header-card">Data Target IKU</h1>
                                 <div class="form-group">
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Unit Kerja</label>
                                         <div>
                                             <select required style="width:100%" class="select2 unitkerja"
@@ -68,14 +69,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="nama-kegiatan">Nama Kegiatan</label>
                                         <div>
                                             <input id="nama-kegiatan" type="text" class="form-control"
                                                 name="nama-kegiatan" required placeholder="Isikan Nama Kegiatan IKU">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    <div class="form-group">
                                         <label for="jumlah-objek">Jumlah Objek</label>
                                         <div>
                                             <input value="1" id="jumlah-objek" type="number" class="form-control"
@@ -83,7 +84,13 @@
                                                 max="50">
                                         </div>
                                     </div>
-                                    <div class="form-group col">
+                                    {{-- info --}}
+                                    <div class="alert alert-info">
+                                        <strong>Info!</strong> Silahkan isi data target IKU sesuai dengan jumlah objek
+                                        yang
+                                        diinginkan. Jika nilai tidak diisi, maka akan dianggap 0.
+                                    </div>
+                                    <div class="form-group">
                                         <table class="table table-responsive-md table-bordered" id="table-iku">
                                             <thead>
                                                 <tr>
@@ -116,9 +123,10 @@
                                                         <select required class="select2 satuan" name="satuan-row1"
                                                             id="satuan-row1" data-placeholder="Pilih Satuan">
                                                             <option></option>
-                                                            @foreach ($kabupaten as $key => $value)
-                                                            <option value="{{ $value }}">{{ $value }}</option>
-                                                            @endforeach
+                                                            @foreach ($masterUnitKerja as $unitKerja)
+                                                            <option value="{{ $unitKerja->id_objek }}">
+                                                                {{ $unitKerja->nama }}
+                                                                @endforeach
                                                         </select>
                                                     </td>
                                                     <td><input type="number" min="0" max="20" name="nilai-y-row1"
@@ -179,29 +187,44 @@
                                                 <tr>
                                                     <td style="text-align: center; font-weight: bold;" colspan="7">
                                                         Target Kinerja (Persen)</td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan1"
+                                                    <td><input disabled type="text" name="presentase-target-triwulan1"
                                                             id="presentase-target-triwulan1" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan2"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text name=" presentase-target-triwulan2"
                                                             id="presentase-target-triwulan2" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan3"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text name=" presentase-target-triwulan3"
                                                             id="presentase-target-triwulan3" value="0"
-                                                            class="form-control"></td>
-                                                    <td><input disabled type="number" name="presentase-target-triwulan4"
+                                                            class="form-control text-center"></td>
+                                                    <td><input disabled type="text name=" presentase-target-triwulan4"
                                                             id="presentase-target-triwulan4" value="0"
-                                                            class="form-control"></td>
+                                                            class="form-control text-center"></td>
                                             </tfoot>
 
                                         </table>
                                         {{-- add button tambah objeck --}}
                                         <div class="form-group
                                             d-flex justify-content-end">
-                                            <button type="button" class="btn btn-primary" id="add-objek">Tambah
+                                            <button type="button" class="btn btn-primary" id="add-objek"><i
+                                                    class="fa-solid fa-plus mr-1"></i>Tambah
                                                 Objek</button>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <hr class="my-1">
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <div>
+                                            <a class="btn btn-outline-primary mr-2"
+                                                href="/perencana/target-iku-unit-kerja" id="btn-back2">
+                                                <i class="fa-solid fa-arrow-left mr-1"></i>
+                                                Kembali
+                                            </a>
+                                            <button type="submit" class="btn btn-primary submit-btn">
+                                                <i class="fas fa-save mr-1"></i>
+                                                Simpan
+                                            </button>
+                                        </div>
+
+                                    </div>
                             </form>
                         </div>
                     </div>
