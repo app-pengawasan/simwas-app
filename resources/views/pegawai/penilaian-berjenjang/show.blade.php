@@ -55,6 +55,8 @@
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
                                     <a class="btn btn-primary" href="/pegawai/nilai-berjenjang">
@@ -63,8 +65,6 @@
                                 </div>
                             </div>
                             <div class="mt-5">
-                                @include('components.flash')
-                                {{ session()->forget(['alert-type', 'status']) }}
                                 <table id="table-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>

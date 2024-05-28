@@ -81,7 +81,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="edit-aktivitas">Aktivitas</label>
                                         <div class="col-sm-10">
-                                            <table id="edit-aktivitas" class="table table-striped responsive">
+                                            <table id="edit-aktivitas" class="table responsive">
                                                 <thead>
                                                     <tr class="text-center">
                                                         <th style="width: 20%">Tanggal</th>
