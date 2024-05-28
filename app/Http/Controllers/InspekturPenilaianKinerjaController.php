@@ -273,7 +273,9 @@ class InspekturPenilaianKinerjaController extends Controller
             'jabatan'   => $this->jabatan,
             'id_pegawai'=> $pegawai_dinilai,
             'events'    => $events,
-            'jamRealisasi' => $jamRealisasi
+            'jamRealisasi' => $jamRealisasi,
+            'bulan' => $bulan,
+            'tahun' => $tahun
         ])
         ->with('realisasiDinilai',$realisasiDinilai);
     }

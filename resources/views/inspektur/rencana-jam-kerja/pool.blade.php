@@ -123,6 +123,9 @@
                 {
                     extend: "excel",
                     className: "btn-success",
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5, 6],
+                    },
                 }
             ],
             columnDefs: [{

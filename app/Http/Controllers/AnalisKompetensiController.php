@@ -37,7 +37,7 @@ class AnalisKompetensiController extends Controller
         $kompetensi = Kompetensi::all();
         $pegawai = User::all();
         $pp = Pp::all()->whereNotIn('is_aktif', [0]);
-        $nama_pp = NamaPp::all();
+        $nama_pp = NamaPp::whereNot('id', '999')->get();
 
         return view('analis-sdm.kelola-kompetensi.index',[
             'type_menu'     => 'kompetensi',
@@ -68,18 +68,26 @@ class AnalisKompetensiController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('analis_sdm');
+        $this->authorize('analis_sdm'); 
+        // dd($request->all());
 
         $rules = [
             'pegawai_id'       => 'required',
             'pp_id'            => 'required',
-            'pp_lain'       => 'required_if:create-pp,==,999',
+            'pp_lain'       => 'required_if:pp_id,==,999',
             'nama_pp_id'        => 'required',
-            'nama_pp_lain'   => 'required_if:create-nama_pp,==,999',
+            'nama_pp_lain'   => 'required_if:nama_pp_id,==,999',
             'create-sertifikat'    => 'required|mimes:pdf|max:500'
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'required' => 'Harus diisi',
+            'required_if' => 'Harus diisi',
+            'mimes' => 'Format file harus pdf',
+            'max' => 'Ukuran file maksimal 500KB'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -171,27 +179,37 @@ class AnalisKompetensiController extends Controller
 
         $rules = [
             'edit-pp'            => 'required',
-            'edit-pp_lain'       => 'required_if:create-pp,==,999',
+            'edit-pp_lain'       => 'required_if:edit-pp,==,999',
             'edit-nama_pp'        => 'required|not_in:null',
-            'edit-nama_pp_lain'   => 'required_if:create-nama_pp,==,999',
+            'edit-nama_pp_lain'   => 'required_if:edit-nama_pp,==,999',
             'edit-sertifikat'     => 'nullable|mimes:pdf|max:500'
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'required' => 'Harus diisi',
+            'required_if' => 'Harus diisi',
+            'mimes' => 'Format file harus pdf',
+            'max' => 'Ukuran file maksimal 500KB'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $validateData = $request->validate($rules);
-
+        // dd(isset($validateData['edit-pp_lain']));
         $data = [
             'pp_id'     => $validateData['edit-pp'],
-            'pp_lain'   => $validateData['edit-pp_lain'],
             'nama_pp_id'   => $validateData['edit-nama_pp'],
-            'nama_pp_lain' => $validateData['edit-nama_pp_lain'],
             'catatan'      => $request['edit-catatan']
         ];
+
+        if (isset($validateData['edit-pp_lain'])) 
+            $data['pp_lain'] = $validateData['edit-pp_lain'];
+        if (isset($validateData['edit-nama_pp_lain'])) 
+            $data['nama_pp_lain'] = $validateData['edit-nama_pp_lain'];
 
         if ($request['edit-sertifikat']) {
             $sertifikat = $request['edit-sertifikat'];

@@ -101,7 +101,7 @@
                                                 @endif
                                                 
                                                 <td>
-                                                    <a class="btn btn-primary"
+                                                    <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
                                                         <i class="fas fa-download"></i>
                                                     </a>

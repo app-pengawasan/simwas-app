@@ -25,7 +25,8 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex float-right col-6 p-0 pl-2">
-                                <div class="ml-auto my-2 col-12 p-0">
+                                <div class="ml-auto my-2 col-12 p-0 form-group">
+                                    <label for="filterTahun" class="mb-0">Tahun</label>
                                     <select class="form-control" id="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
@@ -35,7 +36,8 @@
                                 </div>
                             </div>
                             <div class="d-flex float-right col-6 p-0 pr-1 pl-1">
-                                <div class="ml-auto my-2 col-12 p-0">
+                                <div class="ml-auto my-2 col-12 p-0 form-group">
+                                    <label for="filterBulan" class="mb-0">Bulan</label>
                                     <select class="form-control" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
@@ -53,7 +55,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div style="margin-top: 5rem">
+                            <div style="margin-top: 6rem">
                                 <table id="table-nilai"
                                     class="table table-bordered display responsive" style="background-color: #f6f7f8">
                                     <thead>

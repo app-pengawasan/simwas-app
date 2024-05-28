@@ -44,8 +44,8 @@
                     </div>
                     <div class="form-group form-inline form-one-line form-other-pp mt-3">
                         <label class="form-label" for="pp_lain">Sebutkan:</label>
-                        <input type="text" name="pp_lain" id="pp_lain" class="form-control ml-3 pp_lain">
-                        <small id="error-pp-lain" class="text-danger"></small>
+                        <input type="text" name="pp_lain" id="pp_lain" class="form-control ml-3 pp_lain" style="max-width: 50%">
+                        <small id="error-pp_lain" class="text-danger pl-2"></small>
                     </div>
                     <div class="form-group div_create_peserta">
                         <label class="form-label" for="peserta">Peserta</label>
@@ -68,7 +68,7 @@
                                 @foreach ($nama_pps as $nama_pp)
                                     <option value="{{ $nama_pp->id }}" data-pp="{{ $nama_pp->pp_id }}" data-peserta="{{ $nama_pp->peserta }}">{{ $nama_pp->nama }}</option>
                                 @endforeach
-                                {{-- <option value="999">Lainnya</option> --}}
+                                <option value="999">Lainnya</option>
                                 <option value="" disabled></option>
                             </select>
                             <small id="error-nama_pp_id" class="text-danger"></small>
@@ -76,8 +76,8 @@
                     </div>
                     <div class="form-group form-inline form-one-line form-other-namepp mt-3">
                         <label class="form-label" for="nama_pp_lain">Sebutkan:</label>
-                        <input type="text" name="nama_pp_lain" id="nama_pp_lain" class="form-control ml-3 nama_pp_lain">
-                        <small id="error-nama_pp_lain" class="text-danger"></small>
+                        <input type="text" name="nama_pp_lain" id="nama_pp_lain" class="form-control ml-3 nama_pp_lain" style="max-width: 50%">
+                        <small id="error-nama_pp_lain" class="text-danger pl-2"></small>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="create-sertifikat">Sertifikat</label>

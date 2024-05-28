@@ -40,9 +40,13 @@
                 </div>
             </div>
         </div>
+        @php 
+            $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']; 
+            $strbulan = ($bulan == 'all') ? '' : $months[(int)$bulan - 1];
+        @endphp
         <section class="section">
             <div class="section-header">
-                <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }}</h1>
+                <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }} {{ $strbulan }} {{ $tahun }}</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">

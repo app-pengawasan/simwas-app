@@ -309,18 +309,20 @@ let table = $("#table-realisasi")
                     columns: [0, 1, 2, 3, 4, 6, 8],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
+                            $(":selected", '#filterTahun').text();
                 },
             },
             {
                 extend: "pdf",
                 className: "btn-danger",
-                text: '<i class="fas fa-file-pdf"></i> Pdf',
+                text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 6, 8],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text();
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
+                            $(":selected", '#filterTahun').text();
                 },
             },
         ],

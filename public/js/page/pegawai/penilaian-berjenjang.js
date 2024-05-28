@@ -79,7 +79,7 @@ $("#table-nilai")
         buttons: [
             {
                 extend: "excel",
-                className: "btn-success",
+                className: "btn-success unduh",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 9, 5, 6, 7],
@@ -90,7 +90,7 @@ $("#table-nilai")
             },
             {
                 extend: "pdf",
-                className: "btn-danger",
+                className: "btn-danger unduh",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 9, 5, 6, 7],

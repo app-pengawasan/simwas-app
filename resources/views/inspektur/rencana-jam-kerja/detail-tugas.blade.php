@@ -74,11 +74,11 @@
                                             <td>: </td>
                                             <td>{{ $rencanaKerja->tugas }}</td>
                                         </tr>
-                                        <tr>
+                                        {{-- <tr>
                                             <th>Status Tugas</th>
                                             <td>: </td>
                                             <td>{{ $statusTugas[$rencanaKerja->status_realisasi] }}</td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <th valign=top style="min-width: 64px">Objek</th>
                                             <td>:</td>

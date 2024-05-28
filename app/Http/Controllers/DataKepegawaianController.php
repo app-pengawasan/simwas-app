@@ -175,7 +175,6 @@ class DataKepegawaianController extends Controller
             'file' => 'required|mimes::xls,xlsx'
         ]);
 
-
         $file = $request->file('file');
         $file_name = rand().$file->getClientOriginalName();
         $file->move(storage_path('/document/upload/'), $file_name);
@@ -189,10 +188,31 @@ class DataKepegawaianController extends Controller
 
         foreach($rules as $rule){
             if(!in_array($rule, $header[0][0])){
-               return back()
-               ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
-               ->with('alert-type', 'danger');
+                File::delete(storage_path('/document/upload/').$file_name);
+                return back()
+                ->with('status', 'Gagal mengimpor data, format file tidak sesuai. Silahkan unduh format yang telah disediakan.')
+                ->with('alert-type', 'danger');
             }
+        }
+
+        $array = Excel::toArray(new DataKepegawaianImport, storage_path('/document/upload/').$file_name);
+
+        $assoc_array = array();
+        foreach ($array[0] as $key => $value) {
+            $new_key = $value['nip'] . $value['id_jenis_data_kepegawaian'];
+
+            // Presence of combination of company_code and clerk_code in the assoc_array indicates that
+            // there is duplicate entry in the Excel being imported. So, abort the process and report this to user.
+            if (array_key_exists($new_key, $assoc_array)) {
+                File::delete(storage_path('/document/upload/').$file_name);
+                $error = "Terjadi duplikat untuk kombinasi NIP: ".$value['nip'].
+                            " dan ID jenis data kepegawaian: ".$value['id_jenis_data_kepegawaian'];
+                return back()
+                ->with('status', $error)
+                ->with('alert-type', 'danger');
+            }
+
+            $assoc_array[$new_key] = $value;
         }
 
         // $import = new DataKepegawaianImport(); 
@@ -204,7 +224,7 @@ class DataKepegawaianController extends Controller
             $failures = $e->failures();
             $error = 'Gagal mengimpor data <br>';
             foreach ($failures as $failure) {
-                $error = $error.'- Baris '.$failure->row().': ';
+                $error = $error.'- Baris data ke-' . $failure->row() - 1 . ': ';
                 foreach ($failure->errors() as $errors) {
                     $error = $error.$errors.' ';
                 }
@@ -220,7 +240,7 @@ class DataKepegawaianController extends Controller
 
         if (session()->has('duplikat')) {
             session()->forget('duplikat');
-            return back()->with('status', 'Gagal mengimpor data, nilai pegawai ini sudah ada.')->with('alert-type', 'danger');
+            return back()->with('status', 'Gagal mengimpor data, nilai pegawai sudah ada.')->with('alert-type', 'danger');
         }
 
         return back()->with('status', 'Berhasil mengimpor data pegawai.')->with('alert-type', 'success');

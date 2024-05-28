@@ -71,9 +71,9 @@
                                                 
                                                 <td>
                                                     {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
-                                                    <a class="btn btn-primary"
+                                                    <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
-                                                        <i class="fas fa-eye"></i>
+                                                        <i class="fas fa-download"></i>
                                                     </a>
                                                     {{-- @else
                                                         <a class="btn btn-primary"
@@ -93,14 +93,14 @@
                                                     </td>
                                                 @endif
                                                 <td>
-                                                    <a href="javascript:void(0)" class="btn edit-btn btn-warning"
+                                                    <a href="javascript:void(0)" class="btn btn-sm edit-btn btn-warning"
                                                         data-id="{{ $k->id }}"
-                                                        data-toggle="modal" data-target="#modal-edit-kompetensi" style="width: 42px">
-                                                        <i class="fas fa-edit mr-2"></i>
+                                                        data-toggle="modal" data-target="#modal-edit-kompetensi">
+                                                        <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="javascript:void(0)" class="btn delete-btn btn-danger"
-                                                    data-id="{{ $k->id }}" style="width: 42px">
-                                                        <i class="fas fa-trash mr-2"></i>
+                                                    <a href="javascript:void(0)" class="btn btn-sm delete-btn btn-danger"
+                                                    data-id="{{ $k->id }}">
+                                                        <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>

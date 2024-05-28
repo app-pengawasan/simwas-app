@@ -19,6 +19,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Rencana Jam Kerja {{ $pegawai }}</h1>
+                <input type="hidden" name="pegawai" id="pegawai" value="{{ $pegawai }}">
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
@@ -101,7 +102,7 @@
                                         <tfoot class="font-weight-bold">
                                             <tr>
                                                 <td colspan="18" class="text-center">Total</td>
-                                                <td class="total" value="{{ $total }}">{{ $total }}</td>
+                                                <td class="total" id="total" value="{{ $total }}">{{ $total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -137,11 +138,11 @@
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>
-        var datatable = $('#table-inspektur-kinerja').DataTable({
+        var datatable = $('#table-inspektur-kinerja').dataTable({
             dom: "Bfrtip",
-            fixedColumns: {
-                leftColumns: 2
-            },
+            // fixedColumns: {
+            //     leftColumns: 4
+            // },
             responsive: false,
             lengthChange: false,
             autoWidth: false,
@@ -151,7 +152,10 @@
                     extend: "excel",
                     className: "btn-success",
                     messageTop: function () {
-                        return $('.section-header h1').text();
+                        return $('#title').text() + ' ' + $('#pegawai').val();
+                    },
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                     },
                 },
                 {
@@ -169,7 +173,7 @@
                 $(td).text(row + 1);
                 }
             }],
-        });
+        }).api();
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
@@ -177,9 +181,12 @@
             $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
             $(".jam-kerja").attr('disabled', false);
-            $(".convert, .dataTables_scrollFoot .total").each(function() {
-                $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+            $(".convert").each(function() {
+                let cell = datatable.cell(this);
+                if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
             });
+            let total = $(datatable.column(18).footer());
+            if (total.html() != '0') total.html((Number(total.html()) / 7.5).toFixed(2));
             $('#title').text('Rencana Hari Kerja');
         });
 
@@ -188,9 +195,12 @@
             $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
             $(".hari-kerja").attr('disabled', false);
-            $(".convert, .dataTables_scrollFoot .total").each(function() {
-                $(this).text($(this).attr('value'));
+            $(".convert").each(function() {
+                let cell = datatable.cell(this);
+                if (cell.data() != '0') cell.data($(this).attr('value')).draw();
             });
+            let total = $(datatable.column(18).footer());
+            if (total.html() != '0') total.html(total.attr('value'));
             $('#title').text('Rencana Jam Kerja');
         });
     </script>

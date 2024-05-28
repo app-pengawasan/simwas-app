@@ -50,8 +50,7 @@
                                     <select class="form-control" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
-                                            <option value="{{ $year + $i }}">
-                                                {{ $year + $i }}</option>
+                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
                                         @endfor
                                     </select>
                                 </div>

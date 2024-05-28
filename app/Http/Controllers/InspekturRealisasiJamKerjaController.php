@@ -226,7 +226,7 @@ class InspekturRealisasiJamKerjaController extends Controller
 
         $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
                     ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                    ->get()->groupBy('pelaksana.id_pegawai'); 
+                    ->get()->groupBy('id_pelaksana'); 
 
         $count = $realisasi
                 ->map(function ($items) {
@@ -258,7 +258,7 @@ class InspekturRealisasiJamKerjaController extends Controller
                         ];
                     }); 
         
-        $pegawai = User::findOrFail($id)->name;
+        $pegawai = User::findOrFail($id)->name; 
 
         return view('inspektur.realisasi-jam-kerja.show',[
             'type_menu'     => 'realisasi-jam-kerja',
