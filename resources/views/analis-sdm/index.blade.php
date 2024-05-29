@@ -23,14 +23,14 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <div class="card card-statistic-1">
-                        <div class="card-body p-0">
-                            <select class="form-control" id="filterPegawai" autocomplete="off">
-                                <option value="" selected>Pilih Pegawai</option>
-                                @foreach ($pegawai as $p)
-                                    <option value="{{ $p->id }}">{{ $p->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                    <div class="card-body p-0">
+                        <select class="form-control" id="filterPegawai" autocomplete="off">
+                            <option value="" selected>Pilih Pegawai</option>
+                            @foreach ($pegawai as $p)
+                                <option value="{{ $p->id }}">{{ $p->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

@@ -50,8 +50,7 @@
                                     <select class="form-control" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
-                                            <option value="{{ $year + $i }}">
-                                                {{ $year + $i }}</option>
+                                            <option value="{{ $year + $i }}">{{ $year + $i }}</option>
                                         @endfor
                                     </select>
                                 </div>
@@ -92,27 +91,23 @@
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
                                                 </td> --}}
                                                 <td><span class="badge badge-{{ $colorText[$r->status] }}">{{ $status[$r->status] }}</span></td>
-                                                <td>
-                                                    <a class="btn btn-primary" href="{{ $r->hasil_kerja }}" target="_blank">
-                                                            <i class="fa fa-download"></i>
-                                                    </a>
-                                                    {{-- @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
-                                                        <a class="btn btn-primary"
-                                                        href="{{ asset('document/realisasi/'.$r->hasil_kerja) }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
+
+                                                @if ($r->status == 1)
+                                                    <td>
+                                                        <a class="btn btn-primary" href="{{ $r->hasil_kerja }}" target="_blank">
+                                                                <i class="fa fa-download"></i>
                                                         </a>
-                                                    @else
-                                                        <a class="btn btn-primary"
-                                                        href="{{ $r->hasil_kerja }}" target="_blank">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    @endif --}}
-                                                </td>
+                                                    </td>
+                                                @else
+                                                    <td></td>
+                                                @endif
+
                                                 @if ($r->status == 1) 
                                                     <td>{{ $r->catatan }}</td>
                                                 @else 
                                                     <td>{{ $r->alasan }}</td>
                                                 @endif
+
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
@@ -137,6 +132,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
+
                                                 <td>
                                                     @if (file_exists(public_path().'/document/realisasi/'.$r->hasil_kerja))
                                                         {{ url('/').'/document/realisasi/'.$r->hasil_kerja }}
@@ -144,6 +140,7 @@
                                                         {{ $r->hasil_kerja }}
                                                     @endif
                                                 </td>
+
                                                 <td>{{ $r->created_at }}</td>
                                             </tr>
                                         @endforeach

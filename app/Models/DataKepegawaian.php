@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class DataKepegawaian extends Model
 {
-    use HasFactory, HasUlids;
+    use HasFactory;
     
-    protected $guarded = ['id'];
+    protected $fillable = ['id', 'id_pegawai', 'jenis', 'nilai'];
 
     public function user()
     {

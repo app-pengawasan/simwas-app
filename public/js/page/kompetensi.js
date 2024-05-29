@@ -115,17 +115,19 @@ $.fn.dataTableExt.afnFiltering.push(
 tabled.draw();
     
 const clearError = () => {
-    $("#error-pegawai").text("");
+    $("#error-pegawai_id").text("");
     $("#error-pp").text("");
-    $("#error-pp-lain").text("");
+    $("#error-pp_id").text("");
+    $("#error-pp_lain").text("");
     $("#error-nama_pp").text("");
-    $("#error-namapp-lain").text("");
+    $("#error-nama_pp_id").text("");
+    $("#error-nama_pp_lain").text("");
     $("#error-edit-pp").text("");
-    $("#error-edit-pp_lain").text("");
     $("#error-edit-pp_lain").text("");
     $("#error-edit-nama_pp").text("");
     $("#error-edit-nama_pp_lain").text("");
-    // $("#error-sertifikat").text("");
+    $("#error-create-sertifikat").text("");
+    $("#error-edit-sertifikat").text("");
 }
 
 const showOtherPp = () => {
@@ -204,6 +206,7 @@ $("#create-btn").on("click", function () {
 
 $(".pp_id").on("change", function () {
     let pp = $(this).val();
+    clearError();
 
     if (pp === "1" || pp === "2" || pp === "3") {
         enableNamapp(pp);
@@ -222,12 +225,16 @@ $(".pp_id").on("change", function () {
     if (pp === "3") {
         showPeserta();    
         disableNamapp();
+        $(".nama_pp_id option").hide();
+        $('.disabled').show();
+        $('.disabled').prop("selected", true);
     }
     else hidePeserta();
 });
 
 $(".nama_pp_id").on("change", function () {
     let nama_pp = $(this).val();
+    clearError();
 
     if (nama_pp === "999") {
         showOtherNamapp();
@@ -240,16 +247,21 @@ $(".peserta").on("change", function () {
     let peserta = $(this).val();
     enableNamapp($('#pp_id').val());
     $('.nama_pp_id option').hide();
+    $('.nama_pp_id option[value="999"]').show();
     $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
+    clearError();
+    hideOthers();
 });
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
-    let data = new FormData($('#myform')[0]);
+    let data = new FormData($('#myform')[0]); 
     let token = $("meta[name='csrf-token']").attr("content");
-
     if (!data.get("nama_pp_id")) data.append('nama_pp_id', $("#nama_pp_id").val());
-    data.append('_token', token);
+    if (data.get("nama_pp_id") == 'null') data.delete('nama_pp_id');
+    if (data.get("pp_lain") == '') data.delete('pp_lain');
+    if (data.get("nama_pp_lain") == '') data.delete('nama_pp_lain');
+    data.append('_token', token); 
 
     let url;
     if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi`;
@@ -339,6 +351,9 @@ $("#btn-edit-submit").on("click", function (e) {
     else url = `/pegawai/kompetensi/${id}`;
 
     if (!data.get("edit-nama_pp")) data.append('edit-nama_pp', $("#edit-nama_pp").val());
+    if (data.get("edit-nama_pp") == 'null') data.delete('edit-nama_pp');
+    if (data.get("edit-pp_lain") == '') data.delete('edit-pp_lain');
+    if (data.get("edit-nama_pp_lain") == '') data.delete('edit-nama_pp_lain');
     data.append('_token', token);
     data.append('_method', "PUT");
 

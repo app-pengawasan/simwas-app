@@ -10,7 +10,7 @@ let table = $("#tim-kerja")
                 className: "btn-success unduh",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5],
                 },
             },
             {
@@ -18,7 +18,7 @@ let table = $("#tim-kerja")
                 className: "btn-danger unduh",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5],
                 },
             },
             {
@@ -69,7 +69,7 @@ $('#filterTahun').on("change", function () {
 $.fn.dataTableExt.afnFiltering.push(
     function (setting, data, index) {
         var selectedTahun = $('select#filterTahun option:selected').val();
-        if (data[8] == selectedTahun) return true;
+        if (data[7] == selectedTahun) return true;
         else return false;
     }
 );

@@ -174,7 +174,8 @@ class RealisasiController extends Controller
 
         $customMessages = [
             'required' => ':attribute harus diisi',
-            'required_if' => ':attribute harus diisi'
+            'required_if' => ':attribute harus diisi',
+            'url' => ':attribute harus berupa url/link',
         ];
         
         $validator = Validator::make($request->all(), $rules, $customMessages);

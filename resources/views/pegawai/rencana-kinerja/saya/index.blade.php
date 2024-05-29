@@ -29,7 +29,8 @@
                                     <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
                                     Menampilkan seluruh tugas yang telah disetujui Pimpinan.
                                 </p>
-                                <div class="my-2 col-4 float-right">
+                                <div class="my-2 col-4 float-right form-group">
+                                    <label for="filterTahun" style="margin-bottom: 0;">Tahun</label>
                                     <select class="form-control" id="filterTahun" name="filterTahun" required>
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
@@ -52,7 +53,7 @@
                                         <th>Peran</th>
                                         <th>Hasil kerja</th>
                                         <th id="title">Rencana Jam Kerja</th>
-                                        <th>Status</th>
+                                        {{-- <th>Status</th> --}}
                                         <th>Aksi</th>
                                         <th class="never">tahun</th>
                                     </tr>
@@ -86,9 +87,9 @@
                                             @endif
                                         </td>
                                         <td class="convert" value="{{ $ts->total }}">{{ $ts->total }}</td>
-                                        <td>
+                                        {{-- <td>
                                             <span class="badge badge-{{ $statusColor[$ts->rencanaKerja->status_realisasi] }}">{{ $statusTugas[$ts->rencanaKerja->status_realisasi] }}</span>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <a href="/pegawai/rencana-kinerja/{{ $ts->id_rencanakerja }}"
                                                 class="btn btn-primary" style="width: 42px">

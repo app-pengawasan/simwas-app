@@ -93,13 +93,32 @@
                                     <i class="fas fa-download"></i> disini
                                 </a>.
                             </p>
-                            <div class="d-flex">
+                            <div class="d-flex align-items-center">
+                                <div id="download-button">
+                                </div>
                                 <div class="buttons ml-auto my-2">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#staticBackdrop">
                                         <i class="fas fa-file-upload"></i>
                                         Import
                                     </button>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap: 10px;">
+                                <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                    <div id="filter-search-wrapper">
+                                    </div>
+                                </div>    
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="filter-unit-kerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                    <select name="unit_kerja" id="filter-unit-kerja" class="form-control select2">
+                                        <option value="all">Semua</option>
+                                        <option value="8000">Inspektorat Utama</option>
+                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
+                                        <option value="8100">Inspektorat Wilayah I</option>
+                                        <option value="8200">Inspektorat Wilayah II</option>
+                                        <option value="8300">Inspektorat Wilayah III</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="">
@@ -112,6 +131,7 @@
                                             <th>Jenis Data Kepegawaian</th>
                                             <th>Nilai</th>
                                             <th>Aksi</th>
+                                            <th class="never">unit_kerja</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -127,6 +147,7 @@
                                                     data-id="{{ $data->id }}" data-nilai="{{ $data->nilai }}">
                                                     <i class="fas fa-edit"></i> Edit</button>
                                                 </td>
+                                                <td>{{ $data->user->unit_kerja }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -165,7 +186,7 @@
 
     <!-- Page Specific JS File -->
     <script>
-        table = $("#table-master-pegawai")
+        let table = $("#table-master-pegawai")
             .dataTable({
                 dom: "Bfrtip",
                 responsive: true,
@@ -214,18 +235,29 @@
         $(".dataTables_filter").find("input").addClass("form-control");
         // .dataTables_filter width 100%
         $(".dataTables_filter").css("width", "100%");
-        $(".dataTables_filter").css("margin-top", "15px");
         // .dataTables_filter label width 100%
         $(".dataTables_filter label").css("width", "100%");
         // input height 35px
         $(".dataTables_filter input").css("height", "35px");
-        $(".dataTables_filter input").css("width", "40%");
         // make label text bold and black
         $(".dataTables_filter label").css("font-weight", "bold");
         // remove bottom margin from .dataTables_filter
         $(".dataTables_filter label").css("margin-bottom", "0");
         // add padding x 10px to .dataTables_filter input
         $(".dataTables_filter input").css("padding", "0 10px");
+        $(".dt-buttons").appendTo("#download-button");
+
+        $('#filter-unit-kerja').on("change", function () {
+            table.draw();
+        });
+        
+        $.fn.dataTableExt.afnFiltering.push(
+            function (setting, data, index) {
+                var selectedUnit = $('select#filter-unit-kerja option:selected').val();
+                if ((data[5] == selectedUnit || selectedUnit == 'all')) return true;
+                else return false;
+            }
+        );
 
         $(".edit-btn").on("click", function () {
             let dataId = $(this).attr("data-id");

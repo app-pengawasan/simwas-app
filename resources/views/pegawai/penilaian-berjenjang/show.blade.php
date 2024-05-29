@@ -43,14 +43,20 @@
         </div>
         @include('components.penilaian.create');
         @include('components.penilaian.edit');
+        @php 
+            $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']; 
+            $strbulan = ($bulan == 'all') ? '' : $months[(int)$bulan - 1];
+        @endphp
         <section class="section">
             <div class="section-header">
-                <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }}</h1>
+                <h1>Daftar Realisasi {{ $realisasiDinilai[0]->pelaksana->user->name }} {{ $strbulan }} {{ $tahun }}</h1>
             </div>
             <div class="row">
                 <div class=" col-md-12">
                     <div class="card">
                         <div class="card-body">
+                            @include('components.flash')
+                            {{ session()->forget(['alert-type', 'status']) }}
                             <div class="row mb-4 pb-0">
                                 <div class="col-md-4">
                                     <a class="btn btn-primary" href="/pegawai/nilai-berjenjang">
@@ -59,8 +65,6 @@
                                 </div>
                             </div>
                             <div class="mt-5">
-                                @include('components.flash')
-                                {{ session()->forget(['alert-type', 'status']) }}
                                 <table id="table-nilai"
                                     class="table table-bordered table-striped display responsive">
                                     <thead>

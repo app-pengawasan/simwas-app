@@ -19,6 +19,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Realisasi Jam Kerja {{ $pegawai }}</h1> 
+                <input type="hidden" name="pegawai" id="pegawai" value="{{ $pegawai }}">
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
                     <div class="breadcrumb-item">Realisasi Jam Kerja</div>
@@ -151,7 +152,10 @@
                     extend: "excel",
                     className: "btn-success",
                     messageTop: function () {
-                        return $('.section-header h1').text();
+                        return $('#title').text() + ' ' + $('#pegawai').val();
+                    },
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                     },
                 },
                 {
