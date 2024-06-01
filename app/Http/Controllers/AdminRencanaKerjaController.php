@@ -22,23 +22,27 @@ class AdminRencanaKerjaController extends Controller
     ];
 
     protected $statusTim = [
+        // Pegawai Buat Tim
         0   => 'Belum Disusun',
+        // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
-        2   => 'Perlu Reviu',
+        // Ketua Tim Kirim Rencana Kinerja ke Admin
+        2   => 'Menunggu Persetujuan',
+        // Ditolak Admin - Perlu Perbaikan
         3   => 'Perlu Perbaikan',
-        4   => 'Dalam Perbaikan',
-        5   => 'Diajukan',
-        6   => 'Disetujui',
+        // Disetjui Admin Belum di Lock
+        4   => 'Disetujui, Belum dikunci',
+        // Disetujui Admin Sudah di Lock
+        5   => 'Disetujui, Sudah dikunci',
     ];
 
     protected $colorText = [
         0   => 'dark',
-        1   => 'warning',
+        1   => 'info',
         2   => 'primary',
         3   => 'warning',
-        4   => 'warning',
-        5   => 'primary',
-        6   => 'success',
+        4   => 'success',
+        5   => 'success',
     ];
 
     protected $unsur = [
@@ -166,9 +170,7 @@ class AdminRencanaKerjaController extends Controller
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
         $proyek = $timKerja[0]->proyek;
-        // dd($proyek
-        // $rencanaKerja2 = $timKerja[0]->proyek[0]->rencanaKerja;
-        // dd($rencanaKerja2);
+        $pegawai = User::all();
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
@@ -176,6 +178,7 @@ class AdminRencanaKerjaController extends Controller
         $masterHasil = MasterHasil::all();
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
+
 
         return view('admin.rencana-kinerja.show', [
             'type_menu'     => 'rencana-kinerja',
@@ -192,7 +195,8 @@ class AdminRencanaKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'rencanaKerja'  => $rencanaKerja,
-            'proyeks'        => $proyek
+            'proyeks'        => $proyek,
+            'pegawai'       => $pegawai
         ]);
     }
 
@@ -230,9 +234,9 @@ class AdminRencanaKerjaController extends Controller
 
     }
 
-    public function sendToInspektur(Request $request, $id){
+    public function acceptRencanaKerja(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
-        ->update(['status' => 5]);
+        ->update(['status' => 4]);
 
         $request->session()->put('status', 'Berhasil mengirim rencana kinerja ke Pimpinan.');
         $request->session()->put('alert-type', 'success');
@@ -255,4 +259,7 @@ class AdminRencanaKerjaController extends Controller
             'message' => 'Berhasil mengembalikan rencana kinerja',
         ]);
     }
+
+
 }
+

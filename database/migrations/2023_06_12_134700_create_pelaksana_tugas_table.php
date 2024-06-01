@@ -18,6 +18,7 @@ return new class extends Migration
             $table->ulid('id_pelaksana')->unique()->primary()->default(Ulid::generate());
             $table->string('id_rencanakerja');
             $table->string('id_pegawai');
+            $table->foreign('id_pegawai')->references('id')->on('users')->onDelete('restrict');
             $table->string('pt_jabatan');
             $table->string('pt_hasil');
             $table->string('pt_realisasi')->nullable();

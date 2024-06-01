@@ -40,7 +40,6 @@
         </form>
         @include('components.pegawai.pegawai-card')
         @include('components.pegawai.ketua-tim-card')
-        @include('components.pegawai.pimpinan-card')
     </section>
 </div>
 @endsection

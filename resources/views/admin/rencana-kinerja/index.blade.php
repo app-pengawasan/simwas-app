@@ -20,6 +20,7 @@
     <!-- Modal -->
     @include('components.tim-kerja.create');
     @include('components.tim-kerja.edit');
+
     <section class="section">
         <div class="section-header">
             <h1>Kelola Rencana Kinerja</h1>
@@ -55,7 +56,8 @@
                                         Tahun</label>
                                     <select name="year" id="yearSelect" class="form-control select2">
                                         @foreach ($year as $key => $value)
-                                        <option value="{{ $value->tahun }}" {{ request()->query('year') == $value->tahun ? 'selected' : '' }}>
+                                        <option value="{{ $value->tahun }}"
+                                            {{ request()->query('year') == $value->tahun ? 'selected' : '' }}>
                                             {{ $value->tahun }}
                                         </option>
                                         @endforeach
@@ -75,9 +77,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-
-
                             <div style="gap:10px" class="d-flex align-items-end">
                                 <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modal-create-timkerja">
@@ -118,12 +117,14 @@
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                            @if ($tim->status != 5)
+                                            <button class="btn btn-warning btn-sm btn-edit-timkerja"
+                                                data-id="{{ $tim->id_timkerja }}" data-toggle="modal"
+                                                data-target="#modal-edit-timkerja">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            @endif
                                             @if ($tim->status == 0)
-                                            {{-- <a href="javascript:void(0)" class="btn btn-warning edit-btn"
-                                                            data-id="{{ $tim->id_timkerja }}" style="width: 42px"
-                                            data-toggle="modal" data-target="#modal-edit-masterhasil">
-                                            <i class="fas fa-edit"></i>
-                                            </a> --}}
                                             <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
                                                 data-id="{{ $tim->id_timkerja }}">
                                                 <i class="fas fa-trash"></i>

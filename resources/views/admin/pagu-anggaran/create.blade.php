@@ -16,7 +16,7 @@
             <h1>Form Tambah Pagu Anggaran</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('pagu-anggaran.index') }}">Pagu Anggaran</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('admin.pagu-anggaran.index') }}">Pagu Anggaran</a></div>
                 <div class="breadcrumb-item">Tambah Pagu Anggaran</div>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('pagu-anggaran.store') }}" class="needs-validation"
+                        <form method="POST" action="{{ route('admin.pagu-anggaran.store') }}" class="needs-validation"
                             novalidate="">
                             @csrf
                             <h1 class="h4 text-dark mb-4 header-card">Data Pagu Anggaran</h1>

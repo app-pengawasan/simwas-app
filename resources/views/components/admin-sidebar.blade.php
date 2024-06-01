@@ -1,19 +1,19 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('admin-dashboard') }}">
+            <a href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Admin</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ route('admin-dashboard') }}">
+            <a href="{{ route('admin.dashboard') }}">
                 <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
             </a>
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('admin') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin-dashboard') }}">
+                <a class="nav-link" href="{{ route('admin.dashboard') }}">
                     <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
@@ -26,11 +26,11 @@
                 <ul class="dropdown-menu">
                     <li
                         class="{{ Request::is('admin/master-anggaran') || Request::is('admin/master-anggaran/*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
+                        <a class="nav-link" href="{{ route('admin.master-anggaran.index') }}">Master Anggaran</a>
                     </li>
                     <li
                         class="{{ Request::is('admin/pagu-anggaran') || Request::is('admin/pagu-anggaran/*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('pagu-anggaran.index') }}">Pagu Anggaran</a>
+                        <a class="nav-link" href="{{ route('admin.pagu-anggaran.index') }}">Pagu Anggaran</a>
                     </li>
                 </ul>
             </li>
@@ -94,13 +94,13 @@
                         <a class="nav-link" href="/admin/master-iku">Master IKU</a>
                     </li>
                     <li class="{{ Request::is('admin/master-unsur') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('master-unsur.index') }}">Master Unsur</a>
+                        <a class="nav-link" href="{{ route('admin.master-unsur.index') }}">Master Unsur</a>
                     </li>
                     <li class="{{ Request::is('admin/master-subunsur') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('master-subunsur.index') }}">Master Subunsur</a>
+                        <a class="nav-link" href="{{ route('admin.master-subunsur.index') }}">Master Subunsur</a>
                     </li>
                     <li class="{{ Request::is('admin/master-hasil-kerja') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('master-hasil-kerja.index') }}">Master Hasil Kerja</a>
+                        <a class="nav-link" href="{{ route('admin.master-hasil-kerja.index') }}">Master Hasil Kerja</a>
                     </li>
                 </ul>
             </li>

@@ -250,7 +250,7 @@ class UsulanSuratSrikandiController extends Controller
     public function create()
     {
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->where('status', 6);
+                            $query->whereIn('status', [4,5]);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id)
                                 ->whereIn('pt_jabatan', [2, 3]);
@@ -410,7 +410,7 @@ class UsulanSuratSrikandiController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        return redirect()->route('usulan-surat-srikandi.index')->with('status', 'Berhasil Menambahkan Usulan Surat Srikandi!')
+        return redirect()->route('pegawai.usulan-surat-srikandi.index')->with('status', 'Berhasil Menambahkan Usulan Surat Srikandi!')
             ->with('alert-type', 'success');
     }
 
@@ -487,7 +487,7 @@ class UsulanSuratSrikandiController extends Controller
             'catatan' => 'catatan',
             'user_id' => auth()->user()->id,
         ]);
-        return redirect()->route('usulan-surat-srikandi.show', $usulanSuratSrikandi->id)->with('status', 'Berhasil Mengubah Usulan Surat Srikandi!')
+        return redirect()->route('pegawai.usulan-surat-srikandi.show', $usulanSuratSrikandi->id)->with('status', 'Berhasil Mengubah Usulan Surat Srikandi!')
             ->with('alert-type', 'success');
 
     }
@@ -501,7 +501,7 @@ class UsulanSuratSrikandiController extends Controller
     public function destroy(UsulanSuratSrikandi $usulanSuratSrikandi)
     {
         $usulanSuratSrikandi->delete();
-        return redirect()->route('usulan-surat-srikandi.index')->with('status', 'Berhasil Menghapus Usulan Surat Srikandi!')
+        return redirect()->route('pegawai.usulan-surat-srikandi.index')->with('status', 'Berhasil Menghapus Usulan Surat Srikandi!')
             ->with('alert-type', 'success');
     }
 
@@ -512,7 +512,7 @@ class UsulanSuratSrikandiController extends Controller
             'status' => 'disetujui',
         ]);
 
-        return redirect()->route('surat-srikandi.index')
+        return redirect()->route('pegawai.surat-srikandi.index')
             ->with('alert-message', 'Usulan Surat Srikandi berhasil disetujui')
             ->with('alert-type', 'success');
     }

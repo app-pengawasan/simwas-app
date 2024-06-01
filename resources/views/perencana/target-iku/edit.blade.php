@@ -40,7 +40,8 @@
             <h1>Form Ubah Target IKU</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('target-iku-unit-kerja.index') }}">Target IKU Unit
+                <div class="breadcrumb-item active"><a
+                        href="{{ route('perencana.target-iku-unit-kerja.index') }}">Target IKU Unit
                         Kerja</a></div>
                 <div class="breadcrumb-item">Ubah Target IKU Unit Kerja</div>
             </div>
@@ -51,7 +52,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h1 class="h4 text-dark mb-4 header-card">Data Target IKU</h1>
-                            <form action="{{ route('target-iku-unit-kerja.update', $targetIkuUnitKerja->id) }}"
+                            <form
+                                action="{{ route('perencana.target-iku-unit-kerja.update', $targetIkuUnitKerja->id) }}"
                                 method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')

@@ -8,11 +8,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('master-hasil-kerja.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.master-hasil-kerja.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="masterUnsurId">Nama Unsur</label>
+                        @if (count($masterUnsurs) == 0)
+                        <span><small class="text-danger">
+                                *Tidak ada data unsur. Silahkan
+                                <a href="/admin/master-unsur">
+                                    tambah unsur
+                                </a>
+                                terlebih dahulu.
+                            </small>
+                        </span>
+                        @endif
                         <div class="">
                             <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required
                                 data-placeholder="Pilih Unsur">
@@ -25,13 +35,12 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="masterSubUnsurId">Nama Subunsur</label>
+                        <span id="subunsur-alert"><small class="text-danger ">*Pilih Unsur terlebih
+                                dahulu</small></span>
                         <div class="">
                             <select disabled class="form-control select2" name="masterSubUnsurId" id="masterSubUnsurId"
                                 required data-placeholder="Pilih Subunsur">
                                 <option value=""></option>
-                                @foreach ($masterSubUnsurs as $unsur)
-                                {{-- <option value="{{ $unsur->id }}">{{ $unsur->nama_sub_unsur }}</option> --}}
-                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -53,8 +62,7 @@
                         </div>
                     </div>
                     {{-- radiobutton --}}
-                    <div class="form-group
-                        {{ $errors->has('status') ? ' has-error' : '' }}">
+                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
                         <label class="form-label required" for="status">Status</label>
                         <div class="selectgroup w-100">
                             <label class="selectgroup-item">
@@ -65,35 +73,6 @@
                                 <input type="radio" name="status" value="0" class="selectgroup-input">
                                 <span class="selectgroup-button">Bukan Gugus Tugas</span>
                             </label>
-                        </div>
-                    </div>
-                    <div id="pengendali-teknis" class="form-group">
-                        <label class="form-label" for="pengendaliTeknis">Pengendali Teknis</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="pengendaliTeknis" id="pengendaliTeknis"
-                                required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div id="ketua-tim" class="form-group">
-                        <label class="form-label" for="ketuaTim">Ketua Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="ketuaTim" id="ketuaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div style="display: none" id="pic-koordinator" class="form-group">
-                        <label class="form-label" for="picKoordinator">PIC/Koordinator</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="picKoordinator" id="picKoordinator">
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="anggotaTim">Anggota Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="anggotaTim" id="anggotaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

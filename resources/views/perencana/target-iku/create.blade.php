@@ -41,7 +41,7 @@
             <h1>Form Pembuatan Target IKU</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('target-iku-unit-kerja.index') }}">Target IKU Unit
+                <div class="breadcrumb-item active"><a href="{{ route('perencana.target-iku-unit-kerja.index') }}">Target IKU Unit
                         Kerja</a></div>
                 <div class="breadcrumb-item">Buat Target IKU Unit Kerja</div>
             </div>
@@ -51,7 +51,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form id="form-target" action="{{ route('target-iku-unit-kerja.store') }}" method="post"
+                            <form id="form-target" action="{{ route('perencana.target-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <h1 class="h4 text-dark mb-4 header-card">Data Target IKU</h1>

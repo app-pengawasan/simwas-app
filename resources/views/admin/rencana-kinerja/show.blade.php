@@ -14,7 +14,7 @@
 @section('main')
 @include('components.admin-header')
 @include('components.admin-sidebar')
-{{-- @include('components.rencana-kerja.summary'); --}}
+@include('components.tim-kerja.edit');
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -35,6 +35,7 @@
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         @include('components.rencana-kerja.timeline-steps')
+
                         <div class="d-flex flex-row flex-wrap justify-content-between">
                             <div class="card col-md-6 p-0 pr-2">
                                 <div class="card-body shadow-sm border p-4">
@@ -49,7 +50,6 @@
                                             <td>{{ $timKerja->ketua->name }}</td>
                                         </tr>
                                         @if ($timKerja->operator != null)
-
                                         <tr>
                                             <th>Operator:</th>
                                             <td>{{ $timKerja->operator->name}}</td>
@@ -81,6 +81,16 @@
                                             </td>
                                         </tr>
                                     </table>
+                                    @if ($timKerja->status != 5)
+                                    <div class="text-right">
+                                        <button class="btn btn-outline-primary btn-edit-timkerja"
+                                            data-id="{{ $timKerja->id_timkerja }}" data-toggle="modal"
+                                            data-target="#modal-edit-timkerja">
+                                            <i class="fa-solid fa-pen mr-1"></i>
+                                            Edit Tim Kerja
+                                        </button>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="card col-md-6 p-0 pl-2">
@@ -175,14 +185,6 @@
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <th>Waktu</th>
-                                                        <td>:</td>
-                                                        <td class="">
-                                                            {{ strftime('%A, %d %B %Y', strtotime($tugas->mulai)) }} -
-                                                            {{ strftime('%A, %d %B %Y', strtotime($tugas->selesai)) }}
-                                                        </td>
-                                                    </tr>
                                                 </table>
                                                 <p class="font-weight-bold">
                                                     Pelaksana
@@ -275,15 +277,33 @@
                                 @if (Request::is('admin/rencana-kinerja/*'))
                                 @if ($timKerja->status == 2)
                                 <button class="btn btn-danger" id="btn-admin-send-back">
-                                    <i class="fas fa-undo"></i>
+                                    <i class="fas fa-undo mr-1"></i>
                                     Kembalikan
                                 </button>
                                 <button class="btn btn-success" id="btn-admin-submit-rk">
-                                    <i class="far fa-paper-plane"></i>
-                                    Ajukan
+                                    <i class="fa-solid fa-check mr-1"></i>
+                                    Setujui
                                 </button>
                                 @endif
                                 @endif
+                                @if ($timKerja->status == 4)
+                                <form class="mb-4" action="/admin/tim-kerja/lock/{{ $timKerja->id_timkerja }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary" id="btn-lock-timkerja">
+                                        <i class="fas fa-lock mr-1"></i>
+                                        Kunci Tim Kerja
+                                    </button>
+                                </form>
+                                @elseif ($timKerja->status == 5)
+                                <form class="mb-4" action="/admin/tim-kerja/unlock/{{ $timKerja->id_timkerja }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary" id="btn-unlock-timkerja">
+                                        <i class="fas fa-lock-open mr-1"></i>
+                                        Buka Kunci Tim Kerja
+                                    </button>
+                                </form>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -298,16 +318,11 @@
 @endsection
 
 @push('scripts')
-<!-- JS Libraies -->
-{{-- <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
-<script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-<script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-<script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
+
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 
-<!-- Page Specific JS File -->
 <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
+{{-- <script src="{{ asset('js/page/admin/tim-rencana-kinerja.js') }}"></script> --}}
+<script src="{{ asset('js/page/admin/rencana-kerja.js') }}"></script>
 <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
 @endpush

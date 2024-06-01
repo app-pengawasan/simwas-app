@@ -155,14 +155,14 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('surat-srikandi.show', $usulan->id) }}"
+                                            <a href="{{ route('sekretaris.surat-srikandi.show', $usulan->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
                                                 Lihat
                                             </a>
                                             @if ($usulan->status == 'disetujui')
-                                            <a href="{{ route('surat-srikandi.download', $usulan->id) }}"
+                                            <a href="{{ route('sekretaris.surat-srikandi.download', $usulan->id) }}"
                                                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                                                 data-placement="top" title="Download Surat Srikandi">
                                                 <i class="fa-solid fa-file-pdf"></i>

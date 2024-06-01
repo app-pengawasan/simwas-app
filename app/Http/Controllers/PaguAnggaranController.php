@@ -101,7 +101,7 @@ class PaguAnggaranController extends Controller
         PaguAnggaran::create($validateData);
 
         // return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil menambah data pagu anggaran.');
-        return redirect(route('pagu-anggaran.index'))
+        return redirect(route('admin.pagu-anggaran.index'))
             ->with('status', 'Berhasil menambahkan pagu anggaran.')
             ->with('alert-type', 'success');
         // return $validateData;
@@ -173,7 +173,7 @@ class PaguAnggaranController extends Controller
 
         PaguAnggaran::where('id_panggaran', $paguAnggaran->id_panggaran)->update($validateData);
         // return redirect(route('pagu-anggaran.index'))->with('success', 'Berhasil update data pagu anggaran.');
-        return redirect(route('pagu-anggaran.index'))
+        return redirect(route('admin.pagu-anggaran.index'))
             ->with('status', 'Berhasil memperbarui pagu anggaran.')
             ->with('alert-type', 'success');
     }

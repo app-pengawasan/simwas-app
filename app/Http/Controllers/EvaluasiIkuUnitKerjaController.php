@@ -13,13 +13,7 @@ use Illuminate\Http\Request;
 
 class EvaluasiIkuUnitKerjaController extends Controller
 {
-    protected $kabupaten = [
-        'Kabupaten Aceh Barat',
-        'Kabupaten Aceh Barat Daya',
-        'Kabupaten Aceh Besar',
-        'Kabupaten Aceh Jaya',
-        'Kabupaten Aceh Selatan',
-    ];
+
     protected $unitKerja = [
         '8000'    => 'Inspektorat Utama',
         '8010'    => 'Bagian Umum Inspektorat Utama',
@@ -74,7 +68,6 @@ class EvaluasiIkuUnitKerjaController extends Controller
 
         return view('perencana.evaluasi-iku.index', [
             'type_menu' => 'iku-unit-kerja',
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'colorBadge' => $this->colorBadge,
@@ -146,7 +139,7 @@ class EvaluasiIkuUnitKerjaController extends Controller
         $laporanDoc->move(public_path('storage/evaluasi-iku/laporan'), $laporanDocName);
         $daftarHadirDoc->move(public_path('storage/evaluasi-iku/daftar-hadir'), $daftarHadirDocName);
 
-        return redirect()->route('evaluasi-iku-unit-kerja.index');
+        return redirect()->route('perencana.evaluasi-iku-unit-kerja.index');
 
     }
 
@@ -172,7 +165,6 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
             'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
             'evaluasiIkuUnitKerja' => $evaluasiIkuUnitKerja,
-            'kabupaten' => $this->kabupaten,
             'unitKerja' => $this->unitKerja,
             'status' => $this->status,
         ]);
@@ -200,7 +192,6 @@ class EvaluasiIkuUnitKerjaController extends Controller
             'targetIkuUnitKerja' => $targetIkuUnitKerja,
             'objekIkuUnitKerja' => $objekIkuUnitKerja,
             'realisasiIkuUnitKerja' => $realisasiIkuUnitKerja,
-            'kabupaten' => $this->kabupaten,
             'users' => $users,
         ]);
     }

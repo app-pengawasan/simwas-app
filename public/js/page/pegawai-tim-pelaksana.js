@@ -294,6 +294,9 @@ $("#btn-submit-anggaran").on("click", function (e) {
     $("#error-harga").text("");
     $("#error-total").text("");
 
+    // disable submit button
+    $("#btn-submit-anggaran").prop("disabled", true);
+
     $.ajax({
         url: `/anggaran-rencana-kerja`,
         type: "POST",
@@ -311,7 +314,14 @@ $("#btn-submit-anggaran").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
+            $("#btn-submit-anggaran").prop("disabled", false);
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
+            });
+
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -535,9 +545,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         return;
     }
 
-
-
-
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
 
@@ -632,7 +639,12 @@ $(".btn-edit-pelaksana").on("click", function (e) {
         success: function (response) {
             $("#edit-pt-jabatan").val(response.data.pt_jabatan);
             $("#edit-pt-hasil").val(response.data.pt_hasil);
-            $("#edit-pelaksana").val(response.data.id_pegawai);
+            $("#edit-pelaksana").select2("trigger", "select", {
+                data: {
+                    id: response.data.id_pegawai,
+                    text: response.data.id_pegawai,
+                },
+            });
             $("#edit-id_pelaksana").val(response.data.id_pelaksana);
             $("#edit-januari").val(response.data.jan);
             $("#edit-februari").val(response.data.feb);
@@ -735,7 +747,6 @@ $("#btn-edit-pelaksana").on("click", function (e) {
         $("#error-edit-desember").text("0 - 200 Jam Kerja");
         return;
     }
-
 
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");

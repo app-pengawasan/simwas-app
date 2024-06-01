@@ -84,24 +84,21 @@ $(function () {
                     .column(4)
                     .search(filterUnitKerja, true, false)
                     .draw();
-            }
-            else if (filterJabatan == "" && filterUnitKerja !== "") {
+            } else if (filterJabatan == "" && filterUnitKerja !== "") {
                 table
                     .column(3)
                     .search(filterJabatan, true, false)
                     .column(4)
                     .search("^" + filterUnitKerja + "$", true, false)
                     .draw();
-            }
-            else if (filterJabatan !== "" && filterUnitKerja == "") {
+            } else if (filterJabatan !== "" && filterUnitKerja == "") {
                 table
                     .column(3)
                     .search("^" + filterJabatan + "$", true, false)
                     .column(4)
                     .search(filterUnitKerja, true, false)
                     .draw();
-            }
-            else {
+            } else {
                 table
                     .column(3)
                     .search("^" + filterJabatan + "$", true, false)
@@ -109,7 +106,6 @@ $(function () {
                     .search("^" + filterUnitKerja + "$", true, false)
                     .draw();
             }
-            
 
             // reset numbering in table first column
             table
@@ -157,7 +153,6 @@ $("#btn-back, #btn-back2").on("click", function (e) {
 // Menghapus pegawai
 $(".delete-btn").on("click", function (e) {
     e.preventDefault();
-    console.log("klik");
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
@@ -194,8 +189,13 @@ $(".delete-btn").on("click", function (e) {
                     });
                     setTimeout(location.reload(), 1500);
                 },
-                error: function (e) {
-                    console.log(e);
+                error: function (error) {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Data masih terhubung dengan data lain!",
+                        icon: "error",
+                        confirmButtonColor: "var(--primary)",
+                    });
                 },
             });
         }

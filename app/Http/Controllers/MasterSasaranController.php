@@ -147,14 +147,20 @@ class MasterSasaranController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        MasterSasaran::where('id_sasaran', $id)->delete();
+        try {
+            MasterSasaran::where('id_sasaran', $id)->delete();
+            $request->session()->put('status', 'Berhasil menghapus Sasaran Inspektorat Utama.');
+            $request->session()->put('alert-type', 'success');
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus Sasaran Inspektorat Utama',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus Sasaran Inspektorat Utama',
+            ], 409);
+        }
 
-        $request->session()->put('status', 'Berhasil menghapus Sasaran Inspektorat Utama.');
-        $request->session()->put('alert-type', 'success');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil menghapus Sasaran Inspektorat Utama',
-        ]);
     }
 }

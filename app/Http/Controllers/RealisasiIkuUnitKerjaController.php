@@ -123,7 +123,7 @@ class RealisasiIkuUnitKerjaController extends Controller
                 'catatan' => $request->input('catatan'),
                 'dokumen_sumber_path' => $dokumenSumberPathName ?? $realisasiIkuUnitKerja->dokumen_sumber_path,
             ]);
-            return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Realisasi IKU Unit Kerja');
+            return redirect()->route('perencana.realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Realisasi IKU Unit Kerja');
         }
         else {
             // create
@@ -136,7 +136,7 @@ class RealisasiIkuUnitKerjaController extends Controller
         // update status target iku unit kerja where id = $request->input('id')
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($request->input('id'));
 
-        return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Menambahkan Realisasi IKU Unit Kerja');
+        return redirect()->route('perencana.realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Menambahkan Realisasi IKU Unit Kerja');
 
 
     }
@@ -155,7 +155,7 @@ class RealisasiIkuUnitKerjaController extends Controller
         $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
         $realisasiIkuUnitKerja = RealisasiIkuUnitKerja::where('id_target_iku_unit_kerja', $id)->first();
         if (!$realisasiIkuUnitKerja) {
-            return redirect()->route('realisasi-iku-unit-kerja.edit', $id)->with('status', 'Anda Belum Mengisi Realisasi IKU Unit Kerja, Silakan Mengisi Realisasi IKU Unit Kerja')
+            return redirect()->route('perencana.realisasi-iku-unit-kerja.edit', $id)->with('status', 'Anda Belum Mengisi Realisasi IKU Unit Kerja, Silakan Mengisi Realisasi IKU Unit Kerja')
             ->with('alert-type', 'warning');
         }
         // dd($objekIkuUnitKerja);

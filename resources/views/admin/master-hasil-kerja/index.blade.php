@@ -83,7 +83,7 @@
                                                     <i class=" fas fa-edit"></i>
                                                 </button>
                                                 <form
-                                                    action="{{ route('master-hasil-kerja.destroy', $hasilKerja->id) }}"
+                                                    action="{{ route('admin.master-hasil-kerja.destroy', $hasilKerja->id) }}"
                                                     id="form-{{ $hasilKerja->id }}" method="post">
                                                     @csrf
                                                     @method('DELETE')

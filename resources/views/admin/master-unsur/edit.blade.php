@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="edit-form" method="POST" action="{{ route('master-unsur.update', 'link-id') }}"
+            <form id="edit-form" method="POST" action="{{ route('admin.master-unsur.update', 'link-id') }}"
                 enctype="multipart/form-data" class=" needs-validation" novalidate="">
                 <div class="modal-body">
                     @csrf

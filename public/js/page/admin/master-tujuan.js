@@ -1,45 +1,45 @@
 $(function () {
-let table;
-if ($("#master-tujuan").length) {
-    table = $("#master-tujuan")
-        .dataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1],
+    let table;
+    if ($("#master-tujuan").length) {
+        table = $("#master-tujuan")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1],
+                        },
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "Cari:",
+                    sZeroRecords: "Data tidak ditemukan",
+                    sEmptyTable: "Data tidak ditemukan",
+                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                    sInfoFiltered: "(disaring dari _MAX_ data)",
+                    sLengthMenu: "Tampilkan _MENU_ data",
+                    oPaginate: {
+                        sPrevious: "Sebelumnya",
+                        sNext: "Selanjutnya",
                     },
                 },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1],
-                    },
-                },
-            ],
-            oLanguage: {
-                sSearch: "Cari:",
-                sZeroRecords: "Data tidak ditemukan",
-                sEmptyTable: "Data tidak ditemukan",
-                sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
-                sInfoFiltered: "(disaring dari _MAX_ data)",
-                sLengthMenu: "Tampilkan _MENU_ data",
-                oPaginate: {
-                    sPrevious: "Sebelumnya",
-                    sNext: "Selanjutnya",
-                },
-            },
-        })
-        .api();
+            })
+            .api();
         $(".dt-buttons").appendTo("#download-button");
         $(".dt-buttons").appendTo("#download-button");
         $(".dataTables_filter").appendTo("#filter-search-wrapper");
@@ -55,23 +55,20 @@ if ($("#master-tujuan").length) {
         // remove bottom margin from .dataTables_filter
         $(".dataTables_filter label").css("margin-bottom", "0");
 
-        $(".dataTables_filter input").attr(
-            "placeholder",
-            "Cari tujuan..."
-        );
+        $(".dataTables_filter input").attr("placeholder", "Cari tujuan...");
         // add padding x 10px to .dataTables_filter input
         $(".dataTables_filter input").css("padding", "0 10px");
         $(".dt-buttons").appendTo("#download-button");
-}
+    }
 
-$("#master-tujuan").on("search.dt", function () {
-    table
-        .column(0, { search: "applied", order: "applied" })
-        .nodes()
-        .each(function (cell, i) {
-            cell.innerHTML = i + 1;
-        });
-});
+    $("#master-tujuan").on("search.dt", function () {
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+    });
 });
 
 $("#create-btn").on("click", function (e) {
@@ -205,6 +202,14 @@ $(".delete-btn").on("click", function () {
                 },
                 success: function (response) {
                     location.reload();
+                },
+                error: function (error) {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Data masih terhubung dengan data lain!",
+                        icon: "error",
+                        confirmButtonColor: "var(--primary)",
+                    });
                 },
             });
         }

@@ -4,19 +4,19 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('analis-sdm-pp') }}">
+            <a href="{{ route('analis-sdm.pp') }}">
                 <img src="{{ asset('img/simwas-text.png') }}" alt="brand" style="width: 120px">
             </a>
             <span class="badge badge-primary">Analis SDM</span>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ route('analis-sdm-pp') }}">
+            <a href="{{ route('analis-sdm.pp') }}">
                 <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
             </a>
         </div>
         <ul class="sidebar-menu">
             <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('analis-sdm-dashboard') }}">
+                <a class="nav-link" href="{{ route('analis-sdm.dashboard') }}">
                     <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
@@ -28,7 +28,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li class="{{ Request::is('analis-sdm/pp*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('analis-sdm-pp') }}">
+                        <a class="nav-link" href="{{ route('analis-sdm.pp') }}">
                             <span>Master Kompetensi Pegawai</span>
                         </a>
                     </li>

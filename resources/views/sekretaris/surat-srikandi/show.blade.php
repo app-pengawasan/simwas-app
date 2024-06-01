@@ -48,7 +48,7 @@
                                 <th>Dokumen Surat Srikandi:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
+                                        href="{{ route('sekretaris.surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
                                             class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
 
                             <tr>
@@ -102,8 +102,8 @@
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
                                     @else
-                                    <span class="badge badge-light"><i
-                                            class="fa-regular fa-clock mr-1"></i>Menunggu Persetujuan</span>
+                                    <span class="badge badge-light"><i class="fa-regular fa-clock mr-1"></i>Menunggu
+                                        Persetujuan</span>
                                     @endif
                                 </td>
                             </tr>
@@ -118,7 +118,7 @@
                                 <th>Dokumen Surat Usulan:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
+                                        href="{{ route('pegawai.usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
                                         <i class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
                                 </td>
                             </tr>
@@ -204,7 +204,8 @@
                         <hr class="my-1">
                         <div class="d-flex justify-content-between mt-4">
                             <div class="col-md-4">
-                                <a class="btn btn-outline-primary mr-2" href="{{ route('surat-srikandi.index') }}">
+                                <a class="btn btn-outline-primary mr-2"
+                                    href="{{ route('sekretaris.surat-srikandi.index') }}">
                                     <i class="fas fa-arrow-left mr-1"></i> Kembali
                                 </a>
                                 {{-- button to open modal to setujui or tolak --}}
@@ -233,7 +234,7 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('surat-srikandi.decline', $usulanSuratSrikandi->id) }}">
+            <form method="POST" action="{{ route('sekretaris.surat-srikandi.decline', $usulanSuratSrikandi->id) }}">
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
@@ -245,7 +246,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="alasan">Alasan Penolakan</label>
-                        <textarea class="form-control" name="alasan" id="alasan" rows="3"></textarea>
+                        <input placeholder="Masukkan Alasan Penolakan" type="text" required class="form-control"
+                            name="alasan" id="alasan"></input>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -264,7 +266,7 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('surat-srikandi.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('sekretaris.surat-srikandi.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalSetujuiSuratLabel">Setujui Surat</h5>

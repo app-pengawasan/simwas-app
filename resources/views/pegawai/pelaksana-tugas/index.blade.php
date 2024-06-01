@@ -268,7 +268,7 @@
                                             </td>
                                             <td>
                                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                    <button class="btn btn-warning btn-edit-pelaksana" type="button"
+                                                    <button class="btn btn-warning btn-edit-pelaksana btn-sm" type="button"
                                                         data-toggle="modal" data-disable=false
                                                         data-target="#modal-edit-pelaksana"
                                                         data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
@@ -277,7 +277,7 @@
                                                     @endif
                                                     @if ($i >= 1)
 
-                                                    <button class="btn btn-danger btn-delete-pelaksana" type="button"
+                                                    <button class="btn btn-danger btn-delete-pelaksana btn-sm" type="button"
                                                         data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -312,12 +312,12 @@
                                         <td class="rupiah">{{ $anggaran->harga }}</td>
                                         <td class="rupiah">{{ $anggaran->total }}</td>
                                         <td>
-                                            <button class="btn btn-warning btn-edit-anggaran" type="button"
+                                            <button class="btn btn-warning btn-edit-anggaran btn-sm" type="button"
                                                 data-toggle="modal" data-target="#modal-edit-anggaran"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-delete-anggaran" type="button"
+                                            <button class="btn btn-danger btn-delete-anggaran btn-sm" type="button"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -348,16 +348,7 @@
 @endsection
 
 @push('scripts')
-<!-- JS Libraies -->
-{{-- <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
-<script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-<script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-<script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-
-<!-- Page Specific JS File -->
 <script src="{{ asset('js') }}/page/pegawai-tim-pelaksana.js"></script>
 <script></script>
 @endpush

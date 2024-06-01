@@ -99,10 +99,10 @@
                                     </select>
                                 </div>
                                 <div class="d-flex align-items-end">
-                                    <a href="{{ route('usulan-surat-srikandi.create') }}" id="create-btn"
+                                    <a href="{{ route('pegawai.usulan-surat-srikandi.create') }}" id="create-btn"
                                         class="btn btn-primary">
                                         <i class=" fas fa-plus-circle"></i>
-                                        Tambah Usulan Surat
+                                        Tambah
                                     </a>
                                 </div>
                             </div>
@@ -151,14 +151,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('usulan-surat-srikandi.show', $usulan->id) }}"
+                                        <a href="{{ route('pegawai.usulan-surat-srikandi.show', $usulan->id) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye
                                                 "></i>
                                             Lihat
                                         </a>
                                         @if ($usulan->status == 'disetujui')
-                                        <a href="{{ route('surat-srikandi.download', $usulan->id) }}"
+                                        <a href="{{ route('pegawai.usulan-surat-srikandi.download', $usulan->id) }}"
                                             class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top"
                                             title="Download Surat Srikandi">
                                             <i class="fa-solid fa-file-pdf"></i>

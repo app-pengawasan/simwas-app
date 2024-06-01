@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{ route('master-iku.store') }}" enctype="multipart/form-data"
+            <form method="post" action="{{ route('admin.master-iku.store') }}" enctype="multipart/form-data"
                 class="needs-validation" novalidate="">
                 <div class="modal-body">
                     @csrf

@@ -62,7 +62,7 @@ class MasterAnggaranController extends Controller
         $validateData["program"] = $this->program_manggaran;
         MasterAnggaran::create($validateData);
 
-        return redirect(route('master-anggaran.index'))
+        return redirect(route('admin.master-anggaran.index'))
             ->with('status', 'Berhasil menambahkan master anggaran.')
             ->with('alert-type', 'success');
     }
@@ -113,7 +113,7 @@ class MasterAnggaranController extends Controller
 
         MasterAnggaran::where('id_manggaran', $masterAnggaran->id_manggaran)->update($validateData);
 
-        return redirect(route('master-anggaran.index'))->with('success', 'Berhasil mengubah data master anggaran.');
+        return redirect(route('admin.master-anggaran.index'))->with('success', 'Berhasil mengubah data master anggaran.');
     }
 
     /**

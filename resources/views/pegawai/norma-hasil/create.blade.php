@@ -26,6 +26,8 @@
             </div>
         </div>
         <div class="section-body">
+            @include('components.flash')
+            {{ session()->forget(['alert-type', 'status']) }}
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -54,9 +56,8 @@
                                 <div class="form-group
                                         @if ($errors->has('objek_kegiatan')) is-invalid @endif">
                                     <label for="objek_kegiatan">Objek Kegiatan</label>
-                                    <select required id="objek_kegiatan" name="objek_kegiatan[]" disabled
-                                        multiple="multiple" data-placeholder="Pilih objek kegiatan"
-                                        class="form-control select2">
+                                    <select id="objek_kegiatan" name="objek_kegiatan[]" disabled multiple="multiple"
+                                        data-placeholder="Pilih objek kegiatan" class="form-control select2">
                                         <option value="">Pilih objek kegiatan</option>
                                     </select>
                                     @if ($errors->has('objek_kegiatan'))
@@ -100,19 +101,20 @@
                                 {{-- upload word Laporan --}}
                                 <div class="form-group
                                         @if ($errors->has('file')) is-invalid @endif">
-                                    <label for="file">Upload Dokumen</label>
-                                    <input accept=".doc,.docx" type="file" id="file" name="file" class="form-control"
-                                        required>
-                                    @if ($errors->has('file'))
+                                    <label for="url_norma_hasil">Upload Dokumen</label>
+                                    <input placeholder="Masukkan URL/Link dokumen" type="url" id="file"
+                                        name="url_norma_hasil" class="form-control" required>
+                                    @if ($errors->has('url_norma_hasil'))
                                     <div class="invalid-feedback">
-                                        {{ $errors->first('file') }}
+                                        {{ $errors->first('url-norma-hasil') }}
                                     </div>
                                     @endif
                                 </div>
                                 <hr class="my-1">
                                 <div class="d-flex justify-content-between mt-4">
                                     <div>
-                                        <a class="btn btn-outline-primary mr-2" href="/pegawai/norma-hasil" id="btn-back2">
+                                        <a class="btn btn-outline-primary mr-2" href="/pegawai/norma-hasil"
+                                            id="btn-back2">
                                             <i class="fa-solid fa-arrow-left mr-1"></i>
                                             Kembali
                                         </a>

@@ -114,16 +114,19 @@
                                                 <th>Draft Norma Hasil</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($usulan->document_path) }}"
-                                                        class="badge btn-primary" download><i
-                                                            class="fa fa-download"></i> Download</a>
+                                                    <a target="blank" href="{{ $usulan->document_path }}"
+                                                        class="badge btn-primary" download>
+                                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
+                                                        Buka Draft Norma Hasil
+                                                    </a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>Laporan Norma Hasil</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($usulan->normaHasilAccepted->laporan_path) }}"
+                                                    <a target="blank"
+                                                        href="{{ asset($usulan->normaHasilAccepted->laporan_path) }}"
                                                         class="badge btn-primary" download><i
                                                             class="fa fa-download"></i> Download</a>
                                                 </td>
@@ -132,7 +135,8 @@
                                                 <th>Status Verifikasi Arsiparis</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <span class="badge
+                                                    <span
+                                                        class="badge
                                                         {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
                                                         {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
                                                         {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
@@ -155,8 +159,7 @@
                                             data-target="#staticBackdrop">
                                             Tolak
                                         </button>
-                                        <form action="/arsiparis/norma-hasil"
-                                            method="post">
+                                        <form action="/arsiparis/norma-hasil" method="post">
                                             @csrf
                                             @method('POST')
                                             <input type="hidden" name="norma_hasil" value="{{ $usulan->id }}">

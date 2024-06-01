@@ -40,7 +40,9 @@
             <h1>Form Pembuatan Target IKU</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('target-iku-unit-kerja.index') }}">Target IKU Unit
+                // dd($request->all());
+                <div class="breadcrumb-item active"><a
+                        href="{{ route('perencana.target-iku-unit-kerja.index') }}">Target IKU Unit
                         Kerja</a></div>
                 <div class="breadcrumb-item">Detail Target IKU Unit Kerja</div>
             </div>
@@ -216,11 +218,12 @@
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                 </a>
                                 @if ($targetIkuUnitKerja->status == 1)
-                                <a href="{{ route('target-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                <a href="{{ route('perencana.target-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
                                     class="btn btn-warning">
                                     <i class="fa-solid fa-edit mr-1"></i>Edit
                                 </a>
-                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                <form
+                                    action="{{ route('perencana.target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
                                     method="post" class="d-inline">
                                     @csrf
                                     @method('put')
@@ -230,7 +233,8 @@
                                     </button>
                                 </form>
                                 @endif
-                                <form action="{{ route('target-iku-unit-kerja.destroy', $targetIkuUnitKerja->id) }}"
+                                <form
+                                    action="{{ route('perencana.target-iku-unit-kerja.destroy', $targetIkuUnitKerja->id) }}"
                                     method="post" class="d-inline" id="delete-button">
                                     @csrf
                                     @method('delete')

@@ -25,23 +25,27 @@ class KetuaTimRencanaKerjaController extends Controller
     ];
 
     protected $statusTim = [
+        // Pegawai Buat Tim
         0   => 'Belum Disusun',
+        // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
+        // Ketua Tim Kirim Rencana Kinerja ke Admin
         2   => 'Menunggu Reviu',
+        // Ditolak Admin
         3   => 'Perlu Perbaikan',
-        4   => 'Dalam Perbaikan',
-        5   => 'Diajukan',
-        6   => 'Disetujui',
+        // Diperbaiki Ketua Tim
+        4   => 'Disetujui',
+        // Disetujui Admin Sudah di Lock
+        5   => 'Disetujui',
     ];
 
     protected $colorText = [
         0   => 'dark',
-        1   => 'warning',
+        1   => 'info',
         2   => 'primary',
         3   => 'warning',
-        4   => 'warning',
-        5   => 'primary',
-        6   => 'success',
+        4   => 'success',
+        5   => 'success',
     ];
 
     protected $unsur = [

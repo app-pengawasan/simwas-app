@@ -105,7 +105,7 @@ class NormaHasilController extends Controller
     public function create()
     {
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->where('status', 6);
+                            $query->whereIn('status', [4,5]);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id)
                                 ->whereIn('pt_jabatan', [2, 3]);
@@ -126,51 +126,39 @@ class NormaHasilController extends Controller
      */
     public function store(StoreNormaHasilRequest $request)
     {
-        // dd($request->all());
-        // get user_id from auth
         $user_id = auth()->user()->id;
-
-        // get unit_kerja from rencana_id in RencanaKerja , timkerja, unitkerja
         $rencanaKerja = RencanaKerja::find($request->rencana_id);
         $unit_kerja = $rencanaKerja->timkerja->unitkerja;
-
-        // dd($request->all());
-        // store file to storage
-        $file = $request->file('file');
-        $fileName = $request->nama_dokumen . "-" .time() . '-usulan-norma-hasil.' . $file->getClientOriginalExtension();
-        $path = public_path('storage/norma-hasil');
-        $file->move($path, $fileName);
-        $document_path = 'storage/norma-hasil/' . $fileName;
-        // tanggal = date now
         $tanggal = date('Y-m-d');
 
-        // store to database
-        NormaHasil::create([
-            'user_id' => $user_id,
-            'unit_kerja' => $unit_kerja,
-            'tugas_id' => $request->rencana_id,
-            'jenis_norma_hasil_id' => $request->jenis_norma_hasil,
-            'document_path' => $document_path,
-            'nama_dokumen' => $request->nama_dokumen,
-            'tanggal' => $tanggal,
-            'status_norma_hasil' => 'diperiksa'
-        ]);
+        try {
+            NormaHasil::create([
+                'user_id' => $user_id,
+                'unit_kerja' => $unit_kerja,
+                'tugas_id' => $request->rencana_id,
+                'jenis_norma_hasil_id' => $request->jenis_norma_hasil,
+                'document_path' => $request->url_norma_hasil,
+                'nama_dokumen' => $request->nama_dokumen,
+                'tanggal' => $tanggal,
+                'status_norma_hasil' => 'diperiksa'
+            ]);
 
-        // get last id from norma_hasil
-        $norma_hasil_id = NormaHasil::latest()->first()->id;
+            $norma_hasil_id = NormaHasil::latest()->first()->id;
 
-        // objek kegiatan is array, store to objek_norma_hasil
-        if ($request->objek_kegiatan != null) {
-            foreach ($request->objek_kegiatan as $objek) {
-                ObjekNormaHasil::create([
-                    'objek_id' => $objek,
-                    'norma_hasil_id' => $norma_hasil_id
-                ]);
+            if ($request->objek_kegiatan != null) {
+                foreach ($request->objek_kegiatan as $objek) {
+                    ObjekNormaHasil::create([
+                        'objek_id' => $objek,
+                        'norma_hasil_id' => $norma_hasil_id
+                    ]);
+                }
             }
+            return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return redirect('pegawai/norma-hasil')->with('error', 'Gagal mengajukan usulan norma hasil!');
         }
 
-
-        return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
     }
 
 

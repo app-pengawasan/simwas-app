@@ -145,4 +145,75 @@ class TimKerjaController extends Controller
             'message' => 'Berhasil menghapus tim kerja',
         ]);
     }
+
+    public function detail($id){
+        $timKerja = TimKerja::where('id_timkerja', $id)->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Rencana Kerja',
+            'data'    => $timKerja,
+        ]);
+    }
+
+    public function updateTimKerja(Request $request, $id){
+        $rules = [
+            'id_timkerja' => 'required',
+            'tahun' => 'required',
+            'unitkerja' => 'required',
+            'nama' => 'required',
+            'ketua' => 'required',
+            'operator' => 'required',
+            'iku' => 'required',
+        ];
+        $idTimkerja = $request->input('edit-id-timkerja');
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        try {
+            $timKerja = TimKerja::where('id_timkerja', $id)->first();
+            $timKerja->update([
+                'nama' => $request->input('nama'),
+                'tahun' => $request->input('tahun'),
+                'unitkerja' => $request->input('unitkerja'),
+                'id_ketua' => $request->input('ketua'),
+                'id_operator' => $request->input('operator'),
+                'id_iku' => $request->input('iku'),
+            ]);
+            $request->session()->put('status', 'Berhasil mengubah tim kerja.');
+            $request->session()->put('alert-type', 'success');
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mengubah tim kerja',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+    public function lockTimKerja(Request $request, $id){
+        try {
+            $timKerja = TimKerja::where('id_timkerja', $id)->first();
+            $timKerja->update([
+                'status' => 5,
+            ]);
+            return back()->with('status', 'Berhasil mengunci tim kerja.');
+        } catch (\Throwable $th) {
+            return back()->with('status', $th->getMessage());
+        }
+    }
+    public function unlockTimKerja(Request $request, $id){
+        try {
+            $timKerja = TimKerja::where('id_timkerja', $id)->first();
+            $timKerja->update([
+                'status' => 4,
+            ]);
+            return back()->with('status', 'Berhasil membuka kunci tim kerja.');
+        } catch (\Throwable $th) {
+            return back()->with('status', $th->getMessage());
+        }
+    }
 }

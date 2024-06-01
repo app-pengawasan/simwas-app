@@ -28,7 +28,8 @@
                     <div class="card-body">
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
-                                <a class="btn btn-outline-primary" href="{{ route('usulan-surat-srikandi.index') }}">
+                                <a class="btn btn-outline-primary"
+                                    href="{{ route('pegawai.usulan-surat-srikandi.index') }}">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Kembali
                                 </a>
                             </div>
@@ -52,7 +53,7 @@
                                 <th>Dokumen Surat Srikandi:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
+                                        href="{{ route('pegawai.surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
                                             class="fa-solid fa-file-arrow-down mr-1"></i>Download
                                     </a>
                             <tr>
@@ -112,7 +113,7 @@
                                 <th>Dokumen Surat Usulan:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
+                                        href="{{ route('pegawai.usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
                                         <i class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
                                 </td>
                             </tr>
@@ -194,30 +195,10 @@
                                 </td>
                             </tr>
                         </table>
-                        {{-- edit and delete button --}}
-                        {{-- <div class="d-flex">
-                            <div class="buttons ml-auto my-2">
-                                <a href="{{ route('usulan-surat-srikandi.edit', $usulanSuratSrikandi->id) }}"
-                        id="edit-btn" class="btn btn-warning">
-                        <i class="fas fa-edit"></i>
-                        Edit
-                        </a>
-                        <form action="{{ route('usulan-surat-srikandi.destroy', $usulanSuratSrikandi->id) }}"
-                            method="post" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" id="delete-btn">
-                                <i class="fas fa-trash"></i>
-                                Hapus
-                            </button>
-                        </form>
                     </div>
-                </div> --}}
+                </div>
             </div>
-
-        </div>
-</div>
-</section>
+    </section>
 </div>
 @endsection
 

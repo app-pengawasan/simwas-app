@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                             <div style="gap:10px" class="d-flex align-items-end">
-                                <a type="button" class="btn btn-primary" href="{{ route('master-anggaran.create') }}">
+                                <a type="button" class="btn btn-primary" href="{{ route('admin.master-anggaran.create') }}">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
@@ -75,7 +75,7 @@
                                         <td>{{ $ma->id_kegiatan . ' ' . $ma->kegiatan }}</td>
                                         <td style="width: 100px">
                                             <a class="btn btn-warning btn-sm"
-                                                href="{{ route('master-anggaran.edit', $ma) }}">
+                                                href="{{ route('admin.master-anggaran.edit', $ma) }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
