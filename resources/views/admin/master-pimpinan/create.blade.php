@@ -31,7 +31,7 @@
                                 </a>
                             </div>
                         </div> --}}
-                        <form method="POST" action="{{ route('master-pimpinan.store') }}" class="needs-validation"
+                        <form method="POST" action="{{ route('admin.master-pimpinan.store') }}" class="needs-validation"
                             novalidate="">
                             @csrf
                             <h1 class="h4 text-dark mb-4 header-card">Data Pimpinan</h1>

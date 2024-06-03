@@ -80,7 +80,10 @@ $(function () {
         }
 
         if (filterUnitKerja !== "") {
-            table.column(2).search("^" + filterUnitKerja + "$", true, false).draw();
+            table
+                .column(2)
+                .search("^" + filterUnitKerja + "$", true, false)
+                .draw();
         } else {
             table.column(2).search(filterUnitKerja, true, false).draw();
         }
@@ -132,6 +135,15 @@ $(".submit-btn").on("click", function (e) {
     $("#error-ketua").text("");
 
     // return alert([tahun, unitkerja, iku, nama, ketua]);
+     Swal.fire({
+         title: "Menyimpan Data",
+         html: "Mohon tunggu sebentar",
+         timerProgressBar: true,
+         didOpen: () => {
+             Swal.showLoading();
+         },
+         allowOutsideClick: () => !Swal.isLoading(),
+     });
 
     $.ajax({
         url: `/admin/tim-kerja`,
@@ -147,6 +159,7 @@ $(".submit-btn").on("click", function (e) {
             operator: operator,
         },
         success: function (response) {
+            Swal.close();
             location.reload();
         },
         error: function (error) {
@@ -157,7 +170,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            Swal.close();
         },
     });
 });
@@ -275,4 +288,121 @@ $("#yearSelect").on("change", function () {
     $("#yearForm").attr("action", `?year=${year}`);
     $("#yearForm").find('[name="_token"]').remove();
     $("#yearForm").trigger("submit");
+});
+
+$(".btn-edit-timkerja").on("click", function () {
+    let dataId = $(this).attr("data-id");
+    $.ajax({
+        url: `/admin/tim-kerja/detail/${dataId}`,
+        type: "GET",
+        cache: false,
+        success: function (response) {
+            $("#edit-id-timkerja").val(response.data.id_timkerja);
+            $("#edit-tahun").select2("trigger", "select", {
+                data: { id: response.data.tahun, text: response.data.tahun },
+            });
+            $("#edit-unitkerja").select2("trigger", "select", {
+                data: {
+                    id: response.data.unitkerja,
+                    text: response.data.unitkerja,
+                },
+            });
+            $("#edit-iku").select2("trigger", "select", {
+                data: { id: response.data.id_iku, text: response.data.id_iku },
+            });
+
+            $("#edit-nama").val(response.data.nama);
+            $("#edit-ketua").select2("trigger", "select", {
+                data: {
+                    id: response.data.id_ketua,
+                    text: response.data.id_ketua,
+                },
+            });
+            $("#edit-operator").select2("trigger", "select", {
+                data: {
+                    id: response.data.id_operator,
+                    text: response.data.id_operator,
+                },
+            });
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+
+$("#edit-iku").on("change", function () {
+    let idIKU = $(this).val();
+    $.ajax({
+        url: `/admin/master-iku/${idIKU}`,
+        type: "GET",
+        cache: false,
+        success: function (response) {
+            console.log(response);
+            $("#edit-id_iku").val(response.data[0].id_iku);
+            $("#edit-id_sasaran").val(response.data[0].id_sasaran);
+            let idtujuan = $("#edit-id_sasaran option:selected").data(
+                "idtujuan"
+            );
+            $("#edit-id_tujuan").val(idtujuan);
+            // $("#edit-iku").val(response.data[0].iku);
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+
+$("#submit-edit-btn").on("click", function (e) {
+    e.preventDefault();
+
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    let id_timkerja = $("#edit-id-timkerja").val();
+    let tahun = $("#edit-tahun").val();
+    let unitkerja = $("#edit-unitkerja").val();
+    let iku = $("#edit-iku").val();
+    let nama = $("#edit-nama").val();
+    let ketua = $("#edit-ketua").val();
+    let operator = $("#edit-operator").val();
+
+    $.ajax({
+        url: `/admin/tim-kerja/update/${id_timkerja}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            id_timkerja: id_timkerja,
+            tahun: tahun,
+            unitkerja: unitkerja,
+            iku: iku,
+            nama: nama,
+            ketua: ketua,
+            operator: operator,
+        },
+        success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: `${response.message}`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+
+            $("#modal-edit-timkerja").modal("hide");
+            setTimeout(location.reload(), 3000);
+            console.log(response.data[0]);
+        },
+        error: function (error) {
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `${error.message}`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        },
+    });
 });

@@ -16,8 +16,8 @@ return new class extends Migration
         //
         // add id_objek that references to id_objek in master_objeks table
         Schema::table('objek_iku_unit_kerjas', function (Blueprint $table) {
-            $table->string('id_objek')->nullable();
-            $table->foreign('id_objek')->references('id_objek')->on('master_objeks');
+            $table->ulid('id_objek');
+            $table->foreign('id_objek')->references('id_objek')->on('master_objeks')->onDelete('restrict');
             // delete satuan
             $table->dropColumn('satuan');
         });

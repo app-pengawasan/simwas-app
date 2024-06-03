@@ -15,11 +15,6 @@
         <span class="label"><i class="fa-regular fa-circle"></i></span>
         <span class="title-prg">Persetujuan Oleh Perencana</span>
     </div>
-    <span class="bar half"></span>
-    <div class="circle">
-        <span class="label"><i class="fa-regular fa-circle"></i></span>
-        <span class="title-prg">Persetujuan Oleh Inspektur Wilayah</span>
-    </div>
     @endif
     @if ($timKerja->status == 2 || $timKerja->status == 4)
     <span class="bar done"></span>
@@ -31,11 +26,6 @@
     <div class="circle active">
         <span class="label"><i class="fa-solid fa-hourglass-start"></i></span>
         <span class="title-prg">Menunggu Persetujuan Oleh Perencana</span>
-    </div>
-    <span class="bar half"></span>
-    <div class="circle">
-        <span class="label"><i class="fa-regular fa-circle"></i></span>
-        <span class="title-prg">Persetujuan Oleh Inspektur Wilayah</span>
     </div>
     @endif
 
@@ -50,11 +40,6 @@
         <span class="label"><i class="fa-solid fa-triangle-exclamation"></i></span>
         <span class="title-prg">Rencana Kinerja Ditolak, Silakan Perbaiki</span>
     </div>
-    <span class="bar half"></span>
-    <div class="circle">
-        <span class="label"><i class="fa-regular fa-circle"></i></span>
-        <span class="title-prg">Persetujuan Oleh Inspektur Wilayah</span>
-    </div>
     @endif
 
 
@@ -63,29 +48,6 @@
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
         <span class="title-prg">Ketua Tim Telah Selesai Menyusun Rencana Kegiatan</span>
-    </div>
-    <span class="bar done"></span>
-    <div class="circle done">
-        <span class="label"><i class="fa-solid fa-check"></i></span>
-        <span class="title-prg">Rencana Kinerja Disetujui Oleh Perencana</span>
-    </div>
-    <span class="bar done"></span>
-    <div class="circle active">
-        <span class="label wait"><i class="fa-solid fa-hourglass-start"></i></span>
-        <span class="title-prg">Menunggu Persetujuan Inspektur Wilayah</span>
-    </div>
-    @endif
-
-    @if ($timKerja->status == 6)
-    <span class="bar done"></span>
-    <div class="circle done">
-        <span class="label"><i class="fa-solid fa-check"></i></span>
-        <span class="title-prg">Ketua Tim Telah Selesai Menyusun Rencana Kegiatan</span>
-    </div>
-    <span class="bar done"></span>
-    <div class="circle done">
-        <span class="label"><i class="fa-solid fa-check"></i></span>
-        <span class="title-prg">Rencana Kinerja Disetujui Oleh Perencana</span>
     </div>
     <span class="bar done"></span>
     <div class="circle done">

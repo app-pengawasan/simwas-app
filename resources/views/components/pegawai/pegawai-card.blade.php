@@ -1,5 +1,4 @@
 @if ($suratCount != 0 || $normaHasilCount != 0)
-
 <div style="gap:5px" class="d-flex flex-column dashboard-card my-4">
     <h2 class="font-weight-normal text-dark h5 mb-1">Pegawai</h2>
     <div class="d-flex flex-row dashboard-card flex-wrap" style="gap:15px">
@@ -13,7 +12,7 @@
                         <h6 class="mb-0 text-dark">Surat Srikandi</h6>
                     </div>
                 </div>
-                <a href="{{ route('usulan-surat-srikandi.index') }}" class="arrow-button-card" type="button"
+                <a href="{{ route('pegawai.usulan-surat-srikandi.index') }}" class="arrow-button-card" type="button"
                     class="rounded-circle"><i class="fa-solid fa-arrow-right"></i></a>
             </div>
             <div style="width:100%" class="mt-3 d-flex">

@@ -104,6 +104,9 @@
                             <tr>
                                 <th>Objek:</th>
                                 <td class="py-2">
+                                    @if ($objek->count() == 0)
+                                    <span>-</span>
+                                    @endif
                                     @foreach ($objek as $objek)
                                     <li>{{ $objek->masterObjek->nama }}
                                         @endforeach
@@ -119,11 +122,23 @@
                             <tr>
                                 <th>Draft Norma Hasil:</th>
                                 <td>
-                                    <a target="blank" href="{{ asset($usulan->document_path) }}"
-                                        class="badge btn-primary" download><i class="fa fa-download"></i>
-                                        Download</a>
+                                    <a target="blank" href="{{ $usulan->document_path }}" class="badge btn-primary"
+                                        download>
+                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
+                                        Buka Draft Norma Hasil
+                                    </a>
                                 </td>
                             </tr>
+                            @if ( $usulan->status_norma_hasil == 'disetujui' &&
+                            $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui')
+                            <tr>
+                                <th>Laporan Norma Hasil:</th>
+                                <td>
+                                    <a target="blank" href="{{ asset($usulan->normaHasilAccepted->laporan_path) }}"
+                                        class="badge btn-primary" download><i class="fa fa-download"></i> Download</a>
+                                </td>
+                            </tr>
+                            @endif
                             <tr>
                                 <th>Status Surat:</th>
                                 @if ($usulan->status_norma_hasil != 'diperiksa' && $usulan->status_norma_hasil !=

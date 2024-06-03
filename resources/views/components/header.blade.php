@@ -19,34 +19,38 @@
                 <a href="#" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
+                @if (auth()->user()->is_admin || auth()->user()->is_sekma || auth()->user()->is_sekwil ||
+                auth()->user()->is_aktif || auth()->user()->is_analissdm || auth()->user()->is_perencana ||
+                auth()->user()->is_arsiparis)
                 <div class="dropdown-divider"></div>
+                @endif
                 @if (auth()->user()->is_admin)
-                <a href="{{ route('admin-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('admin.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Admin
                 </a>
                 @endif
                 @if (auth()->user()->is_sekma || auth()->user()->is_sekwil)
-                <a href="{{ route('sekretaris-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('sekretaris.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
                 </a>
                 @endif
                 @if (auth()->user()->is_aktif)
-                <a href="{{ route('inspektur-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('inspektur.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Inspektur
                 </a>
                 @endif
                 @if (auth()->user()->is_analissdm)
-                <a href="{{ route('analis-sdm-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('analis-sdm.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
                 </a>
                 @endif
                 @if (auth()->user()->is_perencana)
-                <a href="{{ route('perencana-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('perencana.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Perencana
                 </a>
                 @endif
                 @if (auth()->user()->is_arsiparis)
-                <a href="{{ route('arsiparis-dashboard') }}" class="dropdown-item has-icon">
+                <a href="{{ route('arsiparis.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Arsiparis
                 </a>
                 @endif

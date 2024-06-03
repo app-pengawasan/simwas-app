@@ -58,9 +58,8 @@ class TargetIkuUnitKerjaController extends Controller
         $yearValues = $year->pluck('year')->toArray();
 
         if (!in_array($currentYear, $yearValues)) {
-            // If the current year is not in the array, add it
             $year->push((object)['year' => $currentYear]);
-            $yearValues[] = $currentYear; // Update the year values array
+            $yearValues[] = $currentYear;
         }
 
         $year = $year->sortByDesc('year');
@@ -85,8 +84,6 @@ class TargetIkuUnitKerjaController extends Controller
     {
         $this->authorize('perencana');
         $masterUnitKerja = MasterUnitKerja::where('kategori', 2)->get();
-        // dd($masterUnitKerja);
-
 
         return view('perencana.target-iku.create', [
             'type_menu' => 'iku-unit-kerja',
@@ -103,8 +100,6 @@ class TargetIkuUnitKerjaController extends Controller
      */
     public function store(StoreTargetIkuUnitKerjaRequest $request)
     {
-        // create
-        // dd($request->all());
         TargetIkuUnitKerja::create([
             'unit_kerja' => $request->input('unit-kerja'),
             'jumlah_objek' => $request->input('jumlah-objek'),
@@ -138,7 +133,7 @@ class TargetIkuUnitKerjaController extends Controller
             ]);
 
         }
-        return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Menambahkan UTarget IKU Unit Kerja')
+        return redirect()->route('perencana.target-iku-unit-kerja.index')->with('status', 'Berhasil Menambahkan UTarget IKU Unit Kerja')
             ->with('alert-type', 'success');
     }
 
@@ -171,13 +166,10 @@ class TargetIkuUnitKerjaController extends Controller
      */
     public function edit(TargetIkuUnitKerja $targetIkuUnitKerja)
     {
-        // dd($targetIkuUnitKerja);
         $this->authorize('perencana');
         $masterUnitKerja = MasterUnitKerja::where('kategori', 2)->get();
 
-
         $objekIkuUnitKerja = objekIkuUnitKerja::with('master_objeks')->where('id_target', $targetIkuUnitKerja->id)->get();
-        // dd($objekIkuUnitKerja);
         return view('perencana.target-iku.edit', [
             'type_menu' => 'iku-unit-kerja',
             'unitKerja' => $this->unitKerja,
@@ -196,7 +188,6 @@ class TargetIkuUnitKerjaController extends Controller
      */
     public function update(UpdateTargetIkuUnitKerjaRequest $request, TargetIkuUnitKerja $targetIkuUnitKerja)
     {
-        // dd($request->all());
         TargetIkuUnitKerja::where('id', $targetIkuUnitKerja->id)
             ->update([
                 'unit_kerja' => $request->input('unit-kerja'),
@@ -234,7 +225,7 @@ class TargetIkuUnitKerjaController extends Controller
 
 
         }
-        return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Target IKU Unit Kerja')
+        return redirect()->route('perencana.target-iku-unit-kerja.index')->with('status', 'Berhasil Mengubah Target IKU Unit Kerja')
             ->with('alert-type', 'success');
     }
 
@@ -253,13 +244,12 @@ class TargetIkuUnitKerjaController extends Controller
 
         $targetIkuUnitKerja->delete();
 
-        return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Menghapus Target IKU Unit Kerja')
+        return redirect()->route('perencana.target-iku-unit-kerja.index')->with('status', 'Berhasil Menghapus Target IKU Unit Kerja')
             ->with('alert-type', 'success');
     }
 
     public function editStatus($id)
     {
-        // dd($targetIkuUnitKerja);
 
         $status = request()->input('status');
         $targetIkuUnitKerja = TargetIkuUnitKerja::find($id);
@@ -270,19 +260,19 @@ class TargetIkuUnitKerjaController extends Controller
         ->update([
             'status' => $status,
         ]);
-            return redirect()->route('target-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Realisasi')
+            return redirect()->route('perencana.target-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Realisasi')
             ->with('alert-type', 'success');
         }
         else if ($status == 3) {
             if($realisasiIkuUnitKerja == null) {
-                return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Realisasi IKU Unit Kerja Belum Diisi')
+                return redirect()->route('perencana.realisasi-iku-unit-kerja.index')->with('status', 'Realisasi IKU Unit Kerja Belum Diisi')
                 ->with('alert-type', 'danger');
             } else{
                 TargetIkuUnitKerja::where('id', $targetIkuUnitKerja->id)
         ->update([
             'status' => $status,
         ]);
-            return redirect()->route('realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Evaluasi')
+            return redirect()->route('perencana.realisasi-iku-unit-kerja.index')->with('status', 'Berhasil Mengirim ke Evaluasi')
             ->with('alert-type', 'success');
             }
         }

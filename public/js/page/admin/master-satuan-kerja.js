@@ -172,11 +172,10 @@ $(".delete-btn").on("click", function () {
                         type: "error",
                         icon: "error",
                         title: "Gagal",
-                        text: "Gagal menghapus data, data masih terhubung dengan data lain",
+                        text: `${error.responseJSON.message}`,
                         showConfirmButton: false,
                         timer: 3000,
                     });
-                    console.log(error);
                 },
             });
         }

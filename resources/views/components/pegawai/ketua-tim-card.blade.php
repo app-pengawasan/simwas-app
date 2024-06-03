@@ -42,11 +42,6 @@
                     class="bg-danger text-white p-1 segmented-proggress rounded-bar">
                 </div>
                 @endif
-                @if ($timKerjaPercentageDiajukan != 0)
-                <div style="width:{{ $timKerjaPercentageDiajukan }}%"
-                    class="bg-warning text-white p-1 segmented-proggress rounded-bar">
-                </div>
-                @endif
                 @if ($timKerjaPercentageDiterima != 0)
                 <div style="width:{{ $timKerjaPercentageDiterima }}%"
                     class="bg-success text-white p-1 segmented-proggress rounded-bar">
@@ -62,18 +57,6 @@
                         </div>
                         <div style="font-size: 1.2em;" class="font-weight-bold text-dark">
                             {{ $timKerjaPenyusunanCount }}
-                        </div>
-                    </div>
-                </div>
-                @endif
-                @if ($timKerjaDiajukanCount != 0)
-                <div class="mx-2">
-                    <h6 style="font-size: .9em;" class="font-weight-normal m-0 text-dark h5">Diajukan</h6>
-                    <div class="d-flex align-items-center">
-                        <div class="bg-warning text-white p-1 mr-2 rounded-bar">
-                        </div>
-                        <div style="font-size: 1.2em;" class="font-weight-bold text-dark">
-                            {{ $timKerjaDiajukanCount }}
                         </div>
                     </div>
                 </div>

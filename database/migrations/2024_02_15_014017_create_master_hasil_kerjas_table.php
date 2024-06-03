@@ -18,13 +18,9 @@ return new class extends Migration
         Schema::create('master_hasil_kerjas', function (Blueprint $table) {
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
             $table->ulid('master_subunsur_id');
-            $table->foreign('master_subunsur_id')->references('id')->on('master_sub_unsurs')->onDelete('cascade');
+            $table->foreign('master_subunsur_id')->references('id')->on('master_sub_unsurs')->onDelete('restrict');
             $table->string('nama_hasil_kerja')->unique();
             $table->string('hasil_kerja_tim');
-            $table->string('pengendali_teknis')->nullable();
-            $table->string('ketua_tim')->nullable();
-            $table->string('anggota_tim');
-            $table->string('pic')->comment('Person In Charge or Koodinator')->nullable();
             $table->timestamps();
         });
     }

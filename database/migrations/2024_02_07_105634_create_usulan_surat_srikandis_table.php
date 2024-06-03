@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('directory', 255);
             $table->string('catatan', 100);
             $table->string('status', 100);
-            $table->string('user_id', 100);
+            $table->ulid('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

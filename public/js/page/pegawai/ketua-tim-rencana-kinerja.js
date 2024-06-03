@@ -501,3 +501,4 @@ $("#yearSelect").on("change", function () {
     $("#yearForm").find('[name="_token"]').remove();
     $("#yearForm").submit();
 });
+

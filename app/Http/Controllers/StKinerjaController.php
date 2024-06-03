@@ -110,7 +110,7 @@ class StKinerjaController extends Controller
     public function create()
     {
         $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->where('status', 6);
+                            $query->whereIn('status', [4,5]);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id)
                                 ->whereIn('pt_jabatan', [2, 3]);
@@ -188,7 +188,7 @@ class StKinerjaController extends Controller
     public function edit(StKinerja $st_kinerja)
     {
         $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-            $query->where('status', 6);
+            $query->whereIn('status', [4,5]);
         })->whereHas('pelaksana', function ($query) {
             $query->where('id_pegawai', auth()->user()->id)
                 ->whereIn('pt_jabatan', [2, 3]);
@@ -233,9 +233,9 @@ class StKinerjaController extends Controller
                 'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
                 'required' => 'Wajib diisi.'
             ]);
-    
+
             StKinerja::where('id', $st_kinerja->id)->update($validatedData);
-    
+
             return redirect('/pegawai/st-kinerja')->with('success', 'Pengajuan kembali usulan ST Kinerja berhasil!');
         } elseif ($request->input('status') == 3) {
             $validatedData = $request->validate([
@@ -253,7 +253,7 @@ class StKinerjaController extends Controller
             StKinerja::where('no_surat', $no_surat)->update($validatedData);
             return redirect('/pegawai/st-kinerja')->with('success', 'Berhasil mengunggah file!');
         }
-        
+
     }
 
     /**

@@ -90,19 +90,21 @@
                                                     $objek->nama }}
                                             </span>
                                         </div>
-                                        <div style="min-width: 100px;">
-                                            <button class="btn btn-warning btn-edit-objek btn-sm" type="button"
-                                                data-toggle="modal" data-target="#modal-edit-objek"
-                                                data-kategori="{{ $objek->kategori_objek }}"
-                                                data-id="{{ $objek->id_opengawasan }}"
-                                                data-idobjek="{{ $objek->id_objek }}">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-delete-objek btn-sm" type="button"
-                                                data-id="{{ $objek->id_opengawasan }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
+                                        @if ($timKerja->status < 2 || $timKerja->status == 3)
+                                            <div style="min-width: 100px;">
+                                                <button class="btn btn-warning btn-edit-objek btn-sm" type="button"
+                                                    data-toggle="modal" data-target="#modal-edit-objek"
+                                                    data-kategori="{{ $objek->kategori_objek }}"
+                                                    data-id="{{ $objek->id_opengawasan }}"
+                                                    data-idobjek="{{ $objek->id_objek }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-delete-objek btn-sm" type="button"
+                                                    data-id="{{ $objek->id_opengawasan }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            @endif
                                     </div>
                                     @endforeach
                                     @else
@@ -180,8 +182,8 @@
                                             <i>Belum tersedia</i>
                                             @elseif($i == 0 || isset($rencanaKerja->pelaksana[$i - 1]))
                                             @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                <button class="btn btn-primary btn-sm btn-create-pelaksana" type="button"
-                                                    data-toggle="modal" data-disable=true
+                                                <button class="btn btn-primary btn-sm btn-create-pelaksana"
+                                                    type="button" data-toggle="modal" data-disable=true
                                                     data-target="#modal-create-pelaksana"
                                                     data-hasilkerja={{ $i == 0 ? 1 : 2 }} data-jabatan=<?php
                                                                     if ($i == 0) {
@@ -268,8 +270,8 @@
                                             </td>
                                             <td>
                                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                    <button class="btn btn-warning btn-edit-pelaksana" type="button"
-                                                        data-toggle="modal" data-disable=false
+                                                    <button class="btn btn-warning btn-edit-pelaksana btn-sm"
+                                                        type="button" data-toggle="modal" data-disable=false
                                                         data-target="#modal-edit-pelaksana"
                                                         data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                         <i class="fas fa-edit"></i>
@@ -277,7 +279,8 @@
                                                     @endif
                                                     @if ($i >= 1)
 
-                                                    <button class="btn btn-danger btn-delete-pelaksana" type="button"
+                                                    <button class="btn btn-danger btn-delete-pelaksana btn-sm"
+                                                        type="button"
                                                         data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
@@ -312,12 +315,12 @@
                                         <td class="rupiah">{{ $anggaran->harga }}</td>
                                         <td class="rupiah">{{ $anggaran->total }}</td>
                                         <td>
-                                            <button class="btn btn-warning btn-edit-anggaran" type="button"
+                                            <button class="btn btn-warning btn-edit-anggaran btn-sm" type="button"
                                                 data-toggle="modal" data-target="#modal-edit-anggaran"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-delete-anggaran" type="button"
+                                            <button class="btn btn-danger btn-delete-anggaran btn-sm" type="button"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -348,16 +351,7 @@
 @endsection
 
 @push('scripts')
-<!-- JS Libraies -->
-{{-- <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
-<script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-<script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-<script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-
-<!-- Page Specific JS File -->
 <script src="{{ asset('js') }}/page/pegawai-tim-pelaksana.js"></script>
 <script></script>
 @endpush

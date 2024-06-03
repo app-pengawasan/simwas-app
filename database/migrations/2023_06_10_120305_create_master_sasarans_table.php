@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('master_sasarans', function (Blueprint $table) {
             $table->ulid('id_sasaran')->unique()->primary()->default(Ulid::generate());
-            $table->string('id_tujuan');
+            $table->ulid('id_tujuan');
+            $table->foreign('id_tujuan')->references('id_tujuan')->on('master_tujuans')->onDelete('restrict');
             $table->string('sasaran');
             $table->timestamps();
         });

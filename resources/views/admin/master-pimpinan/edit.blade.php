@@ -26,7 +26,7 @@
                                 </a>
                             </div>
                         </div> --}}
-                        <form method="POST" action="{{ route('master-pimpinan.update', $pimpinan) }}"
+                        <form method="POST" action="{{ route('admin.master-pimpinan.update', $pimpinan) }}"
                             class="needs-validation" novalidate="">
                             @method('put')
                             @csrf

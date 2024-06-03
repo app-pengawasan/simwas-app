@@ -20,7 +20,7 @@
     @include('components.master-iku.edit');
     <section class="section">
         <div class="section-header">
-            <h1>Master IKU Inspekotrat Utama</h1>
+            <h1>Master IKU Inspektorat Utama</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
                 <div class="breadcrumb-item">Master IKU</div>

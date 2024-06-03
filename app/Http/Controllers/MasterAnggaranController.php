@@ -62,7 +62,7 @@ class MasterAnggaranController extends Controller
         $validateData["program"] = $this->program_manggaran;
         MasterAnggaran::create($validateData);
 
-        return redirect(route('master-anggaran.index'))
+        return redirect(route('admin.master-anggaran.index'))
             ->with('status', 'Berhasil menambahkan master anggaran.')
             ->with('alert-type', 'success');
     }
@@ -113,7 +113,7 @@ class MasterAnggaranController extends Controller
 
         MasterAnggaran::where('id_manggaran', $masterAnggaran->id_manggaran)->update($validateData);
 
-        return redirect(route('master-anggaran.index'))->with('success', 'Berhasil mengubah data master anggaran.');
+        return redirect(route('admin.master-anggaran.index'))->with('success', 'Berhasil mengubah data master anggaran.');
     }
 
     /**
@@ -124,10 +124,23 @@ class MasterAnggaranController extends Controller
      */
     public function destroy($id)
     {
-        MasterAnggaran::destroy($id);
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
-        ]);
+        try {
+            MasterAnggaran::destroy($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Dihapus!',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->getCode() == 23000){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data masih terhubung dengan data lain!',
+                ], 409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Gagal Dihapus!',
+            ], 500);
+        }
     }
 }

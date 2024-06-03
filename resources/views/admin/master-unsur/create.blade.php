@@ -3,12 +3,12 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-create-master-unsur-label">Form Tambah Unsur</h5>
+                <h5 class="modal-title" id="modal-create-master-unsur-label">Form Tambah Unsur Inspektorat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" action="{{ route('master-unsur.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('admin.master-unsur.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     @csrf

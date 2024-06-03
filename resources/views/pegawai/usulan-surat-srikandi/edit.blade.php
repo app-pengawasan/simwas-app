@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <form method="POST" id="logins-part"
-                                action="{{ route('usulan-surat-srikandi.update', $usulanSuratSrikandi->id) }}"
+                                action="{{ route('pegawai.usulan-surat-srikandi.update', $usulanSuratSrikandi->id) }}"
                                 class="needs-validation" novalidate enctype="multipart/form-data">
                                 @csrf
                                 @method('PATCH')

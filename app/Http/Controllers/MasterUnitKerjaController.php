@@ -162,14 +162,27 @@ class MasterUnitKerjaController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        MasterObjek::destroy($id);
-        $request->session()->put('status', 'Berhasil menghapus data Unit Kerja.');
-        $request->session()->put('alert-type', 'success');
+        try {
+            MasterObjek::destroy($id);
+            $request->session()->put('status', 'Berhasil menghapus data Unit Kerja.');
+            $request->session()->put('alert-type', 'success');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil menghapus data Unit Kerja',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus data Unit Kerja',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menghapus data Unit Kerja, data masih digunakan pada data lain.',
+                ], 409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data Unit Kerja',
+            ], 500);
+        }
     }
 
     /**

@@ -118,13 +118,13 @@
                                                 Buka Link Srikandi</a>
                                         </td>
                                         <td>
-                                            <a href="{{ route('surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
+                                            <a href="{{ route('sekretaris.surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye
                                                 "></i>
                                                 Detail
                                             </a>
-                                            <a href="{{ route('surat-srikandi.download', $usulan->id_usulan_surat_srikandi) }}"
+                                            <a href="{{ route('sekretaris.surat-srikandi.download', $usulan->id_usulan_surat_srikandi) }}"
                                                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                                                 data-placement="top" title="Download Surat Srikandi">
                                                 <i class="fa-solid fa-file-pdf"></i>

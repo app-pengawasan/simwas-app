@@ -15,6 +15,6 @@ class EksternalSeeder extends Seeder
      */
     public function run()
     {
-        Eksternal::factory(20)->create();
+        // Eksternal::factory(20)->create();
     }
 }

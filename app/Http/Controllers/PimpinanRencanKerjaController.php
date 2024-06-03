@@ -171,7 +171,7 @@ class PimpinanRencanKerjaController extends Controller
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $masterHasil = MasterHasil::all();
+        // $masterHasil = MasterHasil::all();
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
 
@@ -182,7 +182,7 @@ class PimpinanRencanKerjaController extends Controller
             'masterTujuan'  => $masterTujuan,
             'masterSasaran' => $masterSasaran,
             'masterIku'     => $masterIku,
-            'masterHasil'   => $masterHasil,
+            // 'masterHasil'   => $masterHasil,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,
             'satuan'        => $this->satuan,

@@ -187,18 +187,6 @@
                         </div>
                         <div class="row mb-4 pb0">
                             <div class="col-md-12">
-                                {{-- @if ($timKerja->status <div 2 || $timKerja->status == 3)
-                                    <button id="btn-modal-create-tugas" class="btn btn-primary" type="button"
-                                        data-toggle="modal" data-target="#modal-create-tugas">
-                                        <i class="fas fa-plus-circle"></i>
-                                        Tugas
-                                    </button>
-                                    @endif --}}
-                                {{-- @if ($timKerja->status != 0)
-                                <button class="btn btn-warning" data-toggle="modal" data-target="#modal-summary">
-                                    <i class="fas fa-receipt"></i> Ringkasan
-                                </button>
-                                @endif --}}
                                 @if ($timKerja->status < 2 || $timKerja->status == 3)
                                     <button class="btn btn-success float-right btn-xl mt-4 text-bold"
                                         id="btn-send-rencana-kerja">
@@ -206,47 +194,18 @@
                                     </button>
                                     @endif
                             </div>
-                            {{-- <div class="row mb-4 pb-0">
-                                <div class="col-md-12">
-                                    <h5>Tugas</h5>
-                                    <ol>
-                                        @foreach ($rencanaKerja as $tugas)
-                                        <li class="my-2">
-                                            {{ $tugas->tugas }}
-                            @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                <a href="/ketua-tim/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
-                                    class="btn btn-warning edit-btn">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="javascript(0)" class="btn btn-danger delete-btn"
-                                    data-id="{{ $tugas->id_rencanakerja }}">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                                @endif
-                                </li>
-                                @endforeach
-                                </ol>
                         </div>
-                    </div> --}}
-                </div>
-                <div class="card-footer">
+                        <div class="card-footer">
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-        </div>
-</div>
-</section>
+    </section>
 </div>
 @endsection
 
 @push('scripts')
-<!-- JS Libraies -->
-{{-- <script src="{{ asset('library/simpleweather/jquery.simpleWeather.min.js') }}"></script>
-<script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('library/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-<script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
-<script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script> --}}
 <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -262,8 +221,6 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-
-<!-- Page Specific JS File -->
 <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
 <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
 <script>

@@ -67,9 +67,9 @@ class PenilaianBerjenjangController extends Controller
         //tugas penilai
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
             ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->where('status', 6);
+                $query->whereIn('status', [4,5]);
             })->select('id_rencanakerja', 'pt_jabatan');
-        
+
         //tugas jenjang di bawahnya
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {
                 $join->on('pelaksana_tugas.id_rencanakerja', '=', 'penilai.id_rencanakerja');
@@ -79,18 +79,18 @@ class PenilaianBerjenjangController extends Controller
                     '(
                         CASE
                             when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan between 2 and 3
-                            else pelaksana_tugas.pt_jabatan = 4 
+                            else pelaksana_tugas.pt_jabatan = 4
                         end
                     )'
                 )
             ->select('id_pelaksana');
-        
+
         //realisasi untuk dinilai
         $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->where('status', 1)->get();
         $realisasiWithEvents = RealisasiKinerja::whereIn('events.id_pelaksana', $tugasDinilai)->where('status', 1)
                                 ->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
                                 ->get();
-        
+
         //realisasi berstatus selesai group by bulan dan tahun realisasi, diambil id_pelaksana nya
         $pelaksanaDinilai = $realisasiDinilai->groupBy([function ($items){
             return date("Y",strtotime($items->updated_at));
@@ -100,7 +100,7 @@ class PenilaianBerjenjangController extends Controller
 
         $realisasiCount = [];
 
-        foreach ($pelaksanaDinilai as $tahun => $bulanitems) { 
+        foreach ($pelaksanaDinilai as $tahun => $bulanitems) {
             foreach ($bulanitems as $bulan => $items) {
                 foreach ($items as $id_pelaksana) {
                     $realisasi = $realisasiWithEvents->where('id_pelaksana', $id_pelaksana);
@@ -141,7 +141,7 @@ class PenilaianBerjenjangController extends Controller
                                 'count_all' => $items->count(),
                                 'avg' => $items->groupBy(function ($item) { //rata rata nilai per bulan
                                                             return date("m",strtotime($item->updated_at));
-                                                        })->map->avg->map->nilai->toArray(), 
+                                                        })->map->avg->map->nilai->toArray(),
                                 'avg_all' => $items->avg->nilai,
                                 'rencana_jam' => $items->groupBy(function ($item) {
                                                                 return date("m",strtotime($item->updated_at));
@@ -158,14 +158,14 @@ class PenilaianBerjenjangController extends Controller
 
         if (!empty($tugasCount)) {
             $tugasCount = array_replace_recursive($tugasCount, $realisasiCount);
-            foreach ($tugasCount as &$count) { 
+            foreach ($tugasCount as &$count) {
                 foreach ($count as $tahun => $values) {
                     $count[$tahun]['count']['all'] = $count[$tahun]['count_all'];
                     $count[$tahun]['avg']['all'] = $count[$tahun]['avg_all'];
                     $count[$tahun]['rencana_jam']['all'] = $count[$tahun]['rencana_jam_all'];
                 }
-            } 
-        } 
+            }
+        }
 
         return view('pegawai.penilaian-berjenjang.index', [
             'type_menu' => 'realisasi-kinerja',
@@ -218,9 +218,9 @@ class PenilaianBerjenjangController extends Controller
         //tugas penilai
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
             ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->where('status', 6);
+                $query->whereIn('status', [4,5]);
             })->select('id_rencanakerja', 'pt_jabatan');
-        
+
         //tugas yang akan dinilai
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {
                 $join->on('pelaksana_tugas.id_rencanakerja', '=', 'penilai.id_rencanakerja');
@@ -231,12 +231,12 @@ class PenilaianBerjenjangController extends Controller
                     '(
                         CASE
                             when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan between 2 and 3
-                            else pelaksana_tugas.pt_jabatan = 4 
+                            else pelaksana_tugas.pt_jabatan = 4
                         end
                     )'
                 )
             ->select('id_pelaksana');
-        
+
         //realisasi untuk dinilai
         if ($bulan == 'all') {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)
@@ -244,7 +244,7 @@ class PenilaianBerjenjangController extends Controller
         } else {
             $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->where('status', 1)
                                 ->whereYear('updated_at', $tahun)->whereMonth('updated_at', $bulan)->get();
-        } 
+        }
         $realisasiDinilaiAll = Event::whereIn('id_pelaksana', $tugasDinilai)->get();
 
         $jamRealisasi = $realisasiDinilaiAll->groupBy('id_pelaksana')
@@ -309,7 +309,7 @@ class PenilaianBerjenjangController extends Controller
             'events'        => $events
             ])
             ->with('realisasi', $realisasi);
-    }    
+    }
 
     // /**
     //  * Show the form for editing the specified resource.

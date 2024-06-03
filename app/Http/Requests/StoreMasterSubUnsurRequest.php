@@ -28,4 +28,11 @@ class StoreMasterSubUnsurRequest extends FormRequest
             'masterUnsurId' => 'required',
         ];
     }
+    public function messages()
+    {
+        return [
+            'namaSubUnsur.required' => 'Nama Sub Unsur tidak boleh kosong',
+            'masterUnsurId.required' => 'Unsur tidak boleh kosong',
+        ];
+    }
 }

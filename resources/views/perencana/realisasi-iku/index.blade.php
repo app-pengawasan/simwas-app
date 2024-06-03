@@ -111,16 +111,16 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('realisasi-iku-unit-kerja.show', $ti->id) }}"
+                                            <a href="{{ route('perencana.realisasi-iku-unit-kerja.show', $ti->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @if ($ti->status == '2')
-                                            <a href="{{ route('realisasi-iku-unit-kerja.edit', $ti->id) }}"
+                                            <a href="{{ route('perencana.realisasi-iku-unit-kerja.edit', $ti->id) }}"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
+                                            <form action="{{ route('perencana.target-iku-unit-kerja.status', $ti->id) }}"
                                                 method="post" class="d-inline submit-button">
                                                 @csrf
                                                 @method('put')

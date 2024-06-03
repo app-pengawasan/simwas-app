@@ -15,6 +15,6 @@ class StpdSeeder extends Seeder
      */
     public function run()
     {
-        Stpd::factory(20)->create();
+        // Stpd::factory(20)->create();
     }
 }

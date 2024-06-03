@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('anggaran_rencana_kerjas', function (Blueprint $table) {
             $table->ulid('id_rkanggaran')->unique()->primary()->default(Ulid::generate());
-            $table->string('id_rencanakerja');
+            $table->ulid('id_rencanakerja');
+            $table->foreign('id_rencanakerja')->references('id_rencanakerja')->on('rencana_kerjas')->onDelete('cascade');
             $table->string('uraian');
             $table->string('satuan');
             $table->integer('volume');

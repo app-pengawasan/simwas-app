@@ -260,13 +260,26 @@ class MasterPegawaiController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::where('id', $id)->first();
-        $user->stPp()->delete();
-        $user->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
-        ]);
+
+        try {
+            $user = User::where('id', $id)->first();
+            $user->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Dihapus!',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success' => false,
+                    'message' => "Data masih terhubung dengan data lain!"
+                ], 409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Gagal Dihapus!',
+            ], 409);
+        }
     }
 
     /**

@@ -25,23 +25,27 @@ class KetuaTimRencanaKerjaController extends Controller
     ];
 
     protected $statusTim = [
+        // Pegawai Buat Tim
         0   => 'Belum Disusun',
+        // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
+        // Ketua Tim Kirim Rencana Kinerja ke Admin
         2   => 'Menunggu Reviu',
+        // Ditolak Admin
         3   => 'Perlu Perbaikan',
-        4   => 'Dalam Perbaikan',
-        5   => 'Diajukan',
-        6   => 'Disetujui',
+        // Diperbaiki Ketua Tim
+        4   => 'Disetujui',
+        // Disetujui Admin Sudah di Lock
+        5   => 'Disetujui',
     ];
 
     protected $colorText = [
         0   => 'dark',
-        1   => 'warning',
+        1   => 'info',
         2   => 'primary',
         3   => 'warning',
-        4   => 'warning',
-        5   => 'primary',
-        6   => 'success',
+        4   => 'success',
+        5   => 'success',
     ];
 
     protected $unsur = [
@@ -198,11 +202,15 @@ class KetuaTimRencanaKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
+        $ketuaTim = $timKerja[0]->id_ketua;
+        $userLogin = auth()->user()->id;
+        if ($ketuaTim != $userLogin) {
+            abort(403);
+        }
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $masterHasil = MasterHasil::all();
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
         $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
 
@@ -212,7 +220,6 @@ class KetuaTimRencanaKerjaController extends Controller
             'masterTujuan'  => $masterTujuan,
             'masterSasaran' => $masterSasaran,
             'masterIku'     => $masterIku,
-            'masterHasil'   => $masterHasil,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,
             'satuan'        => $this->satuan,

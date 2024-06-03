@@ -177,7 +177,7 @@
                                                 </td>
                                                 @endif
                                                 <td>
-                                                    <a href="{{ route('usulan-norma-hasil.show', $un->id) }}"
+                                                    <a href="{{ route('ketua-tim.usulan-norma-hasil.show', $un->id) }}"
                                                         class="btn btn-primary btn-sm">
                                                         <i class="fas fa-eye
                                                     "></i>

@@ -49,7 +49,7 @@
             <h1>Form Evaluasi IKU</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('evaluasi-iku-unit-kerja.index') }}">Evaluasi
+                <div class="breadcrumb-item active"><a href="{{ route('perencana.evaluasi-iku-unit-kerja.index') }}">Evaluasi
                         IKU Unit Kerja</a></div>
                 <div class="breadcrumb-item">Buat Evaluasi IKU Unit Kerja</div>
             </div>
@@ -60,7 +60,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h1 class="h4 text-dark mb-4 header-card">Data Evaluasi IKU Unit Kerja</h1>
-                            <form action="{{ route('evaluasi-iku-unit-kerja.store') }}" method="post"
+                            <form action="{{ route('perencana.evaluasi-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">

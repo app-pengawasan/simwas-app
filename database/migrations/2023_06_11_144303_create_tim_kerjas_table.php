@@ -18,8 +18,10 @@ return new class extends Migration
             $table->ulid('id_timkerja')->unique()->primary()->default(Ulid::generate());
             $table->string('nama');
             $table->string('unitkerja');
-            $table->string('id_iku');
-            $table->string('id_ketua');
+            $table->ulid('id_iku');
+            $table->foreign('id_iku')->references('id_iku')->on('master_iku')->onDelete('restrict');
+            $table->ulid('id_ketua');
+            $table->foreign('id_ketua')->references('id')->on('users')->onDelete('restrict');
             $table->integer('status')->default(0);
             $table->year('tahun');
             $table->timestamps();

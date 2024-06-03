@@ -71,10 +71,12 @@ class ProyekController extends Controller
         $timKerja = $proyek->timKerja;
         $masterHasil = MasterHasilKerja::all();
         $rencanaKerjas = $proyek->rencanaKerja;
-        // dd($timKerja);
-        // dd($proyek);
-        // dd($masterHasil);
-        // dd($rencanaKerjas);
+
+        $userLogin = auth()->user()->id;
+        $ketuaTim = $timKerja->id_ketua;
+        if ($ketuaTim != $userLogin) {
+            abort(403);
+        }
         return view('pegawai.rencana-kinerja.proyek.show', [
             'proyek' => $proyek,
             'timKerja' => $timKerja,

@@ -65,7 +65,7 @@ class TimKendaliMutuController extends Controller
         $id_pegawai = auth()->user()->id;
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->where('status', 6);
+                        $query->whereIn('status', [4,5]);
                     })->get();
         $dokumen = KendaliMutuTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))->get();
         return view('pegawai.tugas-tim.km.index', [
@@ -198,7 +198,7 @@ class TimKendaliMutuController extends Controller
         File::delete(public_path().'/'.$path_old);
 
         if (isset($validateData['edit-file'])) {
-            $file = $request->file('edit-file'); 
+            $file = $request->file('edit-file');
             $fileName = time() . '-kendali-mutu.' . $file->getClientOriginalExtension();
             $path = public_path('storage/tim/km');
             $file->move($path, $fileName);

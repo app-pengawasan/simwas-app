@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('pagu_anggarans', function (Blueprint $table) {
             $table->ulid('id_panggaran')->unique()->primary()->default(Ulid::generate());
-            $table->foreignUlid('id_manggaran')->references('id_manggaran')->on('master_anggarans');
+            $table->foreignUlid('id_manggaran')->references('id_manggaran')->on('master_anggarans')->onDelete('restrict');
             $table->year('tahun');
             $table->string('komponen');
             $table->string('akun');

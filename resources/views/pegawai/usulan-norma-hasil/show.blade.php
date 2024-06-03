@@ -72,7 +72,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <a class="btn btn-outline-primary" href="{{ route('usulan-norma-hasil.index') }}">
+                        <a class="btn btn-outline-primary" href="{{ route('ketua-tim.usulan-norma-hasil.index') }}">
                             <i class="fas fa-arrow-left mr-1"></i> Kembali
                         </a>
                         @include('components.timeline.timeline-steps')
@@ -116,14 +116,29 @@
                             <tr>
                                 <th>Draft Norma Hasil:</th>
                                 <td>
-                                    <a target="blank" href="{{ asset($usulan->document_path) }}"
-                                        class="badge btn-primary" download><i class="fa fa-download"></i>
-                                        Download</a>
+                                    <a target="blank" href="{{ $usulan->document_path }}" class="badge btn-primary"
+                                        download>
+                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
+                                        Buka Draft Norma Hasil
+                                    </a>
                                 </td>
                             </tr>
+                            @if ( $usulan->status_norma_hasil == 'disetujui' &&
+                            $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui')
+                            <tr>
+                                <th>Laporan Norma Hasil:</th>
+                                <td>
+                                    <a target="blank" href="{{ asset($usulan->normaHasilAccepted->laporan_path) }}"
+                                        class="badge btn-primary" download><i class="fa fa-download"></i> Download</a>
+                                </td>
+                            </tr>
+                            @endif
                             <tr>
                                 <th>Objek:</th>
                                 <td class="py-2">
+                                    @if ($objek->count() == 0)
+                                    <span>-</span>
+                                    @endif
                                     @foreach ($objek as $objek)
                                     <li>{{ $objek->masterObjek->nama }}
                                         @endforeach
@@ -178,7 +193,7 @@
                                 data-target="#staticBackdrop">
                                 <i class="fa-regular fa-circle-xmark mr-1"></i>Tolak
                             </button>
-                            <form id="setujui" action="{{ route('usulan-norma-hasil.store', $usulan->id) }}"
+                            <form id="setujui" action="{{ route('ketua-tim.usulan-norma-hasil.store', $usulan->id) }}"
                                 method="post">
                                 @csrf
                                 @method('POST')

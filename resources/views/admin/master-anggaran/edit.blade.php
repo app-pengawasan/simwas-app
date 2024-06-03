@@ -16,7 +16,7 @@
             <h1>Form Edit Master Anggaran</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
+                <div class="breadcrumb-item active"><a href="{{ route('admin.master-anggaran.index') }}">Master Anggaran</a>
                 </div>
                 <div class="breadcrumb-item">Edit Master Anggaran</div>
             </div>
@@ -25,7 +25,7 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('master-anggaran.update', $masterAnggaran) }}"
+                        <form method="POST" action="{{ route('admin.master-anggaran.update', $masterAnggaran) }}"
                             class="needs-validation" novalidate="">
                             @csrf
                             @method('put')

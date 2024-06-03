@@ -53,4 +53,4 @@ Berikut adalah langkah-langkah untuk memulai development aplikasi:
 
 ## Lisensi
 
-Aplikasi ini dilindungi oleh [Hak Cipta (c) 2024](https://dgip.go.id/menu-utama/hak-cipta/pengenalan) oleh [Badan Pusat Statistik](https://www.bps.go.id/id).
+Aplikasi ini dilindungi oleh [Hak Cipta (c) 2024](https://dgip.go.id/menu-utama/hak-cipta/pengenalan) oleh [Politeknik Statistika](https://stis.ac.id).
