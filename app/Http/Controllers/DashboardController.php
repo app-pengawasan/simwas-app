@@ -163,25 +163,25 @@ class DashboardController extends Controller
     function inspektur() {
         $this->authorize('inspektur');
         // $stk = StKinerja::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stk_sum = StKinerja::whereHas('rencanaKerja.proyek.timkerja', function ($query) {
-            $query->where('unitkerja', auth()->user()->unit_kerja);
-        })->count();
-        $stk_need_approval = StKinerja::where('status', 0)->whereHas('rencanaKerja.proyek.timkerja', function ($query) {
-            $query->where('unitkerja', auth()->user()->unit_kerja);
-        })->count();
-        $stp_sum = Stp::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stp_need_approval = Stp::where('status', 3)->where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stpd_sum = Stpd::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stpd_need_approval = Stpd::where('status', 0)->where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stk_sum = StKinerja::whereHas('rencanaKerja.proyek.timkerja', function ($query) {
+        //     $query->where('unitkerja', auth()->user()->unit_kerja);
+        // })->count();
+        // $stk_need_approval = StKinerja::where('status', 0)->whereHas('rencanaKerja.proyek.timkerja', function ($query) {
+        //     $query->where('unitkerja', auth()->user()->unit_kerja);
+        // })->count();
+        // $stp_sum = Stp::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stp_need_approval = Stp::where('status', 3)->where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stpd_sum = Stpd::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stpd_need_approval = Stpd::where('status', 0)->where('unit_kerja', auth()->user()->unit_kerja)->count();
 
 
         return view('inspektur.index', [
-            "stk_sum" => $stk_sum,
-            "stk_need_approval" => $stk_need_approval,
-            "stp_sum" => $stp_sum,
-            "stp_need_approval" => $stp_need_approval,
-            "stpd_sum" => $stpd_sum,
-            "stpd_need_approval" => $stpd_need_approval
+            // "stk_sum" => $stk_sum,
+            // "stk_need_approval" => $stk_need_approval,
+            // "stp_sum" => $stp_sum,
+            // "stp_need_approval" => $stp_need_approval,
+            // "stpd_sum" => $stpd_sum,
+            // "stpd_need_approval" => $stpd_need_approval
         ]);
     }
 

@@ -47,10 +47,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="edit-ketua">Ketua Tim Kerja</label>
+                        <label class="form-label" for="edit-ketua">Penanggung Jawab Kegiatan</label>
                         <div class="">
                             <select class="form-control select2" name="edit-ketua" id="edit-ketua" required>
-                                <option value="" selected disabled>Pilih Ketua Tim</option>
+                                <option value="" selected disabled>Pilih Penanggung Jawab Kegiatan</option>
                                 @foreach ($pegawai as $p)
                                 <option value="{{ $p->id }}">{{ $p->name }}</option>
                                 @endforeach

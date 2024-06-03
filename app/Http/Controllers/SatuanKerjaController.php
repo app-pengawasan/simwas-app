@@ -154,13 +154,26 @@ class SatuanKerjaController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        MasterObjek::destroy($id);
-        $request->session()->put('status', 'Berhasil menghapus data Satuan Kerja.');
-        $request->session()->put('alert-type', 'success');
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Satuan Kerja Berhasil Dihapus!.',
-        ]);
+        try {
+            MasterObjek::destroy($id);
+            $request->session()->put('status', 'Berhasil menghapus data Satuan Kerja.');
+            $request->session()->put('alert-type', 'success');
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Satuan Kerja Berhasil Dihapus!.',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data masih terkait dengan data lain.',
+                ],409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Satuan Kerja Gagal Dihapus!.',
+            ], 500);
+        }
     }
 
     public function import(Request $request)

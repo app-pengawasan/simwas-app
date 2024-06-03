@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('jumlah_objek');
             $table->string('nama_kegiatan', 100);
             $table->string('status', 100);
-            $table->string('user_id', 100);
+            $table->ulid('user_id', 100);
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

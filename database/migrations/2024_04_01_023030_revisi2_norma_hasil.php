@@ -16,7 +16,7 @@ return new class extends Migration
 
         // add rencana_kerja_id to usulan_surat_srikandis
         Schema::table('usulan_surat_srikandis', function (Blueprint $table) {
-            $table->string('rencana_kerja_id')->nullable();
+            $table->ulid('rencana_kerja_id')->nullable();
             $table->foreign('rencana_kerja_id')->references('id_rencanakerja')->on('rencana_kerjas');
         });
     }

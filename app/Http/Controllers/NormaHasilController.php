@@ -155,7 +155,6 @@ class NormaHasilController extends Controller
             }
             return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return redirect('pegawai/norma-hasil')->with('error', 'Gagal mengajukan usulan norma hasil!');
         }
 

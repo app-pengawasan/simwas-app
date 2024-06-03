@@ -186,10 +186,23 @@ class PaguAnggaranController extends Controller
      */
     public function destroy(PaguAnggaran $paguAnggaran)
     {
-        PaguAnggaran::destroy($paguAnggaran->id_panggaran);
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
-        ]);
+        try {
+            PaguAnggaran::destroy($paguAnggaran->id_panggaran);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Dihapus!',
+            ]);
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1451) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data Gagal Dihapus! Data masih digunakan di tabel lain.',
+                ]);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Gagal Dihapus!',
+            ]);
+        }
     }
 }

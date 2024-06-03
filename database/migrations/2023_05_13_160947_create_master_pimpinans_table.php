@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('master_pimpinans', function (Blueprint $table) {
             $table->ulid('id_pimpinan')->unique()->primary()->default(Ulid::generate());
             $table->ulid('id_user');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->string('jabatan', 6);
             $table->date('mulai');
             $table->date('selesai');

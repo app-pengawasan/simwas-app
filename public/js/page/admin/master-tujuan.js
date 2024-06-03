@@ -88,6 +88,15 @@ $(".submit-btn").on("click", function (e) {
     let tahun_mulai = $("#create-tahun_mulai").val();
     let tahun_selesai = $("#create-tahun_selesai").val();
     let tujuan = $("#create-tujuan").val();
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/admin/master-tujuan`,
@@ -110,7 +119,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            Swal.close();
         },
     });
 });
@@ -147,7 +156,15 @@ $("#btn-edit-submit").on("click", function (e) {
     let tahun_mulai = $("#edit-tahun_mulai").val();
     let tahun_selesai = $("#edit-tahun_selesai").val();
     let tujuan = $("#edit-tujuan").val();
-
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
     $.ajax({
         url: `/admin/master-tujuan/${id_tujuan}`,
         type: "PUT",
@@ -173,6 +190,7 @@ $("#btn-edit-submit").on("click", function (e) {
                     errorMessage.innerText = `${value}`;
                 }
             });
+            Swal.close();
         },
     });
 });

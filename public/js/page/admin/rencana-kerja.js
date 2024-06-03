@@ -135,6 +135,15 @@ $(".submit-btn").on("click", function (e) {
     $("#error-ketua").text("");
 
     // return alert([tahun, unitkerja, iku, nama, ketua]);
+     Swal.fire({
+         title: "Menyimpan Data",
+         html: "Mohon tunggu sebentar",
+         timerProgressBar: true,
+         didOpen: () => {
+             Swal.showLoading();
+         },
+         allowOutsideClick: () => !Swal.isLoading(),
+     });
 
     $.ajax({
         url: `/admin/tim-kerja`,
@@ -150,6 +159,7 @@ $(".submit-btn").on("click", function (e) {
             operator: operator,
         },
         success: function (response) {
+            Swal.close();
             location.reload();
         },
         error: function (error) {
@@ -160,7 +170,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            Swal.close();
         },
     });
 });

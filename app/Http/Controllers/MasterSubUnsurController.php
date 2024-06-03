@@ -117,8 +117,11 @@ class MasterSubUnsurController extends Controller
         try {
             MasterSubUnsur::destroy($masterSubUnsur);
             return redirect()->route('admin.master-subunsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.master-subunsur.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1451) {
+                return redirect()->route('admin.master-subunsur.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+            }
+            return redirect()->route('admin.master-subunsur.index')->with('status', 'Data gagal dihapus')->with('alert-type', 'danger');
         }
     }
     // api request

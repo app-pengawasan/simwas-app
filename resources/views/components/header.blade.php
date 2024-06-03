@@ -19,7 +19,11 @@
                 <a href="#" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
+                @if (auth()->user()->is_admin || auth()->user()->is_sekma || auth()->user()->is_sekwil ||
+                auth()->user()->is_aktif || auth()->user()->is_analissdm || auth()->user()->is_perencana ||
+                auth()->user()->is_arsiparis)
                 <div class="dropdown-divider"></div>
+                @endif
                 @if (auth()->user()->is_admin)
                 <a href="{{ route('admin.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Admin

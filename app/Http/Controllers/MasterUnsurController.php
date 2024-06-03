@@ -117,7 +117,10 @@ class MasterUnsurController extends Controller
             $masterUnsur->delete();
             return redirect()->route('admin.master-unsur.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
         } catch (\Throwable $th) {
-            return redirect()->route('admin.master-unsur.index')->with('status', 'Data gagal dihapus, data masih berhubungan dengan data lain')->with('alert-type', 'danger');
+            if ($th->errorInfo[1] == 1451) {
+                return redirect()->route('admin.master-unsur.index')->with('status', 'Data gagal dihapus, data masih berhubungan dengan data lain')->with('alert-type', 'danger');
+            }
+            return redirect()->route('admin.master-unsur.index')->with('status', 'Data gagal dihapus')->with('alert-type', 'danger');
         }
     }
 

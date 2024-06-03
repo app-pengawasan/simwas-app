@@ -101,7 +101,7 @@
                                 {{-- upload word Laporan --}}
                                 <div class="form-group
                                         @if ($errors->has('file')) is-invalid @endif">
-                                    <label for="url_norma_hasil">Upload Dokumen</label>
+                                    <label for="url_norma_hasil">Link Dokumen</label>
                                     <input placeholder="Masukkan URL/Link dokumen" type="url" id="file"
                                         name="url_norma_hasil" class="form-control" required>
                                     @if ($errors->has('url_norma_hasil'))

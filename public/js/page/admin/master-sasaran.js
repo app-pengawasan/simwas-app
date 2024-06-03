@@ -87,7 +87,15 @@ $(".submit-btn").on("click", function (e) {
 
     let tujuan = $("#create-tujuan option:selected").val();
     let sasaran = $("#create-sasaran").val();
-
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
     $.ajax({
         url: `/admin/master-sasaran`,
         type: "POST",
@@ -109,7 +117,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            Swal.close();
         },
     });
 });

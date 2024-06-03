@@ -2,35 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PpController;
-use App\Http\Controllers\SlController;
-use App\Http\Controllers\StpController;
-use App\Http\Controllers\StpdController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
-use App\Http\Controllers\KirimController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\NamaPpController;
 use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
-use App\Http\Controllers\SlSekreController;
 use App\Http\Controllers\TimKerjaController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EksternalController;
 use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\RealisasiController;
-use App\Http\Controllers\StKinerjaController;
 use App\Http\Controllers\NomorSuratController;
 use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\MasterHasilController;
 use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\SatuanKerjaController;
-use App\Http\Controllers\InspekturStpController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\PegawaiTugasController;
 use App\Http\Controllers\WilayahKerjaController;
-use App\Http\Controllers\InspekturStpdController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
@@ -46,13 +36,11 @@ use App\Http\Controllers\TimKendaliMutuController;
 use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\DataKepegawaianController;
 use App\Http\Controllers\MasterUnitKerjaController;
-use App\Http\Controllers\NormaHasilSekreController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
 use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\PegawaiKompetensiController;
-use App\Http\Controllers\InspekturStKinerjaController;
 use App\Http\Controllers\NormaHasilAcceptedController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
 use App\Http\Controllers\ArsiparisNormaHasilController;
@@ -98,6 +86,8 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 
 
 
+
+
 /**
      * ---------------------------------------------------------------------------
      * PERLU AUTENTIKASI/LOGIN
@@ -106,13 +96,14 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 
 Route::group(['middleware'=>'auth'], function(){
 
+
+
     /**
      * ---------------------------------------------------------------------------
      * ADMIN
      * ---------------------------------------------------------------------------
      * */
     Route::prefix('admin')->name('admin.')->group(function () {
-
         Route::get('/', [DashboardController::class, 'admin'])->name('dashboard');
 
         //Master Anggaran & Pagu Anggaran
@@ -140,7 +131,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('master-unit-kerja/import', [MasterUnitKerjaController::class, 'import']);
         Route::resource('master-satuan-kerja', SatuanKerjaController::class);
         Route::post('master-satuan-kerja/import', [SatuanKerjaController::class, 'import']);
-        Route::resource('/admin/master-wilayah-kerja', WilayahKerjaController::class);
+        Route::resource('master-wilayah-kerja', WilayahKerjaController::class);
         Route::post('master-wilayah-kerja/import', [WilayahKerjaController::class, 'import']);
         Route::resource('objek-kegiatan', ObjekKegiatanController::class);
         Route::get('objek-kegiatan/count/{id}', [ObjekKegiatanController::class, 'unitkerja']);

@@ -57,7 +57,6 @@ class MasterHasilKerjaController extends Controller
             ]);
             return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
         } catch (\Throwable $th) {
-            dd($th->errorInfo[1]);
             if ($th->errorInfo[1] == 1062) {
                 return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data gagal ditambahkan, data sudah ada')->with('alert-type', 'danger');
             } else {
@@ -127,8 +126,16 @@ class MasterHasilKerjaController extends Controller
      */
     public function destroy(MasterHasilKerja $masterHasilKerja)
     {
-        $masterHasilKerja->delete();
+        try {
+            $masterHasilKerja->delete();
         return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            if ($th->errorInfo[1] == 1451) {
+                return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+            }
+            return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data gagal dihapus')->with('alert-type', 'danger');
+        }
+
     }
 
     public function showMasterHasilKerja($id)

@@ -100,7 +100,7 @@ class PegawaiRencanaKerjaController extends Controller
     ];
 
     protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -119,7 +119,7 @@ class PegawaiRencanaKerjaController extends Controller
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
             ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->where('status', 6);
+                $query->whereIn('status', [4,5]);
             })->selectRaw('*, '.implode('+', $bulans).' as total')->get();
 
         // return [$tugasSaya, $id_pegawai];
@@ -277,7 +277,7 @@ class PegawaiRencanaKerjaController extends Controller
 
         $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
                 ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                    $query->where('status', 6)->where('tahun', $year);
+                    $query->whereIn('status', [4,5])->where('tahun', $year);
                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
                   ->get();
 

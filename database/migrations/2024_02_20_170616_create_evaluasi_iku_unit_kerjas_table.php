@@ -16,12 +16,12 @@ return new class extends Migration
     {
         Schema::create('evaluasi_iku_unit_kerjas', function (Blueprint $table) {
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
-            $table->string('id_target_iku_unit_kerja', 100);
+            $table->ulid('id_target_iku_unit_kerja', 100);
             $table->foreign('id_target_iku_unit_kerja')->references('id')->on('target_iku_unit_kerjas');
             $table->string('kendala', 255);
             $table->string('solusi', 255);
             $table->string('tindak_lanjut', 255);
-            $table->string('id_pic', 255);
+            $table->ulid('id_pic', 255);
             $table->foreign('id_pic')->references('id')->on('users');
             // batas waktu tindak lanjut
             $table->timestamp('batas_waktu_tindak_lanjut');

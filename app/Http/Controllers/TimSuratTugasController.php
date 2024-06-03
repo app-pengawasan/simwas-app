@@ -64,7 +64,7 @@ class TimSuratTugasController extends Controller
         $id_pegawai = auth()->user()->id;
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->where('status', 6);
+                        $query->whereIn('status', [4,5]);
                     })->get();
         $surat = SuratTugasTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                 ->get()->groupBy('nomor');
@@ -194,7 +194,7 @@ class TimSuratTugasController extends Controller
         $path_old = $surat->get()->first()->path;
         File::delete(public_path().'/'.$path_old);
 
-        $file = $request->file('file'); 
+        $file = $request->file('file');
         $fileName = time() . '-surat-tugas.' . $file->getClientOriginalExtension();
         $path = public_path('storage/tim/st');
         $file->move($path, $fileName);

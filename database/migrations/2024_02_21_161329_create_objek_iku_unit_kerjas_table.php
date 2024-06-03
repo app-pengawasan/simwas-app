@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
             $table->string('satuan', 100);
-            $table->string('id_target', 100);
+            $table->ulid('id_target');
             $table->foreign('id_target')->references('id')->on('target_iku_unit_kerjas')->onDelete('cascade');
             $table->integer('nilai_y_target');
             $table->integer('target_triwulan_1');
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->integer('realisasi_triwulan_3')->nullable();
             $table->integer('realisasi_triwulan_4')->nullable();
             $table->string('status', 100);
-            $table->string('user_id', 100);
+            $table->ulid('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

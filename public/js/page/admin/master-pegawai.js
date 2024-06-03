@@ -192,7 +192,7 @@ $(".delete-btn").on("click", function (e) {
                 error: function (error) {
                     Swal.fire({
                         title: "Gagal!",
-                        text: "Data masih terhubung dengan data lain!",
+                        text: `${error.responseJSON.message}`,
                         icon: "error",
                         confirmButtonColor: "var(--primary)",
                     });

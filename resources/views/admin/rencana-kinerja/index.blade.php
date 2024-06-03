@@ -94,7 +94,7 @@
                                         <th>Unit Kerja</th>
                                         <th>IKU</th>
                                         <th>Kegiatan</th>
-                                        <th>Ketua Tim</th>
+                                        <th>PJ Kegiatan</th>
                                         <th>Status</th>
                                         <th style="min-width: 124px">Aksi</th>
                                     </tr>

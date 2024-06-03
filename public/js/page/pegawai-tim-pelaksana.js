@@ -40,6 +40,16 @@ $("#btn-submit-objek").on("click", function (e) {
     $("#error-kategori").text("");
     $("#error-objek").text("");
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/objek-pengawasan`,
         type: "POST",
@@ -63,6 +73,7 @@ $("#btn-submit-objek").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });
@@ -297,6 +308,16 @@ $("#btn-submit-anggaran").on("click", function (e) {
     // disable submit button
     $("#btn-submit-anggaran").prop("disabled", true);
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/anggaran-rencana-kerja`,
         type: "POST",
@@ -329,6 +350,7 @@ $("#btn-submit-anggaran").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });
@@ -548,6 +570,16 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/pelaksana-tugas`,
         type: "POST",
@@ -583,6 +615,7 @@ $("#btn-submit-pelaksana").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });

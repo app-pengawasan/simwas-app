@@ -269,6 +269,12 @@ class MasterPegawaiController extends Controller
                 'message' => 'Data Berhasil Dihapus!',
             ]);
         } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success' => false,
+                    'message' => "Data masih terhubung dengan data lain!"
+                ], 409);
+            }
             return response()->json([
                 'success' => false,
                 'message' => 'Data Gagal Dihapus!',

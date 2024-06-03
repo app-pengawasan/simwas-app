@@ -15,6 +15,6 @@ class StKinerjaSeeder extends Seeder
      */
     public function run()
     {
-        StKinerja::factory(20)->create();
+        // StKinerja::factory(20)->create();
     }
 }

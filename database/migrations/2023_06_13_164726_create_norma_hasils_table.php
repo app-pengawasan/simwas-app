@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('norma_hasils', function (Blueprint $table) {
             $table->ulid('id')->primary()->default(Ulid::generate());
-            $table->string('user_id', 26);
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->boolean('is_backdate');
             $table->date('tanggal')->nullable();
             $table->string('unit_kerja');

@@ -88,6 +88,17 @@ $(".submit-btn").on("click", function (e) {
     let sasaran = $("#create-sasaran").val();
     let iku = $("#create-iku").val();
 
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/admin/master-iku`,
         type: "POST",
@@ -108,6 +119,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });

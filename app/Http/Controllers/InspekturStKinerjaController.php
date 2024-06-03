@@ -165,7 +165,7 @@ class InspekturStKinerjaController extends Controller
     {
         $this->authorize('inspektur');
         $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-            $query->where('status', 6);
+            $query->whereIn('status', [4,5]);
         })->whereHas('pelaksana', function ($query) {
             $query->where('id_pegawai', auth()->user()->id)
                 ->whereIn('pt_jabatan', [2, 3]);
@@ -221,7 +221,7 @@ class InspekturStKinerjaController extends Controller
                     'mulai.after_or_equal' => 'Tanggal mulai harus setelah atau sama dengan hari ini/tanggal surat',
                     'required' => 'Wajib diisi.'
                 ]);
-        
+
                 StKinerja::where('id', $request->input('id'))->update($validatedData);
             }
             $usulan = StKinerja::find($request->input('id'));
@@ -239,7 +239,7 @@ class InspekturStKinerjaController extends Controller
             $buatSurat = new SuratController();
             $buatSurat->store($data);
             $nomorSurat = Surat::latest()->first()->nomor_surat;
-            
+
             // Path untuk menyimpan hasil dokumen
             $tempFilePath = 'storage/temp/temp_file.docx';
             $outputPath = 'st-kinerja'.'/'.$usulan->id.'-draft.docx';
@@ -267,7 +267,7 @@ class InspekturStKinerjaController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkPerseoranganPath);
-                    
+
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
                         'nama' => $pelaksana_tugas->user->name,
@@ -285,7 +285,7 @@ class InspekturStKinerjaController extends Controller
                     // Simpan dokumen hasil
                     $templateProcessor->saveAs('storage/'.$outputPath);
 
-                    
+
                 } else {
                     // Path ke template dokumen .docx
                     $stkPerseoranganPath = 'document/template-dokumen/draft-st-kinerja-perorangan-nonesign.docx';
@@ -309,7 +309,7 @@ class InspekturStKinerjaController extends Controller
                     // Simpan dokumen hasil
                     $templateProcessor->saveAs('storage/'.$outputPath);
                 }
-                
+
             } else {
                 $surat = Surat::where('nomor_surat', $nomorSurat)->first();
 
@@ -330,7 +330,7 @@ class InspekturStKinerjaController extends Controller
                             $newSurat->save();
                         }
                         break;
-                    } 
+                    }
                 }
                 foreach ($pelaksana_tugas as $pel) {
                     if ($pel->pt_jabatan == 2 ) {
@@ -342,7 +342,7 @@ class InspekturStKinerjaController extends Controller
                             $newSurat->save();
                         }
                         break;
-                    } 
+                    }
                 }
                 foreach ($pelaksana_tugas as $pel) {
                     if ($pel->pt_jabatan == 3 ) {
@@ -354,7 +354,7 @@ class InspekturStKinerjaController extends Controller
                             $newSurat->save();
                         }
                         break;
-                    } 
+                    }
                 }
                 foreach ($pelaksana_tugas as $pel) {
                     if ($pel->pt_jabatan == 4 ) {
@@ -374,9 +374,9 @@ class InspekturStKinerjaController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkKolektifPath);
-                    
+
                     $templateProcessor->cloneRowAndSetValues('no', $values);
-                    
+
                     $pimpinan = MasterPimpinan::find($usulan->penandatangan);
                     $templateProcessor->setValues([
                         'no_surat' => $nomorSurat,
@@ -396,7 +396,7 @@ class InspekturStKinerjaController extends Controller
 
                     // Inisialisasi TemplateProcessor dengan template dokumen
                     $templateProcessor = new TemplateProcessor($stkKolektifPath);
-                    
+
                     $templateProcessor->cloneRowAndSetValues('no', $values);
 
                     $templateProcessor->setValues([
@@ -413,7 +413,7 @@ class InspekturStKinerjaController extends Controller
                     $templateProcessor->saveAs(public_path().'/document/storage/'.$outputPath);
                 }
             }
-            
+
             // Simpan PDF ke dalam file
             // $phpWord = IOFactory::load($tempFilePath);
 

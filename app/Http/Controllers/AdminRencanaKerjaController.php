@@ -31,9 +31,9 @@ class AdminRencanaKerjaController extends Controller
         // Ditolak Admin - Perlu Perbaikan
         3   => 'Perlu Perbaikan',
         // Disetjui Admin Belum di Lock
-        4   => 'Disetujui, Belum dikunci',
+        4   => 'Disetujui, 🔓',
         // Disetujui Admin Sudah di Lock
-        5   => 'Disetujui, Sudah dikunci',
+        5   => 'Disetujui, 🔒',
     ];
 
     protected $colorText = [
@@ -175,7 +175,6 @@ class AdminRencanaKerjaController extends Controller
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $masterHasil = MasterHasil::all();
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
 
@@ -186,7 +185,6 @@ class AdminRencanaKerjaController extends Controller
             'masterTujuan'  => $masterTujuan,
             'masterSasaran' => $masterSasaran,
             'masterIku'     => $masterIku,
-            'masterHasil'   => $masterHasil,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,
             'satuan'        => $this->satuan,

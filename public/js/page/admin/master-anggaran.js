@@ -92,7 +92,6 @@ $("#btn-back").on("click", function (e) {
 // Menghapus pegawai
 $(".delete-btn").on("click", function (e) {
     e.preventDefault();
-    console.log("klik");
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
@@ -130,11 +129,10 @@ $(".delete-btn").on("click", function (e) {
                         type: "error",
                         icon: "error",
                         title: "Gagal",
-                        text: "Gagal menghapus data, silahkan hubungi tim TI",
+                        text: `${e.responseJSON.message}`,
                         showConfirmButton: false,
                         timer: 3000,
                     });
-                    console.log(e);
                 },
             });
         }

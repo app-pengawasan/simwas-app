@@ -15,17 +15,17 @@ class KkaSeeder extends Seeder
      */
     public function run()
     {
-        Kka::create([
-            'kode' => 'PW.110',
-            'is_aktif' => true
-        ]);
-        Kka::create([
-            'kode' => 'PW.120',
-            'is_aktif' => true
-        ]);
-        Kka::create([
-            'kode' => 'KP.310',
-            'is_aktif' => true
-        ]);
+        // Kka::create([
+        //     'kode' => 'PW.110',
+        //     'is_aktif' => true
+        // ]);
+        // Kka::create([
+        //     'kode' => 'PW.120',
+        //     'is_aktif' => true
+        // ]);
+        // Kka::create([
+        //     'kode' => 'KP.310',
+        //     'is_aktif' => true
+        // ]);
     }
 }

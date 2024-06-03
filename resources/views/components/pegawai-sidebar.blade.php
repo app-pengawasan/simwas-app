@@ -32,7 +32,7 @@
                     <li
                         class="{{ Request::is('ketua-tim/rencana-kinerja') || Request::is('ketua-tim/rencana-kinerja/*') || Request::is('ketua-tim/tim-pelaksana/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/ketua-tim/rencana-kinerja">
-                            <span>Ketua Tim</span>
+                            <span>PJ Kegiatan</span>
                             @if ($timKerjaPenyusunanCountSidebar > 0)
                             <div class="bg-primary sidebar-count">
                                 {{ $timKerjaPenyusunanCountSidebar }}

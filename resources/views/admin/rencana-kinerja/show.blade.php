@@ -46,7 +46,7 @@
                                             <td>{{ $timKerja->nama }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Ketua Tim:</th>
+                                            <th>PJ Kegiatan:</th>
                                             <td>{{ $timKerja->ketua->name }}</td>
                                         </tr>
                                         @if ($timKerja->operator != null)

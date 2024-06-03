@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nama_proyek');
             $table->string('rencana_kinerja_anggota');
             $table->string('iki_anggota');
-            $table->string('id_tim_kerja');
+            $table->ulid('id_tim_kerja');
             $table->foreign('id_tim_kerja')->references('id_timkerja')->on('tim_kerjas')->onDelete('cascade');
             $table->timestamps();
         });

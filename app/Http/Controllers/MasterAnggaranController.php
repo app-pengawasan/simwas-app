@@ -124,10 +124,23 @@ class MasterAnggaranController extends Controller
      */
     public function destroy($id)
     {
-        MasterAnggaran::destroy($id);
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!',
-        ]);
+        try {
+            MasterAnggaran::destroy($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Berhasil Dihapus!',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->getCode() == 23000){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data masih terhubung dengan data lain!',
+                ], 409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Gagal Dihapus!',
+            ], 500);
+        }
     }
 }

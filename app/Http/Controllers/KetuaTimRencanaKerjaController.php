@@ -202,11 +202,15 @@ class KetuaTimRencanaKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
+        $ketuaTim = $timKerja[0]->id_ketua;
+        $userLogin = auth()->user()->id;
+        if ($ketuaTim != $userLogin) {
+            abort(403);
+        }
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $masterHasil = MasterHasil::all();
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
         $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
 
@@ -216,7 +220,6 @@ class KetuaTimRencanaKerjaController extends Controller
             'masterTujuan'  => $masterTujuan,
             'masterSasaran' => $masterSasaran,
             'masterIku'     => $masterIku,
-            'masterHasil'   => $masterHasil,
             'hasilKerja'    => $this->hasilKerja,
             'unsur'         => $this->unsur,
             'satuan'        => $this->satuan,
