@@ -10,7 +10,7 @@
             </div>
             {{-- <form method="post" action="/ketua-tim/rencana-kinerja" enctype="multipart/form-data"
                 class="needs-validation" novalidate=""> --}}
-            <form enctype="multipart/form-data">
+            <form>
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
