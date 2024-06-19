@@ -26,11 +26,11 @@
                         <label class="form-label" for="edit-pt-hasil">Hasil Kerja</label>
                         <div class="">
                             <select id="edit-pt-hasil" class="form-control" name="edit-pt-hasil" required>
-                                @foreach ($allHasilKerja as $hasilkerja)
+                                {{-- @foreach ($allHasilKerja as $hasilkerja)
                                 <option value="{{ $hasilkerja->kategori_hasilkerja }}">
                                     {{ $masterHasilKerja[$hasilkerja->kategori_hasilkerja] }}
                                 </option>
-                                @endforeach
+                                @endforeach --}}
                                 <option value="2">Kertas Kerja</option>
                             </select>
                             <small id="error-edit-hasil_kerja" class="text-danger"></small>

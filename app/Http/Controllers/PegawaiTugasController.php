@@ -97,7 +97,7 @@ class PegawaiTugasController extends Controller
     {
         $rencanaKerja = RencanaKerja::with('pelaksana.user')->where('id_rencanakerja', $id)->get();
         $pegawai = User::all();
-        $allHasilKerja = MasterHasil::where('kategori_pelaksana', 'ngt')->get();
+        // $allHasilKerja = MasterHasil::where('kategori_pelaksana', 'ngt')->get();
         $masterHasilKerja = $this->hasilKerja;
         $timKerja = TimKerja::where('id_timkerja', $rencanaKerja[0]->id_timkerja)->first();
         $proyek = Proyek::where('id', $rencanaKerja[0]->id_proyek)->first();
@@ -116,7 +116,7 @@ class PegawaiTugasController extends Controller
             'pelaksanaTugas'    => $this->pelaksanaTugas,
             'satuan'            => $this->satuan,
             'pegawai'           => $pegawai,
-            'allHasilKerja'     => $allHasilKerja,
+            // 'allHasilKerja'     => $allHasilKerja,
             'masterHasilKerja'  => $masterHasilKerja,
             'timKerja'          => $timKerja,
             'proyek'            => $proyek,
