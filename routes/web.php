@@ -86,7 +86,7 @@ use App\Http\Controllers\Auth\SingleSignOnController;
 
     Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
-    Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
+    Route::post('sign-out', [SingleSignOnController::class, 'logout'])->middleware('auth')->name('logout');
     Route::get('/auth-login', function () {
         return view('pages.auth-login', ['type_menu' => 'auth']);
     })->middleware('guest')->name('login');

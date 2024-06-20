@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,12 +33,26 @@ class SingleSignOnController extends Controller
         return redirect($response);
     }
 
-    public function handleSingleSignOnCallback()
+    public function handleSingleSignOnCallback(Request $request)
     {
         // check if the state is valid
         if (empty($_GET['state']) || $_GET['state'] !== session('oauth2state')) {
-            session()->forget('oauth2state');
-            exit('Invalid state');
+            Auth::logout();
+        // remove cache so that the user cannot go back to the previous page
+        // and logout again
+        $request->session()->flush();
+
+
+        session()->forget('oauth2state');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect(route('login'))->withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
+
+
         }
 
         try {
@@ -66,10 +82,27 @@ class SingleSignOnController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         $url_logout = $this->SingleSignOnProvider->getLogoutUrl();
+        // dd($url_logout);
         return redirect($url_logout);
+
+
+
+        Auth::logout();
+        // remove cache so that the user cannot go back to the previous page
+        // and logout again
+        $request->session()->flush();
+
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect(route('login'))->withHeaders([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     public function getUserInfo()

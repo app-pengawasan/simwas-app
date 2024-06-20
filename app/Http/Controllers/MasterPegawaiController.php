@@ -108,7 +108,7 @@ class MasterPegawaiController extends Controller
 
     public function getAllPegawai()
     {
-        $url_base       = 'https://sso.bps.go.id/auth/';
+$url_base       = 'https://sso.bps.go.id/auth/';
 $url_token      = $url_base.'realms/pegawai-bps/protocol/openid-connect/token';
 $url_api        = $url_base.'realms/pegawai-bps/api-pegawai';
 $client_id      = env('SSO_CLIENT_ID');
@@ -151,6 +151,16 @@ foreach($kodeOrganisasi as $kode){
     $allPegawai = array_merge($allPegawai, $json);
 
 }
+
+$pegawaiDatabase = User::all();
+
+// filter allpegawai when ["attributes"]["attribute-nip"][0] not in nip pegawaidatabase
+$allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase){
+    $nip = $pegawai["attributes"]["attribute-nip"][0];
+    $isExist = $pegawaiDatabase->contains('nip', $nip);
+    return !$isExist;
+});
+
 dd($allPegawai);
 }
 
@@ -199,6 +209,13 @@ foreach($kodeOrganisasi as $kode){
     $allPegawai = array_merge($allPegawai, $json);
 
 }
+$pegawaiDatabase = User::all();
+// filter allpegawai when ["attributes"]["attribute-nip"][0] not in nip pegawaidatabase
+$allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase){
+    $nip = $pegawai["attributes"]["attribute-nip"][0];
+    $isExist = $pegawaiDatabase->contains('nip', $nip);
+    return !$isExist;
+});
 // dd($allPegawai[0]["attributes"]["attribute-nip"][0]);
         return view(
             'admin.master-pegawai.create',

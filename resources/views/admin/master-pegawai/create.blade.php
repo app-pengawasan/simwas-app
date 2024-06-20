@@ -79,7 +79,7 @@
                                     Unit Kerja belum diisi
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="jabatan">Jabatan</label>
                                 <input placeholder="Jabatan" type="text" class="form-control" name="jabatan" id="jabatan"
                                     required value="{{ old('jabatan') }}">
