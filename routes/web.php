@@ -119,6 +119,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Master-pegawai
         Route::resource('master-pegawai', MasterPegawaiController::class);
+        Route::get('master-pegawai/getPegawai/{nip}', [MasterPegawaiController::class, 'getPegawai']);
         Route::post('master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
         //Master-pimpinan

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use JKD\SSO\Client\Provider\Keycloak as KeycloakProviderSSO;
 use App\Providers\SingleSignOnProvider;
+use JKD\SSO\Client\Provider\Keycloak as KeycloakProviderSSO;
 use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Single;
 
 class SingleSignOnController extends Controller
@@ -49,17 +50,26 @@ class SingleSignOnController extends Controller
         }
 
         // get user info
-        $user = $this->SingleSignOnProvider->getResourceOwner($token);
+        $pegawai = $this->SingleSignOnProvider->getResourceOwner($token);
         // save session
         // dd($user->toArray());
-        session(['user' => $user->toArray()['nip']]);
-
+        session(['user' => $pegawai->toArray()['nip']]);
+        // dd($pegawai->toArray()['nip']);
+        $user = User::where('nip', $pegawai->toArray()['nip'])->first();
+        if ($user) {
+            auth()->login($user);
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->route('login')
+                ->with('status', 'Akun belum terdaftar, silahkan hubungi admin')
+                ->with('alert-type', 'danger');
+        }
     }
 
     public function logout()
     {
         $url_logout = $this->SingleSignOnProvider->getLogoutUrl();
-        return redirect('/');
+        return redirect($url_logout);
     }
 
     public function getUserInfo()

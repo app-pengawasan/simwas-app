@@ -201,3 +201,60 @@ $(".delete-btn").on("click", function (e) {
         }
     });
 });
+
+document.forms['addPegawai'].reset();
+
+$("#name").on("change", function (e) {
+    let nip = $(this).find(':selected').data('nip');
+    Swal.fire({
+        title: "Mengambil Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+    $.ajax({
+        url: `/admin/master-pegawai/getPegawai/${nip}`,
+        method: "GET",
+        cache: false,
+        // data: {
+        //     _token: token,
+        // },
+        success: function (response) {
+            $('#email').val(response[0]['email']);
+            $('#nip').val(response[0]['attributes']['attribute-nip'][0]);
+            $('#pangkat').val(response[0]['attributes']['attribute-golongan'][0]);
+            // switch(response[0]['attributes']['attribute-organisasi'][0]) {
+            //     case '000000081000':
+            //         $('#unit_kerja').val('Inspektorat Wilayah I');
+            //         break;
+            //     case '000000082000':
+            //         $('#unit_kerja').val('Inspektorat Wilayah II');
+            //         break;
+            //     case '000000083000':
+            //         $('#unit_kerja').val('Inspektorat Wilayah III');
+            //         break;
+            //     default:
+            //         $('#unit_kerja').val('Inspektorat Utama');
+            // }
+            let unit_kerja = response[0]['attributes']['attribute-organisasi'][0];
+            $('#unit_kerja').val(unit_kerja.substring(7, unit_kerja.length - 1));
+            // $('#jabatan').val(response[0]['attributes']['attribute-jabatan'][0]);
+            $('#jabatan').val(0);
+            Swal.close();
+        },
+        error: function (error) {
+            // console.log(error);
+            // let errorResponses = error.responseJSON;
+            // let errors = Object.entries(errorResponses.errors);
+
+            // errors.forEach(([key, value]) => {
+            //     let errorMessage = document.getElementById(`error-${key}`);
+            //     errorMessage.innerText = `${value}`;
+            // });
+            Swal.close();
+        },
+    });
+});

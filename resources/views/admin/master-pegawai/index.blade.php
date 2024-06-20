@@ -126,7 +126,7 @@
                                         <th style="width: 15px;">No</th>
                                         <th style="width: 100px;">NIP</th>
                                         <th>Nama</th>
-                                        <th>Jabatan</th>
+                                        {{-- <th>Jabatan</th> --}}
                                         <th>Unit Kerja</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -147,7 +147,7 @@
                                                 {{  $user->name }}
                                             </div>
                                         </td>
-                                        <td>{{ $jabatan["$user->jabatan"] }}</td>
+                                        {{-- <td>{{ $jabatan["$user->jabatan"] }}</td> --}}
                                         <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
                                         <td style="min-width: 100px;">
                                             <a class="btn btn-primary btn-sm"

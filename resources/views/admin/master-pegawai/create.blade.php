@@ -31,21 +31,27 @@
                                 </a>
                             </div>
                         </div> --}}
-                        <form method="POST" action="/admin/master-pegawai" class="needs-validation" novalidate="">
+                        <form method="POST" action="/admin/master-pegawai" class="needs-validation" novalidate="" name="addPegawai">
                             @csrf
                             <h1 class="h4 text-dark mb-4 header-card">Data Pribadi Pegawai</h1>
                             <div class="form-group">
                                 <label for="name">Nama</label>
-                                <input placeholder="Nama Pegawai" type="text" class="form-control" name="name" required
-                                    value="{{ old('name') }}">
+                                {{-- <input placeholder="Nama Pegawai" type="text" class="form-control" name="name" required
+                                    value="{{ old('name') }}"> --}}
                                 {{-- error bootstrap message --}}
-                                <div class="invalid-feedback">
-                                    Nama belum diisi
-                                </div>
+                                <select class="form-control select2" name="name" id="name" required
+                                    data-placeholder="Pilih Nama">
+                                    <option value=""></option>
+                                    @foreach ($allPegawai as $key => $value)
+                                    <option value="{{ $value["firstName"] }}{{ empty($value['lastName']) || $value['lastName'] === '-' ? '' : ' '.$value['lastName'] }}" data-nip="{{ $value["attributes"]["attribute-nip"][0] }}">
+                                        {{ $value['firstName'] }}{{ empty($value['lastName']) || $value['lastName'] === '-' ? '' : ' '.$value['lastName'] }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input placeholder="Email Pegawai" type="email" class="form-control" name="email"
+                                <input placeholder="Email Pegawai" type="email" class="form-control" name="email" id="email"
                                     required value="{{ old('email') }}">
                                 <div class="invalid-feedback">
                                     Email belum diisi
@@ -53,7 +59,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="nip">Nomor Induk Pegawai (NIP)</label>
-                                <input placeholder="Nomor Induk Pegawai" class="form-control" name="nip" required
+                                <input placeholder="Nomor Induk Pegawai" class="form-control" name="nip" required id="nip"
                                     value="{{ old('nip') }}"
                                     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                 <div class="invalid-feedback">
@@ -62,42 +68,21 @@
                             </div>
                             <div class="form-group">
                                 <label for="pangkat">Pangkat</label>
-                                <select class="form-control select2" name="pangkat" required
-                                    data-placeholder="Pilih Pangkat">
-                                    <option value=""></option>
-                                    @foreach ($pangkat as $key => $value)
-                                    <option value="{{ $key }}" {{ old('pangkat') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <input placeholder="Pangkat" type="text" class="form-control" name="pangkat" id="pangkat"
+                                    required value="{{ old('email') }}">
                             </div>
                             <div class="form-group">
                                 <label for="unit_kerja">Unit Kerja</label>
-                                <select class="form-control select2" name="unit_kerja" required
-                                    data-placeholder="Pilih Unit Kerja">
-                                    <option value=""></option>
-                                    @foreach ($unit_kerja as $key => $value)
-                                    <option value="{{ $key }}" {{ old('unit_kerja') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <input placeholder="Unit Kerja" type="text" class="form-control" name="unit_kerja" id="unit_kerja"
+                                    required value="{{ old('unit_kerja') }}">
                                 <div class="invalid-feedback">
                                     Unit Kerja belum diisi
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="jabatan">Jabatan</label>
-                                <select class="form-control select2" name="jabatan" required
-                                    data-placeholder="Pilih Jabatan">
-                                    <option value=""></option>
-                                    @foreach ($jabatan as $key => $value)
-                                    <option value="{{ $key }}" {{ old('jabatan') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <input placeholder="Jabatan" type="text" class="form-control" name="jabatan" id="jabatan"
+                                    required value="{{ old('jabatan') }}">
                                 <div class="invalid-feedback">
                                     Jabatan belum diisi
                                 </div>
