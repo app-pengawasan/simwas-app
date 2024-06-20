@@ -187,7 +187,10 @@ $(".delete-btn").on("click", function (e) {
                         showConfirmButton: false,
                         timer: 3000,
                     });
-                    setTimeout(location.reload(), 1500);
+                    // redirect to master pegawai page
+                    setTimeout(() => {
+                        window.location.href = "/admin/master-pegawai";
+                    }, 3000);
                 },
                 error: function (error) {
                     Swal.fire({

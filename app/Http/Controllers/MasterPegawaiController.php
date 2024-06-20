@@ -79,7 +79,8 @@ class MasterPegawaiController extends Controller
         'is_apkapbn'    => 'APK-APBN',
         'is_opwil'      => 'Operator Wilayah',
         'is_analissdm'  => 'Analis SDM',
-        'is_arsiparis'  => 'Arsiparis'
+        'is_arsiparis'  => 'Arsiparis',
+        'is_aktif'      => 'Inspektur'
     ];
 
     /**
@@ -263,10 +264,10 @@ $allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase
             'is_opwil'      => 'required',
             'is_analissdm'  => 'required',
             'is_arsiparis'  => 'required',
+            'is_aktif'      => 'required',
         ]);
 
         $validateData["password"] = bcrypt($request->password);
-        $validateData["is_aktif"] = 1;
 
         User::create($validateData);
 
@@ -340,6 +341,7 @@ $allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase
             'is_opwil'      => 'required',
             'is_analissdm'  => 'required',
             'is_arsiparis'  => 'required',
+            'is_aktif'      => 'required',
         ];
 
         // if($request->password != ""){

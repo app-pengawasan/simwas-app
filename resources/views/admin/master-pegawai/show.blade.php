@@ -3,6 +3,7 @@
 @section('title', 'Master Pegawai')
 
 @push('style')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- CSS Libraries -->
 <link rel="stylesheet" href="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.css">
 @endpush
@@ -64,7 +65,9 @@
                                     $user->is_perencana ||
                                     $user->is_apkapbn ||
                                     $user->is_opwil ||
-                                    $user->is_analissdm
+                                    $user->is_analissdm ||
+                                    $user->is_aktif ||
+                                    $user->is_arsiparis
                                     ))
                                     -
                                     @else
