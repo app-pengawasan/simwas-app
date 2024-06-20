@@ -58,6 +58,7 @@ use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\Auth\SingleSignOnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,9 +78,15 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
      * ===========================================================================
     */
     //SSO and Auth Route
+    Route::get('/auth/sso-bps', [SingleSignOnController::class, 'redirectToSingleSignOn']);
+    Route::get('/auth/sso-bps/callback', [SingleSignOnController::class, 'handleSingleSignOnCallback']);
+    Route::get('/signout/sso-bps', [SingleSignOnController::class, 'logout']);
+
+
+
     Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
-    Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
+    Route::post('sign-out', [SingleSignOnController::class, 'logout'])->middleware('auth')->name('logout');
     Route::get('/auth-login', function () {
         return view('pages.auth-login', ['type_menu' => 'auth']);
     })->middleware('guest')->name('login');
@@ -112,6 +119,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Master-pegawai
         Route::resource('master-pegawai', MasterPegawaiController::class);
+        Route::get('master-pegawai/getPegawai/{nip}', [MasterPegawaiController::class, 'getPegawai']);
         Route::post('master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
         //Master-pimpinan

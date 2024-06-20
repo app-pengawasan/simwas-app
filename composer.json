@@ -13,6 +13,7 @@
         "doctrine/dbal": "^3.8",
         "dompdf/dompdf": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
+        "irsadarief/jkd-sso": "^1.6",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/socialite": "^5.6",
@@ -20,6 +21,7 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.29",
         "phpoffice/phpword": "^1.1",
+        "socialiteproviders/keycloak": "^5.3",
         "tecnickcom/tcpdf": "^6.6"
     },
     "require-dev": {
