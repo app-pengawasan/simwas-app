@@ -58,6 +58,7 @@ use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\Auth\SingleSignOnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,12 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
      * ===========================================================================
     */
     //SSO and Auth Route
+    Route::get('/auth/sso-bps', [SingleSignOnController::class, 'redirectToSingleSignOn']);
+    Route::get('/auth/sso-bps/callback', [SingleSignOnController::class, 'handleSingleSignOnCallback']);
+    Route::get('/signout/sso-bps', [SingleSignOnController::class, 'logout']);
+
+
+
     Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
     Route::post('sign-out', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
