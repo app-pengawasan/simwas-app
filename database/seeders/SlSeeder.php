@@ -15,6 +15,6 @@ class SlSeeder extends Seeder
      */
     public function run()
     {
-        Sl::factory(20)->create();
+        // Sl::factory(20)->create();
     }
 }

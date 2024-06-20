@@ -70,7 +70,7 @@
                             </div>
 
                             <div style="gap:10px" class="d-flex align-items-end">
-                                <a type="button" class="btn btn-primary" href="{{ route('pagu-anggaran.create') }}">
+                                <a type="button" class="btn btn-primary" href="{{ route('admin.pagu-anggaran.create') }}">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
@@ -109,11 +109,11 @@
                                         <td class="rupiah">{{ $pa->pagu }}</td>
                                         <td style="width: 100px">
                                             <a class="btn btn-primary btn-sm"
-                                                href="{{ route('pagu-anggaran.show', $pa) }}">
+                                                href="{{ route('admin.pagu-anggaran.show', $pa) }}">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a class="btn btn-warning btn-sm"
-                                                href="{{ route('pagu-anggaran.edit', $pa) }}">
+                                                href="{{ route('admin.pagu-anggaran.edit', $pa) }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"

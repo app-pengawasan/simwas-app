@@ -39,6 +39,18 @@
                             <div id="download-button">
                             </div>
                         </div>
+
+                        {{-- if error --}}
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        {{-- end if error --}}
                         {{ session()->forget(['alert-type', 'status']) }}
                         <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
                             <div class="form-group flex-grow-1" style="margin-bottom: 0;">
@@ -72,8 +84,7 @@
                                         <td>{{ $subunsur->masterUnsur->nama_unsur }}</td>
                                         <td>
                                             <div class="d-flex">
-                                                <button type="button"
-                                                    class="btn btn-warning btn-sm edit-button"
+                                                <button type="button" class="btn btn-warning btn-sm edit-button"
                                                     data-toggle="modal" data-target="#modal-edit-master-subunsur"
                                                     data-id="{{ $subunsur->id }}"
                                                     data-nama="{{ $subunsur->nama_sub_unsur }}"
@@ -81,7 +92,7 @@
                                                     data-nama-unsur="{{ $subunsur->master_unsur_name }}">
                                                     <i class=" fas fa-edit"></i>
                                                 </button>
-                                                <form action="{{ route('master-subunsur.destroy', $subunsur->id) }}"
+                                                <form action="{{ route('admin.master-subunsur.destroy', $subunsur->id) }}"
                                                     id="form-{{ $subunsur->id }}" method="post">
                                                     @csrf
                                                     @method('DELETE')

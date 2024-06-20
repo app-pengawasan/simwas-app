@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password', 64)->nullable();
             $table->string('nip', 18);
             $table->string('name', 64);
-            $table->string('pangkat', 4);
+            $table->string('pangkat', 10);
             $table->string('unit_kerja', 4);
             $table->string('jabatan', 2);
             $table->boolean('is_aktif')->default(1);

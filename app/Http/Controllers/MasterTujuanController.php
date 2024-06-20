@@ -140,15 +140,22 @@ class MasterTujuanController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        MasterTujuan::where('id_tujuan', $id)->delete();
+        try{
 
-        $request->session()->put('status', 'Berhasil menghapus Tujuan Inspektorat Utama.');
-        $request->session()->put('alert-type', 'success');
+            MasterTujuan::where('id_tujuan', $id)->delete();
+            $request->session()->put('status', 'Berhasil menghapus Tujuan Inspektorat Utama.');
+            $request->session()->put('alert-type', 'success');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil menghapus Tujuan Inspektorat Utama',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus Tujuan Inspektorat Utama',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus Tujuan Inspektorat Utama',
+            ],409);
+        }
 
     }
 }

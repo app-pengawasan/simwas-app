@@ -140,7 +140,7 @@ class MasterPimpinanController extends Controller
         // $validateData = $request->validate($rules);
 
         MasterPimpinan::create($validateData);
-        return redirect(route('master-pimpinan.index'))->with('status', 'Berhasil Menambah Pimpinan.')->with('alert-type', 'success');
+        return redirect(route('admin.master-pimpinan.index'))->with('status', 'Berhasil Menambah Pimpinan.')->with('alert-type', 'success');
     }
 
     /**
@@ -204,7 +204,7 @@ class MasterPimpinanController extends Controller
         $validateData = $request->validate($rules);
 
         MasterPimpinan::where('id_pimpinan', $id)->update($validateData);
-        return redirect(route('master-pimpinan.index'))->with('status', 'Berhasil Memperbarui Pimpinan.')->with('alert-type', 'success');
+        return redirect(route('admin.master-pimpinan.index'))->with('status', 'Berhasil Memperbarui Pimpinan.')->with('alert-type', 'success');
         // return $request;
     }
 

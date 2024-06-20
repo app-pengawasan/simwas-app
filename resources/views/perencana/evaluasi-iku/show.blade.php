@@ -41,7 +41,7 @@
             <h1>Evaluasi Unit Kerja</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('evaluasi-iku-unit-kerja.index') }}">Evaluasi
+                <div class="breadcrumb-item active"><a href="{{ route('perencana.evaluasi-iku-unit-kerja.index') }}">Evaluasi
                         IKU Unit Kerja</a></div>
                 <div class="breadcrumb-item">Detail Evaluasi IKU Unit Kerja</div>
             </div>

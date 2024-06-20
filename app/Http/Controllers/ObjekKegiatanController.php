@@ -154,18 +154,31 @@ class ObjekKegiatanController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        ObjekKegiatan::where('kode_kegiatan', $id)
-        ->update([
-            'is_active' => 0
-        ]);
+        try {
+            ObjekKegiatan::where('kode_kegiatan', $id)
+            ->update([
+                'is_active' => 0
+            ]);
 
-        $request->session()->put('status', 'Berhasil menghapus kegiatan Unit Kerja.');
-        $request->session()->put('alert-type', 'success');
+            $request->session()->put('status', 'Berhasil menghapus kegiatan Unit Kerja.');
+            $request->session()->put('alert-type', 'success');
 
-        return response()->json([
-            'success'   => true,
-            'message'   => 'Data Berhasil Dihapus',
-        ]);
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Data Berhasil Dihapus',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success'   => false,
+                    'message'   => 'Data masih terkait dengan data lain.',
+                ],409);
+            }
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Data Gagal Dihapus',
+            ],500);
+        }
     }
 
     public function unitkerja($id){

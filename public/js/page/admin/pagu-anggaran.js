@@ -134,7 +134,7 @@ $(".delete-btn").on("click", function (e) {
                         type: "error",
                         icon: "error",
                         title: "Gagal",
-                        text: "Gagal menghapus data, silahkan hubungi tim TI",
+                        text: `${e.responseJSON.message}`,
                         showConfirmButton: false,
                         timer: 3000,
                     });

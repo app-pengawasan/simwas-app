@@ -49,7 +49,7 @@
                         <div class="card-footer">
                             <div class="row mb-0 pb-0">
                                 <div class="col-md-4">
-                                    <a class="btn btn-primary" href="{{ route('master-pimpinan.index') }}">
+                                    <a class="btn btn-primary" href="{{ route('admin.master-pimpinan.index') }}">
                                         <i class="fas fa-chevron-circle-left"></i>
                                     </a>
                                     <a class="btn btn-warning" href="/admin/master-pegawai/{{ $pimpinan->user->id }}/edit">

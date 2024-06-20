@@ -40,6 +40,16 @@ $("#btn-submit-objek").on("click", function (e) {
     $("#error-kategori").text("");
     $("#error-objek").text("");
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/objek-pengawasan`,
         type: "POST",
@@ -63,6 +73,7 @@ $("#btn-submit-objek").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });
@@ -294,6 +305,19 @@ $("#btn-submit-anggaran").on("click", function (e) {
     $("#error-harga").text("");
     $("#error-total").text("");
 
+    // disable submit button
+    $("#btn-submit-anggaran").prop("disabled", true);
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/anggaran-rencana-kerja`,
         type: "POST",
@@ -311,7 +335,14 @@ $("#btn-submit-anggaran").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
+            $("#btn-submit-anggaran").prop("disabled", false);
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
+            });
+
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -319,6 +350,7 @@ $("#btn-submit-anggaran").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });
@@ -535,11 +567,18 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         return;
     }
 
-
-
-
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/pelaksana-tugas`,
@@ -576,6 +615,7 @@ $("#btn-submit-pelaksana").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            Swal.close();
         },
     });
 });
@@ -632,7 +672,12 @@ $(".btn-edit-pelaksana").on("click", function (e) {
         success: function (response) {
             $("#edit-pt-jabatan").val(response.data.pt_jabatan);
             $("#edit-pt-hasil").val(response.data.pt_hasil);
-            $("#edit-pelaksana").val(response.data.id_pegawai);
+            $("#edit-pelaksana").select2("trigger", "select", {
+                data: {
+                    id: response.data.id_pegawai,
+                    text: response.data.id_pegawai,
+                },
+            });
             $("#edit-id_pelaksana").val(response.data.id_pelaksana);
             $("#edit-januari").val(response.data.jan);
             $("#edit-februari").val(response.data.feb);
@@ -735,7 +780,6 @@ $("#btn-edit-pelaksana").on("click", function (e) {
         $("#error-edit-desember").text("0 - 200 Jam Kerja");
         return;
     }
-
 
     $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");

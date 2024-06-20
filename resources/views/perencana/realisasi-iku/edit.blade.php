@@ -185,7 +185,7 @@
             <h1>Buat Realisasi IKU Unit Kerja</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('realisasi-iku-unit-kerja.index') }}">Realisasi
+                <div class="breadcrumb-item active"><a href="{{ route('perencana.realisasi-iku-unit-kerja.index') }}">Realisasi
                         IKU Unit Kerja</a></div>
                 <div class="breadcrumb-item">Buat Realisasi IKU Unit Kerja</div>
             </div>
@@ -198,7 +198,7 @@
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
                             <h1 class="h4 text-dark mb-4 header-card">Data Realisasi IKU Unit Kerja</h1>
-                            <form action="{{ route('realisasi-iku-unit-kerja.store') }}" method="post"
+                            <form action="{{ route('perencana.realisasi-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">

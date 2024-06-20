@@ -266,7 +266,7 @@ class SuratSrikandiController extends Controller
             'id_usulan_surat_srikandi' => $request->usulan_surat_srikandi_id,
         ]);
         $this->acceptUsulanSurat($request->usulan_surat_srikandi_id, $request->nomor_surat_srikandi);
-        return redirect()->route('surat-srikandi.index')->with('status', 'Berhasil Menambahkan Surat Srikandi!')
+        return redirect()->route('sekretaris.surat-srikandi.index')->with('status', 'Berhasil Menambahkan Surat Srikandi!')
             ->with('alert-type', 'success');
     }
 
@@ -349,7 +349,7 @@ class SuratSrikandiController extends Controller
             'catatan' => $request['alasan'],
         ]);
 
-        return redirect()->route('surat-srikandi.index')
+        return redirect()->route('sekretaris.surat-srikandi.index')
             ->with('alert-message', 'Usulan Surat Srikandi berhasil ditolak')
             ->with('alert-type', 'success');
     }

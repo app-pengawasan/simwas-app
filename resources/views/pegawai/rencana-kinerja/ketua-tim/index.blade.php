@@ -81,7 +81,7 @@
                                         style="width: 400px;"
                                         >IKU</th>
                                         <th>Kegiatan</th>
-                                        <th>Ketua Tim</th>
+                                        <th>PJ Kegiatan</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>

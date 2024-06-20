@@ -3,16 +3,26 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Unsur Inspektorat</h5>
+                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Subunsur Inspektorat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('master-subunsur.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.master-subunsur.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="masterUnsurId">Nama Unsur</label>
+                        @if (count($masterUnsurs) == 0)
+                        <span><small class="text-danger">
+                                *Tidak ada data unsur. Silahkan
+                                <a href="/admin/master-unsur">
+                                    tambah unsur
+                                </a>
+                                terlebih dahulu.
+                            </small>
+                        </span>
+                        @endif
                         <div class="">
                             <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required
                                 data-placeholder="Pilih Unsur">

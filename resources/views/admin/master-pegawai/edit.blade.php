@@ -87,7 +87,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="jabatan">Jabatan</label>
                                 <select class="form-control select2" name="jabatan" required>
                                     @foreach ($jabatan as $key => $value)

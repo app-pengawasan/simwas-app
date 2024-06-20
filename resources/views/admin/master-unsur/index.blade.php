@@ -76,7 +76,7 @@
                                                     data-id="{{ $unsur->id }}" data-nama="{{ $unsur->nama_unsur }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <form action="{{ route('master-unsur.destroy', $unsur->id) }}"
+                                                <form action="{{ route('admin.master-unsur.destroy', $unsur->id) }}"
                                                     id="form-{{ $unsur->id }}" method="post">
                                                     @csrf
                                                     @method('DELETE')

@@ -47,7 +47,7 @@
                         <div class="card-body">
                         @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <form action="{{ route('target-iku-unit-kerja.store') }}" method="post"
+                            <form action="{{ route('perencana.target-iku-unit-kerja.store') }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">

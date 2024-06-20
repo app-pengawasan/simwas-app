@@ -109,9 +109,10 @@
                                                 <th>Draft Norma Hasil</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($usulan->document_path) }}"
-                                                        class="badge btn-primary" download><i
-                                                            class="fa fa-download"></i> Download</a>
+                                                    <a target="blank" href="{{ $usulan->document_path }}" class="badge btn-primary" download>
+                                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
+                                                        Buka Draft Norma Hasil
+                                                    </a>
                                                 </td>
                                             </tr>
                                             @if ($usulan->status_norma_hasil == 'ditolak')

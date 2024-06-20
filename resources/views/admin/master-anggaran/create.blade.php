@@ -16,7 +16,7 @@
             <h1>Form Tambah Master Anggaran</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('master-anggaran.index') }}">Master Anggaran</a>
+                <div class="breadcrumb-item active"><a href="{{ route('admin.master-anggaran.index') }}">Master Anggaran</a>
                 </div>
                 <div class="breadcrumb-item">Tambah Master Anggaran</div>
             </div>
@@ -25,7 +25,7 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('master-anggaran.store') }}" class="needs-validation"
+                        <form method="POST" action="{{ route('admin.master-anggaran.store') }}" class="needs-validation"
                             novalidate="">
                             @csrf
                             <h1 class="h4 text-dark mb-4 header-card">Data Anggaran</h1>

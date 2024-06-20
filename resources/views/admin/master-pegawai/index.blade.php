@@ -63,14 +63,14 @@
                     <div class="card-body">
                         @include('components.flash')
                         <div class="d-flex justify-content-between">
-                            <p class="mb-3">
+                            {{-- <p class="mb-3">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
                                 Untuk melakukan import pegawai silahkan download format
                                 <a href="{{ asset('document/data-pegawai-inspektorat-utama.xlsx') }}"
                                     class="link-primary font-weight-bold" download>
                                     <i class="fas fa-download"></i> disini
                                 </a>.
-                            </p>
+                            </p> --}}
                             <div id="download-button">
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 <div id="filter-search-wrapper">
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                            {{-- <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                 <label for="filter-jabatan" style="margin-bottom: 0;">
                                     Jabatan</label>
                                 <select name="jabatan" id="filter-jabatan" class="form-control select2">
@@ -91,7 +91,7 @@
                                     </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             {{-- unit kerja --}}
                             <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                 <label for="filter-unit-kerja" style="margin-bottom: 0;">
@@ -111,11 +111,11 @@
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                {{-- <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#staticBackdrop">
                                     <i class="fas fa-file-upload"></i>
                                     Import
-                                </button>
+                                </button> --}}
                             </div>
                         </div>
                         <div class="">
@@ -126,7 +126,7 @@
                                         <th style="width: 15px;">No</th>
                                         <th style="width: 100px;">NIP</th>
                                         <th>Nama</th>
-                                        <th>Jabatan</th>
+                                        {{-- <th>Jabatan</th> --}}
                                         <th>Unit Kerja</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -147,7 +147,7 @@
                                                 {{  $user->name }}
                                             </div>
                                         </td>
-                                        <td>{{ $jabatan["$user->jabatan"] }}</td>
+                                        {{-- <td>{{ $jabatan["$user->jabatan"] }}</td> --}}
                                         <td>{{ $unit_kerja["$user->unit_kerja"] }}</td>
                                         <td style="min-width: 100px;">
                                             <a class="btn btn-primary btn-sm"

@@ -15,29 +15,29 @@ class PembebananSeeder extends Seeder
      */
     public function run()
     {
-        Pembebanan::create([
-            'nama' => 'Pembebanan 1',
-            'is_aktif' => true
-        ]);
-        
-        Pembebanan::create([
-            'nama' => 'Pembebanan 2',
-            'is_aktif' => true
-        ]);
+        // Pembebanan::create([
+        //     'nama' => 'Pembebanan 1',
+        //     'is_aktif' => true
+        // ]);
 
-        Pembebanan::create([
-            'nama' => 'Pembebanan 3',
-            'is_aktif' => true
-        ]);
+        // Pembebanan::create([
+        //     'nama' => 'Pembebanan 2',
+        //     'is_aktif' => true
+        // ]);
 
-        Pembebanan::create([
-            'nama' => 'Pembebanan 4',
-            'is_aktif' => true
-        ]);
+        // Pembebanan::create([
+        //     'nama' => 'Pembebanan 3',
+        //     'is_aktif' => true
+        // ]);
 
-        Pembebanan::create([
-            'nama' => 'Pembebanan 5',
-            'is_aktif' => true
-        ]);
+        // Pembebanan::create([
+        //     'nama' => 'Pembebanan 4',
+        //     'is_aktif' => true
+        // ]);
+
+        // Pembebanan::create([
+        //     'nama' => 'Pembebanan 5',
+        //     'is_aktif' => true
+        // ]);
     }
 }

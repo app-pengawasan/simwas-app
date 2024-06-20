@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-nama_proyek">Nama Proyek</label>
                         <div class="">
-                            <input type="text" id="create-nama_proyek" class="form-control" name="create-nama_proyek"
+                            <input placeholder="Masukkan Nama Proyek" type="text" id="create-nama_proyek" class="form-control" name="create-nama_proyek"
                                 required>
                             <small id="error-tugas" class="text-danger"></small>
                         </div>
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-rk_anggota">Rencana Kinerja Anggota</label>
                         <div class="">
-                            <input type="text" id="create-rk_anggota" class="form-control" name="create-rk_anggota"
+                            <input placeholder="Masukkan Rencana Kinerja Anggota" type="text" id="create-rk_anggota" class="form-control" name="create-rk_anggota"
                                 required>
                             <small id="error-tugas" class="text-danger"></small>
                         </div>
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label class="form-label" for="create-iki_anggota">IKI Ketua</label>
                         <div class="">
-                            <input type="text" id="create-iki_anggota" class="form-control" name="create-iki_anggota"
+                            <input placeholder="Masukkan IKI Ketua" type="text" id="create-iki_anggota" class="form-control" name="create-iki_anggota"
                                 required>
                             <small id="error-tugas" class="text-danger"></small>
                         </div>

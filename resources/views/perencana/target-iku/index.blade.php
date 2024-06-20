@@ -88,7 +88,7 @@
 
                             <div style="gap:10px" class="d-flex align-items-end">
                                 <a type="button" class="btn btn-primary"
-                                    href="{{ route('target-iku-unit-kerja.create') }}">
+                                    href="{{ route('perencana.target-iku-unit-kerja.create') }}">
                                     <i class="fas fa-plus-circle"></i>
                                     Tambah
                                 </a>
@@ -118,14 +118,14 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('target-iku-unit-kerja.show', $ti->id) }}"
+                                            <a href="{{ route('perencana.target-iku-unit-kerja.show', $ti->id) }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @if ($ti->status == 1)
 
                                             {{-- kirim ke realisasi --}}
-                                            <form action="{{ route('target-iku-unit-kerja.status', $ti->id) }}"
+                                            <form action="{{ route('perencana.target-iku-unit-kerja.status', $ti->id) }}"
                                                 method="post" class="d-inline submit-button">
                                                 @csrf
                                                 @method('put')
@@ -135,7 +135,7 @@
                                                 </button>
                                             </form>
 
-                                            <form action="{{ route('target-iku-unit-kerja.destroy', $ti->id) }}"
+                                            <form action="{{ route('perencana.target-iku-unit-kerja.destroy', $ti->id) }}"
                                                 method="post" class="d-inline delete-button">
                                                 @csrf
                                                 @method('delete')

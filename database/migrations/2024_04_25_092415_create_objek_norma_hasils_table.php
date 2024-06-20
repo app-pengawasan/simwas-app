@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('objek_norma_hasils', function (Blueprint $table) {
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
             $table->string('objek_id');
-            $table->foreign('objek_id')->references('id_objek')->on('master_objeks')->onDelete('cascade');
+            $table->foreign('objek_id')->references('id_objek')->on('master_objeks')->onDelete('restrict');
             $table->string('norma_hasil_id');
             $table->foreign('norma_hasil_id')->references('id')->on('norma_hasils')->onDelete('cascade');
             $table->timestamps();

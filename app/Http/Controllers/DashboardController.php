@@ -78,13 +78,9 @@ class DashboardController extends Controller
 
             'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
             'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
-            'timKerjaDiajukanCount' => $timKerjaCount['timKerjaDiajukanCount'],
             'timKerjaDiterimaCount' => $timKerjaCount['timKerjaDiterimaCount'],
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
-            'timKerjaPercentageDiajukan' => $timKerjaCount['timKerjaPercentageDiajukan'],
             'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
-
-
         ]);
     }
 
@@ -108,12 +104,7 @@ class DashboardController extends Controller
             $query->where('id_ketua', auth()->user()->id)->where('status_norma_hasil', 'diperiksa');
         })->count();
         $timKerjaCount = $this->ketuaTimKerjaCount($year);
-        // dd($timKerjaCount);
-        $usulanPimpinanCount = TimKerja::with(['ketua', 'iku'])
-            ->where('unitkerja', $id_unitkerja)
-            ->whereIn('status', [5])
-            ->where('tahun', $year)
-            ->count();
+
 
         return view('pegawai.index', [
             'type_menu' => 'usulan-surat-srikandi',
@@ -138,16 +129,9 @@ class DashboardController extends Controller
             // Tim Kerja - Ketua Tim Kerja
             'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
             'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
-            'timKerjaDiajukanCount' => $timKerjaCount['timKerjaDiajukanCount'],
             'timKerjaDiterimaCount' => $timKerjaCount['timKerjaDiterimaCount'],
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
-            'timKerjaPercentageDiajukan' => $timKerjaCount['timKerjaPercentageDiajukan'],
             'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
-            // Tim Kerja - Pimpinan
-            'usulanPimpinanCount' => $usulanPimpinanCount,
-
-
-
         ]);
     }
 
@@ -179,25 +163,25 @@ class DashboardController extends Controller
     function inspektur() {
         $this->authorize('inspektur');
         // $stk = StKinerja::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stk_sum = StKinerja::whereHas('rencanaKerja.proyek.timkerja', function ($query) {
-            $query->where('unitkerja', auth()->user()->unit_kerja);
-        })->count();
-        $stk_need_approval = StKinerja::where('status', 0)->whereHas('rencanaKerja.proyek.timkerja', function ($query) {
-            $query->where('unitkerja', auth()->user()->unit_kerja);
-        })->count();
-        $stp_sum = Stp::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stp_need_approval = Stp::where('status', 3)->where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stpd_sum = Stpd::where('unit_kerja', auth()->user()->unit_kerja)->count();
-        $stpd_need_approval = Stpd::where('status', 0)->where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stk_sum = StKinerja::whereHas('rencanaKerja.proyek.timkerja', function ($query) {
+        //     $query->where('unitkerja', auth()->user()->unit_kerja);
+        // })->count();
+        // $stk_need_approval = StKinerja::where('status', 0)->whereHas('rencanaKerja.proyek.timkerja', function ($query) {
+        //     $query->where('unitkerja', auth()->user()->unit_kerja);
+        // })->count();
+        // $stp_sum = Stp::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stp_need_approval = Stp::where('status', 3)->where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stpd_sum = Stpd::where('unit_kerja', auth()->user()->unit_kerja)->count();
+        // $stpd_need_approval = Stpd::where('status', 0)->where('unit_kerja', auth()->user()->unit_kerja)->count();
 
 
         return view('inspektur.index', [
-            "stk_sum" => $stk_sum,
-            "stk_need_approval" => $stk_need_approval,
-            "stp_sum" => $stp_sum,
-            "stp_need_approval" => $stp_need_approval,
-            "stpd_sum" => $stpd_sum,
-            "stpd_need_approval" => $stpd_need_approval
+            // "stk_sum" => $stk_sum,
+            // "stk_need_approval" => $stk_need_approval,
+            // "stp_sum" => $stp_sum,
+            // "stp_need_approval" => $stp_need_approval,
+            // "stpd_sum" => $stpd_sum,
+            // "stpd_need_approval" => $stpd_need_approval
         ]);
     }
 
@@ -324,24 +308,20 @@ class DashboardController extends Controller
     }
 
     function adminTimKerjaCount($year){
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('status', [0,1,2,3,4])->where('tahun', $year)->get()->count();
-        $timKerjaDiajukanCount = TimKerja::with('ketua', 'iku')->where('status', 5)->where('tahun', $year)->get()->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('status', 6)->where('tahun', $year)->get()->count();
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->whereIn('status', [0,1,2,3])->where('tahun', $year)->get()->count();
+        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->whereIn('status', [4,5])->where('tahun', $year)->get()->count();
 
         $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get()->count();
 
         $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
-        $timKerjaPercentageDiajukan = $timKerjaDiajukanCount != 0 ? intval($timKerjaDiajukanCount/($timKerjaTotalCount)*100) : 0;
         $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;
 
 
         return [
             'timKerjaTotalCount' => $timKerjaTotalCount,
             'timKerjaPenyusunanCount' => $timKerjaPenyusunanCount,
-            'timKerjaDiajukanCount' => $timKerjaDiajukanCount,
             'timKerjaDiterimaCount' => $timKerjaDiterimaCount,
             'timKerjaPercentagePenyusunan' => $timKerjaPercentagePenyusunan,
-            'timKerjaPercentageDiajukan' => $timKerjaPercentageDiajukan,
             'timKerjaPercentageDiterima' => $timKerjaPercentageDiterima,
         ];
     }
@@ -378,24 +358,20 @@ class DashboardController extends Controller
 
     function ketuaTimKerjaCount($year){
         $id_pegawai = auth()->user()->id;
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', [0,1,2,3,4])->where('tahun', $year)->get()->count();
-        $timKerjaDiajukanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 5)->where('tahun', $year)->get()->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 6)->where('tahun', $year)->get()->count();
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [0,1,2,3])->where('tahun', $year)->get()->count();
+        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [4,5])->where('tahun', $year)->get()->count();
 
         $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get()->count();
 
         $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
-        $timKerjaPercentageDiajukan = $timKerjaDiajukanCount != 0 ? intval($timKerjaDiajukanCount/($timKerjaTotalCount)*100) : 0;
         $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;
 
 
         return [
             'timKerjaTotalCount' => $timKerjaTotalCount,
             'timKerjaPenyusunanCount' => $timKerjaPenyusunanCount,
-            'timKerjaDiajukanCount' => $timKerjaDiajukanCount,
             'timKerjaDiterimaCount' => $timKerjaDiterimaCount,
             'timKerjaPercentagePenyusunan' => $timKerjaPercentagePenyusunan,
-            'timKerjaPercentageDiajukan' => $timKerjaPercentageDiajukan,
             'timKerjaPercentageDiterima' => $timKerjaPercentageDiterima,
         ];
     }

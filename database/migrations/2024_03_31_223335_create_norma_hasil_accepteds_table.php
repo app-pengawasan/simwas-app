@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('norma_hasil_accepteds', function (Blueprint $table) {
             $table->ulid('id')->unique()->primary()->default(Ulid::generate());
-            $table->string('id_norma_hasil', 100);
+            $table->ulid('id_norma_hasil');
             $table->foreign('id_norma_hasil')->references('id')->on('norma_hasils')->onDelete('cascade');
             $table->integer('nomor_norma_hasil');
             $table->string('kode_norma_hasil', 100);

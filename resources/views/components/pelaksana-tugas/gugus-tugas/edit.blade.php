@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-edit-pelaksana" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-edit-pelaksana" data-backdrop="static" data-keyboard="false" 
     aria-labelledby="modal-edit-pelaksana-label" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">

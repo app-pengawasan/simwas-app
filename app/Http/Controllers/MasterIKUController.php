@@ -149,14 +149,22 @@ class MasterIKUController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        MasterIKU::where('id_iku', $id)->delete();
+        try {
+            MasterIKU::where('id_iku', $id)->delete();
 
-        $request->session()->put('status', 'Berhasil menghapus IKU Inspektorat Utama.');
-        $request->session()->put('alert-type', 'success');
+            $request->session()->put('status', 'Berhasil menghapus IKU Inspektorat Utama.');
+            $request->session()->put('alert-type', 'success');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil menghapus IKu Inspektorat Utama',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus IKu Inspektorat Utama',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus IKU Inspektorat Utama',
+            ],409);
+        }
+
     }
 }

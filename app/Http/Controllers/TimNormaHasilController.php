@@ -63,7 +63,7 @@ class TimNormaHasilController extends Controller
         $id_pegawai = auth()->user()->id;
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->where('status', 6);
+                        $query->whereIn('status', [4,5]);
                     })->pluck('id_rencanakerja');
         $draf = NormaHasil::latest()->whereIn('tugas_id', $tugasSaya)
                 ->where('status_norma_hasil', 'disetujui')
@@ -104,7 +104,7 @@ class TimNormaHasilController extends Controller
         $rules = [
             'nomor' => ['required', 'string', 'max:26'],
             'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
-        ]; 
+        ];
 
         $messages = [
             'required' => ':attribute harus diisi',

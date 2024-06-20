@@ -20,7 +20,7 @@
     @include('components.master-sasaran.edit');
     <section class="section">
         <div class="section-header">
-            <h1>Master Sasaran Inspekotrat Utama</h1>
+            <h1>Master Sasaran Inspektorat Utama</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
                 <div class="breadcrumb-item">Master Sasaran</div>

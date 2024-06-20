@@ -30,8 +30,8 @@ return new class extends Migration
             $table->dropColumn('catatan');
             // Add new columns
             // Usulan Norma Hasil
-            $table->string('tugas_id', 100);
-            $table->foreign('tugas_id')->references('id_rencanakerja')->on('rencana_kerjas');
+            $table->ulid('tugas_id');
+            $table->foreign('tugas_id')->references('id_rencanakerja')->on('rencana_kerjas')->onDelete('cascade');
             $table->string('jenis_norma_hasil_id', 100);
             $table->string('nama_dokumen', 100);
             $table->string('document_path', 100);
