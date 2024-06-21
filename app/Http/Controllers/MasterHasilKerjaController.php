@@ -53,6 +53,10 @@ class MasterHasilKerjaController extends Controller
                 'master_subunsur_id' => $request->masterSubUnsurId,
                 'nama_hasil_kerja' => $request->namaHasilKerja,
                 'hasil_kerja_tim' => $request->hasilKerjaTim,
+                'pengendali_teknis' => $request->status == '1' ? $request->pengendaliTeknis : null,
+                'ketua_tim' => $request->status == '1' ? $request->ketuaTim : null,
+                'anggota_tim' => $request->anggotaTim,
+                'pic' => $request->status != '1' ? $request->picKoordinator : null,
                 'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
             ]);
             return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');

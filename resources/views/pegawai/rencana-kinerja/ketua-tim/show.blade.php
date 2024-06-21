@@ -15,7 +15,7 @@
 @include('components.pegawai-sidebar')
 <!-- Modal -->
 {{-- @include('components.rencana-kerja.create'); --}}
-@include('components.rencana-kerja.summary');
+{{-- @include('components.rencana-kerja.summary'); --}}
 @include('components.rencana-kerja.edit')
 @include('components.rencana-kerja.create-proyek')
 <div class="main-content">

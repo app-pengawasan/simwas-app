@@ -33,6 +33,7 @@
                                 <option value="{{ $hasil_kerja->id }}">{{ $hasil_kerja->nama_hasil_kerja }}</option>
                                 @endforeach
                             </select>
+                            <small id="error-hasil_kerja" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -46,7 +47,7 @@
                         <label class="form-label" for="subunsur">Subunsur</label>
                         <div class="">
                             <input disabled type="text" id="subunsur" class="form-control" name="subunsur" required>
-                            <small id="error-unsur" class="text-danger"></small>
+                            <small id="error-subunsur" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,7 +55,7 @@
                         <div class="">
                             <input disabled type="text" id="pelaksana-tugas" class="form-control" name="pelaksana-tugas"
                                 required>
-                            <small id="error-unsur" class="text-danger"></small>
+                            <small id="error-pelaksana_tugas" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -62,7 +63,7 @@
                         <div class="">
                             <input placeholder="Masukkan Melaksanakan" type="text" id="create-melaksanakan"
                                 class="form-control" name="create-melaksanakan" required>
-                            <small id="error-unsur" class="text-danger"></small>
+                            <small id="error-melaksanakan" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -70,7 +71,7 @@
                         <div class="">
                             <input placeholder="Masukkan Capaian" type="text" id="create-capaian" class="form-control"
                                 name="create-capaian" required>
-                            <small id="error-unsur" class="text-danger"></small>
+                            <small id="error-capaian" class="text-danger"></small>
                         </div>
                     </div>
                     {{-- <div class="form-group">

@@ -260,9 +260,15 @@
                                             <td>
                                                 {{ $jabatanPelaksana[$rencanaKerja->pelaksana[$i]->pt_jabatan - 1] }}
                                             </td>
+                                            @if ($rencanaKerja->kategori_pelaksanatugas == 'gt')
                                             <td>
                                                 {{ $masterHasilKerja[$rencanaKerja->pelaksana[$i]->pt_hasil] }}
                                             </td>
+                                            @else
+                                            <td>
+                                                {{ $rencanaKerja->pelaksana[$i]->hasil->nama_hasil_kerja }}
+                                            </td>
+                                            @endif
                                             <td>
                                                 {{
                                                         $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agt + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des

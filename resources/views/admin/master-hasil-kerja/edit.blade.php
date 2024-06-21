@@ -17,18 +17,8 @@
                     @csrf
                     <div class="form-group">
                         <label class="form-label" for="editMasterUnsurId">Nama Unsur</label>
-                        @if (count($masterUnsurs) == 0)
-                        <span><small class="text-danger">
-                                *Tidak ada data unsur. Silahkan
-                                <a href="/admin/master-unsur">
-                                    tambah unsur
-                                </a>
-                                terlebih dahulu.
-                            </small>
-                        </span>
-                        @endif
                         <div class="">
-                            <select class="form-control select2" name="editMasterUnsurId" id="editMasterUnsurId" required>
+                            <select class="form-control" name="editMasterUnsurId" id="editMasterUnsurId" required>
                                 <option value="">Pilih Unsur</option>
                                 @foreach ($masterUnsurs as $unsur)
                                 <option value="{{ $unsur->id }}">{{ $unsur->nama_unsur }}</option>
@@ -38,9 +28,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="editMasterSubUnsurId">Nama Subunsur</label>
-                        <span id="subunsur-alert"><small class="text-danger "></small></span>
                         <div class="">
-                            <select class="form-control select2" name="editMasterSubUnsurId" id="editMasterSubUnsurId" required>
+                            <select class="form-control" name="editMasterSubUnsurId" id="editMasterSubUnsurId" required>
                                 <option value="">Pilih Subunsur</option>
                                 @foreach ($masterSubUnsurs as $unsur)
                                 <option value="{{ $unsur->id }}">{{ $unsur->nama_sub_unsur }}</option>
@@ -66,20 +55,47 @@
                         </div>
                     </div>
                     {{-- radiobutton --}}
-                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                    <div class="form-group
+                                        {{ $errors->has('status') ? ' has-error' : '' }}">
                         <label class="form-label required" for="editStatus">Status</label>
                         <div class="selectgroup w-100">
                             <label class="selectgroup-item">
-                                <input id="editStatus1" type="radio" name="editStatus" value="1"
-                                    class="selectgroup-input" checked="">
+                                <input type="radio" name="editStatus" value="1" class="selectgroup-input" checked="">
                                 <span class="selectgroup-button">Gugus Tugas</span>
                             </label>
                             <label class="selectgroup-item">
-
-                                <input id="editStatus2" type="radio" name="editStatus" value="0"
-                                    class="selectgroup-input">
+                                <input id="ngt" type="radio" name="editStatus" value="0" class="selectgroup-input">
                                 <span class="selectgroup-button">Bukan Gugus Tugas</span>
                             </label>
+                        </div>
+                    </div>
+                    <div id="edit-pengendali-teknis" class="form-group">
+                        <label class="form-label" for="editPengendaliTeknis">Pengendali Teknis</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="editPengendaliTeknis"
+                                id="editPengendaliTeknis" required>
+                            <small id="error-hasil-kerja" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div id="edit-ketua-tim" class="form-group">
+                        <label class="form-label" for="editKetuaTim">Ketua Tim</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="editKetuaTim" id="editKetuaTim" required>
+                            <small id="error-hasil-kerja" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div style="display: none" id="edit-picKoordinator" class="form-group">
+                        <label class="form-label" for="editPicKoordinator">PIC/Koordinator</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="editPicKoordinator" id="editPicKoordinator">
+                            <small id="error-hasil-kerja" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editAnggotaTim">Anggota Tim</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="editAnggotaTim" id="editAnggotaTim" required>
+                            <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
                 </div>
