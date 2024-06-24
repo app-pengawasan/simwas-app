@@ -26,4 +26,9 @@ class MasterHasilKerja extends Model
     {
         return $this->belongsTo(MasterSubUnsur::class, 'master_subunsur_id', 'id');
     }
+
+    public function masterKinerja()
+    {
+        return $this->hasMany(MasterKinerja::class, 'hasil_kerja_id', 'id');
+    }
 }

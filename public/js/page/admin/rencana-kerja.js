@@ -135,15 +135,15 @@ $(".submit-btn").on("click", function (e) {
     $("#error-ketua").text("");
 
     // return alert([tahun, unitkerja, iku, nama, ketua]);
-     Swal.fire({
-         title: "Menyimpan Data",
-         html: "Mohon tunggu sebentar",
-         timerProgressBar: true,
-         didOpen: () => {
-             Swal.showLoading();
-         },
-         allowOutsideClick: () => !Swal.isLoading(),
-     });
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/admin/tim-kerja`,
@@ -163,14 +163,14 @@ $(".submit-btn").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `Gagal menyimpan data`,
+                showConfirmButton: false,
+                timer: 3000,
             });
-            Swal.close();
         },
     });
 });
@@ -318,12 +318,9 @@ $(".btn-edit-timkerja").on("click", function () {
                     text: response.data.id_ketua,
                 },
             });
-            $("#edit-operator").select2("trigger", "select", {
-                data: {
-                    id: response.data.id_operator,
-                    text: response.data.id_operator,
-                },
-            });
+            $("#edit-operator").val(response.data.operator);
+
+            $("#edit-operator").trigger("change");
         },
         error: function (e) {
             console.log(e);
@@ -404,5 +401,47 @@ $("#submit-edit-btn").on("click", function (e) {
                 timer: 3000,
             });
         },
+    });
+});
+
+$(".button-lock-timkerja").on("click", function () {
+    // swal fire lock and if yes then form submit
+    // if no then close modal
+    event.preventDefault();
+    dataId = $(this).attr("data-id");
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Tim akan dikunci dan tidak dapat diubah",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kunci",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#form-lock-timkerja-${dataId}`).submit();
+        }
+    });
+});
+
+$(".button-unlock-timkerja").on("click", function () {
+    // swal fire lock and if yes then form submit
+    // if no then close modal
+    event.preventDefault();
+    dataId = $(this).attr("data-id");
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Tim akan dibuka dan dapat diubah kembali",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kunci",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#form-unlock-timkerja-${dataId}`).submit();
+        }
     });
 });

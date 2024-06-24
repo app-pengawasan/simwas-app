@@ -22,22 +22,6 @@
                             <small id="error-nama_proyek" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="create-rk_anggota">Rencana Kinerja Anggota</label>
-                        <div class="">
-                            <input placeholder="Masukkan Rencana Kinerja Anggota" type="text" id="create-rk_anggota" class="form-control" name="create-rk_anggota"
-                                required>
-                            <small id="error-rk_anggota" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="create-iki_anggota">IKI Ketua</label>
-                        <div class="">
-                            <input placeholder="Masukkan IKI Ketua" type="text" id="create-iki_anggota" class="form-control" name="create-iki_anggota"
-                                required>
-                            <small id="error-iki_anggota" class="text-danger"></small>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">

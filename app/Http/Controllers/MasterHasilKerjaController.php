@@ -10,6 +10,8 @@ use App\Models\MasterSubUnsur;
 
 class MasterHasilKerjaController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -52,11 +54,6 @@ class MasterHasilKerjaController extends Controller
             MasterHasilKerja::create([
                 'master_subunsur_id' => $request->masterSubUnsurId,
                 'nama_hasil_kerja' => $request->namaHasilKerja,
-                'hasil_kerja_tim' => $request->hasilKerjaTim,
-                'pengendali_teknis' => $request->status == '1' ? $request->pengendaliTeknis : null,
-                'ketua_tim' => $request->status == '1' ? $request->ketuaTim : null,
-                'anggota_tim' => $request->anggotaTim,
-                'pic' => $request->status != '1' ? $request->picKoordinator : null,
                 'kategori_pelaksana' => $request->status == '1' ? 'gt' : 'ngt',
             ]);
             return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
@@ -105,12 +102,7 @@ class MasterHasilKerjaController extends Controller
             $masterHasilKerja->update([
                 'master_subunsur_id' => $request->editMasterSubUnsurId,
                 'nama_hasil_kerja' => $request->editNamaHasilKerja,
-                'hasil_kerja_tim' => $request->editHasilKerjaTim,
-                'pengendali_teknis' => $request->editPengendaliTeknis,
-                'pengendali_mutu' => $request->editPengendaliMutu,
-                'ketua_tim' => $request->editKetuaTim,
-                'anggota_tim' => $request->editAnggotaTim,
-                'pic' => $request->editPicKoordinator,
+                'kategori_pelaksana' => $request->editStatus == '1' ? 'gt' : 'ngt',
             ]);
             return redirect()->route('admin.master-hasil-kerja.index')->with('status', 'Data berhasil diubah')->with('alert-type', 'success');
         } catch (\Throwable $th) {

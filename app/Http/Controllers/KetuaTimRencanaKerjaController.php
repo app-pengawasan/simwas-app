@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Proyek;
 use App\Models\TimKerja;
 use App\Models\MasterIKU;
 use App\Models\MasterHasil;
 use App\Models\MasterTujuan;
 use App\Models\RencanaKerja;
-use App\Models\Proyek;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
+use App\Models\MasterHasilKerja;
 use App\Http\Controllers\Controller;
+use App\Models\OperatorRencanaKinerja;
 use Illuminate\Support\Facades\Validator;
 
 class KetuaTimRencanaKerjaController extends Controller
@@ -24,28 +26,19 @@ class KetuaTimRencanaKerjaController extends Controller
         '8300'    => 'Inspektorat Wilayah III',
     ];
 
-    protected $statusTim = [
+   protected $statusTim = [
         // Pegawai Buat Tim
         0   => 'Belum Disusun',
         // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
         // Ketua Tim Kirim Rencana Kinerja ke Admin
-        2   => 'Menunggu Reviu',
-        // Ditolak Admin
-        3   => 'Perlu Perbaikan',
-        // Diperbaiki Ketua Tim
-        4   => 'Disetujui',
-        // Disetujui Admin Sudah di Lock
-        5   => 'Disetujui',
+        2   => 'Dikunci Oleh Admin',
     ];
 
     protected $colorText = [
-        0   => 'dark',
+        0   => 'warning',
         1   => 'info',
-        2   => 'primary',
-        3   => 'warning',
-        4   => 'success',
-        5   => 'success',
+        2   => 'success',
     ];
 
     protected $unsur = [
@@ -105,7 +98,12 @@ class KetuaTimRencanaKerjaController extends Controller
             $year = $year;
         }
         $id_pegawai = auth()->user()->id;
-        $timKerja = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get();
+        $timKerja = TimKerja::with('ketua', 'iku')->where(function($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai)
+                    ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
+                        $query->where('operator_id', $id_pegawai);
+                    });
+            })->where('tahun', $year)->get();
         // select raw distinct year from created_at
 
         $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
@@ -158,8 +156,6 @@ class KetuaTimRencanaKerjaController extends Controller
             'hasilkerja' => 'required',
             'tugas' => 'required',
             'id_proyek' => 'required',
-            'melaksanakan' => 'required',
-            'capaian' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -177,8 +173,6 @@ class KetuaTimRencanaKerjaController extends Controller
             'kategori_pelaksanatugas'   => $request->kategori_pelaksana,
             'tugas'         => $validateData['tugas'],
             'id_proyek'     => $validateData['id_proyek'],
-            'melaksanakan'  => $validateData['melaksanakan'],
-            'capaian'       => $validateData['capaian'],
         ]);
 
         TimKerja::where('id_timkerja', $validateData['id_timkerja'])
@@ -202,17 +196,15 @@ class KetuaTimRencanaKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
-        $ketuaTim = $timKerja[0]->id_ketua;
-        $userLogin = auth()->user()->id;
-        if ($ketuaTim != $userLogin) {
-            abort(403);
-        }
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
         $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
+        $masterHasil = MasterHasilKerja::whereHas('masterKinerja')->get();
+        $operator = OperatorRencanaKinerja::where('tim_kerja_id', $timKerja[0]->id_timkerja)->get();
+
 
         return view('pegawai.rencana-kinerja.ketua-tim.show', [
             'type_menu'     => 'rencana-kinerja',
@@ -227,8 +219,10 @@ class KetuaTimRencanaKerjaController extends Controller
             'timKerja'      => $timKerja[0],
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
-            'rencanaKerja'  => $rencanaKerja,
-            'proyeks'       => $proyeks
+            'rencanaKerjas'  => $rencanaKerja,
+            'proyeks'       => $proyeks,
+            'masterHasil'   => $masterHasil,
+            'operator'      => $operator,
         ]);
     }
 
@@ -252,7 +246,29 @@ class KetuaTimRencanaKerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $hasilKerja = MasterHasilKerja::where('id', $request->hasilkerja)->first();
+            RencanaKerja::where('id_rencanakerja', $id)
+            ->update([
+                'tugas' => $request->tugas,
+                'id_hasilkerja' => $request->hasilkerja,
+                'id_proyek' => $request->proyek,
+                'kategori_pelaksanatugas' => $hasilKerja->kategori_pelaksana,
+            ]);
+
+            $request->session()->put('status', 'Berhasil mengubah Tugas Tim Kerja.');
+            $request->session()->put('alert-type', 'success');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mengubah Tugas Tim Kerja',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => `Gagal mengubah Tugas Tim Kerja`,
+            ], 500);
+        }
     }
 
     /**

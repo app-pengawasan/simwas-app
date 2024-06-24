@@ -42,8 +42,6 @@ class ProyekController extends Controller
             Proyek::create([
                 'id_tim_kerja' => $request->id_timkerja,
                 'nama_proyek' => $request->nama_proyek,
-                'rencana_kinerja_anggota' => $request->rk_anggota,
-                'iki_anggota' => $request->iki_anggota,
             ]);
             $request->session()->put('status', 'Berhasil menambahkan Proyek');
         $request->session()->put('alert-type', 'success');
@@ -72,11 +70,6 @@ class ProyekController extends Controller
         $masterHasil = MasterHasilKerja::all();
         $rencanaKerjas = $proyek->rencanaKerja;
 
-        $userLogin = auth()->user()->id;
-        $ketuaTim = $timKerja->id_ketua;
-        if ($ketuaTim != $userLogin) {
-            abort(403);
-        }
         return view('pegawai.rencana-kinerja.proyek.show', [
             'proyek' => $proyek,
             'timKerja' => $timKerja,
@@ -104,9 +97,23 @@ class ProyekController extends Controller
      * @param  \App\Models\Proyek  $proyek
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProyekRequest $request, Proyek $proyek)
+    public function update($id)
     {
-        //
+        try {
+            $proyek = Proyek::where('id', $id)->first();
+            $proyek->update([
+                'nama_proyek' => request()->input('nama_proyek'),
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mengubah Proyek',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -117,9 +124,14 @@ class ProyekController extends Controller
      */
     public function destroy(Proyek $proyek)
     {
-        $proyek->delete();
-        // return back
-        return redirect()->back()->with('status', 'Berhasil Menghapus Proyek')
-            ->with('alert-type', 'success');
+        try {
+            $proyek->delete();
+            // return back
+            return redirect()->back()->with('status', 'Berhasil Menghapus Proyek')
+                ->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('status', 'Gagal Menghapus Proyek, Data masih digunakan di tugas')
+                ->with('alert-type', 'danger');
+        }
     }
 }

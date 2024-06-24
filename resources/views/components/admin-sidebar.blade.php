@@ -102,6 +102,9 @@
                     <li class="{{ Request::is('admin/master-hasil-kerja') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.master-hasil-kerja.index') }}">Master Hasil Kerja</a>
                     </li>
+                    <li class="{{ Request::is('admin/master-kinerja') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.master-kinerja.index') }}">Master Kinerja</a>
+                    </li>
                 </ul>
             </li>
         </ul>

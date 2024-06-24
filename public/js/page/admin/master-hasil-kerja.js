@@ -1,4 +1,3 @@
-// function when edit-button class clicked
 $(document).on("click", ".edit-button", function () {
     var id = $(this).data("id");
     $("#edit-form").attr("action", "/admin/master-hasil-kerja/" + id);
@@ -16,19 +15,19 @@ $(document).on("click", ".edit-button", function () {
             $("#editPicKoordinator").val(data.pic);
             $("#editAnggotaTim").val(data.anggota_tim);
 
-            if (data.pic != null) {
+            if (data.kategori_pelaksana == "ngt") {
                 $("#editStatus1").prop("checked", true);
                 $("#edit-picKoordinator").show();
-                $("#edit-picKoordinator").attr("required", true);
+                $("#editPicKoordinator").attr("required", true);
                 $("#edit-pengendali-teknis").hide();
                 $("#edit-ketua-tim").hide();
-                $("#edit-pengendaliTeknis").attr("required", false);
-                $("#edit-ketuaTim").attr("required", false);
+                $("#editPengendaliTeknis").attr("required", false);
+                $("#editKetuaTim").attr("required", false);
                 $("#ngt").prop("checked", true);
             } else {
                 $("#editStatus2").prop("checked", true);
                 $("#edit-picKoordinator").hide();
-                $("#edit-picKoordinator").attr("required", false);
+                $("#editPicKoordinator").attr("required", false);
                 $("#edit-pengendali-teknis").show();
                 $("#edit-ketua-tim").show();
                 $("#edit-pengendaliTeknis").attr("required", true);
@@ -60,7 +59,6 @@ $(document).on("click", ".hapus-button", function () {
 
 $(document).on("change", "#masterUnsurId", function () {
     var id = $(this).val();
-    console.log(id);
     $.ajax({
         url: "/admin/master-subunsur/unsur/" + id,
         method: "GET",
@@ -79,14 +77,14 @@ $(document).on("change", "#masterUnsurId", function () {
 $(document).on("change", "input[type=radio][name=status]", function () {
     var value = $(this).val();
     if (value == "1") {
-        $("#picKoordinator").hide();
+        $("#wrapper-picKoordinator").hide();
         $("#picKoordinator").attr("required", false);
         $("#pengendali-teknis").show();
         $("#ketua-tim").show();
         $("#pengendaliTeknis").attr("required", true);
         $("#ketuaTim").attr("required", true);
     } else {
-        $("#picKoordinator").show();
+        $("#wrapper-picKoordinator").show();
         $("#picKoordinator").attr("required", true);
         $("#pengendali-teknis").hide();
         $("#ketua-tim").hide();
@@ -98,18 +96,18 @@ $(document).on("change", "input[type=radio][name=editStatus]", function () {
     var value = $(this).val();
     if (value == "1") {
         $("#edit-picKoordinator").hide();
-        $("#edit-picKoordinator").attr("required", false);
+        $("#editPicKoordinator").attr("required", false);
         $("#edit-pengendali-teknis").show();
         $("#edit-ketua-tim").show();
-        $("#edit-pengendaliTeknis").attr("required", true);
-        $("#edit-ketuaTim").attr("required", true);
+        $("#editPengendaliTeknis").attr("required", true);
+        $("#editKetuaTim").attr("required", true);
     } else {
         $("#edit-picKoordinator").show();
-        $("#edit-picKoordinator").attr("required", true);
+        $("#editPicKoordinator").attr("required", true);
         $("#edit-pengendali-teknis").hide();
         $("#edit-ketua-tim").hide();
-        $("#edit-pengendaliTeknis").attr("required", false);
-        $("#edit-ketuaTim").attr("required", false);
+        $("#editPengendaliTeknis").attr("required", false);
+        $("#editKetuaTim").attr("required", false);
     }
 });
 

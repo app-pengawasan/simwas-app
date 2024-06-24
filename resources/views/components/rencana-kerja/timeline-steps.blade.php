@@ -4,7 +4,7 @@
         <span class="title-prg">Rencana Kegiatan Berhasil Dibuat</span>
     </div>
 
-    @if ($timKerja->status == 0 || $timKerja->status == 1)
+    @if ($timKerja->status == 0)
     <span class="bar done"></span>
     <div class="circle active">
         <span class="label"><i class="fa-solid fa-hourglass-start"></i></span>
@@ -16,7 +16,7 @@
         <span class="title-prg">Persetujuan Oleh Perencana</span>
     </div>
     @endif
-    @if ($timKerja->status == 2)
+    @if ($timKerja->status == 1)
     <span class="bar done"></span>
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
@@ -29,21 +29,8 @@
     </div>
     @endif
 
-    @if ($timKerja->status == 3)
-    <span class="bar done"></span>
-    <div class="circle done">
-        <span class="label"><i class="fa-solid fa-check"></i></span>
-        <span class="title-prg">Ketua Tim Telah Selesai Menyusun Rencana Kegiatan</span>
-    </div>
-    <span class="bar done"></span>
-    <div class="circle danger">
-        <span class="label"><i class="fa-solid fa-triangle-exclamation"></i></span>
-        <span class="title-prg">Rencana Kinerja Ditolak, Silakan Perbaiki</span>
-    </div>
-    @endif
 
-
-    @if ($timKerja->status == 5 || $timKerja->status == 4)
+    @if ($timKerja->status == 2)
     <span class="bar done"></span>
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>

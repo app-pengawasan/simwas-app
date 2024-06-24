@@ -221,7 +221,7 @@ class InspekturPenilaianKinerjaController extends Controller
         //tugas yang akan dinilai
         $tugas = PelaksanaTugas::where('id_pegawai', $pegawai_dinilai)
             ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->whereIn('status', [4,5]);
+                $query->whereIn('status', [1,2]);
             })->select('id_pelaksana');
 
         //realisasi untuk dinilai

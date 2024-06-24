@@ -14,7 +14,16 @@ $(function () {
                         className: "btn-success",
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4],
+                            columns: [0, 1, 2, 3],
+                            orthogonal: "sort",
+                        },
+                        customizeData: function (data) {
+                            for (var i = 0; i < data.body.length; i++) {
+                                for (var j = 0; j < data.body[i].length; j++) {
+                                    data.body[i][j] =
+                                        "\u200C" + data.body[i][j];
+                                }
+                            }
                         },
                     },
                     {
@@ -22,7 +31,7 @@ $(function () {
                         className: "btn-danger",
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4],
+                            columns: [0, 1, 2, 3],
                         },
                     },
                 ],
@@ -67,42 +76,24 @@ $(function () {
         $(".dt-buttons").appendTo("#download-button");
 
         function filterTable() {
-            let filterJabatan = $("#filter-jabatan").val();
             let filterUnitKerja = $("#filter-unit-kerja").val();
 
-            if (filterJabatan == "Semua") {
-                filterJabatan = "";
-            }
             if (filterUnitKerja == "Semua") {
                 filterUnitKerja = "";
             }
 
-            if (filterJabatan == "" && filterUnitKerja == "") {
+            if (filterUnitKerja == "") {
+                table.column(3).search(filterUnitKerja, true, false).draw();
+            } else if (filterUnitKerja !== "") {
                 table
                     .column(3)
-                    .search(filterJabatan, true, false)
-                    .column(4)
-                    .search(filterUnitKerja, true, false)
-                    .draw();
-            } else if (filterJabatan == "" && filterUnitKerja !== "") {
-                table
-                    .column(3)
-                    .search(filterJabatan, true, false)
-                    .column(4)
                     .search("^" + filterUnitKerja + "$", true, false)
                     .draw();
-            } else if (filterJabatan !== "" && filterUnitKerja == "") {
-                table
-                    .column(3)
-                    .search("^" + filterJabatan + "$", true, false)
-                    .column(4)
-                    .search(filterUnitKerja, true, false)
-                    .draw();
+            } else if (filterUnitKerja == "") {
+                table.column(3).search(filterUnitKerja, true, false).draw();
             } else {
                 table
                     .column(3)
-                    .search("^" + filterJabatan + "$", true, false)
-                    .column(4)
                     .search("^" + filterUnitKerja + "$", true, false)
                     .draw();
             }
@@ -115,7 +106,7 @@ $(function () {
                     cell.innerHTML = i + 1;
                 });
         }
-        $("#filter-jabatan, #filter-unit-kerja").on("change", function () {
+        $("#filter-unit-kerja").on("change", function () {
             filterTable();
         });
     }
@@ -202,10 +193,10 @@ $(".delete-btn").on("click", function (e) {
     });
 });
 
-document.forms['addPegawai'].reset();
+document.forms["addPegawai"].reset();
 
 $("#name").on("change", function (e) {
-    let nip = $(this).find(':selected').data('nip');
+    let nip = $(this).find(":selected").data("nip");
     Swal.fire({
         title: "Mengambil Data",
         html: "Mohon tunggu sebentar",
@@ -223,9 +214,11 @@ $("#name").on("change", function (e) {
         //     _token: token,
         // },
         success: function (response) {
-            $('#email').val(response[0]['email']);
-            $('#nip').val(response[0]['attributes']['attribute-nip'][0]);
-            $('#pangkat').val(response[0]['attributes']['attribute-golongan'][0]);
+            $("#email").val(response[0]["email"]);
+            $("#nip").val(response[0]["attributes"]["attribute-nip"][0]);
+            $("#pangkat").val(
+                response[0]["attributes"]["attribute-golongan"][0]
+            );
             // switch(response[0]['attributes']['attribute-organisasi'][0]) {
             //     case '000000081000':
             //         $('#unit_kerja').val('Inspektorat Wilayah I');
@@ -239,10 +232,13 @@ $("#name").on("change", function (e) {
             //     default:
             //         $('#unit_kerja').val('Inspektorat Utama');
             // }
-            let unit_kerja = response[0]['attributes']['attribute-organisasi'][0];
-            $('#unit_kerja').val(unit_kerja.substring(7, unit_kerja.length - 1));
+            let unit_kerja =
+                response[0]["attributes"]["attribute-organisasi"][0];
+            $("#unit_kerja").val(
+                unit_kerja.substring(7, unit_kerja.length - 1)
+            );
             // $('#jabatan').val(response[0]['attributes']['attribute-jabatan'][0]);
-            $('#jabatan').val(0);
+            $("#jabatan").val(0);
             Swal.close();
         },
         error: function (error) {

@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Subunsur Inspektorat</h5>
+                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Hasil Kerja Inspektorat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -38,18 +38,11 @@
                     <div class="form-group">
                         <label class="form-label" for="namaHasilKerja">Nama Hasil Kerja</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required>
+                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required placeholder="Nama Hasil Kerja">
                             <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="hasilKerjaTim">Hasil Kerja Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="hasilKerjaTim" id="hasilKerjaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
                     {{-- radiobutton --}}
                     <div class="form-group
                         {{ $errors->has('status') ? ' has-error' : '' }}">
@@ -63,35 +56,6 @@
                                 <input type="radio" name="status" value="0" class="selectgroup-input">
                                 <span class="selectgroup-button">Bukan Gugus Tugas</span>
                             </label>
-                        </div>
-                    </div>
-                    <div id="pengendali-teknis" class="form-group">
-                        <label class="form-label" for="pengendaliTeknis">Pengendali Teknis</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="pengendaliTeknis" id="pengendaliTeknis"
-                                required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div id="ketua-tim" class="form-group">
-                        <label class="form-label" for="ketuaTim">Ketua Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="ketuaTim" id="ketuaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div style="display: none" id="picKoordinator" class="form-group">
-                        <label class="form-label" for="picKoordinator">PIC/Koordinator</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="picKoordinator" id="picKoordinator">
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="anggotaTim">Anggota Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="anggotaTim" id="anggotaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

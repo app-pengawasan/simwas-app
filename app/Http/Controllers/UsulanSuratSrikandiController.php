@@ -250,10 +250,9 @@ class UsulanSuratSrikandiController extends Controller
     public function create()
     {
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->whereIn('status', [4,5]);
+                            $query->whereIn('status', [1,2]);
                         })->whereHas('pelaksana', function ($query) {
-                            $query->where('id_pegawai', auth()->user()->id)
-                                ->whereIn('pt_jabatan', [2, 3]);
+                            $query->where('id_pegawai', auth()->user()->id);
                         })->get();
                         // dd($rencanaKerja);
         return view('pegawai.usulan-surat-srikandi.create', [

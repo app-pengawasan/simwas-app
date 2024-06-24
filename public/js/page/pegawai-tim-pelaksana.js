@@ -489,7 +489,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     let id_rencanakerja = $("#id_rencanakerja").val();
     let jabatan = $("#pt-jabatan").val();
-    let hasil_kerja = $("#pt-hasil").val();
     let pelaksana = $("#pelaksana").val();
     let jan = $("#create-januari").val();
     let feb = $("#create-februari").val();
@@ -516,6 +515,45 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     okt = okt == "" ? 0 : okt;
     nov = nov == "" ? 0 : nov;
     des = des == "" ? 0 : des;
+
+    // replace , to .
+    if (jan) {
+        jan = jan.replace(/,/g, ".");
+    }
+    if (feb) {
+        feb = feb.replace(/,/g, ".");
+    }
+    if (mar) {
+        mar = mar.replace(/,/g, ".");
+    }
+    if (apr) {
+        apr = apr.replace(/,/g, ".");
+    }
+    if (mei) {
+        mei = mei.replace(/,/g, ".");
+    }
+    if (jun) {
+        jun = jun.replace(/,/g, ".");
+    }
+    if (jul) {
+        jul = jul.replace(/,/g, ".");
+    }
+    if (agu) {
+        agu = agu.replace(/,/g, ".");
+    }
+    if (sep) {
+        sep = sep.replace(/,/g, ".");
+    }
+    if (okt) {
+        okt = okt.replace(/,/g, ".");
+    }
+    if (nov) {
+        nov = nov.replace(/,/g, ".");
+    }
+    if (des) {
+        des = des.replace(/,/g, ".");
+    }
+
 
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
@@ -567,8 +605,13 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         return;
     }
 
-    $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
+
+    if(pelaksana == null || pelaksana == ""){
+        $("#error-pelaksana").text("Pilih Pelaksana");
+        return;
+    }
+
 
     Swal.fire({
         title: "Menyimpan Data",
@@ -580,6 +623,7 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         allowOutsideClick: () => !Swal.isLoading(),
     });
 
+
     $.ajax({
         url: `/pelaksana-tugas`,
         type: "POST",
@@ -588,7 +632,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             _token: token,
             id_rencanakerja: id_rencanakerja,
             pt_jabatan: jabatan,
-            hasil_kerja: hasil_kerja,
             pelaksana: pelaksana,
             jan: jan,
             feb: feb,
@@ -607,15 +650,13 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
-            Swal.close();
+
         },
     });
 });
@@ -679,18 +720,18 @@ $(".btn-edit-pelaksana").on("click", function (e) {
                 },
             });
             $("#edit-id_pelaksana").val(response.data.id_pelaksana);
-            $("#edit-januari").val(response.data.jan);
-            $("#edit-februari").val(response.data.feb);
-            $("#edit-maret").val(response.data.mar);
-            $("#edit-april").val(response.data.apr);
-            $("#edit-mei").val(response.data.mei);
-            $("#edit-juni").val(response.data.jun);
-            $("#edit-juli").val(response.data.jul);
-            $("#edit-agustus").val(response.data.agu);
-            $("#edit-september").val(response.data.sep);
-            $("#edit-oktober").val(response.data.okt);
-            $("#edit-november").val(response.data.nov);
-            $("#edit-desember").val(response.data.des);
+            $("#edit-januari").val(response.data.jan.replace(".", ","));
+            $("#edit-februari").val(response.data.feb.replace(".", ","));
+            $("#edit-maret").val(response.data.mar.replace(".", ","));
+            $("#edit-april").val(response.data.apr.replace(".", ","));
+            $("#edit-mei").val(response.data.mei.replace(".", ","));
+            $("#edit-juni").val(response.data.jun.replace(".", ","));
+            $("#edit-juli").val(response.data.jul.replace(".", ","));
+            $("#edit-agustus").val(response.data.agu.replace(".", ","));
+            $("#edit-september").val(response.data.sep.replace(".", ","));
+            $("#edit-oktober").val(response.data.okt.replace(".", ","));
+            $("#edit-november").val(response.data.nov.replace(".", ","));
+            $("#edit-desember").val(response.data.des.replace(".", ","));
         },
         error: function (e) {
             console.log(e);
@@ -730,6 +771,45 @@ $("#btn-edit-pelaksana").on("click", function (e) {
     okt = okt == "" ? 0 : okt;
     nov = nov == "" ? 0 : nov;
     des = des == "" ? 0 : des;
+
+    // replace , to . if exist
+    if (jan) {
+        jan = jan.replace(/,/g, ".");
+    }
+    if (feb) {
+        feb = feb.replace(/,/g, ".");
+    }
+    if (mar) {
+        mar = mar.replace(/,/g, ".");
+    }
+    if (apr) {
+        apr = apr.replace(/,/g, ".");
+    }
+    if (mei) {
+        mei = mei.replace(/,/g, ".");
+    }
+    if (jun) {
+        jun = jun.replace(/,/g, ".");
+    }
+    if (jul) {
+        jul = jul.replace(/,/g, ".");
+    }
+    if (agu) {
+        agu = agu.replace(/,/g, ".");
+    }
+    if (sep) {
+        sep = sep.replace(/,/g, ".");
+    }
+    if (okt) {
+        okt = okt.replace(/,/g, ".");
+    }
+    if (nov) {
+        nov = nov.replace(/,/g, ".");
+    }
+    if (des) {
+        des = des.replace(/,/g, ".");
+    }
+
 
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
@@ -830,3 +910,23 @@ for (i = 0; i <= rupiah.length - 1; i++) {
     let tmp = rupiah[i].innerText.toString();
     rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
 }
+
+$(".jam-kerja").on("keyup", function (e) {
+    // just allow number and ,0 or ,5
+    this.value = this.value.replace(/[^0-9,]/g, "");
+    this.value = this.value.replace(/,+/g, ",");
+    // just allow 0 or 5 after comma
+    this.value = this.value.replace(/,[^0,5]/g, "");
+
+
+
+});
+
+// after document ready change . to , in jam-kerja class
+$(document).ready(function () {
+    $(".total-jam").each(function () {
+        let value = $(this).text();
+        value = value.replace(/\./g, ",");
+        $(this).text(value);
+    });
+});

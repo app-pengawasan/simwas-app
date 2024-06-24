@@ -64,7 +64,7 @@ class TimSuratTugasController extends Controller
         $id_pegawai = auth()->user()->id;
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->whereIn('status', [4,5]);
+                        $query->whereIn('status', [1,2]);
                     })->get();
         $surat = SuratTugasTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                 ->get()->groupBy('nomor');

@@ -46,14 +46,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="editHasilKerjaTim">Hasil Kerja Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="editHasilKerjaTim" id="editHasilKerjaTim"
-                                required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
                     {{-- radiobutton --}}
                     <div class="form-group
                                         {{ $errors->has('status') ? ' has-error' : '' }}">
@@ -67,35 +59,6 @@
                                 <input id="ngt" type="radio" name="editStatus" value="0" class="selectgroup-input">
                                 <span class="selectgroup-button">Bukan Gugus Tugas</span>
                             </label>
-                        </div>
-                    </div>
-                    <div id="edit-pengendali-teknis" class="form-group">
-                        <label class="form-label" for="editPengendaliTeknis">Pengendali Teknis</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="editPengendaliTeknis"
-                                id="editPengendaliTeknis" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div id="edit-ketua-tim" class="form-group">
-                        <label class="form-label" for="editKetuaTim">Ketua Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="editKetuaTim" id="editKetuaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div style="display: none" id="edit-picKoordinator" class="form-group">
-                        <label class="form-label" for="editPicKoordinator">PIC/Koordinator</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="editPicKoordinator" id="editPicKoordinator">
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="editAnggotaTim">Anggota Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="editAnggotaTim" id="editAnggotaTim" required>
-                            <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

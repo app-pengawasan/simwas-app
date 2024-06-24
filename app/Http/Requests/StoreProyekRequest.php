@@ -26,8 +26,6 @@ class StoreProyekRequest extends FormRequest
         return [
             'id_timkerja' => 'required',
             'nama_proyek' => 'required',
-            'rk_anggota' => 'required',
-            'iki_anggota' => 'required',
         ];
     }
 }

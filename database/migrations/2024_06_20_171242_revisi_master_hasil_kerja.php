@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('ketua_tim')->nullable();
             $table->string('anggota_tim');
             $table->string('pic')->comment('Person In Charge or Koodinator')->nullable();
+            // delete hasil_kerja_tim
+            $table->dropColumn('hasil_kerja_tim');
         });
     }
 

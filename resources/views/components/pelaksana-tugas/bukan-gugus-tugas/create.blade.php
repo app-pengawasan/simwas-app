@@ -22,20 +22,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="label" for="pt-hasil">Hasil Kerja</label>
-                        <div class="">
-                            <select id="pt-hasil" class="form-control" name="pt-hasil" disabled required>
-                                {{-- @foreach ($allHasilKerja as $hasilkerja)
-                                    <option value="{{ $hasilkerja->kategori_hasilkerja }}">
-                                        {{ $masterHasilKerja[$hasilkerja->kategori_hasilkerja] }}
-                                    </option>
-                                @endforeach --}}
-                                <option value="2">Kertas Kerja</option>
-                            </select>
-                            <small id="error-hasil_kerja" class="text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="label" for="pelaksana">Nama</label>
                         <div class="">
                             <select id="pelaksana" class="form-control select2" name="pelaksana">
@@ -58,7 +44,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-januari">Januari</label>
-                                <input type="number" id="create-januari" class="form-control" name="create-januari" required
+                                <input type="text" id="create-januari" class="form-control jam-kerja" name="create-januari" required
                                     style="min-width: 60px;">
                                 <small id="error-januari" class="text-danger"></small>
                             </div>
@@ -66,7 +52,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-februari">Februari</label>
-                                <input type="number" id="create-februari" class="form-control" name="create-februari" required
+                                <input type="text" id="create-februari" class="form-control jam-kerja" name="create-februari" required
                                     style="min-width: 60px;">
                                 <small id="error-februari" class="text-danger"></small>
                             </div>
@@ -74,7 +60,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-maret">Maret</label>
-                                <input type="number" id="create-maret" class="form-control" name="create-maret" required
+                                <input type="text" id="create-maret" class="form-control jam-kerja" name="create-maret" required
                                     style="min-width: 60px;">
                                 <small id="error-maret" class="text-danger"></small>
                             </div>
@@ -82,7 +68,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-april">April</label>
-                                <input type="number" id="create-april" class="form-control" name="create-april" required
+                                <input type="text" id="create-april" class="form-control jam-kerja" name="create-april" required
                                     style="min-width: 60px;">
                                 <small id="error-april" class="text-danger"></small>
                             </div>
@@ -90,14 +76,14 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-mei">Mei</label>
-                                <input type="number" id="create-mei" class="form-control" name="create-mei" required style="min-width: 60px;">
+                                <input type="text" id="create-mei" class="form-control jam-kerja" name="create-mei" required style="min-width: 60px;">
                                 <small id="error-mei" class="text-danger"></small>
                             </div>
                             {{-- juni --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-juni">Juni</label>
-                                <input type="number" id="create-juni" class="form-control" name="create-juni" required
+                                <input type="text" id="create-juni" class="form-control jam-kerja" name="create-juni" required
                                     style="min-width: 60px;">
                                 <small id="error-juni" class="text-danger"></small>
                             </div>
@@ -105,7 +91,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-juli">Juli</label>
-                                <input type="number" id="create-juli" class="form-control" name="create-juli" required
+                                <input type="text" id="create-juli" class="form-control jam-kerja" name="create-juli" required
                                     style="min-width: 60px;">
                                 <small id="error-juli" class="text-danger"></small>
                             </div>
@@ -113,7 +99,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-agustus">Agustus</label>
-                                <input type="number" id="create-agustus" class="form-control" name="create-agustus" required
+                                <input type="text" id="create-agustus" class="form-control jam-kerja" name="create-agustus" required
                                     style="min-width: 60px;">
                                 <small id="error-agustus" class="text-danger"></small>
                             </div>
@@ -121,7 +107,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-september">September</label>
-                                <input type="number" id="create-september" class="form-control" name="create-september" required
+                                <input type="text" id="create-september" class="form-control jam-kerja" name="create-september" required
                                     style="min-width: 60px;">
                                 <small id="error-september" class="text-danger"></small>
                             </div>
@@ -129,7 +115,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-oktober">Oktober</label>
-                                <input type="number" id="create-oktober" class="form-control" name="create-oktober" required
+                                <input type="text" id="create-oktober" class="form-control jam-kerja" name="create-oktober" required
                                     style="min-width: 60px;">
                                 <small id="error-oktober" class="text-danger"></small>
                             </div>
@@ -137,7 +123,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-november">November</label>
-                                <input type="number" id="create-november" class="form-control" name="create-november" required
+                                <input type="text" id="create-november" class="form-control jam-kerja" name="create-november" required
                                     style="min-width: 60px;">
                                 <small id="error-november" class="text-danger"></small>
                             </div>
@@ -145,7 +131,7 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                     " for="create-desember">Desember</label>
-                                <input type="number" id="create-desember" class="form-control" name="create-desember" required
+                                <input type="text" id="create-desember" class="form-control jam-kerja" name="create-desember" required
                                     style="min-width: 60px;">
                                 <small id="error-desember" class="text-danger"></small>
                             </div>
