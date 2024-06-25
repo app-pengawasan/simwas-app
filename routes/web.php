@@ -356,6 +356,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('surat-srikandi', SuratSrikandiController::class);
         Route::put('surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
         Route::get('surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
+        Route::put('surat-srikandi/batal/{id}', [SuratSrikandiController::class, 'batalSuratSrikandi']);
         Route::get('arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
         Route::resource('nomor-surat', NomorSuratController::class);
         Route::resource('surat', SuratController::class);

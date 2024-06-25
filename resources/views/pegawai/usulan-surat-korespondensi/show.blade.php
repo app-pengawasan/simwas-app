@@ -98,6 +98,9 @@
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                    @elseif ($usulanSuratSrikandi->status == 'dibatalkan')
+                                    <span class="badge badge-danger"><i
+                                            class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                     @else
                                     <span class="badge badge-light"><i
                                             class="fa-regular fa-clock mr-1"></i>Menunggu</span>
@@ -115,8 +118,7 @@
 
                                 <th>Dokumen Surat Usulan:</th>
                                 <td>
-                                    <a class="badge badge-primary p-2"
-                                        href="/{{ $usulanSuratSrikandi->directory }}">
+                                    <a class="badge badge-primary p-2" href="/{{ $usulanSuratSrikandi->directory }}">
                                         <i class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
                                 </td>
                             </tr>

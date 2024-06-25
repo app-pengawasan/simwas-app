@@ -74,7 +74,8 @@
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
                                 <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->kode ?? ''}}
-                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}</td>
+                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}
+                                </td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
@@ -99,6 +100,9 @@
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                    @elseif ($usulanSuratSrikandi->status == 'dibatalkan')
+                                    <span class="badge badge-danger"><i
+                                            class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                     @else
                                     <span class="badge badge-light"><i
                                             class="fa-regular fa-clock mr-1"></i>Menunggu</span>

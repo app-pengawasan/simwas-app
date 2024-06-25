@@ -143,6 +143,9 @@
                                             data-placement="top" title="{{ $usulan->catatan }}"
                                             style="cursor: pointer;"><i
                                                 class="fa-solid fa-triangle-exclamation mr-1"></i>{{ $usulan->status}}</span>
+                                        @elseif ($usulan->status == 'dibatalkan')
+                                        <span class="badge badge-danger"><i
+                                                class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                         @else
                                         <span class="badge badge-light text-capitalize" data-toggle="tooltip"
                                             data-placement="top" title="Menunggu persetujuan sekretaris"
@@ -158,9 +161,8 @@
                                             Lihat
                                         </a>
                                         @if ($usulan->status == 'disetujui')
-                                        <a href="/{{ $usulan->directory}}"
-                                            class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top"
-                                            title="Download Surat Srikandi">
+                                        <a href="/{{ $usulan->directory}}" class="btn btn-primary btn-sm"
+                                            data-toggle="tooltip" data-placement="top" title="Download Surat Srikandi">
                                             <i class="fa-solid fa-file-pdf"></i>
                                             Download
                                             @endif
