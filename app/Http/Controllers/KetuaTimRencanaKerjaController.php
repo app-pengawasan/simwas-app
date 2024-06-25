@@ -200,10 +200,10 @@ class KetuaTimRencanaKerjaController extends Controller
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
+        $rencanaKerja = RencanaKerja::with(['proyek','hasilKerja','hasilKerja.masterSubUnsur'])->where('id_timkerja',$timKerja[0]->id_timkerja)->get();
         $proyeks = Proyek::where('id_tim_kerja', $timKerja[0]->id_timkerja)->get();
         $masterHasil = MasterHasilKerja::whereHas('masterKinerja')->get();
-        $operator = OperatorRencanaKinerja::where('tim_kerja_id', $timKerja[0]->id_timkerja)->get();
+        $operator = OperatorRencanaKinerja::with('user')->where('tim_kerja_id', $timKerja[0]->id_timkerja)->get();
 
 
         return view('pegawai.rencana-kinerja.ketua-tim.show', [

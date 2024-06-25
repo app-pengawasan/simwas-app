@@ -287,8 +287,8 @@
                                                         data-melaksanakan="{{ $tugas->melaksanakan }}"
                                                         data-capaian="{{ $tugas->capaian }}"
                                                         data-hasil="{{ $tugas->hasilKerja->id }}"
-                                                        data-subunsur="{{ $tugas->hasilKerja->MasterSubUnsur->nama_sub_unsur }}"
-                                                        data-unsur="{{ $tugas->hasilKerja->MasterSubUnsur->MasterUnsur->nama_unsur }}"
+                                                        data-subunsur="{{ $tugas->hasilKerja->masterSubUnsur->nama_sub_unsur }}"
+                                                        data-unsur="{{ $tugas->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}"
                                                         data-pelaksana="{{ $tugas->kategori_pelaksanatugas }}">
                                                         <i class="fa fa-edit
                                                             "></i>

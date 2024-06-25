@@ -17,6 +17,7 @@ class SidebarPegawai
     {
         $id_pegawai = auth()->user()->id;
         $id_unitkerja = auth()->user()->unit_kerja;
+        $year = date('Y');
 
         // Usulan Norma Hasil Ketua
         $usulanNormaHasilCountSidebar = NormaHasil::with('normaHasilAccepted')->where('user_id', $id_pegawai)->where('status_norma_hasil', 'diperiksa')->whereYear('created_at', date('Y'))->count();
@@ -29,8 +30,8 @@ class SidebarPegawai
                         $query->where('operator_id', $id_pegawai);
                     });
             })
-            ->whereIn('status', [0, 1, 2, 3])
-            ->where('tahun', '2024')
+            ->whereIn('status', [0, 1])
+            ->where('tahun', $year)
             ->count();
         $timKerjaAll = TimKerja::with('ketua', 'iku')
             ->where(function($query) use ($id_pegawai) {
@@ -39,7 +40,7 @@ class SidebarPegawai
                         $query->where('operator_id', $id_pegawai);
                     });
             })
-            ->where('tahun', '2024')
+            ->where('tahun', $year)
             ->count();
         // $timKerjaPenyusunanCountSidebar = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [0,1,2,3])->where('tahun', '2024')->get()->count();
 

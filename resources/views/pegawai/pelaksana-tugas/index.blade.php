@@ -169,7 +169,7 @@
                                             </td>
                                             <td>{{ $jabatanPelaksana[$rencanaKerja->pelaksana[$i]->pt_jabatan - 1] }}
                                             </td>
-                                            <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai[0]->where('pt_jabatan', $rencanaKerja->pelaksana[$i]->pt_jabatan )->first()->hasil_kerja }}
+                                            <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $rencanaKerja->pelaksana[$i]->pt_jabatan )->first()->hasil_kerja }}
                                             </td>
                                             </td>
                                             <td class="total-jam">
@@ -236,7 +236,7 @@
                                                 @endif
                                                 <td>
                                                     {{
-                                                        $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agt + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des
+                                                        $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agu + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des
                                                         }}
                                                 </td>
                                                 <td>

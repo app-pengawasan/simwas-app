@@ -14,8 +14,8 @@ class SidebarAdmin
      */
     public function compose(View $view): void
     {
-        $id_pegawai = auth()->user()->id;
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('status', 2)->where('tahun', date('Y'))->get()->count();
+        $year = date('Y');
+        $timKerjaPenyusunanCount =TimKerja::with('ketua', 'iku')->whereIn('status', [0,1])->where('tahun', $year)->get()->count();
 
 
         $view->with(
