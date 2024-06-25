@@ -298,11 +298,13 @@ Route::group(['middleware'=>'auth'], function(){
             'create' => 'usulan-norma-hasil.create',
             'store' => 'usulan-norma-hasil.store',
         ]);
+        Route::get('objek-pengawasan/detail/{id}', [ObjekPengawasanController::class, 'detailObjekPengawasan']);
     });
 
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
     Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
+
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);

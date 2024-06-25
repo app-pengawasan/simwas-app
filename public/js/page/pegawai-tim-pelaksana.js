@@ -1,3 +1,4 @@
+
 // Tambah Objek Pengawasan
 $("#btn-create-objek").on("click", function (e) {
     $("#error-kategori_objek").text("");
@@ -60,20 +61,31 @@ $("#btn-submit-objek").on("click", function (e) {
             id_rencanakerja: id_rencanakerja,
             objek: id_objek,
             nama: nama,
+            namaLaporan: $("#create-nama-laporan").val(),
+            januari: $(`input[name="create-Januari"]:checked`).val(),
+            februari: $(`input[name="create-Februari"]:checked`).val(),
+            maret: $(`input[name="create-Maret"]:checked`).val(),
+            april: $(`input[name="create-April"]:checked`).val(),
+            mei: $(`input[name="create-Mei"]:checked`).val(),
+            juni: $(`input[name="create-Juni"]:checked`).val(),
+            juli: $(`input[name="create-Juli"]:checked`).val(),
+            agustus: $(`input[name="create-Agustus"]:checked`).val(),
+            september: $(`input[name="create-September"]:checked`).val(),
+            oktober: $(`input[name="create-Oktober"]:checked`).val(),
+            november: $(`input[name="create-November"]:checked`).val(),
+            desember: $(`input[name="create-Desember"]:checked`).val(),
+
         },
         success: function (response) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
-            Swal.close();
         },
     });
 });
@@ -83,7 +95,7 @@ $(".btn-delete-objek").on("click", function (e) {
     e.preventDefault();
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
-
+    console.log(dataId);
     Swal.fire({
         title: "Apakah Anda Yakin?",
         text: "Data tidak dapat dipulihkan!",
@@ -117,30 +129,44 @@ $(".btn-delete-objek").on("click", function (e) {
 // Edit Objek
 $(".btn-edit-objek").on("click", function (e) {
     let id = $(this).data("id");
-    let kategori = $(this).data("kategori");
-    let idobjek = $(this).data("idobjek");
+    $("#edit-id").val(id);
 
-    $("#id_opengawasan").val(id);
-    $("#edit-okategori").val(kategori);
 
-    console.log([id, kategori, idobjek]);
     $.ajax({
-        url: `/objek-bykategori/${kategori}`,
-        method: "GET",
-        cache: false,
+        url: `/ketua-tim/objek-pengawasan/detail/${id}`,
+        type: "GET",
         success: function (response) {
-            let objek = response.data;
-            let objekDropdown = `<select id="edit-objek" class="form-control" name="create-objek">`;
-
-            objek.forEach((element) => {
-                objekDropdown += `
-                    <option value="${element.id_objek}" >${element.nama}</option>
-                `;
+            $("#edit-okategori").val(response.data.master_objek.kategori);
+            $("#edit-okategori").trigger("change");
+            // wait for 2 second
+            setTimeout(() => {
+                $("#edit-objek").val(response.data.id_objek);
+                $("#edit-objek").trigger("change");
+            }, 1000);
+            $("#edit-nama-laporan").val(response.data.nama_laporan);
+            var bulan = {
+                1 : "Januari",
+                2 : "Februari",
+                3 : "Maret",
+                4 : "April",
+                5 : "Mei",
+                6 : "Juni",
+                7 : "Juli",
+                8 : "Agustus",
+                9 : "September",
+                10 : "Oktober",
+                11 : "November",
+                12 : "Desember",
+            }
+            response.data.laporan_objek_pengawasan.forEach(element => {
+                // iterate bulan
+                for (const [key, value] of Object.entries(bulan)) {
+                    if(element.month == key){
+                        $(`input[name="edit-${value}"][value="${element.status}"]`).prop("checked", true);
+                    }
+                }
             });
-            objekDropdown += `</select>`;
 
-            $("#edit-objek").replaceWith(objekDropdown);
-            $("#edit-objek").val(idobjek);
         },
         error: function (e) {
             console.log(e);
@@ -175,10 +201,20 @@ $("#edit-okategori").on("change", function (e) {
 $("#btn-submit-edit-objek").on("click", function (e) {
     e.preventDefault();
     let token = $("meta[name='csrf-token']").attr("content");
-    let id_opengawasan = $("#id_opengawasan").val();
+    let id_opengawasan = $("#edit-id").val();
     let kategori = $("#edit-okategori option:selected").val();
     let id_objek = $("#edit-objek option:selected").val();
     let nama = $("#edit-objek option:selected").text();
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/objek-pengawasan/${id_opengawasan}}`,
@@ -190,18 +226,35 @@ $("#btn-submit-edit-objek").on("click", function (e) {
             kategori_objek: kategori,
             objek: id_objek,
             nama: nama,
+            namaLaporan: $("#edit-nama-laporan").val(),
+            januari: $(`input[name="edit-Januari"]:checked`).val(),
+            februari: $(`input[name="edit-Februari"]:checked`).val(),
+            maret: $(`input[name="edit-Maret"]:checked`).val(),
+            april: $(`input[name="edit-April"]:checked`).val(),
+            mei: $(`input[name="edit-Mei"]:checked`).val(),
+            juni: $(`input[name="edit-Juni"]:checked`).val(),
+            juli: $(`input[name="edit-Juli"]:checked`).val(),
+            agustus: $(`input[name="edit-Agustus"]:checked`).val(),
+            september: $(`input[name="edit-September"]:checked`).val(),
+            oktober: $(`input[name="edit-Oktober"]:checked`).val(),
+            november: $(`input[name="edit-November"]:checked`).val(),
+            desember: $(`input[name="edit-Desember"]:checked`).val(),
         },
         success: function (response) {
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Data berhasil diubah",
+                icon: "success",
+                confirmButtonColor: "var(--primary)",
+            });
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-edit${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
         },
     });
