@@ -120,11 +120,7 @@
                                                 <td class="capitalize">
                                                     <div
                                                         class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                        <div class="circle mr-2">
-                                                            <span class="initials text-capitalize">
-                                                                {{ substr($un->user->name, 0, 1) }}{{ substr(strstr($un->user->name, ' '), 1, 1) }}
-                                                            </span>
-                                                        </div>
+                                                        
                                                         {{  $un->user->name }}
                                                     </div>
                                                 </td>

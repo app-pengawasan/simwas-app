@@ -428,11 +428,11 @@
                                     <i class="fa-solid fa-file-excel mr-1"></i> Export Excel
                                 </button>
                                 @if ($targetIkuUnitKerja->status == '2')
-                                <a href="{{ route('realisasi-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
+                                <a href="{{ route('perencana.realisasi-iku-unit-kerja.edit', $targetIkuUnitKerja->id) }}"
                                     class="btn btn-warning">
                                     <i class="fas fa-edit mr-1"></i>Edit
                                 </a>
-                                <form action="{{ route('target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
+                                <form action="{{ route('perencana.target-iku-unit-kerja.status', $targetIkuUnitKerja->id) }}"
                                     method="post" class="d-inline submit-button">
                                     @csrf
                                     @method('put')

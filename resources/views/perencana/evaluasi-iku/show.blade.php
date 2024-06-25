@@ -41,7 +41,8 @@
             <h1>Evaluasi Unit Kerja</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/perencana">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="{{ route('perencana.evaluasi-iku-unit-kerja.index') }}">Evaluasi
+                <div class="breadcrumb-item active"><a
+                        href="{{ route('perencana.evaluasi-iku-unit-kerja.index') }}">Evaluasi
                         IKU Unit Kerja</a></div>
                 <div class="breadcrumb-item">Detail Evaluasi IKU Unit Kerja</div>
             </div>
@@ -180,12 +181,13 @@
                             <table class="table table-responsive-md table-bordered " id="table-iku">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" class="text-center align-middle" style="width: 30px;">No</th>
+                                        <th rowspan="2" class="text-center align-middle" style="width: 30px;">No
+                                        </th>
                                         <th rowspan="2" class="text-center align-middle" style="min-width: 250px;">
-                                            Satuan</th>
-                                        <th rowspan="2" class="text-center align-middle"
-                                            style="width: 75px; min-width:90px">Y</th>
-                                        <th colspan="4" class="text-center align-middle">Target Kinerja (Triwulan)</th>
+                                            Satuan Kerja</th>
+                                        <th rowspan="2" class="text-center align-middle" style="width: 75px; min-width:90px">Y</th>
+                                        <th colspan="4" class="text-center align-middle">Target Kinerja
+                                            (Triwulan)</th>
                                         <th colspan="4" class="text-center align-middle">Realisasi Kinerja
                                             (Triwulan)</th>
                                         <th colspan="4" class="text-center align-middle">Capaian Kinerja
@@ -219,81 +221,143 @@
                                             </select>
                                         </td>
                                         <td><input value="{{ $value->nilai_y_target }}" disabled type="number"
-                                                name="nilai-y-row1" id="nilai-y-row1" class="form-control nilai-y"></td>
-                                        <td><input value="{{ $value->target_triwulan_1 }}" disabled type="number"
-                                                name="triwulan1-row1" id="{{ 'triwulan1-row'.$loop->iteration }}"
-                                                class="form-control triwulan1"></td>
-                                        <td><input value="{{ $value->target_triwulan_1 + $value->target_triwulan_2  }}"
-                                                disabled type="number" name="triwulan2-row1"
-                                                id="{{ 'triwulan2-row'.$loop->iteration }}"
-                                                class="form-control triwulan2"></td>
-                                        <td><input
-                                                value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 }}"
-                                                disabled type="number" name="triwulan3-row1"
-                                                id="{{ 'triwulan3-row'.$loop->iteration }}"
+                                                name="{{ 'nilai-y-row'.$loop->iteration }}" id="{{ 'nilai-y-row'.$loop->iteration }}"
+                                                class="form-control nilai-y"></td>
+                                        <td><input value="{{ $value->target_triwulan_1 }}" disabled type="number" name="triwulan1-row1"
+                                                id="{{ 'triwulan1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
+                                        <td><input value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 }}" disabled type="number"
+                                                name="triwulan2-row1" id="{{ 'triwulan2-row'.$loop->iteration }}" class="form-control triwulan2">
+                                        </td>
+                                        <td><input value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 }}"
+                                                disabled type="number" name="triwulan3-row1" id="{{ 'triwulan3-row'.$loop->iteration }}"
                                                 class="form-control triwulan3"></td>
                                         <td><input
                                                 value="{{ $value->target_triwulan_1 + $value->target_triwulan_2 + $value->target_triwulan_3 + $value->target_triwulan_4 }}"
-                                                disabled type="number" name="triwulan4-row1"
-                                                id="{{ 'triwulan4-row'.$loop->iteration }}"
+                                                disabled type="number" name="triwulan4-row1" id="{{ 'triwulan4-row'.$loop->iteration }}"
                                                 class="form-control triwulan4"></td>
 
+                                        @php
+                                        $realisasi1 = $value->nilai_y_realisasi != 0 ?
+                                        number_format($value->realisasi_triwulan_1 /
+                                        $value->nilai_y_realisasi, 2) : 0;
+                                        $realisasi2 = $value->nilai_y_realisasi != 0 ?
+                                        number_format($value->realisasi_triwulan_2 /
+                                        $value->nilai_y_realisasi, 2) : 0;
+                                        $realisasi3 = $value->nilai_y_realisasi != 0 ?
+                                        number_format($value->realisasi_triwulan_3 /
+                                        $value->nilai_y_realisasi, 2) : 0;
+                                        $realisasi4 = $value->nilai_y_realisasi != 0 ?
+                                        number_format($value->realisasi_triwulan_4 /
+                                        $value->nilai_y_realisasi, 2) : 0;
+                                        @endphp
 
-                                        <td><input type="number" disabled
-                                                value="{{ number_format($value->realisasi_triwulan_1/$value->nilai_y_realisasi, 2) }}"
-                                                name="{{ 'triwulan1-row'.$loop->iteration }}"
-                                                id="{{ 'real-triwulan1-row'.$loop->iteration }}"
-                                                class="form-control triwulan1"></td>
-                                        <td><input type="number" disabled
-                                                value="{{ number_format($value->realisasi_triwulan_2/$value->nilai_y_realisasi, 2) }}"
-                                                name="{{ 'triwulan2-row'.$loop->iteration }}"
-                                                id="{{ 'real-triwulan2-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled value="{{ $realisasi1 + 0}}" name="{{ 'triwulan1-row'.$loop->iteration }}"
+                                                id="{{ 'real-triwulan1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
+                                        <td><input type="number" disabled value="{{ $realisasi2 + $realisasi1 }}"
+                                                name="{{ 'triwulan2-row'.$loop->iteration }}" id="{{ 'real-triwulan2-row'.$loop->iteration }}"
                                                 class="form-control triwulan2"></td>
-                                        <td><input type="number" disabled
-                                                value="{{ number_format($value->realisasi_triwulan_3/$value->nilai_y_realisasi, 2) }}"
-                                                name="{{ 'triwulan3-row'.$loop->iteration }}"
-                                                id="{{ 'real-triwulan3-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled value="{{ $realisasi3 + $realisasi2 + $realisasi1 }}"
+                                                name="{{ 'triwulan3-row'.$loop->iteration }}" id="{{ 'real-triwulan3-row'.$loop->iteration }}"
                                                 class="form-control triwulan3"></td>
-                                        <td><input type="number" disabled
-                                                value="{{ number_format($value->realisasi_triwulan_4/$value->nilai_y_realisasi, 2) }}"
-                                                name="{{ 'triwulan4-row'.$loop->iteration }}"
-                                                id="{{ 'real-triwulan4-row'.$loop->iteration }}"
+                                        <td><input type="number" disabled value="{{ $realisasi4 + $realisasi3 + $realisasi2 + $realisasi1 }}"
+                                                name="{{ 'triwulan4-row'.$loop->iteration }}" id="{{ 'real-triwulan4-row'.$loop->iteration }}"
                                                 class="form-control triwulan4"></td>
-
 
                                         <td><input type="number" disabled name="{{ 'capaian1-row'.$loop->iteration }}"
-                                                id="{{ 'capaian1-row'.$loop->iteration }}"
-                                                class="form-control triwulan1"></td>
+                                                id="{{ 'capaian1-row'.$loop->iteration }}" class="form-control triwulan1"></td>
                                         <td><input type="number" disabled name="{{ 'capaian2-row'.$loop->iteration }}"
-                                                id="{{ 'capaian2-row'.$loop->iteration }}"
-                                                class="form-control triwulan2"></td>
+                                                id="{{ 'capaian2-row'.$loop->iteration }}" class="form-control triwulan2"></td>
                                         <td><input type="number" disabled name="{{ 'capaian3-row'.$loop->iteration }}"
-                                                id="{{ 'capaian3-row'.$loop->iteration }}"
-                                                class="form-control triwulan3"></td>
+                                                id="{{ 'capaian3-row'.$loop->iteration }}" class="form-control triwulan3"></td>
                                         <td><input type="number" disabled name="{{ 'capaian4-row'.$loop->iteration }}"
-                                                id="{{ 'capaian4-row'.$loop->iteration }}"
-                                                class="form-control triwulan4"></td>
+                                                id="{{ 'capaian4-row'.$loop->iteration }}" class="form-control triwulan4"></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    {{-- <tr>
-                                        <td class="text-center align-middle" colspan="2"
+                                <tfoot class="font-weight-bold">
+                                    <tr>
+                                        <td class="text-center align-middle font-weight-bold" colspan="2"
                                             style="text-align: center; font-weight: bold;">
                                             Total:</td>
                                         <td><input disabled type="number" name="total-y" id="total-y" value="0"
-                                                class="form-control"></td>
-                                        <td><input disabled type="number" name="total-triwulan1" id="total-triwulan1"
-                                                value="0" class="form-control"></td>
-                                        <td><input disabled type="number" name="total-triwulan2" id="total-triwulan2"
-                                                value="0" class="form-control"></td>
-                                        <td><input disabled type="number" name="total-triwulan3" id="total-triwulan3"
-                                                value="0" class="form-control"></td>
-                                        <td><input disabled type="number" name="total-triwulan4" id="total-triwulan4"
-                                                value="0" class="form-control"></td>
-                                    </tr> --}}
-                                </tfoot>
+                                                class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="total-target-triwulan1" id="total-target-triwulan1" value="0"
+                                                class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="total-target-triwulan2" id="total-target-triwulan2" value="0"
+                                                class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="total-target-triwulan3" id="total-target-triwulan3" value="0"
+                                                class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="total-target-triwulan4" id="total-target-triwulan4" value="0"
+                                                class="form-control font-weight-bold"></td>
 
+                                        <td><input disabled type="number" name="total-realisasi-triwulan1" id="total-realisasi-triwulan1" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-realisasi-triwulan2" id="total-realisasi-triwulan2" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-realisasi-triwulan3" id="total-realisasi-triwulan3" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-realisasi-triwulan4" id="total-realisasi-triwulan4" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+
+                                        <td><input disabled type="number" name="total-capaian-triwulan1" id="total-capaian-triwulan1" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-capaian-triwulan2" id="total-capaian-triwulan2" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-capaian-triwulan3" id="total-capaian-triwulan3" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="total-capaian-triwulan4" id="total-capaian-triwulan4" value="0"
+                                                class="form-control font-weight-bold">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center align-middle font-weight-bold" colspan="2"
+                                            style="text-align: center; font-weight: bold;">
+                                            Persentase:</td>
+                                        <td>
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-target-triwulan1" id="persentase-target-triwulan1"
+                                                value="0" class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="persentase-target-triwulan2" id="persentase-target-triwulan2"
+                                                value="0" class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="persentase-target-triwulan3" id="persentase-target-triwulan3"
+                                                value="0" class="form-control font-weight-bold"></td>
+                                        <td><input disabled type="number" name="persentase-target-triwulan4" id="persentase-target-triwulan4"
+                                                value="0" class="form-control font-weight-bold"></td>
+
+                                        <td><input disabled type="number" name="persentase-realisasi-triwulan1" id="persentase-realisasi-triwulan1"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-realisasi-triwulan2" id="persentase-realisasi-triwulan2"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-realisasi-triwulan3" id="persentase-realisasi-triwulan3"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-realisasi-triwulan4" id="persentase-realisasi-triwulan4"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+
+                                        <td><input disabled type="number" name="persentase-capaian-triwulan1" id="persentase-capaian-triwulan1"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-capaian-triwulan2" id="persentase-capaian-triwulan2"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-capaian-triwulan3" id="persentase-capaian-triwulan3"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                        <td><input disabled type="number" name="persentase-capaian-triwulan4" id="persentase-capaian-triwulan4"
+                                                value="0" class="form-control font-weight-bold">
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
 
                         </div>
@@ -313,10 +377,14 @@
 @endsection
 
 @push('scripts')
+<script src="
+https://cdn.jsdelivr.net/npm/@linways/table-to-excel@1.0.4/dist/tableToExcel.min.js
+"></script>
 {{-- <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script> --}}
 <script src="{{ asset('js') }}/page/perencana/evaluasi-iku.js"></script>
+
 <script>
     $(document).ready(function() {
             $('#btn-export').on('click', function (e) {
@@ -338,6 +406,7 @@
                 a.href = url;
                 a.download = 'evaluasi-iku-unit-kerja.xls'; // Set your file name
                 a.click();
+                
             });
         });
         // Set your file name a.click(); }); });

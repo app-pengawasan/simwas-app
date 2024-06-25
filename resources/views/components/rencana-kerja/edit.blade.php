@@ -17,7 +17,7 @@
                         <label class="form-label" for="edit-uraian_tugas">Uraian Tugas</label>
                         <div class="">
                             <input placeholder="Masukkan Uraian Tugas" type="text" id="edit-uraian_tugas" class="form-control" name="edit-uraian_tugas" required value="{{ $timKerja->uraian_tugas }}">
-                            <small id="error-tugas" class="text-danger"></small>
+                            <small id="error-edit-uraian" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -25,7 +25,7 @@
                         <div class="">
                             <input placeholder="Masukkan Rencana Kinerja Ketua" type="text" id="edit-rk_ketua" class="form-control" name="edit-rk_ketua" required
                                 value="{{ $timKerja->renca_kerja_ketua }}">
-                            <small id="error-tugas" class="text-danger"></small>
+                            <small id="error-edit-rk" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,7 +33,7 @@
                         <div class="">
                             <input placeholder="Masukkan IKI Ketua" type="text" id="edit-iki_ketua" class="form-control" name="edit-iki_ketua" required
                                 value="{{ $timKerja->iki_ketua }}">
-                            <small id="error-tugas" class="text-danger"></small>
+                            <small id="error-edit-iki" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

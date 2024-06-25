@@ -1,3 +1,4 @@
+
 // Tambah Objek Pengawasan
 $("#btn-create-objek").on("click", function (e) {
     $("#error-kategori_objek").text("");
@@ -60,20 +61,31 @@ $("#btn-submit-objek").on("click", function (e) {
             id_rencanakerja: id_rencanakerja,
             objek: id_objek,
             nama: nama,
+            namaLaporan: $("#create-nama-laporan").val(),
+            januari: $(`input[name="create-Januari"]:checked`).val(),
+            februari: $(`input[name="create-Februari"]:checked`).val(),
+            maret: $(`input[name="create-Maret"]:checked`).val(),
+            april: $(`input[name="create-April"]:checked`).val(),
+            mei: $(`input[name="create-Mei"]:checked`).val(),
+            juni: $(`input[name="create-Juni"]:checked`).val(),
+            juli: $(`input[name="create-Juli"]:checked`).val(),
+            agustus: $(`input[name="create-Agustus"]:checked`).val(),
+            september: $(`input[name="create-September"]:checked`).val(),
+            oktober: $(`input[name="create-Oktober"]:checked`).val(),
+            november: $(`input[name="create-November"]:checked`).val(),
+            desember: $(`input[name="create-Desember"]:checked`).val(),
+
         },
         success: function (response) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
-            Swal.close();
         },
     });
 });
@@ -83,7 +95,7 @@ $(".btn-delete-objek").on("click", function (e) {
     e.preventDefault();
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
-
+    console.log(dataId);
     Swal.fire({
         title: "Apakah Anda Yakin?",
         text: "Data tidak dapat dipulihkan!",
@@ -117,30 +129,44 @@ $(".btn-delete-objek").on("click", function (e) {
 // Edit Objek
 $(".btn-edit-objek").on("click", function (e) {
     let id = $(this).data("id");
-    let kategori = $(this).data("kategori");
-    let idobjek = $(this).data("idobjek");
+    $("#edit-id").val(id);
 
-    $("#id_opengawasan").val(id);
-    $("#edit-okategori").val(kategori);
 
-    console.log([id, kategori, idobjek]);
     $.ajax({
-        url: `/objek-bykategori/${kategori}`,
-        method: "GET",
-        cache: false,
+        url: `/ketua-tim/objek-pengawasan/detail/${id}`,
+        type: "GET",
         success: function (response) {
-            let objek = response.data;
-            let objekDropdown = `<select id="edit-objek" class="form-control" name="create-objek">`;
-
-            objek.forEach((element) => {
-                objekDropdown += `
-                    <option value="${element.id_objek}" >${element.nama}</option>
-                `;
+            $("#edit-okategori").val(response.data.master_objek.kategori);
+            $("#edit-okategori").trigger("change");
+            // wait for 2 second
+            setTimeout(() => {
+                $("#edit-objek").val(response.data.id_objek);
+                $("#edit-objek").trigger("change");
+            }, 1000);
+            $("#edit-nama-laporan").val(response.data.nama_laporan);
+            var bulan = {
+                1 : "Januari",
+                2 : "Februari",
+                3 : "Maret",
+                4 : "April",
+                5 : "Mei",
+                6 : "Juni",
+                7 : "Juli",
+                8 : "Agustus",
+                9 : "September",
+                10 : "Oktober",
+                11 : "November",
+                12 : "Desember",
+            }
+            response.data.laporan_objek_pengawasan.forEach(element => {
+                // iterate bulan
+                for (const [key, value] of Object.entries(bulan)) {
+                    if(element.month == key){
+                        $(`input[name="edit-${value}"][value="${element.status}"]`).prop("checked", true);
+                    }
+                }
             });
-            objekDropdown += `</select>`;
 
-            $("#edit-objek").replaceWith(objekDropdown);
-            $("#edit-objek").val(idobjek);
         },
         error: function (e) {
             console.log(e);
@@ -175,10 +201,20 @@ $("#edit-okategori").on("change", function (e) {
 $("#btn-submit-edit-objek").on("click", function (e) {
     e.preventDefault();
     let token = $("meta[name='csrf-token']").attr("content");
-    let id_opengawasan = $("#id_opengawasan").val();
+    let id_opengawasan = $("#edit-id").val();
     let kategori = $("#edit-okategori option:selected").val();
     let id_objek = $("#edit-objek option:selected").val();
     let nama = $("#edit-objek option:selected").text();
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/objek-pengawasan/${id_opengawasan}}`,
@@ -190,18 +226,35 @@ $("#btn-submit-edit-objek").on("click", function (e) {
             kategori_objek: kategori,
             objek: id_objek,
             nama: nama,
+            namaLaporan: $("#edit-nama-laporan").val(),
+            januari: $(`input[name="edit-Januari"]:checked`).val(),
+            februari: $(`input[name="edit-Februari"]:checked`).val(),
+            maret: $(`input[name="edit-Maret"]:checked`).val(),
+            april: $(`input[name="edit-April"]:checked`).val(),
+            mei: $(`input[name="edit-Mei"]:checked`).val(),
+            juni: $(`input[name="edit-Juni"]:checked`).val(),
+            juli: $(`input[name="edit-Juli"]:checked`).val(),
+            agustus: $(`input[name="edit-Agustus"]:checked`).val(),
+            september: $(`input[name="edit-September"]:checked`).val(),
+            oktober: $(`input[name="edit-Oktober"]:checked`).val(),
+            november: $(`input[name="edit-November"]:checked`).val(),
+            desember: $(`input[name="edit-Desember"]:checked`).val(),
         },
         success: function (response) {
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Data berhasil diubah",
+                icon: "success",
+                confirmButtonColor: "var(--primary)",
+            });
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-edit${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
         },
     });
@@ -489,7 +542,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     let id_rencanakerja = $("#id_rencanakerja").val();
     let jabatan = $("#pt-jabatan").val();
-    let hasil_kerja = $("#pt-hasil").val();
     let pelaksana = $("#pelaksana").val();
     let jan = $("#create-januari").val();
     let feb = $("#create-februari").val();
@@ -516,6 +568,45 @@ $("#btn-submit-pelaksana").on("click", function (e) {
     okt = okt == "" ? 0 : okt;
     nov = nov == "" ? 0 : nov;
     des = des == "" ? 0 : des;
+
+    // replace , to .
+    if (jan) {
+        jan = jan.replace(/,/g, ".");
+    }
+    if (feb) {
+        feb = feb.replace(/,/g, ".");
+    }
+    if (mar) {
+        mar = mar.replace(/,/g, ".");
+    }
+    if (apr) {
+        apr = apr.replace(/,/g, ".");
+    }
+    if (mei) {
+        mei = mei.replace(/,/g, ".");
+    }
+    if (jun) {
+        jun = jun.replace(/,/g, ".");
+    }
+    if (jul) {
+        jul = jul.replace(/,/g, ".");
+    }
+    if (agu) {
+        agu = agu.replace(/,/g, ".");
+    }
+    if (sep) {
+        sep = sep.replace(/,/g, ".");
+    }
+    if (okt) {
+        okt = okt.replace(/,/g, ".");
+    }
+    if (nov) {
+        nov = nov.replace(/,/g, ".");
+    }
+    if (des) {
+        des = des.replace(/,/g, ".");
+    }
+
 
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
@@ -567,8 +658,13 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         return;
     }
 
-    $("#error-hasil_kerja").text("");
     $("#error-pelaksana").text("");
+
+    if(pelaksana == null || pelaksana == ""){
+        $("#error-pelaksana").text("Pilih Pelaksana");
+        return;
+    }
+
 
     Swal.fire({
         title: "Menyimpan Data",
@@ -580,6 +676,7 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         allowOutsideClick: () => !Swal.isLoading(),
     });
 
+
     $.ajax({
         url: `/pelaksana-tugas`,
         type: "POST",
@@ -588,7 +685,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             _token: token,
             id_rencanakerja: id_rencanakerja,
             pt_jabatan: jabatan,
-            hasil_kerja: hasil_kerja,
             pelaksana: pelaksana,
             jan: jan,
             feb: feb,
@@ -607,15 +703,13 @@ $("#btn-submit-pelaksana").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = `${value}`;
+            Swal.fire({
+                title: "Gagal!",
+                text: "Silakan isi form dengan benar",
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
             });
-            Swal.close();
+
         },
     });
 });
@@ -679,18 +773,18 @@ $(".btn-edit-pelaksana").on("click", function (e) {
                 },
             });
             $("#edit-id_pelaksana").val(response.data.id_pelaksana);
-            $("#edit-januari").val(response.data.jan);
-            $("#edit-februari").val(response.data.feb);
-            $("#edit-maret").val(response.data.mar);
-            $("#edit-april").val(response.data.apr);
-            $("#edit-mei").val(response.data.mei);
-            $("#edit-juni").val(response.data.jun);
-            $("#edit-juli").val(response.data.jul);
-            $("#edit-agustus").val(response.data.agu);
-            $("#edit-september").val(response.data.sep);
-            $("#edit-oktober").val(response.data.okt);
-            $("#edit-november").val(response.data.nov);
-            $("#edit-desember").val(response.data.des);
+            $("#edit-januari").val(response.data.jan.replace(".", ","));
+            $("#edit-februari").val(response.data.feb.replace(".", ","));
+            $("#edit-maret").val(response.data.mar.replace(".", ","));
+            $("#edit-april").val(response.data.apr.replace(".", ","));
+            $("#edit-mei").val(response.data.mei.replace(".", ","));
+            $("#edit-juni").val(response.data.jun.replace(".", ","));
+            $("#edit-juli").val(response.data.jul.replace(".", ","));
+            $("#edit-agustus").val(response.data.agu.replace(".", ","));
+            $("#edit-september").val(response.data.sep.replace(".", ","));
+            $("#edit-oktober").val(response.data.okt.replace(".", ","));
+            $("#edit-november").val(response.data.nov.replace(".", ","));
+            $("#edit-desember").val(response.data.des.replace(".", ","));
         },
         error: function (e) {
             console.log(e);
@@ -730,6 +824,45 @@ $("#btn-edit-pelaksana").on("click", function (e) {
     okt = okt == "" ? 0 : okt;
     nov = nov == "" ? 0 : nov;
     des = des == "" ? 0 : des;
+
+    // replace , to . if exist
+    if (jan) {
+        jan = jan.replace(/,/g, ".");
+    }
+    if (feb) {
+        feb = feb.replace(/,/g, ".");
+    }
+    if (mar) {
+        mar = mar.replace(/,/g, ".");
+    }
+    if (apr) {
+        apr = apr.replace(/,/g, ".");
+    }
+    if (mei) {
+        mei = mei.replace(/,/g, ".");
+    }
+    if (jun) {
+        jun = jun.replace(/,/g, ".");
+    }
+    if (jul) {
+        jul = jul.replace(/,/g, ".");
+    }
+    if (agu) {
+        agu = agu.replace(/,/g, ".");
+    }
+    if (sep) {
+        sep = sep.replace(/,/g, ".");
+    }
+    if (okt) {
+        okt = okt.replace(/,/g, ".");
+    }
+    if (nov) {
+        nov = nov.replace(/,/g, ".");
+    }
+    if (des) {
+        des = des.replace(/,/g, ".");
+    }
+
 
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
@@ -830,3 +963,23 @@ for (i = 0; i <= rupiah.length - 1; i++) {
     let tmp = rupiah[i].innerText.toString();
     rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
 }
+
+$(".jam-kerja").on("keyup", function (e) {
+    // just allow number and ,0 or ,5
+    this.value = this.value.replace(/[^0-9,]/g, "");
+    this.value = this.value.replace(/,+/g, ",");
+    // just allow 0 or 5 after comma
+    this.value = this.value.replace(/,[^0,5]/g, "");
+
+
+
+});
+
+// after document ready change . to , in jam-kerja class
+$(document).ready(function () {
+    $(".total-jam").each(function () {
+        let value = $(this).text();
+        value = value.replace(/\./g, ",");
+        $(this).text(value);
+    });
+});

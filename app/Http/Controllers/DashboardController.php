@@ -308,8 +308,8 @@ class DashboardController extends Controller
     }
 
     function adminTimKerjaCount($year){
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->whereIn('status', [0,1,2,3])->where('tahun', $year)->get()->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->whereIn('status', [4,5])->where('tahun', $year)->get()->count();
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->whereIn('status', [0,1])->where('tahun', $year)->get()->count();
+        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->whereIn('status', [2])->where('tahun', $year)->get()->count();
 
         $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get()->count();
 
@@ -358,10 +358,36 @@ class DashboardController extends Controller
 
     function ketuaTimKerjaCount($year){
         $id_pegawai = auth()->user()->id;
-        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [0,1,2,3])->where('tahun', $year)->get()->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [4,5])->where('tahun', $year)->get()->count();
+        $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')
+            ->where(function($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai)
+                    ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
+                        $query->where('operator_id', $id_pegawai);
+                    });
+            })
+            ->whereIn('status', [0, 1])
+            ->where('tahun', $year)
+            ->count();
+        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')
+            ->where(function($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai)
+                    ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
+                        $query->where('operator_id', $id_pegawai);
+                    });
+            })
+            ->whereIn('status', [2])
+            ->where('tahun', $year)
+            ->count();
 
-        $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->where('tahun', $year)->get()->count();
+        $timKerjaTotalCount =TimKerja::with('ketua', 'iku')
+            ->where(function($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai)
+                    ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
+                        $query->where('operator_id', $id_pegawai);
+                    });
+            })
+            ->where('tahun', $year)
+            ->count();
 
         $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
         $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;

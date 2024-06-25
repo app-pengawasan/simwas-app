@@ -37,5 +37,9 @@ class TimKerja extends Model
         return $this->hasMany(Proyek::class, 'id_tim_kerja');
     }
 
-    
+    public function operatorRencanaKinerja(){
+        return $this->hasMany(OperatorRencanaKinerja::class, 'tim_kerja_id');
+    }
+
+
 }

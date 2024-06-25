@@ -11,12 +11,13 @@
     <ul class="navbar-nav navbar-right">
         <li class="dropdown d-flex justify-content-center align-items-center"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="{{ asset('img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
+                <img alt="image" src="{{env('APP_ENV') == 'local' ? asset('img/avatar/avatar-1.png')  : session('profile_picture') }}"
+                    style="object-fit: cover; width: 30px; height: 30px;" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">{{ auth()->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 {{-- <div class="dropdown-title">Logged in 5 min ago</div> --}}
-                <a href="#" class="dropdown-item has-icon">
+                <a target="_blank" href="{{ env("PROFILE_URL") }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
                 @if (auth()->user()->is_admin || auth()->user()->is_sekma || auth()->user()->is_sekwil ||

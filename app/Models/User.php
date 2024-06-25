@@ -123,4 +123,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(TimKerja::class, 'id_ketua');
     }
+    public function operatorRencanaKinerja()
+    {
+        return $this->hasMany(OperatorRencanaKinerja::class);
+    }
 }

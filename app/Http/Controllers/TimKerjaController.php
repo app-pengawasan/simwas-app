@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TimKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\OperatorRencanaKinerja;
 
 class TimKerjaController extends Controller
 {
@@ -43,6 +44,7 @@ class TimKerjaController extends Controller
             'ketua'     => 'required',
             'tahun'     => 'required',
         ];
+        try{
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -58,8 +60,19 @@ class TimKerjaController extends Controller
             'unitkerja'  => $validateData['unitkerja'],
             'id_iku'  => $validateData['iku'],
             'id_ketua'  => $validateData['ketua'],
-            'id_operator'  => $request->operator,
         ]);
+        // get last id after insert
+        $timKerja = TimKerja::orderBy('id_timkerja', 'desc')->first();
+
+        // create loop for operator
+        if($request->operator != null){
+        foreach ($request->operator as $key => $value) {
+            OperatorRencanaKinerja::create([
+                'tim_kerja_id' => $timKerja->id_timkerja,
+                'operator_id' => $value,
+            ]);
+        }
+        }
 
         $request->session()->put('status', 'Berhasil menambahkan Tim Kerja.');
         $request->session()->put('alert-type', 'success');
@@ -68,6 +81,13 @@ class TimKerjaController extends Controller
             'success' => true,
             'message' => 'Berhasil menambah Tim Kerja',
         ]);
+        }
+        catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -148,6 +168,14 @@ class TimKerjaController extends Controller
 
     public function detail($id){
         $timKerja = TimKerja::where('id_timkerja', $id)->first();
+        // add operator id to array operator
+        $operator = OperatorRencanaKinerja::where('tim_kerja_id', $id)->get();
+        $operatorId = [];
+        foreach ($operator as $key => $value) {
+            $operatorId[] = $value->operator_id;
+        }
+        $timKerja['operator'] = $operatorId;
+
 
         return response()->json([
             'success' => true,
@@ -163,7 +191,6 @@ class TimKerjaController extends Controller
             'unitkerja' => 'required',
             'nama' => 'required',
             'ketua' => 'required',
-            'operator' => 'required',
             'iku' => 'required',
         ];
         $idTimkerja = $request->input('edit-id-timkerja');
@@ -178,11 +205,23 @@ class TimKerjaController extends Controller
                 'tahun' => $request->input('tahun'),
                 'unitkerja' => $request->input('unitkerja'),
                 'id_ketua' => $request->input('ketua'),
-                'id_operator' => $request->input('operator'),
                 'id_iku' => $request->input('iku'),
             ]);
             $request->session()->put('status', 'Berhasil mengubah tim kerja.');
             $request->session()->put('alert-type', 'success');
+
+            // delete all operator by tim kerja id
+            OperatorRencanaKinerja::where('tim_kerja_id', $id)->delete();
+            // create loop for operator
+            if($request->operator != null){
+                foreach ($request->operator as $key => $value) {
+                    OperatorRencanaKinerja::create([
+                        'tim_kerja_id' => $id,
+                        'operator_id' => $value,
+                    ]);
+                }
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Berhasil mengubah tim kerja',
@@ -198,7 +237,7 @@ class TimKerjaController extends Controller
         try {
             $timKerja = TimKerja::where('id_timkerja', $id)->first();
             $timKerja->update([
-                'status' => 5,
+                'status' => 2,
             ]);
             return back()->with('status', 'Berhasil mengunci tim kerja.');
         } catch (\Throwable $th) {
@@ -209,7 +248,7 @@ class TimKerjaController extends Controller
         try {
             $timKerja = TimKerja::where('id_timkerja', $id)->first();
             $timKerja->update([
-                'status' => 4,
+                'status' => 1,
             ]);
             return back()->with('status', 'Berhasil membuka kunci tim kerja.');
         } catch (\Throwable $th) {

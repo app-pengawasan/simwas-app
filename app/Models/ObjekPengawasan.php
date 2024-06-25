@@ -12,4 +12,14 @@ class ObjekPengawasan extends Model
 
     protected $primaryKey = 'id_opengawasan';
     protected $guarded = ['id_opengawasan'];
+
+    public function laporanObjekPengawasan()
+    {
+        return $this->hasMany(LaporanObjekPengawasan::class, 'id_objek_pengawasan', 'id_opengawasan');
+    }
+
+    public function masterObjek()
+    {
+        return $this->belongsTo(MasterObjek::class, 'id_objek', 'id_objek');
+    }
 }

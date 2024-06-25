@@ -1,3 +1,93 @@
+let tableProyek;
+if ($("#table-proyek").length) {
+    tableProyek = $("#table-proyek")
+        .dataTable({
+            dom: "Bfrtip",
+            responsive: true,
+            lengthChange: false,
+            autoWidth: false,
+            buttons: [],
+            bPaginate: false,
+            bInfo: false,
+            oLanguage: {
+                sSearch: "Cari:",
+                sZeroRecords: "Data tidak ditemukan",
+                sEmptyTable: "Data tidak ditemukan",
+            },
+        })
+        .api();
+    $("#table-proyek_filter").appendTo("#filter-search-wrapper");
+    $("#table-proyek_filter").find("input").addClass("form-control");
+    $("#table-proyek_filter").css("width", "100%");
+    $("#table-proyek_filter label").css("width", "100%");
+    $("#table-proyek_filter input").css("height", "35px");
+    $("#table-proyek_filter label").css("font-weight", "bold");
+    $("#table-proyek_filter label").css("margin-bottom", "0");
+    $("#table-proyek_filter input").css("padding", "0 10px");
+    $("#table-proyek_filter input").attr("placeholder", "Cari Proyek");
+    // hide dt-buttons
+    $(".dt-buttons").hide();
+    // hide dt
+}
+
+let tableTugas;
+if ($("#table-tugas").length) {
+    tableTugas = $("#table-tugas")
+        .dataTable({
+            dom: "Bfrtip",
+            responsive: true,
+            lengthChange: false,
+            autoWidth: false,
+            buttons: [],
+            bPaginate: false,
+            bInfo: false,
+            oLanguage: {
+                sSearch: "Cari:",
+                sZeroRecords: "Data tidak ditemukan",
+                sEmptyTable: "Data tidak ditemukan",
+            },
+        })
+        .api();
+    $("#table-tugas_filter").appendTo("#filter-search-wrapper-tugas");
+    $("#table-tugas_filter").find("input").addClass("form-control");
+    $("#table-tugas_filter").css("width", "100%");
+    $("#table-tugas_filter label").css("width", "100%");
+    $("#table-tugas_filter input").css("height", "35px");
+    $("#table-tugas_filter label").css("font-weight", "bold");
+    $("#table-tugas_filter label").css("margin-bottom", "0");
+    $("#table-tugas_filter input").css("padding", "0 10px");
+    $("#table-tugas_filter input").attr("placeholder", "Cari Tugas");
+    $(".dt-buttons").hide();
+}
+
+function filterTableTugas() {
+    let filterProyek = $("#filter-proyek").val();
+
+    if (filterProyek == "Semua") {
+        filterProyek = "";
+    }
+
+    if (filterProyek !== "") {
+        tableTugas
+            .column(1)
+            .search("^" + filterProyek + "$", true, false)
+            .draw();
+    } else {
+        tableTugas.column(1).search("").draw();
+    }
+
+    // reset numbering in table first column
+    tableTugas
+        .column(0, { search: "applied", order: "applied" })
+        .nodes()
+        .each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+}
+$("#filter-proyek").on("change", function () {
+    filterTableTugas();
+});
+
 let table;
 if ($("#tim-kerja").length) {
     table = $("#tim-kerja")
@@ -44,19 +134,12 @@ if ($("#tim-kerja").length) {
     $(".dt-buttons").appendTo("#download-button");
     $(".dataTables_filter").appendTo("#filter-search-wrapper");
     $(".dataTables_filter").find("input").addClass("form-control");
-    // .dataTables_filter width 100%
     $(".dataTables_filter").css("width", "100%");
-    // .dataTables_filter label width 100%
     $(".dataTables_filter label").css("width", "100%");
-    // input height 35px
     $(".dataTables_filter input").css("height", "35px");
-    // make label text bold and black
     $(".dataTables_filter label").css("font-weight", "bold");
-    // remove bottom margin from .dataTables_filter
     $(".dataTables_filter label").css("margin-bottom", "0");
-
     $(".dataTables_filter input").attr("placeholder", "Cari rencana kerja");
-    // add padding x 10px to .dataTables_filter input
     $(".dataTables_filter input").css("padding", "0 10px");
     $(".dt-buttons").appendTo("#download-button");
 }
@@ -91,12 +174,41 @@ $("#create-hasilkerja").on("change", function () {
 });
 
 $("#btn-tambah-tugas").on("click", function (e) {
-    // e.preventDefault();
+    event.preventDefault();
     $("#error-tugas").text("");
-    $("#error-mulai").text("");
-    $("#error-selesai").text("");
-    $("#error-hasilkerja").text("");
+    $("#error-hasil_kerja").text("");
+    $("#error-unsur").text("");
+    $("#error-subunsur").text("");
+    $("#error-kategori_pelaksana").text("");
+    $("#error-proyek").text("");
 
+    if (
+        $("#create-tugas").val() == "" ||
+        $("#create-hasil_kerja").val() == "" ||
+        $("#create-hasil_kerja").val() == null ||
+        $("#unsur").val() == "" ||
+        $("#subunsur").val() == "" ||
+        $("#pelaksana-tugas").val() == "" ||
+        $("#create-proyek").val() == null ||
+        $("#create-proyek").val() == ""
+    ) {
+        if ($("#create-tugas").val() == "") {
+            $("#error-tugas").text("Tugas harus diisi");
+        }
+        if ($("#create-hasil_kerja").val() == null) {
+            $("#error-hasil_kerja").text("Hasil Kerja harus diisi");
+        }
+        if ($("#create-hasil_kerja").val() == "") {
+            $("#error-hasil_kerja").text("Hasil Kerja harus diisi");
+        }
+        if (
+            $("#create-proyek").val() == "" ||
+            $("#create-proyek").val() == null
+        ) {
+            $("#error-proyek").text("Proyek harus diisi");
+        }
+        return;
+    }
 
     let token = $("meta[name='csrf-token']").attr("content");
     let id_timkerja = $("#id_timkerja").val();
@@ -108,11 +220,12 @@ $("#btn-tambah-tugas").on("click", function (e) {
     } else if (kategori_pelaksana == "Non Gugus Tugas") {
         kategori_pelaksana = "ngt";
     }
-    let melaksanakan = $("#create-melaksanakan").val();
-    let capaian = $("#create-capaian").val();
-    let id_proyek = $("#id_proyek").val();
+    let id_proyek = $("#create-proyek").val();
 
-    if (tugas == "" || hasilkerja== "" ||melaksanakan == "" || capaian == "") {
+    if (
+        tugas == "" ||
+        hasilkerja == ""
+    ) {
         return;
     }
     Swal.fire({
@@ -136,14 +249,134 @@ $("#btn-tambah-tugas").on("click", function (e) {
             tugas: tugas,
             hasilkerja: hasilkerja,
             kategori_pelaksana: kategori_pelaksana,
-            melaksanakan: melaksanakan,
-            capaian: capaian,
         },
         success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data berhasil disimpan",
+                showConfirmButton: false,
+                timer: 3000,
+            });
             location.reload();
         },
         error: function (error) {
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `${error.message}`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
             console.log(error);
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
+
+            errors.forEach(([key, value]) => {
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+        },
+    });
+});
+
+$("#btn-edit-tugas").on("click", function (e) {
+    event.preventDefault();
+    $("#error-edit-tugas").text("");
+    $("#error-edit-hasil_kerja").text("");
+    $("#error-edit-unsur").text("");
+    $("#error-edit-subunsur").text("");
+    $("#error-edit-kategori_pelaksana").text("");
+    $("#error-edit-proyek").text("");
+
+    if (
+        $("#edit-tugas").val() == "" ||
+        $("#edit-hasil_kerja").val() == "" ||
+        $("#edit-hasil_kerja").val() == null ||
+        $("#edit-unsur").val() == "" ||
+        $("#edit-subunsur").val() == "" ||
+        $("#edit-pelaksana-tugas").val() == "" ||
+        $("#edit-proyek").val() == null ||
+        $("#edit-proyek").val() == ""
+    ) {
+        if ($("#edit-tugas").val() == "") {
+            $("#error-edit-tugas").text("Tugas harus diisi");
+        }
+        if ($("#edit-hasil_kerja").val() == null) {
+            $("#error-edit-hasil_kerja").text("Hasil Kerja harus diisi");
+        }
+        if ($("#edit-hasil_kerja").val() == "") {
+            $("#error-edit-hasil_kerja").text("Hasil Kerja harus diisi");
+        }
+        if ($("#edit-proyek").val() == "" || $("#edit-proyek").val() == null) {
+            $("#error-edit-proyek").text("Proyek harus diisi");
+        }
+        return;
+    }
+
+    let id_tugas = $("#edit-id_tugas").val();
+    let id_proyek = $("#edit-proyek").val();
+    let token = $("meta[name='csrf-token']").attr("content");
+    let tugas = $("#edit-tugas").val();
+    let hasilkerja = $("#edit-hasil_kerja").val();
+    let kategori_pelaksana = $("#pelaksana-tugas").val();
+    if (kategori_pelaksana == "Gugus Tugas") {
+        kategori_pelaksana = "gt";
+    } else if (kategori_pelaksana == "Non Gugus Tugas") {
+        kategori_pelaksana = "ngt";
+    }
+    let melaksanakan = $("#edit-melaksanakan").val();
+    let capaian = $("#edit-capaian").val();
+
+    if (
+        tugas == "" ||
+        hasilkerja == ""
+    ) {
+        return;
+    }
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
+    $.ajax({
+        url: `/ketua-tim/rencana-kinerja/${id_tugas}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            proyek: id_proyek,
+            tugas: tugas,
+            hasilkerja: hasilkerja,
+            kategori_pelaksana: kategori_pelaksana,
+        },
+        success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data berhasil disimpan",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+            location.reload();
+        },
+        error: function (error) {
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: "Data gagal disimpan",
+                showConfirmButton: false,
+                timer: 3000,
+            });
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -257,6 +490,14 @@ $(".delete-btn").on("click", function (e) {
                     _token: token,
                 },
                 success: function (response) {
+                    Swal.fire({
+                        type: "success",
+                        icon: "success",
+                        title: "Berhasil!",
+                        text: "Data berhasil dihapus",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
                     location.reload();
                 },
             });
@@ -370,13 +611,36 @@ $("#btn-admin-send-back").on("click", function (e) {
 });
 
 $("#btn-edit-tim").on("click", function () {
+    event.preventDefault();
     let id_timkerja = $("#id_timkerja").val();
     let token = $("meta[name='csrf-token']").attr("content");
     let uraian_tugas = $("#edit-uraian_tugas").val();
     let rk_ketua = $("#edit-rk_ketua").val();
     let iki_ketua = $("#edit-iki_ketua").val();
-    console.log(uraian_tugas, rk_ketua, iki_ketua);
-
+    $("#error-edit-uraian").text("");
+    $("#error-edit-rk").text("");
+    $("#error-edit-iki").text("");
+    if (uraian_tugas == "" || rk_ketua == "" || iki_ketua == "") {
+        if (uraian_tugas == "") {
+            $("#error-edit-uraian").text("Uraian Tugas harus diisi");
+        }
+        if (rk_ketua == "") {
+            $("#error-edit-rk").text("RK Ketua harus diisi");
+        }
+        if (iki_ketua == "") {
+            $("#error-edit-iki").text("IKI Ketua harus diisi");
+        }
+        return;
+    }
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
     $.ajax({
         url: `/admin/tim-kerja/${id_timkerja}`,
         type: "PUT",
@@ -392,18 +656,28 @@ $("#btn-edit-tim").on("click", function () {
             location.reload();
         },
         error: function (e) {
-            console.log(e);
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `${e.message}`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
         },
     });
 });
 
 $("#btn-create-proyek").on("click", function () {
+    event.preventDefault();
     let id_timkerja = $("#id_timkerja").val();
     let nama_proyek = $("#create-nama_proyek").val();
-    let rk_anggota = $("#create-rk_anggota").val();
-    let iki_anggota = $("#create-iki_anggota").val();
     let token = $("meta[name='csrf-token']").attr("content");
-    if (nama_proyek == "" || rk_anggota == "" || iki_anggota == "") {
+    $("#error-nama_proyek").text("");
+    if (nama_proyek == "") {
+        if (nama_proyek == "") {
+            $("#error-nama_proyek").text("Nama Proyek harus diisi");
+        }
         return;
     }
     // swal loading
@@ -425,14 +699,84 @@ $("#btn-create-proyek").on("click", function () {
             _token: token,
             id_timkerja: id_timkerja,
             nama_proyek: nama_proyek,
-            rk_anggota: rk_anggota,
-            iki_anggota: iki_anggota,
         },
         success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data berhasil disimpan",
+                showConfirmButton: false,
+                timer: 3000,
+            });
             location.reload();
         },
         error: function (e) {
-            // console.log(e);
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `Data gagal disimpan`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        },
+    });
+});
+
+$("#btn-edit-proyek").on("click", function () {
+    event.preventDefault();
+    let id_proyek = $("#edit-id_proyek").val();
+    let nama_proyek = $("#edit-nama_proyek").val();
+    let rk_anggota = $("#edit-rk_anggota").val();
+    let token = $("meta[name='csrf-token']").attr("content");
+    $("#error-edit-nama_proyek").text("");
+    $("#error-edit-rk_anggota").text("");
+    if (nama_proyek == "" ) {
+        if (nama_proyek == "") {
+            $("#error-edit-nama_proyek").text("Nama Proyek harus diisi");
+        }
+        return;
+    }
+    // swal loading
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
+    $.ajax({
+        url: `/ketua-tim/rencana-kinerja/proyek/update/${id_proyek}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            nama_proyek: nama_proyek,
+        },
+        success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: "Data berhasil disimpan",
+                showConfirmButton: false,
+                timer: 3000,
+            });
+            location.reload();
+        },
+        error: function (e) {
+            Swal.fire({
+                type: "error",
+                icon: "error",
+                title: "Gagal!",
+                text: `Data gagal disimpan`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
         },
     });
 });
@@ -452,6 +796,27 @@ $("#create-hasil_kerja").on("change", function () {
                 $("#pelaksana-tugas").val("Gugus Tugas");
             } else if (pelaksana == "ngt") {
                 $("#pelaksana-tugas").val("Non Gugus Tugas");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+        },
+    });
+});
+$("#edit-hasil_kerja").on("change", function () {
+    let dataId = $("#edit-hasil_kerja option:selected").val();
+    $.ajax({
+        url: `/admin/master-hasil-kerja/detail/${dataId}`,
+        type: "GET",
+        cache: false,
+        success: function (response) {
+            $("#edit-unsur").val(response.masterUnsurName);
+            $("#edit-subunsur").val(response.masterSubUnsurName);
+            let pelaksana = response.kategori_pelaksana;
+            if (pelaksana == "gt") {
+                $("#edit-pelaksana-tugas").val("Gugus Tugas");
+            } else if (pelaksana == "ngt") {
+                $("#edit-pelaksana-tugas").val("Non Gugus Tugas");
             }
         },
         error: function (e) {
@@ -502,3 +867,45 @@ $("#yearSelect").on("change", function () {
     $("#yearForm").submit();
 });
 
+$("#modal-edit-proyek").on("show.bs.modal", function (e) {
+    let id_proyek = $(e.relatedTarget).data("id");
+    let nama_proyek = $(e.relatedTarget).data("nama");
+    let rk_anggota = $(e.relatedTarget).data("rencana");
+    let iki_anggota = $(e.relatedTarget).data("iki");
+
+    $("#edit-id_proyek").val(id_proyek);
+    $("#edit-nama_proyek").val(nama_proyek);
+    $("#edit-rk_anggota").val(rk_anggota);
+    $("#edit-iki_anggota").val(iki_anggota);
+});
+
+$("#modal-edit-tugas").on("show.bs.modal", function (e) {
+    let id_tugas = $(e.relatedTarget).data("id");
+    let tugas = $(e.relatedTarget).data("tugas");
+    let hasil_kerja = $(e.relatedTarget).data("hasil");
+    let melaksanakan = $(e.relatedTarget).data("melaksanakan");
+    let capaian = $(e.relatedTarget).data("capaian");
+    let id_proyek = $(e.relatedTarget).data("proyek");
+    let unsur = $(e.relatedTarget).data("unsur");
+    let subunsur = $(e.relatedTarget).data("subunsur");
+    let kategori_pelaksana = $(e.relatedTarget).data("pelaksana");
+
+    if (kategori_pelaksana == "gt") {
+        kategori_pelaksana = "Gugus Tugas";
+    } else if (kategori_pelaksana == "ngt") {
+        kategori_pelaksana = "Non Gugus Tugas";
+    }
+
+    $("#edit-subunsur").val(subunsur);
+    $("#edit-unsur").val(unsur);
+    $("#edit-id_tugas").val(id_tugas);
+    $("#edit-tugas").val(tugas);
+    $("#edit-hasil_kerja").val(hasil_kerja);
+    $("#edit-hasil_kerja").trigger("change");
+    $("#edit-pelaksana-tugas").val(kategori_pelaksana);
+
+    $("#edit-melaksanakan").val(melaksanakan);
+    $("#edit-capaian").val(capaian);
+    $("#edit-proyek").val(id_proyek);
+    $("#edit-proyek").trigger("change");
+});

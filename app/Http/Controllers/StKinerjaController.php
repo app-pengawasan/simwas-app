@@ -110,7 +110,7 @@ class StKinerjaController extends Controller
     public function create()
     {
         $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->whereIn('status', [4,5]);
+                            $query->whereIn('status', [1,2]);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id)
                                 ->whereIn('pt_jabatan', [2, 3]);
@@ -188,7 +188,7 @@ class StKinerjaController extends Controller
     public function edit(StKinerja $st_kinerja)
     {
         $rencana_kerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-            $query->whereIn('status', [4,5]);
+            $query->whereIn('status', [1,2]);
         })->whereHas('pelaksana', function ($query) {
             $query->where('id_pegawai', auth()->user()->id)
                 ->whereIn('pt_jabatan', [2, 3]);

@@ -1,32 +1,22 @@
-<div class="modal fade" id="modal-create-master-subunsur" data-backdrop="static" data-keyboard="false"
+<div class="modal fade" id="modal-create-master-subunsur" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="modal-create-master-SubUnsur-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Subunsur Inspektorat</h5>
+                <h5 class="modal-title" id="modal-create-master-SubUnsur-label">Form Tambah Hasil Kerja Inspektorat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" action="{{ route('admin.master-hasil-kerja.store') }}" enctype="multipart/form-data">
-                @csrf
+            <form method="POST" action="{{ route('admin.master-hasil-kerja.store') }}" enctype="multipart/form-data"
+                class="needs-validation" novalidate="">
                 <div class="modal-body">
+                    @csrf
                     <div class="form-group">
                         <label class="form-label" for="masterUnsurId">Nama Unsur</label>
-                        @if (count($masterUnsurs) == 0)
-                        <span><small class="text-danger">
-                                *Tidak ada data unsur. Silahkan
-                                <a href="/admin/master-unsur">
-                                    tambah unsur
-                                </a>
-                                terlebih dahulu.
-                            </small>
-                        </span>
-                        @endif
                         <div class="">
-                            <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required
-                                data-placeholder="Pilih Unsur">
-                                <option value=""></option>
+                            <select class="form-control select2" name="masterUnsurId" id="masterUnsurId" required>
+                                <option value="">Pilih Unsur</option>
                                 @foreach ($masterUnsurs as $unsur)
                                 <option value="{{ $unsur->id }}">{{ $unsur->nama_unsur }}</option>
                                 @endforeach
@@ -35,34 +25,27 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="masterSubUnsurId">Nama Subunsur</label>
-                        <span id="subunsur-alert"><small class="text-danger ">*Pilih Unsur terlebih
-                                dahulu</small></span>
                         <div class="">
                             <select disabled class="form-control select2" name="masterSubUnsurId" id="masterSubUnsurId"
-                                required data-placeholder="Pilih Subunsur">
-                                <option value=""></option>
+                                required>
+                                <option value="">Pilih Subunsur</option>
+                                @foreach ($masterSubUnsurs as $unsur)
+                                {{-- <option value="{{ $unsur->id }}">{{ $unsur->nama_sub_unsur }}</option> --}}
+                                @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="namaHasilKerja">Nama Hasil Kerja</label>
                         <div class="">
-                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required
-                                placeholder="Masukkan Nama Hasil Kerja">
+                            <input type="text" class="form-control" name="namaHasilKerja" id="namaHasilKerja" required placeholder="Nama Hasil Kerja">
                             <small id="error-hasil-kerja" class="text-danger"></small>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="hasilKerjaTim">Hasil Kerja Tim</label>
-                        <div class="">
-                            <input type="text" class="form-control" name="hasilKerjaTim" id="hasilKerjaTim" required
-                                placeholder="Masukkan Hasil Kerja Tim">
-                            <small id="error-hasil-kerja" class="text-danger"></small>
-                        </div>
-                    </div>
                     {{-- radiobutton --}}
-                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                    <div class="form-group
+                        {{ $errors->has('status') ? ' has-error' : '' }}">
                         <label class="form-label required" for="status">Status</label>
                         <div class="selectgroup w-100">
                             <label class="selectgroup-item">

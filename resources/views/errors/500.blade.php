@@ -11,7 +11,7 @@
     <div class="page-inner">
         <h1>500</h1>
         <div class="page-description">
-            Terdapat kesalahan, kami juga tidak tahu apa yang terjadi. Silakan hubungi admin untuk info lebih lanjut.
+            Terdapat kesalahan dalam sistem, Silakan hubungi admin untuk info lebih lanjut.
         </div>
         <div class="page-search">
             </form>
