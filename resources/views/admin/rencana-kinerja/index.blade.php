@@ -112,52 +112,54 @@
                                             <span class="badge badge-{{ $colorText[$tim->status] }}">
                                                 {{ $statusTim[$tim->status] }}
                                         </td>
-                                        <td class="d-flex align-items-center" style="gap: 5px">
-                                            <a href="/admin/rencana-kinerja/{{ $tim->id_timkerja }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            @if ($tim->status != 2)
-                                            <button class="btn btn-warning btn-sm btn-edit-timkerja"
-                                                data-id="{{ $tim->id_timkerja }}" data-toggle="modal"
-                                                data-target="#modal-edit-timkerja">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            @endif
-                                            @if ($tim->status == 0)
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
-                                                data-id="{{ $tim->id_timkerja }}">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                            @endif
-                                            @if ($tim->status == 1)
-                                            <form
-                                            class="button-lock-timkerja"
-                                            id="form-lock-timkerja-{{ $tim->id_timkerja }}"
-                                            data-id="{{ $tim->id_timkerja }}"
-                                            action="/admin/tim-kerja/lock/{{ $tim->id_timkerja }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Kunci Tim Kerja"
-                                                    id="btn-lock-timkerja">
-                                                    <i class="fas fa-lock"></i>
+                                        <td>
+                                            <div class="d-flex align-items-center" style="gap: 5px">
+                                                <a href="/admin/rencana-kinerja/{{ $tim->id_timkerja }}"
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                @if ($tim->status != 2)
+                                                <button class="btn btn-warning btn-sm btn-edit-timkerja"
+                                                    data-id="{{ $tim->id_timkerja }}" data-toggle="modal"
+                                                    data-target="#modal-edit-timkerja">
+                                                    <i class="fas fa-edit"></i>
                                                 </button>
-                                            </form>
-                                            @elseif ($tim->status == 2)
-                                            <form
-                                            class="button-unlock-timkerja"
-                                            id="form-unlock-timkerja-{{ $tim->id_timkerja }}"
-                                            data-id="{{ $tim->id_timkerja }}"
-                                            action="/admin/tim-kerja/unlock/{{ $tim->id_timkerja }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Buka Kunci Tim Kerja"
-                                                    id="btn-unlock-timkerja">
-                                                    <i class="fas fa-lock-open"></i>
-                                                </button>
-                                            </form>
-                                            @endif
+                                                @endif
+                                                @if ($tim->status == 0)
+                                                <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
+                                                    data-id="{{ $tim->id_timkerja }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                                @endif
+                                                @if ($tim->status == 1)
+                                                <form class="button-lock-timkerja"
+                                                    id="form-lock-timkerja-{{ $tim->id_timkerja }}"
+                                                    data-id="{{ $tim->id_timkerja }}"
+                                                    action="/admin/tim-kerja/lock/{{ $tim->id_timkerja }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Kunci Tim Kerja" id="btn-lock-timkerja">
+                                                        <i class="fas fa-lock"></i>
+                                                    </button>
+                                                </form>
+                                                @elseif ($tim->status == 2)
+                                                <form class="button-unlock-timkerja"
+                                                    id="form-unlock-timkerja-{{ $tim->id_timkerja }}"
+                                                    data-id="{{ $tim->id_timkerja }}"
+                                                    action="/admin/tim-kerja/unlock/{{ $tim->id_timkerja }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-info btn-sm"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Buka Kunci Tim Kerja" id="btn-unlock-timkerja">
+                                                        <i class="fas fa-lock-open"></i>
+                                                    </button>
+                                                </form>
+                                                @endif
 
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach

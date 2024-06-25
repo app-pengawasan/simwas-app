@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-create-master-kinerja" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modal-create-master-kinerja" data-backdrop="static" data-keyboard="false" 
     aria-labelledby="modal-create-master-SubUnsur-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">

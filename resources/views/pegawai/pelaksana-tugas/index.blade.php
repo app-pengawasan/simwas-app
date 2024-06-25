@@ -206,7 +206,14 @@
                                                 @if (!isset($rencanaKerja->pelaksana[$i]))
                                                 <td class="font-italic"> Belum ditentukan </td>
                                                 <td> PIC </td>
-                                                <td class="font-italic"> Belum ditentukan </td>
+                                                <td class="font-italic"> {{
+                                                        $rencanaKerja->hasilKerja->masterKinerja[0]
+                                                        ->masterKinerjaPegawai
+                                                        ->where('pt_jabatan', 3 )
+                                                        ->first()
+                                                        ->hasil_kerja ?? 'Belum tersedia'
+
+                                                        }} </td>
                                                 <td class="font-italic"> Belum ditentukan </td>
                                                 <td>
                                                     @if ($timKerja->status < 2) <button
