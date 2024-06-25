@@ -284,19 +284,11 @@ class SuratSrikandiController extends Controller
      */
     public function show($id)
     {
-        $usulanSuratSrikandi = UsulanSuratSrikandi::leftJoin('surat_srikandis', 'usulan_surat_srikandis.id', '=', 'surat_srikandis.id_usulan_surat_srikandi')
-        ->select('usulan_surat_srikandis.*', 'surat_srikandis.*', 'usulan_surat_srikandis.id as id', 'usulan_surat_srikandis.user_id as user_id')
-        ->where('usulan_surat_srikandis.id', $id)
-        ->first();
-        // dd($usulanSuratSrikandi);
-        $usulanSuratSrikandi->user_name = $usulanSuratSrikandi->user->name;
-        $suratSrikandi = SuratSrikandi::where('id_usulan_surat_srikandi', $id)->first();
-
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
 
         return view('sekretaris.surat-srikandi.show', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'suratSrikandi' => $suratSrikandi,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,

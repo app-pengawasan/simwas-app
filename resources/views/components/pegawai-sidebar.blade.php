@@ -121,7 +121,7 @@
                     <span>Laporan Kinerja</span>
                 </a>
             </li>
-            <li class="menu-header">Pengelolaan Dokumen</li>
+            <li class="menu-header">Pengelolaan Arsip</li>
             <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/usulan-surat-srikandi">
                     <i class="fas fa-solid fa-envelope"></i>
