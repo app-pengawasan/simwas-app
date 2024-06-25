@@ -37,23 +37,27 @@
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
                                 <th>Pejabat Penanda Tangan:</th>
-                                <td>{{ $usulanSuratSrikandi->kepala_unit_penandatangan_srikandi}}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kepala_unit_penandatangan_srikandi}}</td>
                             </tr>
                             {{-- nomor_surat_srikandi --}}
                             <tr>
                                 <th>Nomor Surat Srikandi:</th>
-                                <td>{{ $usulanSuratSrikandi->nomor_surat_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->nomor_surat_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Dokumen Surat Srikandi:</th>
                                 <td>
-                                    <a class="badge badge-primary p-2"
-                                        href="{{ route('sekretaris.surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
-                                            class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
+                                    <a class="badge badge-danger p-2" target="_blank"
+                                        href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_pdf_path }}">
+                                        <i
+                                            class="fa-solid fa-file-pdf mr-1"></i>Download</a>
+                                            <a class="badge badge-info p-2" target="_blank"
+                                                href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_word_path }}">
+                                                <i class="fa-solid fa-file-word mr-1"></i>Download</a>
 
                             <tr>
                                 <th>Jenis Naskah Dinas:</th>
-                                <td>{{ $usulanSuratSrikandi->jenis_naskah_dinas_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->jenis_naskah_dinas_srikandi }}</td>
                             </tr>
                             {{-- <tr>
                                                                                     <th>Jenis Naskah Dinas Penugasan:</th>
@@ -67,22 +71,22 @@
                             {{-- kegiatan --}}
                             <tr>
                                 <th>Tanggal Persetujuan Srikandi:</th>
-                                <td>{{ $suratSrikandi->tanggal_persetujuan_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->tanggal_persetujuan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Derajat Keamanan:</th>
-                                <td>{{ $suratSrikandi->derajat_keamanan_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->derajat_keamanan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $suratSrikandi->kode_klasifikasi_arsip_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kode_klasifikasi_arsip_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
                                 <td>
                                     <a target="_blank" class="badge badge-primary"
-                                        href="{{ $suratSrikandi->link_srikandi }}">
-                                        {{ $suratSrikandi->link_srikandi }}
+                                        href="{{ $usulanSuratSrikandi->suratSrikandi[0]->link_srikandi }}">
+                                        {{ $usulanSuratSrikandi->suratSrikandi[0]->link_srikandi }}
                                     </a>
                                 </td>
                             </tr>
@@ -97,7 +101,7 @@
                                     <span class="badge badge-success mr-1"><i
                                             class="fa-regular fa-circle-check mr-1"></i>Disetujui</span>
                                     Pada Tanggal {{ $usulanSuratSrikandi->updated_at->format('d F Y')}} Oleh
-                                    {{ $suratSrikandi->user->name }}
+                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->user->name }}
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>

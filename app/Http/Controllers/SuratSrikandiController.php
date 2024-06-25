@@ -137,8 +137,14 @@ class SuratSrikandiController extends Controller
         } else {
             $year = $year;
         }
-        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->whereYear('created_at', $year)->get();
-        $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
+        if(auth()->user()->is_sekma){
+            $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->whereYear('created_at', $year)->get();
+            $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
+        } else {
+            $unitKerja = auth()->user()->unit_kerja;
+            $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->get();
+            $allStatus = UsulanSuratSrikandi::select('status')->distinct()->where('pejabat_penanda_tangan', $unitKerja)->get();
+        }
 
         foreach ($usulanSuratSrikandi as $usulan) {
             $usulan->user_name = $usulan->user->name;
@@ -278,19 +284,11 @@ class SuratSrikandiController extends Controller
      */
     public function show($id)
     {
-        $usulanSuratSrikandi = UsulanSuratSrikandi::leftJoin('surat_srikandis', 'usulan_surat_srikandis.id', '=', 'surat_srikandis.id_usulan_surat_srikandi')
-        ->select('usulan_surat_srikandis.*', 'surat_srikandis.*', 'usulan_surat_srikandis.id as id', 'usulan_surat_srikandis.user_id as user_id')
-        ->where('usulan_surat_srikandis.id', $id)
-        ->first();
-        // dd($usulanSuratSrikandi);
-        $usulanSuratSrikandi->user_name = $usulanSuratSrikandi->user->name;
-        $suratSrikandi = SuratSrikandi::where('id_usulan_surat_srikandi', $id)->first();
-
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
 
         return view('sekretaris.surat-srikandi.show', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'suratSrikandi' => $suratSrikandi,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
@@ -371,7 +369,14 @@ class SuratSrikandiController extends Controller
             $year = $year;
         }
 
-        $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereYear('created_at', $year)->get();
+        if(auth()->user()->is_sekma){
+            $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereYear('created_at', $year)->get();
+        } else {
+            $unitKerja = auth()->user()->unit_kerja;
+            $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereHas('usulanSuratSrikandi', function($query) use ($unitKerja) {
+                $query->where('pejabat_penanda_tangan', $unitKerja);
+            })->whereYear('created_at', $year)->get();
+        }
 
 
 

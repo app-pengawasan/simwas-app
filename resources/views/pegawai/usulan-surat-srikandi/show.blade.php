@@ -53,7 +53,7 @@
                                 <th>Dokumen Surat Srikandi:</th>
                                 <td>
                                     <a class="badge badge-primary p-2"
-                                        href="{{ route('pegawai.surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
+                                        href="{{ route('pegawai.usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
                                             class="fa-solid fa-file-arrow-down mr-1"></i>Download
                                     </a>
                             <tr>

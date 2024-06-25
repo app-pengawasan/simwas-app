@@ -152,7 +152,7 @@ class DashboardController extends Controller
             'percentage_usulan' => $suratSrikandiCount['percentage_usulan'],
             'percentage_disetujui' => $suratSrikandiCount['percentage_disetujui'],
             'percentage_ditolak' => $suratSrikandiCount['percentage_ditolak'],
-            'total_usulan' => $suratSrikandiCount['usulanCount'],
+            'total_usulan' => $suratSrikandiCount['total_usulan'],
             'usulanCount' => $suratSrikandiCount['usulanCount'],
             'disetujuiCount' => $suratSrikandiCount['disetujuiCount'],
             'ditolakCount' => $suratSrikandiCount['ditolakCount'],
@@ -423,9 +423,19 @@ class DashboardController extends Controller
 
     // Sekretaris
     function sekretarisSuratSrikandiCount($year){
-        $usulanCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'usulan')->count();
-        $disetujuiCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'disetujui')->count();
-        $ditolakCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'ditolak')->count();
+
+        if(auth()->user()->is_sekma){
+            $usulanCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'usulan')->count();
+            $disetujuiCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'disetujui')->count();
+            $ditolakCount= UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->where('status', 'ditolak')->count();
+            $totalCount = UsulanSuratSrikandi::with('user')->latest()->whereYear('created_at', $year)->count();
+        } else {
+            $unitKerja = auth()->user()->unit_kerja;
+            $usulanCount= UsulanSuratSrikandi::with('user')->latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->where('status', 'usulan')->count();
+            $disetujuiCount= UsulanSuratSrikandi::with('user')->latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->where('status', 'disetujui')->count();
+            $ditolakCount= UsulanSuratSrikandi::with('user')->latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->where('status', 'ditolak')->count();
+            $totalCount = UsulanSuratSrikandi::with('user')->latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->count();
+        }
 
         if ($usulanCount+$disetujuiCount+$ditolakCount != 0) {
             $percentage_usulan = intval($usulanCount/($usulanCount+$disetujuiCount+$ditolakCount)*100);
@@ -445,7 +455,7 @@ class DashboardController extends Controller
             'usulanCount' => $usulanCount,
             'disetujuiCount' => $disetujuiCount,
             'ditolakCount' => $ditolakCount,
-            'total_usulan' => $usulanCount+$disetujuiCount+$ditolakCount
+            'total_usulan' => $totalCount,
         ];
     }
 
