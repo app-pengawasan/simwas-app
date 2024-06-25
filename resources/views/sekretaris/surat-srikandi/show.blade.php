@@ -79,7 +79,7 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kode_klasifikasi_arsip_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->kode ?? '' }} {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
@@ -195,7 +195,7 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip }}</td>
+                                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? ''}} {{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}</td>
                             </tr>
 
                             <tr>
@@ -340,13 +340,13 @@
                         <label for="kodeKlasifikasiArsip">Kode Klasifikasi Arsip</label>
                         <select required
                             class="form-control select2
-                                                                    @error('kodeKlasifikasiArsip') is-invalid @enderror"
+                            @error('kodeKlasifikasiArsip') is-invalid @enderror"
                             id=" kodeKlasifikasiArsip" name="kodeKlasifikasiArsip">
                             <option disabled selected value="">Pilih Kode Klasifikasi Arsip</option>
                             @foreach ($kodeKlasifikasiArsip as $kodeKlasifikasiArsip)
-                            <option {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip ? 'selected' : '' }}
-                                value="{{ $kodeKlasifikasiArsip }}">
-                                {{ $kodeKlasifikasiArsip }}</option>
+                            <option {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip->id ? 'selected' : '' }}
+                                value="{{ $kodeKlasifikasiArsip->id }}">
+                                {{ $kodeKlasifikasiArsip->nama }}{{ $kodeKlasifikasiArsip->uraian }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">Kode Klasifikasi Arsip Harus Diisi</div>

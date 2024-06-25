@@ -6,6 +6,7 @@ use App\Models\UsulanSuratSrikandi;
 use App\Models\SuratSrikandi;
 use App\Http\Requests\StoreSuratSrikandiRequest;
 use App\Http\Requests\UpdateSuratSrikandiRequest;
+use App\Models\KodeKlasifikasiArsip;
 use Illuminate\Http\Request;
 
 class SuratSrikandiController extends Controller
@@ -48,12 +49,6 @@ class SuratSrikandiController extends Controller
         "B-biasa/terbuka",
         "R-rahasia",
         "T-terbatas",
-    ];
-
-    private $kodeKlasifikasiArsip = [
-            "PW.110 Surat Tugas Kegiatan Audit",
-            "PW.100 Surat Tugas Pengawasan Selain Audit",
-            "PW.100 Surat Tugas Diklat Pengawasan",
     ];
 
     private $kegiatanPengawasan = [
@@ -285,7 +280,7 @@ class SuratSrikandiController extends Controller
     public function show($id)
     {
         $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-
+        $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
         return view('sekretaris.surat-srikandi.show', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
@@ -295,7 +290,7 @@ class SuratSrikandiController extends Controller
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,

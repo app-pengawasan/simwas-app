@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
-use PhpOffice\PhpWord\IOFactory;
 use App\Models\UsulanSuratSrikandi;
 use App\Models\KodeKlasifikasiArsip;
-use PhpOffice\PhpWord\TemplateProcessor;
-use App\Http\Requests\StoreUsulanSuratSrikandiRequest;
-use App\Http\Requests\UpdateUsulanSuratSrikandiRequest;
 
-class UsulanSuratSrikandiController extends Controller
+
+
+class SuratKorespondensiController extends Controller
+
 {
-
-    // make array of variable to be used in the view
     private $pejabatPenandaTangan = [
         "8000" => "Inspektur Utama",
         "8100" => "Inspektur Wilayah I",
@@ -54,8 +50,6 @@ class UsulanSuratSrikandiController extends Controller
         "R-rahasia",
         "T-terbatas",
     ];
-
-
 
     private $kegiatanPengawasan = [
             "01" => "Anggaran",
@@ -187,12 +181,6 @@ class UsulanSuratSrikandiController extends Controller
         '3' => 'PIC',
         '4' => 'Anggota Tim',
     ];
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
 
@@ -205,7 +193,7 @@ class UsulanSuratSrikandiController extends Controller
         }
 
         $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
-        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('jenis_naskah_dinas', '1031')->get();
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('jenis_naskah_dinas', '1032')->get();
 
 
         $year = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')
@@ -230,7 +218,7 @@ class UsulanSuratSrikandiController extends Controller
 
 
 
-        return view('pegawai.usulan-surat-srikandi.index', [
+        return view('pegawai.usulan-surat-korespondensi.index', [
             'type_menu' => 'usulan-surat',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
             'year' => $year,
@@ -239,22 +227,30 @@ class UsulanSuratSrikandiController extends Controller
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
         ]);
     }
+    public function show($id)
+    {
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
+        return view('pegawai.usulan-surat-korespondensi.show', [
+            'type_menu' => 'usulan-surat',
+            'usulanSuratSrikandi' => $usulanSuratSrikandi,
+            'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
+            'jenisNaskahDinas' => $this->jenisNaskahDinas,
+            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
+            'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
+            'kegiatan' => $this->kegiatan,
+            'derajatKeamanan' => $this->derajatKeamanan,
+            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kegiatanPengawasan' => $this->kegiatanPengawasan,
+            'pendukungPengawasan' => $this->pendukungPengawasan,
+            'unsurTugas' => $this->unsurTugas,
+        ]);
+    }
     public function create()
     {
-        $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->whereIn('status', [0,1,2]);
-                        })->whereHas('pelaksana', function ($query) {
-                            $query->where('id_pegawai', auth()->user()->id);
-                        })->get();
         $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
-                        // dd($rencanaKerja);
-        return view('pegawai.usulan-surat-srikandi.create', [
+
+        return view('pegawai.usulan-surat-korespondensi.create', [
             'type_menu' => 'usulan-surat',
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
@@ -266,71 +262,9 @@ class UsulanSuratSrikandiController extends Controller
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
-            'rencanaKerja' => $rencanaKerja,
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreUsulanSuratSrikandiRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    public function makeSurat($menimbang, $mengingat, $rencana_id, $untuk, $path_doc){
-        $usulan = RencanaKerja::findOrFail($rencana_id);
-        $pelaksanaTugas = $usulan->pelaksana;
-        // dd($untuk);
-        // replace /r/n untuk enter
-        $menimbang = str_replace("\r\n", "<w:br/>", $menimbang);
-        $mengingat = str_replace("\r\n", "<w:br/>", $mengingat);
-        $untuk = str_replace("\r\n", "<w:br/>", $untuk);
-
-        // Jika pelaksana tugas kurang dari sama dengan 3 orang
-        if (count($pelaksanaTugas) <= 3) {
-            $path_template = 'document/template-dokumen/template-surat-tugas.docx';
-            $templateProcessor = new TemplateProcessor($path_template);
-            $templateProcessor->setValue('menimbang', $menimbang);
-            $templateProcessor->setValue('mengingat', $mengingat);
-            $templateProcessor->setValue('untuk', $untuk);
-            $no = 1;
-            $nama = "";
-            foreach ($pelaksanaTugas as $pelaksana) {
-                $nama .= $no . ". " . $pelaksana->user->name . "\n";
-                $no++;
-            }
-            $nama = str_replace("\n", "<w:br/>", $nama);
-            $templateProcessor->setValue('nama', $nama);
-
-        } else {
-            $path_template = 'document/template-dokumen/template-surat-tugas-gt3.docx';
-            $templateProcessor = new TemplateProcessor($path_template);
-            $templateProcessor->setValue('menimbang', $menimbang);
-            $templateProcessor->setValue('mengingat', $mengingat);
-            $templateProcessor->setValue('untuk', $untuk);
-
-            // duplicate row
-            $templateProcessor->cloneRow('no', count($pelaksanaTugas));
-            $no = 1;
-            foreach ($pelaksanaTugas as $pelaksana) {
-                $templateProcessor->setValue('no#' . $no, $no);
-                $templateProcessor->setValue('nama#' . $no, $pelaksana->user->name);
-                $templateProcessor->setValue('pangkat#' . $no, $this->pangkat[$pelaksana->user->pangkat]);
-                $templateProcessor->setValue('nip#' . $no, $pelaksana->user->nip);
-                $templateProcessor->setValue('jabatan#' . $no, $this->jabatan[$pelaksana->user->jabatan]);
-                $templateProcessor->setValue('keterangan#' . $no, $this->keterangan[$pelaksana->pt_jabatan]);
-                $no++;
-            }
-        }
-
-        $path = public_path('storage/usulan-surat-srikandi/' . $path_doc);
-        $fileName = time() . '-usulan-surat-srikandi.docx';
-        $templateProcessor->saveAs($path . $fileName);
-        // dd($path . $fileName);
-        return "storage/usulan-surat-srikandi/" .   $path_doc . $fileName;
-    }
-
-    public function store(StoreUsulanSuratSrikandiRequest $request)
+    public function store(Request $request)
     {
 
         // dd($request->all());
@@ -409,115 +343,7 @@ class UsulanSuratSrikandiController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        return redirect()->route('pegawai.usulan-surat-srikandi.index')->with('status', 'Berhasil Menambahkan Usulan Surat Srikandi!')
+        return redirect()->route('pegawai.usulan-surat-korespondensi.index')->with('status', 'Berhasil Menambahkan Usulan Surat Srikandi!')
             ->with('alert-type', 'success');
-    }
-
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\UsulanSuratSrikandi  $usulanSuratSrikandi
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
-
-        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-        return view('pegawai.usulan-surat-srikandi.show', [
-            'type_menu' => 'usulan-surat',
-            'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
-            'jenisNaskahDinas' => $this->jenisNaskahDinas,
-            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
-            'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
-            'kegiatan' => $this->kegiatan,
-            'derajatKeamanan' => $this->derajatKeamanan,
-            'kegiatanPengawasan' => $this->kegiatanPengawasan,
-            'pendukungPengawasan' => $this->pendukungPengawasan,
-            'unsurTugas' => $this->unsurTugas,
-        ]);
-    }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\UsulanSuratSrikandi  $usulanSuratSrikandi
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(UsulanSuratSrikandi $usulanSuratSrikandi)
-    {
-        $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
-
-        return view('pegawai.usulan-surat-srikandi.edit', [
-            'type_menu' => 'usulan-surat',
-            'usulanSuratSrikandi' => $usulanSuratSrikandi,
-            'jenisNaskahDinas' => $this->jenisNaskahDinas,
-            'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
-            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
-            'kegiatan' => $this->kegiatan,
-            'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateUsulanSuratSrikandiRequest  $request
-     * @param  \App\Models\UsulanSuratSrikandi  $usulanSuratSrikandi
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateUsulanSuratSrikandiRequest $request, UsulanSuratSrikandi $usulanSuratSrikandi)
-    {
-        $usulanSuratSrikandi->update([
-            'pejabat_penanda_tangan' => $request->pejabatPenandaTangan,
-            'jenis_naskah_dinas' => $request->jenisNaskahDinas,
-            'jenis_naskah_dinas_penugasan' => $request->jenisNaskahDinasPenugasan,
-            'kegiatan' => $request->kegiatan,
-            'derajat_keamanan' => $request->derajatKeamanan,
-            'kode_klasifikasi_arsip' => $request->kodeKlasifikasiArsip,
-            'melaksanakan' => $request->melaksanakan,
-            'usulan_tanggal_penandatanganan' => $request->usulanTanggal,
-            'status' => 'usulan',
-            'catatan' => 'catatan',
-            'user_id' => auth()->user()->id,
-        ]);
-        return redirect()->route('pegawai.usulan-surat-srikandi.show', $usulanSuratSrikandi->id)->with('status', 'Berhasil Mengubah Usulan Surat Srikandi!')
-            ->with('alert-type', 'success');
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\UsulanSuratSrikandi  $usulanSuratSrikandi
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(UsulanSuratSrikandi $usulanSuratSrikandi)
-    {
-        $usulanSuratSrikandi->delete();
-        return redirect()->route('pegawai.usulan-surat-srikandi.index')->with('status', 'Berhasil Menghapus Usulan Surat Srikandi!')
-            ->with('alert-type', 'success');
-    }
-
-    public function acceptUsulanSurat($id)
-    {
-        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-        $usulanSuratSrikandi->update([
-            'status' => 'disetujui',
-        ]);
-
-        return redirect()->route('pegawai.surat-srikandi.index')
-            ->with('alert-message', 'Usulan Surat Srikandi berhasil disetujui')
-            ->with('alert-type', 'success');
-    }
-    public function downloadUsulanSurat($id)
-    {
-        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-        $file = public_path($usulanSuratSrikandi->directory);
-        return response()->download($file);
     }
 }
-

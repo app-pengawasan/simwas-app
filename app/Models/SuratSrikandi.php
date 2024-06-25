@@ -33,4 +33,9 @@ class SuratSrikandi extends Model
         return $this->belongsTo(UsulanSuratSrikandi::class, 'id_usulan_surat_srikandi');
 
     }
+
+    public function kodeKlasifikasiArsip()
+    {
+        return $this->belongsTo(KodeKlasifikasiArsip::class, 'kode_klasifikasi_arsip_srikandi', 'id');
+    }
 }
