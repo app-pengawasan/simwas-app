@@ -137,8 +137,14 @@ class SuratSrikandiController extends Controller
         } else {
             $year = $year;
         }
-        $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->whereYear('created_at', $year)->get();
-        $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
+        if(auth()->user()->is_sekma){
+            $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->whereYear('created_at', $year)->get();
+            $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
+        } else {
+            $unitKerja = auth()->user()->unit_kerja;
+            $usulanSuratSrikandi = UsulanSuratSrikandi::latest()->where('pejabat_penanda_tangan', $unitKerja)->whereYear('created_at', $year)->get();
+            $allStatus = UsulanSuratSrikandi::select('status')->distinct()->where('pejabat_penanda_tangan', $unitKerja)->get();
+        }
 
         foreach ($usulanSuratSrikandi as $usulan) {
             $usulan->user_name = $usulan->user->name;
@@ -371,7 +377,14 @@ class SuratSrikandiController extends Controller
             $year = $year;
         }
 
-        $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereYear('created_at', $year)->get();
+        if(auth()->user()->is_sekma){
+            $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereYear('created_at', $year)->get();
+        } else {
+            $unitKerja = auth()->user()->unit_kerja;
+            $suratSrikandi = SuratSrikandi::with('usulanSuratSrikandi.user')->whereHas('usulanSuratSrikandi', function($query) use ($unitKerja) {
+                $query->where('pejabat_penanda_tangan', $unitKerja);
+            })->whereYear('created_at', $year)->get();
+        }
 
 
 

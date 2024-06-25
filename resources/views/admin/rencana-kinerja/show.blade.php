@@ -114,7 +114,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    @if ($timKerja->status != 5)
+                                    @if ($timKerja->status != 2)
                                     <div class="text-right">
                                         <button class="btn btn-outline-primary btn-edit-timkerja"
                                             data-id="{{ $timKerja->id_timkerja }}" data-toggle="modal"
@@ -253,11 +253,9 @@
                                                                                             ?>
                                                             <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
                                                             <td>
-                                                                @if ($tugas->kategori_pelaksanatugas == "ngt")
                                                                 {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )
                                                                 ->first()
                                                                 ->hasil_kerja : 'Belum Ditentukan' }}
-                                                                @endif
                                                             </td>
                                                         </tr>
                                                         @endforeach
