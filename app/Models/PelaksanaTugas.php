@@ -27,6 +27,6 @@ class PelaksanaTugas extends Model
 
     public function hasil()
     {
-        return $this->belongsTo(MasterHasil::class, "pt_hasil", "kategori_hasilkerja");
+        return $this->belongsTo(MasterHasilKerja::class, "pt_hasil", "id");
     }
 }

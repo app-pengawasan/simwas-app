@@ -21,6 +21,7 @@ use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\PegawaiTugasController;
 use App\Http\Controllers\WilayahKerjaController;
+use App\Http\Controllers\MasterKinerjaController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
@@ -40,6 +41,7 @@ use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
 use App\Http\Controllers\MasterHasilKerjaController;
 use App\Http\Controllers\AdminRencanaKerjaController;
+use App\Http\Controllers\Auth\SingleSignOnController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\NormaHasilAcceptedController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
@@ -58,7 +60,6 @@ use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
-use App\Http\Controllers\Auth\SingleSignOnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,9 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('master-unsur', MasterUnsurController::class);
         Route::resource('master-subunsur', MasterSubUnsurController::class);
         Route::resource('master-hasil-kerja', MasterHasilKerjaController::class);
+        Route::resource('master-kinerja', MasterKinerjaController::class);
+        Route::get('master-kinerja/detail/{id}', [MasterKinerjaController::class, 'showMasterKinerja']);
+        Route::get('master-kinerja/update/{id}', [MasterKinerjaController::class, 'update']);
         Route::get('master-subunsur/unsur/{id}',[MasterSubUnsurController::class, 'getSubUnsurByUnsur'])->middleware('auth');
         Route::get('master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja'])->middleware('auth');
         Route::get('master-unsur/subunsur/{id}',[MasterUnsurController::class, 'getUnsurBySubUnsur'])->middleware('auth');
@@ -281,10 +285,12 @@ Route::group(['middleware'=>'auth'], function(){
     // Ketua Tim
     Route::prefix('ketua-tim')->name('ketua-tim.')->group(function () {
         Route::resource('rencana-kinerja', KetuaTimRencanaKerjaController::class);
+        Route::put('rencana-kinerja/update/{id}', [KetuaTimRencanaKerjaController::class, 'update']);
         Route::put('rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
         Route::put('rencana-kinerja/send/{id}', [KetuaTimRencanaKerjaController::class, 'sendToAnalis']);
         Route::resource('tim-pelaksana', PegawaiTugasController::class);
         Route::resource('rencana-kinerja/proyek', ProyekController::class);
+        Route::put('rencana-kinerja/proyek/update/{id}', [ProyekController::class, 'update']);
         Route::resource('norma-hasil', NormaHasilAcceptedController::class)->names([
             'index' => 'usulan-norma-hasil.index',
             'show' => 'usulan-norma-hasil.show',
@@ -292,11 +298,13 @@ Route::group(['middleware'=>'auth'], function(){
             'create' => 'usulan-norma-hasil.create',
             'store' => 'usulan-norma-hasil.store',
         ]);
+        Route::get('objek-pengawasan/detail/{id}', [ObjekPengawasanController::class, 'detailObjekPengawasan']);
     });
 
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
     Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
+
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);

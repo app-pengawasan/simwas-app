@@ -17,7 +17,9 @@
         </div>
         <div>
             <div class="form-group col-lg-12 mx-auto">
-                <a href="/auth/sso-bps" class="gsi-material-button" style="width:620; display:block">
+                <a href={{
+                    env('APP_ENV') == 'local' ? "/auth/google" :
+                    "/auth/sso-bps" }} class="gsi-material-button" style="width:620; display:block">
                     <div class="gsi-material-button-state"></div>
                     <div class="gsi-material-button-content-wrapper">
                         <div class="gsi-material-button-icon">

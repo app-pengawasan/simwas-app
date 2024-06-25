@@ -10,6 +10,7 @@ use App\Models\MasterTujuan;
 use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
+use App\Models\OperatorRencanaKinerja;
 
 class AdminRencanaKerjaController extends Controller
 {
@@ -27,22 +28,13 @@ class AdminRencanaKerjaController extends Controller
         // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
         // Ketua Tim Kirim Rencana Kinerja ke Admin
-        2   => 'Menunggu Persetujuan',
-        // Ditolak Admin - Perlu Perbaikan
-        3   => 'Perlu Perbaikan',
-        // Disetjui Admin Belum di Lock
-        4   => 'Disetujui, 🔓',
-        // Disetujui Admin Sudah di Lock
-        5   => 'Disetujui, 🔒',
+        2   => 'Dikunci',
     ];
 
     protected $colorText = [
-        0   => 'dark',
+        0   => 'warning',
         1   => 'info',
-        2   => 'primary',
-        3   => 'warning',
-        4   => 'success',
-        5   => 'success',
+        2   => 'success',
     ];
 
     protected $unsur = [
@@ -177,6 +169,7 @@ class AdminRencanaKerjaController extends Controller
         $masterIku = MasterIKU::all();
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
+        $operator = OperatorRencanaKinerja::where('tim_kerja_id', $timKerja[0]->id_timkerja)->get();
 
 
         return view('admin.rencana-kinerja.show', [
@@ -194,7 +187,8 @@ class AdminRencanaKerjaController extends Controller
             'colorText'     => $this->colorText,
             'rencanaKerja'  => $rencanaKerja,
             'proyeks'        => $proyek,
-            'pegawai'       => $pegawai
+            'pegawai'       => $pegawai,
+            'operator'      => $operator
         ]);
     }
 

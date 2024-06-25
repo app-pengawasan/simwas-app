@@ -97,11 +97,7 @@
                                         <td>
                                             <div
                                                 class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                <div class="circle mr-2">
-                                                    <span class="initials text-capitalize">
-                                                        {{ substr($tim->ketua->name, 0, 1) }}{{ substr(strstr($tim->ketua->name, ' '), 1, 1) }}
-                                                    </span>
-                                                </div>
+                                                
                                                 {{  $tim->ketua->name }}
                                             </div>
                                         </td>

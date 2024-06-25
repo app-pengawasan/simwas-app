@@ -67,10 +67,7 @@ class SingleSignOnController extends Controller
 
         // get user info
         $pegawai = $this->SingleSignOnProvider->getResourceOwner($token);
-        // save session
-        // dd($user->toArray());
-        session(['user' => $pegawai->toArray()['nip']]);
-        // dd($pegawai->toArray()['nip']);
+        session(['profile_picture' => $pegawai->toArray()['foto']]);
         $user = User::where('nip', $pegawai->toArray()['nip'])->first();
         if ($user) {
             auth()->login($user);

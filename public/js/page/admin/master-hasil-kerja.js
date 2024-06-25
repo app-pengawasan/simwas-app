@@ -1,4 +1,3 @@
-// function when edit-button class clicked
 $(document).on("click", ".edit-button", function () {
     var id = $(this).data("id");
     $("#edit-form").attr("action", "/admin/master-hasil-kerja/" + id);
@@ -7,21 +6,33 @@ $(document).on("click", ".edit-button", function () {
         method: "GET",
         success: function (data) {
             $("#editId").val(data.id);
-            $("#editMasterUnsurId").select2("trigger", "select", {
-                data: { id: data.masterUnsurId, text: data.nama_unsur },
-            });
-            $("#editMasterSubUnsurId").select2("trigger", "select", {
-                data: {
-                    id: data.master_subunsur_id,
-                    text: data.master_subunsur_id,
-                },
-            });
+            $("#editMasterUnsurId").val(data.masterUnsurId);
+            $("#editMasterSubUnsurId").val(data.master_subunsur_id);
             $("#editNamaHasilKerja").val(data.nama_hasil_kerja);
             $("#editHasilKerjaTim").val(data.hasil_kerja_tim);
-            if (data.kategori_pelaksana == "gt") {
+            $("#editPengendaliTeknis").val(data.pengendali_teknis);
+            $("#editKetuaTim").val(data.ketua_tim);
+            $("#editPicKoordinator").val(data.pic);
+            $("#editAnggotaTim").val(data.anggota_tim);
+
+            if (data.kategori_pelaksana == "ngt") {
                 $("#editStatus1").prop("checked", true);
+                $("#edit-picKoordinator").show();
+                $("#editPicKoordinator").attr("required", true);
+                $("#edit-pengendali-teknis").hide();
+                $("#edit-ketua-tim").hide();
+                $("#editPengendaliTeknis").attr("required", false);
+                $("#editKetuaTim").attr("required", false);
+                $("#ngt").prop("checked", true);
             } else {
                 $("#editStatus2").prop("checked", true);
+                $("#edit-picKoordinator").hide();
+                $("#editPicKoordinator").attr("required", false);
+                $("#edit-pengendali-teknis").show();
+                $("#edit-ketua-tim").show();
+                $("#edit-pengendaliTeknis").attr("required", true);
+                $("#edit-ketuaTim").attr("required", true);
+                // check radio button input with id ngt
             }
         },
     });
@@ -53,48 +64,56 @@ $(document).on("change", "#masterUnsurId", function () {
         method: "GET",
         success: function (data) {
             $("#masterSubUnsurId").attr("disabled", false);
-            if (data.length != 0) {
-                var html = "";
-                data.forEach((item) => {
-                    html += `<option value="${item.id}">${item.nama_sub_unsur}</option>`;
-                });
-                $("#masterSubUnsurId").html(html);
-                $("#subunsur-alert").hide();
-            } else {
-                $("#subunsur-alert").show();
-                // chane small text to "Tidak ada subunsur"
-                html = `<small class="text-danger ">*Unsur ini tidak memiliki subunsur</small>`;
-                $("#subunsur-alert").html(html);
-            }
-        },
-    });
-});
-$(document).on("change", "#editMasterUnsurId", function () {
-    var id = $(this).val();
-    $.ajax({
-        url: "/admin/master-subunsur/unsur/" + id,
-        method: "GET",
-        success: function (data) {
-            $("#editMasterSubUnsurId").attr("disabled", false);
-            if (data.length != 0) {
-                var html = "";
-                data.forEach((item) => {
-                    html += `<option value="${item.id}">${item.nama_sub_unsur}</option>`;
-                });
-                $("#editMasterSubUnsurId").html(html);
-                $("#subunsur-alert").hide();
-            } else {
-                $("#subunsur-alert").show();
-                // chane small text to "Tidak ada subunsur"
-                html = `<small class="text-danger ">*Unsur ini tidak memiliki subunsur</small>`;
-                $("#subunsur-alert").html(html);
-            }
+            var html = "";
+            data.forEach((item) => {
+                html += `<option value="${item.id}">${item.nama_sub_unsur}</option>`;
+            });
+            $("#masterSubUnsurId").html(html);
         },
     });
 });
 
+// onchange radio button
+$(document).on("change", "input[type=radio][name=status]", function () {
+    var value = $(this).val();
+    if (value == "1") {
+        $("#wrapper-picKoordinator").hide();
+        $("#picKoordinator").attr("required", false);
+        $("#pengendali-teknis").show();
+        $("#ketua-tim").show();
+        $("#pengendaliTeknis").attr("required", true);
+        $("#ketuaTim").attr("required", true);
+    } else {
+        $("#wrapper-picKoordinator").show();
+        $("#picKoordinator").attr("required", true);
+        $("#pengendali-teknis").hide();
+        $("#ketua-tim").hide();
+        $("#pengendaliTeknis").attr("required", false);
+        $("#ketuaTim").attr("required", false);
+    }
+});
+$(document).on("change", "input[type=radio][name=editStatus]", function () {
+    var value = $(this).val();
+    if (value == "1") {
+        $("#edit-picKoordinator").hide();
+        $("#editPicKoordinator").attr("required", false);
+        $("#edit-pengendali-teknis").show();
+        $("#edit-ketua-tim").show();
+        $("#editPengendaliTeknis").attr("required", true);
+        $("#editKetuaTim").attr("required", true);
+    } else {
+        $("#edit-picKoordinator").show();
+        $("#editPicKoordinator").attr("required", true);
+        $("#edit-pengendali-teknis").hide();
+        $("#edit-ketua-tim").hide();
+        $("#editPengendaliTeknis").attr("required", false);
+        $("#editKetuaTim").attr("required", false);
+    }
+});
+
 $(function () {
     let table;
+
     if ($("#master-hasil-kerja").length) {
         table = $("#master-hasil-kerja")
             .dataTable({
@@ -119,14 +138,20 @@ $(function () {
             })
             .api();
 
+        // move datatable button to inside download button
         $(".dt-buttons").appendTo("#download-button");
         $(".dt-buttons").appendTo("#download-button");
         $(".dataTables_filter").appendTo("#filter-search-wrapper");
         $(".dataTables_filter").find("input").addClass("form-control");
+        // .dataTables_filter width 100%
         $(".dataTables_filter").css("width", "100%");
+        // .dataTables_filter label width 100%
         $(".dataTables_filter label").css("width", "100%");
+        // input height 35px
         $(".dataTables_filter input").css("height", "35px");
+        // make label text bold and black
         $(".dataTables_filter label").css("font-weight", "bold");
+        // remove bottom margin from .dataTables_filter
         $(".dataTables_filter label").css("margin-bottom", "0");
 
         $(".dataTables_filter input").attr(
@@ -149,14 +174,24 @@ $(function () {
 });
 
 $(".submit-btn").on("click", function () {
+    // disable button after click
     if (
         $("#masterUnsurId").val() == "" ||
-        $("#masterSubUnsurId").val() == "" ||
         $("#namaHasilKerja").val() == "" ||
         $("#hasilKerjaTim").val() == "" ||
-        $("#status").val() == ""
+        $("#status").val() == "" ||
+        $("#anggotaTim").val() == ""
     ) {
         return;
+    }
+    if ("input[type=radio][name=status]" == "1") {
+        if ($("#picKoordinator").val() == "") {
+            return;
+        }
+    } else {
+        if ($("#pengendaliTeknis").val() == "" || $("#ketuaTim").val() == "") {
+            return;
+        }
     }
     $(this).attr("disabled", true);
     $(this).closest("form").submit();

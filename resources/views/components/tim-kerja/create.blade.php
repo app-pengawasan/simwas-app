@@ -61,8 +61,7 @@
                         <small class="text-muted">*Optional</small>
 
                         <div class="">
-                            <select class="form-control select2" name="create-operator" id="create-operator">
-                                <option value="" selected disabled>Pilih Operator Tim</option>
+                            <select multiple="multiple" class="form-control select2" name="create-operator[]" id="create-operator" data-placeholder="Pilih Operator Tim">
                                 @foreach ($pegawai as $p)
                                 <option value="{{ $p->id }}">{{ $p->name }}</option>
                                 @endforeach

@@ -109,115 +109,57 @@ class MasterPegawaiController extends Controller
 
     public function getAllPegawai()
     {
-$url_base       = 'https://sso.bps.go.id/auth/';
-$url_token      = $url_base.'realms/pegawai-bps/protocol/openid-connect/token';
-$url_api        = $url_base.'realms/pegawai-bps/api-pegawai';
-$client_id      = env('SSO_CLIENT_ID');
-$client_secret  = env('SSO_CLIENT_SECRET');
-$ch = curl_init($url_token);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-curl_setopt($ch, CURLOPT_POSTFIELDS,"grant_type=client_credentials");
-curl_setopt($ch, CURLOPT_USERPWD, $client_id . ":" . $client_secret);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response_token = curl_exec($ch);
-if(curl_errno($ch)){
-    throw new Exception(curl_error($ch));
-}
-curl_close ($ch);
-$json_token = json_decode($response_token, true);
-$access_token = $json_token['access_token'];
-// dd($access_token);
+        $url_base       = 'https://sso.bps.go.id/auth/';
+        $url_token      = $url_base.'realms/pegawai-bps/protocol/openid-connect/token';
+        $url_api        = $url_base.'realms/pegawai-bps/api-pegawai';
+        $client_id      = env('SSO_CLIENT_ID');
+        $client_secret  = env('SSO_CLIENT_SECRET');
+        $ch = curl_init($url_token);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS,"grant_type=client_credentials");
+        curl_setopt($ch, CURLOPT_USERPWD, $client_id . ":" . $client_secret);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response_token = curl_exec($ch);
+        if(curl_errno($ch)){
+            throw new Exception(curl_error($ch));
+        }
+        curl_close ($ch);
+        $json_token = json_decode($response_token, true);
+        $access_token = $json_token['access_token'];
 
-// $query_search = '/username/vony';
+        $kodeOrganisasi = ['000000080100','000000081000',  '000000082000', '000000083000'];
 
-$kodeOrganisasi = ['000000080100','000000081000',  '000000082000', '000000083000'];
+        $allPegawai = [];
 
-// foreach
-$allPegawai = [];
+        foreach($kodeOrganisasi as $kode){
+            $query_search = '/unit/'.$kode;
 
-// foreach kodeorganisasi
-foreach($kodeOrganisasi as $kode){
-    $query_search = '/unit/'.$kode;
+            $ch = curl_init($url_api.$query_search);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , 'Authorization: Bearer '.$access_token ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            if(curl_errno($ch)){
+                throw new Exception(curl_error($ch));
+            }
+            curl_close ($ch);
+            $json = json_decode($response, true);
+            $allPegawai = array_merge($allPegawai, $json);
 
-    $ch = curl_init($url_api.$query_search);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , 'Authorization: Bearer '.$access_token ));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    if(curl_errno($ch)){
-        throw new Exception(curl_error($ch));
+        }
+        $pegawaiDatabase = User::all();
+        // filter allpegawai when ["attributes"]["attribute-nip"][0] not in nip pegawaidatabase
+        $allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase){
+            $nip = $pegawai["attributes"]["attribute-nip"][0];
+            $isExist = $pegawaiDatabase->contains('nip', $nip);
+            return !$isExist;
+        });
+        return $allPegawai;
     }
-    curl_close ($ch);
-    $json = json_decode($response, true);
-    $allPegawai = array_merge($allPegawai, $json);
-
-}
-
-$pegawaiDatabase = User::all();
-
-// filter allpegawai when ["attributes"]["attribute-nip"][0] not in nip pegawaidatabase
-$allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase){
-    $nip = $pegawai["attributes"]["attribute-nip"][0];
-    $isExist = $pegawaiDatabase->contains('nip', $nip);
-    return !$isExist;
-});
-
-dd($allPegawai);
-}
 
     public function create()
     {
-        $url_base       = 'https://sso.bps.go.id/auth/';
-$url_token      = $url_base.'realms/pegawai-bps/protocol/openid-connect/token';
-$url_api        = $url_base.'realms/pegawai-bps/api-pegawai';
-$client_id      = env('SSO_CLIENT_ID');
-$client_secret  = env('SSO_CLIENT_SECRET');
-$ch = curl_init($url_token);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-curl_setopt($ch, CURLOPT_POSTFIELDS,"grant_type=client_credentials");
-curl_setopt($ch, CURLOPT_USERPWD, $client_id . ":" . $client_secret);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response_token = curl_exec($ch);
-if(curl_errno($ch)){
-    throw new Exception(curl_error($ch));
-}
-curl_close ($ch);
-$json_token = json_decode($response_token, true);
-$access_token = $json_token['access_token'];
-// dd($access_token);
-
-// $query_search = '/username/vony';
-
-$kodeOrganisasi = ['000000080100','000000081000',  '000000082000', '000000083000'];
-
-// foreach
-$allPegawai = [];
-
-// foreach kodeorganisasi
-foreach($kodeOrganisasi as $kode){
-    $query_search = '/unit/'.$kode;
-
-    $ch = curl_init($url_api.$query_search);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , 'Authorization: Bearer '.$access_token ));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    if(curl_errno($ch)){
-        throw new Exception(curl_error($ch));
-    }
-    curl_close ($ch);
-    $json = json_decode($response, true);
-    $allPegawai = array_merge($allPegawai, $json);
-
-}
-$pegawaiDatabase = User::all();
-// filter allpegawai when ["attributes"]["attribute-nip"][0] not in nip pegawaidatabase
-$allPegawai = array_filter($allPegawai, function($pegawai) use ($pegawaiDatabase){
-    $nip = $pegawai["attributes"]["attribute-nip"][0];
-    $isExist = $pegawaiDatabase->contains('nip', $nip);
-    return !$isExist;
-});
-// dd($allPegawai[0]["attributes"]["attribute-nip"][0]);
+        $allPegawai = $this->getAllPegawai();
         return view(
             'admin.master-pegawai.create',
             [

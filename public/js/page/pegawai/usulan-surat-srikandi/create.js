@@ -121,6 +121,9 @@ $("#kegiatan").change(function () {
         $("#unsurTugas").attr("required", "required");
         $("#kegiatanPengawasanWrapper").removeClass("d-none");
         $("#kegiatanPengawasan").attr("required", "required");
+        $("#pendukungPengawasanWrapper").addClass("d-none");
+        $("#pendukungPengawasan").removeAttr("required");
+        $("#pendukungPengawasan").val("");
     } else if (value === "2") {
         $("#unsurTugasWrapper").addClass("d-none");
         $("#unsurTugas").removeAttr("required");

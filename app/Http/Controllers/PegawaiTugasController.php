@@ -102,11 +102,7 @@ class PegawaiTugasController extends Controller
         $timKerja = TimKerja::where('id_timkerja', $rencanaKerja[0]->id_timkerja)->first();
         $proyek = Proyek::where('id', $rencanaKerja[0]->id_proyek)->first();
 
-        $ketuaTim = $timKerja->id_ketua;
-        $userLogin = auth()->user()->id;
-        if ($ketuaTim != $userLogin) {
-            abort(403);
-        }
+
 
 
         return view('pegawai.pelaksana-tugas.index', [

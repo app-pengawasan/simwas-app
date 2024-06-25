@@ -62,7 +62,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-end">
                             {{-- <p class="mb-3">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
                                 Untuk melakukan import pegawai silahkan download format
@@ -139,11 +139,6 @@
                                         <td>
                                             <div
                                                 class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                <div class="circle mr-2">
-                                                    <span class="initials text-capitalize">
-                                                        {{ substr($user->name, 0, 1) }}{{ substr(strstr($user->name, ' '), 1, 1) }}
-                                                    </span>
-                                                </div>
                                                 {{  $user->name }}
                                             </div>
                                         </td>

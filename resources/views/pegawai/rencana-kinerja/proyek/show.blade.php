@@ -75,7 +75,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama Tugas</th>
+                                            <th>Nama Proyek</th>
                                             <th>Pelaksana Tugas</th>
                                             <th>Melaksanakan</th>
                                             <th>Capaian</th>
@@ -90,8 +90,8 @@
                                             <td>
                                                 {{
                                                     $tugas->kategori_pelaksanatugas == 'gt' ? "Gugus Tugas" :  "Non Gugus Tugas"
-                                                 }}
-</td>
+                                                }}
+                                                </td>
                                             <td>{{ $tugas->melaksanakan }}</td>
                                             <td>{{ $tugas->capaian }}</td>
                                             <td>
@@ -122,7 +122,6 @@
                         <div class="card-footer">
                         </div>
                     </div>
-
                 </div>
             </div>
     </section>

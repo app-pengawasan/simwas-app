@@ -24,7 +24,10 @@ class UpdateProyekRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'id_proyek' => 'required',
+            'edit-nama_proyek' => 'required',
+            'edit-rk_anggota' => 'required',
+            'edit-iki_anggota' => 'required',
         ];
     }
 }

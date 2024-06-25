@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LaporanObjekPengawasan;
 use Illuminate\Http\Request;
 use App\Models\ObjekPengawasan;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +38,25 @@ class ObjekPengawasanController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $rules = [
             'id_rencanakerja'   => 'required',
             'objek'          => 'required',
             'kategori_objek'    => 'required',
-            'nama'              => 'required'
+            'nama'              => 'required',
+            'namaLaporan'       => 'required',
+            'januari'           => 'required',
+            'februari'          => 'required',
+            'maret'             => 'required',
+            'april'             => 'required',
+            'mei'               => 'required',
+            'juni'              => 'required',
+            'juli'              => 'required',
+            'agustus'           => 'required',
+            'september'         => 'required',
+            'oktober'           => 'required',
+            'november'          => 'required',
+            'desember'          => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -56,8 +71,35 @@ class ObjekPengawasanController extends Controller
             'id_rencanakerja'   => $validateData['id_rencanakerja'],
             'id_objek'          => $validateData['objek'],
             'kategori_objek'    => $validateData['kategori_objek'],
-            'nama'              => $validateData['nama']
+            'nama'              => $validateData['nama'],
+            'nama_laporan'      => $validateData['namaLaporan']
         ]);
+        // get last id
+        // get last id_opengawasan
+        $lastId = ObjekPengawasan::latest()->first()->id_opengawasan;
+
+        $month = [
+            1 => 'januari',
+            2 => 'februari',
+            3 => 'maret',
+            4 => 'april',
+            5 => 'mei',
+            6 => 'juni',
+            7 => 'juli',
+            8 => 'agustus',
+            9 => 'september',
+            10 => 'oktober',
+            11 => 'november',
+            12 => 'desember'
+        ];
+
+        foreach ($month as $key => $value) {
+            LaporanObjekPengawasan::create([
+                'id_objek_pengawasan' => $lastId,
+                'month' => $key,
+                'status' => $validateData[$value]
+            ]);
+        }
 
         $request->session()->put('status', 'Berhasil menambahkan Objek Pengawasan.');
         $request->session()->put('alert-type', 'success');
@@ -102,7 +144,8 @@ class ObjekPengawasanController extends Controller
         $rules = [
             'objek'          => 'required',
             'kategori_objek' => 'required',
-            'nama'           => 'required'
+            'nama'           => 'required',
+            'namaLaporan'    => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -111,20 +154,52 @@ class ObjekPengawasanController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        ObjekPengawasan::where('id_opengawasan', $request->id_opengawasan)
-        ->update([
-            'id_objek'          => $request->objek,
-            'kategori_objek'    => $request->kategori_objek,
-            'nama'              => $request->nama
-        ]);
+        try {
+            ObjekPengawasan::where('id_opengawasan', $request->id_opengawasan)
+            ->update([
+                'id_objek'          => $request->objek,
+                'kategori_objek'    => $request->kategori_objek,
+                'nama'              => $request->nama,
+                'nama_laporan'      => $request->namaLaporan
+            ]);
+            // delete laporan objek pengawasan
+            LaporanObjekPengawasan::where('id_objek_pengawasan', $request->id_opengawasan)->delete();
+            // create laporan objek pengawasan
+            $month = [
+                1 => 'januari',
+                2 => 'februari',
+                3 => 'maret',
+                4 => 'april',
+                5 => 'mei',
+                6 => 'juni',
+                7 => 'juli',
+                8 => 'agustus',
+                9 => 'september',
+                10 => 'oktober',
+                11 => 'november',
+                12 => 'desember'
+            ];
+            foreach ($month as $key => $value) {
+                LaporanObjekPengawasan::create([
+                    'id_objek_pengawasan' => $request->id_opengawasan,
+                    'month' => $key,
+                    'status' => $request->$value
+                ]);
+            }
 
-        $request->session()->put('status', 'Berhasil memperbarui Objek Pengawasan.');
-        $request->session()->put('alert-type', 'success');
+            $request->session()->put('status', 'Berhasil memperbarui Objek Pengawasan.');
+            $request->session()->put('alert-type', 'success');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Berhasil memperbarui Objek Pengawasan',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil memperbarui Objek Pengawasan',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui Objek Pengawasan',
+            ], 500);
+        }
     }
 
     /**
@@ -135,6 +210,7 @@ class ObjekPengawasanController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+
         ObjekPengawasan::where('id_opengawasan', $id)->delete()   ;
 
         $request->session()->put('status', 'Berhasil menghapus Objek Pengawasan.');
@@ -150,12 +226,20 @@ class ObjekPengawasanController extends Controller
 
     {
         $rencana_id = request()->rencana_id;
-        $objek_pengawasan = ObjekPengawasan::where('id_rencanakerja', $rencana_id)->get();
+        $objek_pengawasan = ObjekPengawasan::with('laporanObjekPengawasan')->where('id_rencanakerja', $rencana_id)->get();
         return response()->json([
             'success' => true,
             'data' => $objek_pengawasan
         ]);
     }
 
+    public function detailObjekPengawasan($id)
+    {
+        $objek_pengawasan = ObjekPengawasan::with('laporanObjekPengawasan', 'masterObjek')->where('id_opengawasan', $id)->first();
+        return response()->json([
+            'success' => true,
+            'data' => $objek_pengawasan
+        ]);
+    }
 
 }
