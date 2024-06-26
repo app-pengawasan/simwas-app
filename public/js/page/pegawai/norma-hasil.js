@@ -78,7 +78,7 @@ $("#table-norma-hasil").on("search.dt", function () {
 $("#rencana_id").on("change", function () {
     let rencana_id = $(this).val();
     $.ajax({
-        url: "/objek-pengawasan-search/",
+        url: "/objek-pengawasan-search",
         type: "GET",
         data: {
             rencana_id: rencana_id,

@@ -240,7 +240,6 @@ class SuratKorespondensiController extends Controller
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
