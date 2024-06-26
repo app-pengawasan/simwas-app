@@ -227,6 +227,8 @@ class ObjekPengawasanController extends Controller
     {
         $rencana_id = request()->rencana_id;
         $objek_pengawasan = ObjekPengawasan::with('laporanObjekPengawasan')->where('id_rencanakerja', $rencana_id)->get();
+        // get hasil kerja from rencanaKerja and hasilKerja
+        $objek_pengawasan->load('rencanaKerja.hasilKerja');
         return response()->json([
             'success' => true,
             'data' => $objek_pengawasan
@@ -241,5 +243,6 @@ class ObjekPengawasanController extends Controller
             'data' => $objek_pengawasan
         ]);
     }
+
 
 }

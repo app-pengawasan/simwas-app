@@ -23,4 +23,5 @@ class MasterLaporan extends Model
                 ->orWhere('nama_laporan', 'like', '%' . $search . '%');
         });
     }
+
 }

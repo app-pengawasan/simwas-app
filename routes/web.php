@@ -63,6 +63,7 @@ use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\LaporanObjekPengawasanController;
 use App\Http\Controllers\MasterLaporanController;
 use App\Models\MasterLaporan;
 
@@ -327,6 +328,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
     Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
+    Route::get('/objek-pengawasan/laporan/{id}', [LaporanObjekPengawasanController::class, 'getLaporanObjekPengawasan']);
 
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);

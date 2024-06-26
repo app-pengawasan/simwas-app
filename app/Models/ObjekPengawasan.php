@@ -22,4 +22,9 @@ class ObjekPengawasan extends Model
     {
         return $this->belongsTo(MasterObjek::class, 'id_objek', 'id_objek');
     }
+
+    public function rencanaKerja()
+    {
+        return $this->belongsTo(RencanaKerja::class, 'id_rencanakerja', 'id_rencanakerja');
+    }
 }
