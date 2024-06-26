@@ -80,7 +80,8 @@ class MasterPegawaiController extends Controller
         'is_opwil'      => 'Operator Wilayah',
         'is_analissdm'  => 'Analis SDM',
         'is_arsiparis'  => 'Arsiparis',
-        'is_aktif'      => 'Inspektur'
+        'is_aktif'      => 'Inspektur Utama',
+        'is_irwil'     =>  'Inspektur Wilayah',
     ];
 
     /**
@@ -207,6 +208,7 @@ class MasterPegawaiController extends Controller
             'is_analissdm'  => 'required',
             'is_arsiparis'  => 'required',
             'is_aktif'      => 'required',
+            'is_irwil'      => 'required',
         ]);
 
         $validateData["password"] = bcrypt($request->password);
@@ -284,6 +286,7 @@ class MasterPegawaiController extends Controller
             'is_analissdm'  => 'required',
             'is_arsiparis'  => 'required',
             'is_aktif'      => 'required',
+            'is_irwil'      => 'required',
         ];
 
         // if($request->password != ""){

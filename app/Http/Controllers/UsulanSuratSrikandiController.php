@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RencanaKerja;
+use Illuminate\Http\Request;
+use PhpOffice\PhpWord\IOFactory;
 use App\Models\UsulanSuratSrikandi;
+use App\Models\KodeKlasifikasiArsip;
+use PhpOffice\PhpWord\TemplateProcessor;
 use App\Http\Requests\StoreUsulanSuratSrikandiRequest;
 use App\Http\Requests\UpdateUsulanSuratSrikandiRequest;
-use Illuminate\Http\Request;
-use PhpOffice\PhpWord\TemplateProcessor;
-use PhpOffice\PhpWord\IOFactory;
-use App\Models\RencanaKerja;
+
 class UsulanSuratSrikandiController extends Controller
 {
 
@@ -53,11 +55,7 @@ class UsulanSuratSrikandiController extends Controller
         "T-terbatas",
     ];
 
-    private $kodeKlasifikasiArsip = [
-            "PW.110 Surat Tugas Kegiatan Audit",
-            "PW.100 Surat Tugas Pengawasan Selain Audit",
-            "PW.100 Surat Tugas Diklat Pengawasan",
-    ];
+
 
     private $kegiatanPengawasan = [
             "01" => "Anggaran",
@@ -207,7 +205,7 @@ class UsulanSuratSrikandiController extends Controller
         }
 
         $allStatus = UsulanSuratSrikandi::select('status')->distinct()->get();
-        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->get();
+        $usulanSuratSrikandi = UsulanSuratSrikandi::with('user')->latest()->where('user_id', auth()->user()->id)->whereYear('created_at', $year)->where('jenis_naskah_dinas', '1031')->get();
 
 
         $year = UsulanSuratSrikandi::selectRaw('YEAR(created_at) year')
@@ -233,7 +231,7 @@ class UsulanSuratSrikandiController extends Controller
 
 
         return view('pegawai.usulan-surat-srikandi.index', [
-            'type_menu' => 'usulan-surat-srikandi',
+            'type_menu' => 'usulan-surat',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
             'year' => $year,
             'allStatus' => $allStatus,
@@ -254,16 +252,17 @@ class UsulanSuratSrikandiController extends Controller
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id);
                         })->get();
+        $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
                         // dd($rencanaKerja);
         return view('pegawai.usulan-surat-srikandi.create', [
-            'type_menu' => 'usulan-surat-srikandi',
+            'type_menu' => 'usulan-surat',
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
@@ -390,6 +389,7 @@ class UsulanSuratSrikandiController extends Controller
 
 
         UsulanSuratSrikandi::create([
+            'type_menu' => 'usulan-surat',
             'pejabat_penanda_tangan' => $request->pejabatPenandaTangan,
             'rencana_kerja_id' => $request->rencana_id ?? null,
             'jenis_naskah_dinas' => $request->jenisNaskahDinas,
@@ -421,16 +421,13 @@ class UsulanSuratSrikandiController extends Controller
      * @param  \App\Models\UsulanSuratSrikandi  $usulanSuratSrikandi
      * @return \Illuminate\Http\Response
      */
-    public function show(UsulanSuratSrikandi $usulanSuratSrikandi)
+    public function show($id)
     {
-        // left join usulan_surat_srikandi and surat_srikandi
-        $usulanSuratSrikandi = UsulanSuratSrikandi::leftJoin('surat_srikandis', 'usulan_surat_srikandis.id', '=', 'surat_srikandis.id_usulan_surat_srikandi')
-        ->select('usulan_surat_srikandis.*', 'surat_srikandis.*', 'usulan_surat_srikandis.id as id')
-        ->where('usulan_surat_srikandis.id', $usulanSuratSrikandi->id)
-        ->first();
-            // dd($usulanSuratSrikandi);
+
+
+        $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
         return view('pegawai.usulan-surat-srikandi.show', [
-            'type_menu' => 'usulan-surat-srikandi',
+            'type_menu' => 'usulan-surat',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
@@ -438,7 +435,6 @@ class UsulanSuratSrikandiController extends Controller
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
@@ -452,15 +448,17 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function edit(UsulanSuratSrikandi $usulanSuratSrikandi)
     {
+        $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
+
         return view('pegawai.usulan-surat-srikandi.edit', [
-            'type_menu' => 'usulan-surat-srikandi',
+            'type_menu' => 'usulan-surat',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
             'jenisNaskahDinas' => $this->jenisNaskahDinas,
             'pejabatPenandaTangan' => $this->pejabatPenandaTangan,
             'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
         ]);
     }
 

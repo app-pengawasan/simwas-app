@@ -18,10 +18,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Usulan Surat Srikandi</h1>
+            <h1>Usulan Surat Tugas</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item">Usulan Surat Srikandi</div>
+                <div class="breadcrumb-item">Usulan Surat Tugas</div>
             </div>
         </div>
         @include('components.flash')
@@ -33,7 +33,7 @@
                         <div class="d-flex justify-content-between">
                             <p class="mb-4">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Menampilkan usulan surat srikandi yang perlu persetujuan sekretaris.
+                                Menampilkan usulan surat tugas yang perlu persetujuan sekretaris.
                             </p>
                             <div id="download-button">
                             </div>
@@ -143,6 +143,9 @@
                                             data-placement="top" title="{{ $usulan->catatan }}"
                                             style="cursor: pointer;"><i
                                                 class="fa-solid fa-triangle-exclamation mr-1"></i>{{ $usulan->status}}</span>
+                                        @elseif ($usulan->status == 'dibatalkan')
+                                        <span class="badge badge-danger"><i
+                                                class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                         @else
                                         <span class="badge badge-light text-capitalize" data-toggle="tooltip"
                                             data-placement="top" title="Menunggu persetujuan sekretaris"

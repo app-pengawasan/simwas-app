@@ -107,6 +107,20 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item dropdown {{ $type_menu === 'master-arsip' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-folder-closed"></i>
+                    <span>Master Arsip</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/master-kode-klasifikasi-arsip') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-kode-klasifikasi-arsip">Master KKA</a>
+                    </li>
+                    <li class="{{ Request::is('admin/kode-klasifikasi-arsip') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/master-laporan">Master Laporan</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         @include('components.footer')
     </aside>

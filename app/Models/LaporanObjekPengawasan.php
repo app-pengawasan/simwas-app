@@ -17,4 +17,8 @@ class LaporanObjekPengawasan extends Model
     {
         return $this->belongsTo(ObjekPengawasan::class, 'id_objek_pengawasan', 'id_opengawasan');
     }
+    public function normaHasil()
+    {
+        return $this->hasMany(NormaHasil::class, 'laporan_pengawasan_id', 'id');
+    }
 }

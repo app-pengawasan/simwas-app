@@ -119,7 +119,7 @@
                                         <td>
                                             <div
                                                 class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                
+
                                                 {{ $usulan->user_name }}
                                             </div>
                                         </td>
@@ -142,7 +142,10 @@
                                             <span class="badge badge-danger text-capitalize" data-toggle="tooltip"
                                                 data-placement="top" title="{{ $usulan->catatan }}"
                                                 style="cursor: pointer;"><i
-                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>{{ $usulan->status}}</span>
+                                                    class="fa-solid fa-ban mr-1"></i>{{ $usulan->status}}</span>
+                                            @elseif ($usulan->status == 'dibatalkan')
+                                            <span class="badge badge-danger"><i
+                                                    class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                             @else
                                             <span class="badge badge-light text-capitalize" data-toggle="tooltip"
                                                 data-placement="top" title="Menunggu persetujuan sekretaris"

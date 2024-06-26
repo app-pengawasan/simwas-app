@@ -28,8 +28,12 @@ class UsulanSuratSrikandi extends Model
     // has many suratSrikandi
     public function suratSrikandi()
     {
-        return $this->hasMany(SuratSrikandi::class);
+        return $this->hasMany(SuratSrikandi::class, 'id_usulan_surat_srikandi', 'id');
         // add foreign key
+    }
+    public function kodeKlasifikasiArsip()
+    {
+        return $this->belongsTo(KodeKlasifikasiArsip::class, 'kode_klasifikasi_arsip', 'id');
     }
 
 }

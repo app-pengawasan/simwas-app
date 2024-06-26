@@ -83,8 +83,7 @@
                                 <th>Nomor Surat:</th>
                                 <td>
                                     <span class="badge badge-primary">
-                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                            $kodeHasilPengawasan[$usulan->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $usulan->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
                                     </span>
                                 </td>
                             </tr>
@@ -102,11 +101,34 @@
                                 <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama }}</td>
                             </tr>
                             <tr>
+                                <th>Nama Dokumen:</th>
+                                <td>{{ $usulan->nama_dokumen }}</td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Norma Hasil:</th>
+                                <td>{{ $usulan->masterLaporan->nama ?? "" }}</td>
+                            </tr>
+                            <tr>
                                 <th>Tanggal Usulan:</th>
                                 <td>{{ \Carbon\Carbon::parse($usulan->tanggal)->format('d F Y') }}</td>
                             </tr>
+                            <tr>
+                                <th>Objek:</th>
+                                <td class="py-2">
+                                    @if ($objek->count() == 0)
+                                    <span>-</span>
+                                    @endif
+                                    @foreach ($objek as $objek)
+                                    <li>{{ $objek->masterObjek->nama }}
+                                        @endforeach
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bulan Pelaporan:</th>
+                                <td>{{ $usulan->laporanPengawasan ? $month[$usulan->laporanPengawasan->month] : '' }}
+                                </td>
+                            </tr>
                             @if ($usulan->status_norma_hasil == 'disetujui')
-
                             <tr>
                                 <th>Tanggal Persetujuan Ketua Tim:</th>
                                 <td>{{ \Carbon\Carbon::parse($usulan->normaHasilAccepted->tanggal_norma_hasil)->format('d F Y') }}
@@ -134,20 +156,9 @@
                             </tr>
                             @endif
                             <tr>
-                                <th>Objek:</th>
-                                <td class="py-2">
-                                    @if ($objek->count() == 0)
-                                    <span>-</span>
-                                    @endif
-                                    @foreach ($objek as $objek)
-                                    <li>{{ $objek->masterObjek->nama }}
-                                        @endforeach
-                                </td>
-                            </tr>
-                            <tr>
                                 <th>Status Surat:</th>
-                                @if ($usulan->status_norma_hasil != 'diperiksa' &&
-                                $usulan->status_norma_hasil != 'ditolak')
+                                @if ($usulan->status_norma_hasil != 'diperiksa' && $usulan->status_norma_hasil !=
+                                'ditolak')
                                 <td>
                                     @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
                                     'belum unggah')
@@ -165,12 +176,13 @@
                                 </td>
                                 @else
                                 <td>
-                                    <span class="badge
-                                                            {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
-                                                            {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
-                                                            {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
-                                                                text-capitalize">{{
-                                                                $usulan->status_norma_hasil }}
+                                    <span
+                                        class="badge
+                                    {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
+                                    {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
+                                    {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
+                                        text-capitalize">{{
+                                        $usulan->status_norma_hasil }}
                                     </span>
                                 </td>
                                 @endif

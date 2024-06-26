@@ -51,12 +51,12 @@
     @include('components.kelola-kompetensi.edit'); --}}
     <section class="section">
         <div class="section-header">
-            <h1>Pengajuan Naskah Dinas Srikandi</h1>
+            <h1>Pengajuan Surat Tugas</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
+                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat/surat-tugas">Usulan Surat Tugas</a>
                 </div>
-                <div class="breadcrumb-item">Formulir Pengajuan Naskah Dinas</div>
+                <div class="breadcrumb-item">Formulir Pengajuan</div>
             </div>
         </div>
         <div class="row">
@@ -81,7 +81,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <form id="logins-part" action="/pegawai/usulan-surat-srikandi" method="POST"
+                            <form id="logins-part" action="/pegawai/usulan-surat/surat-tugas" method="POST"
                                 class="needs-validation" novalidate enctype="multipart/form-data">
                                 @csrf
                                 <div class="bs-stepper-content">
@@ -105,25 +105,9 @@
                                             <div class="invalid-feedback">Pejabat Penanda Tangan Harus Diisi</div>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="jenisNaskahDinas">Jenis Naskah Dinas</label>
-                                            <i class="fa-solid fa-circle-info" data-toggle="modal"
-                                                data-target="#modalDetail" style="cursor: pointer"></i>
-                                            <select required
-                                                class="form-control select2 @error('jenisNaskahDinas') is-invalid @enderror"
-                                                id="jenisNaskahDinas" name="jenisNaskahDinas">
-                                                <option disabled selected value="">Pilih Jenis Naskah Dinas</option>
-                                                @foreach ($jenisNaskahDinas as $key => $jenisNaskahDinas)
-                                                <option {{
-                                                        old('jenisNaskahDinas') == $jenisNaskahDinas ? 'selected' : ''
-                                                    }} value="{{ $key }}">
-                                                    {{ $jenisNaskahDinas }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="invalid-feedback">Jenis Naskah Dinas Harus Diisi</div>
-                                        </div>
+                                        <input type="hidden" value="1031" name="jenisNaskahDinas">
 
-                                        <div id="jenisNaskahDinasPenugasanWrapper" class="d-none">
+                                        <div id="jenisNaskahDinasPenugasanWrapper">
                                             <div class="form-group">
                                                 <label for="jenisNaskahDinasPenugasan">Jenis Naskah Dinas
                                                     Penugasan</label>
@@ -145,7 +129,7 @@
                                             </div>
                                         </div>
 
-                                        <div id="kegiatanWrapper" class="d-none">
+                                        <div id="kegiatanWrapper">
                                             <div class="form-group">
                                                 <label for="kegiatan">Kegiatan</label>
                                                 <select required
@@ -196,47 +180,6 @@
                                             </div>
                                         </div>
 
-                                        <div id="jenisNaskahDinasKorespondensiWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="jenisNaskahDinasKorespondensi">Jenis Naskah Dinas
-                                                    Korespondensi</label>
-                                                <select required
-                                                    class="form-control select2 @error('jenisNaskahDinasKorespondensi') is-invalid @enderror"
-                                                    id="jenisNaskahDinasKorespondensi"
-                                                    name="jenisNaskahDinasKorespondensi">
-                                                    <option disabled selected value="">Pilih Jenis Naskah Dinas
-                                                        Korespondensi
-                                                    </option>
-                                                    @foreach ($jenisNaskahDinasKorespondensi as $key => $jndk)
-                                                    <option {{
-                                                        old('jenisNaskahDinasKorespondensi') == $key ? 'selected' : ''
-                                                    }} value="{{ $key }}">
-                                                        {{ $jndk }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div class="invalid-feedback">Jenis Naskah Dinas Korespondensi Harus
-                                                    Diisi
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="unsurTugasWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="unsurTugas">Unsur Tugas</label>
-                                                <select required
-                                                    class="form-control select2 @error('unsurTugas') is-invalid @enderror"
-                                                    id="unsurTugas" name="unsurTugas">
-                                                    <option disabled selected value="">Pilih Unsur Tugas</option>
-                                                    @foreach ($unsurTugas as $key => $unsurTugas)
-                                                    <option {{ old('unsurTugas') == $key ? 'selected' : '' }}
-                                                        value="{{ $key }}">
-                                                        {{ $unsurTugas }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div class="invalid-feedback">Unsur Tugas Harus Diisi</div>
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <label for="derajatKeamanan">Derajat Keamanan</label>
                                             <select required
@@ -254,16 +197,6 @@
                                             <div class="invalid-feedback">Derajat Kemanan Harus Diisi</div>
                                         </div>
 
-                                        <div id="perihalWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="perihal">Perihal</label>
-                                                <input required placeholder="Uraian Singkat isi surat" type="text"
-                                                    class="form-control @error('perihal') is-invalid @enderror"
-                                                    id="perihal" name="perihal" value="{{ old('perihal') }}">
-                                                <div class="invalid-feedback">Perihal Harus Diisi</div>
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <label for="kodeKlasifikasiArsip">Kode Klasifikasi Arsip</label>
                                             <select required class="form-control select2
@@ -272,23 +205,12 @@
                                                 <option disabled selected value="">Pilih Kode Klasifikasi Arsip</option>
                                                 @foreach ($kodeKlasifikasiArsip as $kodeKlasifikasiArsip)
                                                 <option
-                                                    {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip ? 'selected' : '' }}
-                                                    value="{{ $kodeKlasifikasiArsip }}">
-                                                    {{ $kodeKlasifikasiArsip }}</option>
+                                                    {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip->id ? 'selected' : '' }}
+                                                    value="{{ $kodeKlasifikasiArsip->id }}">
+                                                    {{ $kodeKlasifikasiArsip->kode }} {{ $kodeKlasifikasiArsip->uraian }}</option>
                                                 @endforeach
                                             </select>
                                             <div class="invalid-feedback">Kode Klasifikasi Arsip Harus Diisi</div>
-                                        </div>
-                                        {{-- create input untuk melaksanakan --}}
-                                        <div id="melaksanakanWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="melaksanakan">Melaksanakan</label>
-                                                <input required placeholder="Input Untuk Melaksanakan" type="text"
-                                                    class="form-control @error('melaksanakan') is-invalid @enderror"
-                                                    id="melaksanakan" name="melaksanakan"
-                                                    value="{{ old('melaksanakan') }}">
-                                                <div class="invalid-feedback">Melaksanakan Harus Diisi</div>
-                                            </div>
                                         </div>
 
                                         {{-- create input untuk menimbang --}}
@@ -318,17 +240,6 @@
                                     </div>
                                 </div>
                                 <div id="test-l-2" class="content">
-                                    <div id="file-upload-wrapper" class="form-group">
-                                        <label for="customFile">Upload Dokumen Naskah Dinas</label>
-                                        <div class="custom-file">
-                                            <input required name="file" type="file" class="custom-file-input @error('file')
-                                                is-invalid @enderror" id="customFile" accept=".doc, .docx"
-                                                @error('file') is-invalid @enderror>
-                                            <label class="custom-file-label" for="customFile">Pilih Dokumen Naskah
-                                                Dinas</label>
-                                            <div class="invalid-feedback pt-1">Unggah Dokumen Naskah Dinas</div>
-                                        </div>
-                                    </div>
                                     <div id="surat-tugas-wrapper">
                                         <div class="form-group">
                                             <label for="rencana_id">Tugas</label>

@@ -56,7 +56,7 @@
                                 <div class="form-group
                                         @if ($errors->has('objek_kegiatan')) is-invalid @endif">
                                     <label for="objek_kegiatan">Objek Kegiatan</label>
-                                    <select id="objek_kegiatan" name="objek_kegiatan[]" disabled multiple="multiple"
+                                    <select id="objek_kegiatan" name="objek_kegiatan" disabled
                                         data-placeholder="Pilih objek kegiatan" class="form-control select2">
                                         <option value="">Pilih objek kegiatan</option>
                                     </select>
@@ -67,18 +67,33 @@
                                     @endif
                                 </div>
 
+                                {{-- Bulan Pelaporan --}}
+                                <div class="form-group
+                                    @if ($errors->has('bulan_laporan')) is-invalid @endif">
+                                    <label for="bulan_pelaporan">Objek Kegiatan</label>
+                                    <select id="bulan_pelaporan" name="bulan_pelaporan" disabled data-placeholder="Pilih Bulan Pelaporan" class="form-control select2">
+                                        class="form-control select2">
+                                        <option value="">Pilih Bulan Pelaporan</option>
+                                    </select>
+                                    @if ($errors->has('bulan_pelaporan'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('objek_kegiatan') }}
+                                    </div>
+                                    @endif
+                                </div>
+
                                 {{-- Jenis Norma Hasil --}}
                                 <div class="form-group
                                         @if ($errors->has('jenis_norma_hasil')) is-invalid @endif">
-                                    <label for="jenis_norma_hasil">Jenis Norma Hasil</label>
+                                    <label for="jenis_norma_hasil">Pilih Jenis Laporan</label>
                                     <select required id="jenis_norma_hasil" name="jenis_norma_hasil"
-                                        class="form-control select2">
-                                        <option value="">Pilih jenis norma hasil</option>
-                                        @foreach ($hasilPengawasan as $id => $nama)
-                                        <option value="{{ $id }}"
-                                            {{ old('jenis_norma_hasil') == $id ? 'selected' : '' }}>
-                                            {{ $nama }}</option>
-                                        @endforeach
+                                        class="form-control select2" data-placeholder="Pilih Jenis Laporan">
+                                        <option value=""></option>
+                                    @foreach ($masterLaporan as $masterLaporan)
+                                        <option value="{{ $masterLaporan->id }}"
+                                            {{ old('jenis_norma_hasil') == $masterLaporan->id ? 'selected' : '' }}>
+                                            {{ $masterLaporan->kode }} - {{ $masterLaporan->nama }}</option>
+                                    @endforeach
                                     </select>
                                     @if ($errors->has('jenis_norma_hasil'))
                                     <div class="invalid-feedback">
@@ -90,7 +105,7 @@
                                 <div class="form-group
                                         @if ($errors->has('nama_dokumen')) is-invalid @endif">
                                     <label for="nama_dokumen">Nama Dokumen</label>
-                                    <input placeholder="Nama Dokumen" required type="text" id="nama_dokumen"
+                                    <input placeholder="Nama Dokumen" required type="text" id="nama_dokumen" readonly
                                         name="nama_dokumen" class="form-control" value="{{ old('nama_dokumen') }}">
                                     @if ($errors->has('nama_dokumen'))
                                     <div class="invalid-feedback">
@@ -102,7 +117,7 @@
                                 <div class="form-group
                                         @if ($errors->has('file')) is-invalid @endif">
                                     <label for="url_norma_hasil">Link Dokumen</label>
-                                    <input placeholder="Masukkan URL/Link dokumen" type="url" id="file"
+                                    <input placeholder="Masukkan URL/Link dokumen" type="url" id="url_norma_hasil"
                                         name="url_norma_hasil" class="form-control" required>
                                     @if ($errors->has('url_norma_hasil'))
                                     <div class="invalid-feedback">

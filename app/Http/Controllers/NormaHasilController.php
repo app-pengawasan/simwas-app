@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NormaHasil;
 use App\Http\Requests\StoreNormaHasilRequest;
 use App\Http\Requests\UpdateNormaHasilRequest;
+use App\Models\MasterLaporan;
 use App\Models\ObjekNormaHasil;
 use App\Models\StKinerja;
 use Illuminate\Support\Facades\Storage;
@@ -89,11 +90,13 @@ class NormaHasilController extends Controller
 
         $year = $year->sortByDesc('year');
 
+
+
         return view('pegawai.norma-hasil.index', [
             'usulan' => $usulan,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'jenisNormaHasil' => $this->hasilPengawasan,
-            'year' => $year
+            'year' => $year,
         ]);
     }
 
@@ -110,11 +113,13 @@ class NormaHasilController extends Controller
                             $query->where('id_pegawai', auth()->user()->id)
                                 ->whereIn('pt_jabatan', [2, 3]);
                         })->get();
+        $masterLaporan = MasterLaporan::where('is_aktif', 1)->get();
         // $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
         return view('pegawai.norma-hasil.create', [
             // "stks" => $stks
             'rencanaKerja' => $rencanaKerja,
             'hasilPengawasan' => $this->hasilPengawasan,
+            'masterLaporan' => $masterLaporan,
         ]);
     }
 
@@ -130,6 +135,7 @@ class NormaHasilController extends Controller
         $rencanaKerja = RencanaKerja::find($request->rencana_id);
         $unit_kerja = $rencanaKerja->timkerja->unitkerja;
         $tanggal = date('Y-m-d');
+        // dd($request->all());
 
         try {
             NormaHasil::create([
@@ -140,19 +146,19 @@ class NormaHasilController extends Controller
                 'document_path' => $request->url_norma_hasil,
                 'nama_dokumen' => $request->nama_dokumen,
                 'tanggal' => $tanggal,
-                'status_norma_hasil' => 'diperiksa'
+                'status_norma_hasil' => 'diperiksa',
+                'bulan_pelaporan' => $request->bulan_pelaporan,
+                'laporan_pengawasan_id' => $request->bulan_pelaporan,
             ]);
 
             $norma_hasil_id = NormaHasil::latest()->first()->id;
 
-            if ($request->objek_kegiatan != null) {
-                foreach ($request->objek_kegiatan as $objek) {
-                    ObjekNormaHasil::create([
-                        'objek_id' => $objek,
-                        'norma_hasil_id' => $norma_hasil_id
-                    ]);
-                }
-            }
+
+            ObjekNormaHasil::create([
+                'objek_id' => $request->objek_kegiatan,
+                'norma_hasil_id' => $norma_hasil_id
+            ]);
+
             return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
         } catch (\Exception $e) {
             return redirect('pegawai/norma-hasil')->with('error', 'Gagal mengajukan usulan norma hasil!');
@@ -170,11 +176,27 @@ class NormaHasilController extends Controller
      */
     public function show(NormaHasil $norma_hasil)
     {
+        $month=[
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
         $objek = ObjekNormaHasil::where('norma_hasil_id', $norma_hasil->id)->get();
+
         return view('pegawai.norma-hasil.show', [
             "usulan" => $norma_hasil,
             "objek" => $objek,
-            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
+            "month" => $month,
+            "kodeHasilPengawasan" => $this->kodeHasilPengawasan,
         ]);
     }
 

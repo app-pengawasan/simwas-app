@@ -121,12 +121,32 @@
                     <span>Laporan Kinerja</span>
                 </a>
             </li>
-            <li class="menu-header">Pengelolaan Dokumen</li>
-            <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
+            <li class="menu-header">Pengelolaan Arsip</li>
+            {{-- <li class="{{ Request::is('pegawai/usulan-surat-srikandi*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/usulan-surat-srikandi">
                     <i class="fas fa-solid fa-envelope"></i>
                     <span>Usulan Surat</span>
                 </a>
+            </li> --}}
+            <li class="nav-item dropdown {{ $type_menu === 'usulan-surat' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-solid fa-envelope"></i>
+                    <span>Usulan Surat</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li
+                        class="{{ Request::is('pegawai/usulan-surat/surat-tugas*') || Request::is('pegawai/usulan-surat/surat-tugas/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/usulan-surat/surat-tugas">
+                            <span>Surat Tugas</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/usulan-surat/surat-korespondensi') || Request::is('pegawai/usulan-surat/surat-korespondensi/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/usulan-surat/surat-korespondensi">
+                            <span>Surat Korespondensi</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/norma-hasil">

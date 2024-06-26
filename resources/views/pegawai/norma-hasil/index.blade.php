@@ -67,7 +67,7 @@
                                         </select>
                                     </div>
                                 </form>
-                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                {{-- <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                     <label for="filter-surat" style="margin-bottom: 0;">
                                         Jenis</label>
                                     <select name="jabatan" id="filter-surat" class="form-control select2">
@@ -78,7 +78,7 @@
                                         </option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
                                 {{-- status,diperiksa, ditolak, disetujui --}}
                                 <div class="form-group
                                     {{ request()->status ? 'd-none' : '' }}"
@@ -127,11 +127,11 @@
                                             <td class="text-center" style="width: 10px; text-align:center" scope="row">
                                                 {{ $loop->iteration }}
                                             </td>
-                                            <td>{{ $jenisNormaHasil[$un->jenis_norma_hasil_id] }}</td>
+                                            <td>{{ $un->masterLaporan->nama ?? "" }}</td>
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')
                                                 <span class="badge badge-primary">
-                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $kodeHasilPengawasan[$un->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
                                                 </span>
                                                 @endif
                                             </td>

@@ -17,7 +17,7 @@
             <h1>Detail Usulan Surat Srikandi</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
+                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat/surat-tugas">Usulan Surat Tugas</a>
                 </div>
                 <div class="breadcrumb-item">Detail Usulan</div>
             </div>
@@ -42,45 +42,49 @@
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
                                 <th>Pejabat Penanda Tangan:</th>
-                                <td>{{ $usulanSuratSrikandi->kepala_unit_penandatangan_srikandi}}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kepala_unit_penandatangan_srikandi}}</td>
                             </tr>
                             {{-- nomor_surat_srikandi --}}
                             <tr>
                                 <th>Nomor Surat Srikandi:</th>
-                                <td>{{ $usulanSuratSrikandi->nomor_surat_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->nomor_surat_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Dokumen Surat Srikandi:</th>
                                 <td>
-                                    <a class="badge badge-primary p-2"
-                                        href="{{ route('pegawai.surat-srikandi.download', $usulanSuratSrikandi->id) }}"><i
-                                            class="fa-solid fa-file-arrow-down mr-1"></i>Download
-                                    </a>
+                                    <a class="badge badge-danger p-2" target="_blank"
+                                        href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_pdf_path }}">
+                                        <i class="fa-solid fa-file-pdf mr-1"></i>Download</a>
+                                    <a class="badge badge-info p-2" target="_blank"
+                                        href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_word_path }}">
+                                        <i class="fa-solid fa-file-word mr-1"></i>Download</a>
+
                             <tr>
                                 <th>Jenis Naskah Dinas:</th>
-                                <td>{{ $usulanSuratSrikandi->jenis_naskah_dinas_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->jenis_naskah_dinas_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Tanggal Persetujuan Srikandi:</th>
-                                <td>{{ $usulanSuratSrikandi->tanggal_persetujuan_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->tanggal_persetujuan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Derajat Keamanan:</th>
-                                <td>{{ $usulanSuratSrikandi->derajat_keamanan_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->derajat_keamanan_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->kode ?? ''}}
+                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}
+                                </td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
                                 <td>
                                     <a target="_blank" class="badge badge-primary"
-                                        href="{{ $usulanSuratSrikandi->link_srikandi }}">
-                                        {{ $usulanSuratSrikandi->link_srikandi }}
+                                        href="{{ $usulanSuratSrikandi->suratSrikandi[0]->link_srikandi }}">
+                                        {{ $usulanSuratSrikandi->suratSrikandi[0]->link_srikandi }}
                                     </a>
                                 </td>
-
                             </tr>
                         </table>
                         @endif
@@ -96,6 +100,9 @@
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                    @elseif ($usulanSuratSrikandi->status == 'dibatalkan')
+                                    <span class="badge badge-danger"><i
+                                            class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                     @else
                                     <span class="badge badge-light"><i
                                             class="fa-regular fa-clock mr-1"></i>Menunggu</span>
@@ -110,10 +117,10 @@
                             </tr>
                             @endif
                             <tr>
+
                                 <th>Dokumen Surat Usulan:</th>
                                 <td>
-                                    <a class="badge badge-primary p-2"
-                                        href="{{ route('pegawai.usulan-surat-srikandi.download', $usulanSuratSrikandi->id) }}">
+                                    <a class="badge badge-primary p-2" href="/{{ $usulanSuratSrikandi->directory }}">
                                         <i class="fa-solid fa-file-arrow-down mr-1"></i>Download</a>
                                 </td>
                             </tr>
@@ -186,7 +193,8 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip }}</td>
+                                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? '' }}{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}
+                                </td>
                             </tr>
 
                             <tr>
