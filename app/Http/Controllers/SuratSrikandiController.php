@@ -6,6 +6,7 @@ use App\Models\UsulanSuratSrikandi;
 use App\Models\SuratSrikandi;
 use App\Http\Requests\StoreSuratSrikandiRequest;
 use App\Http\Requests\UpdateSuratSrikandiRequest;
+use App\Models\KodeKlasifikasiArsip;
 use Illuminate\Http\Request;
 
 class SuratSrikandiController extends Controller
@@ -48,12 +49,6 @@ class SuratSrikandiController extends Controller
         "B-biasa/terbuka",
         "R-rahasia",
         "T-terbatas",
-    ];
-
-    private $kodeKlasifikasiArsip = [
-            "PW.110 Surat Tugas Kegiatan Audit",
-            "PW.100 Surat Tugas Pengawasan Selain Audit",
-            "PW.100 Surat Tugas Diklat Pengawasan",
     ];
 
     private $kegiatanPengawasan = [
@@ -263,7 +258,7 @@ class SuratSrikandiController extends Controller
             'nomor_surat_srikandi' => $request->nomor_surat_srikandi,
             'derajat_keamanan_srikandi' => $request->derajatKeamanan,
             'kode_klasifikasi_arsip_srikandi' => $request->kodeKlasifikasiArsip,
-            'perihal_srikandi' => 'Surat Srikandi',
+            'perihal_srikandi' => $request->melaksanakan,
             'kepala_unit_penandatangan_srikandi' => $request->pejabatPenandaTangan,
             'link_srikandi' => $request->link_srikandi,
             'document_srikandi_word_path' => $document,
@@ -285,7 +280,7 @@ class SuratSrikandiController extends Controller
     public function show($id)
     {
         $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
-
+        $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
         return view('sekretaris.surat-srikandi.show', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
@@ -295,7 +290,7 @@ class SuratSrikandiController extends Controller
             'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
             'kegiatan' => $this->kegiatan,
             'derajatKeamanan' => $this->derajatKeamanan,
-            'kodeKlasifikasiArsip' => $this->kodeKlasifikasiArsip,
+            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
             'kegiatanPengawasan' => $this->kegiatanPengawasan,
             'pendukungPengawasan' => $this->pendukungPengawasan,
             'unsurTugas' => $this->unsurTugas,
@@ -320,9 +315,102 @@ class SuratSrikandiController extends Controller
      * @param  \App\Models\SuratSrikandi  $suratSrikandi
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSuratSrikandiRequest $request, SuratSrikandi $suratSrikandi)
+    public function update(Request $request, SuratSrikandi $suratSrikandi)
     {
         // dd($request->all());
+        try {
+            // dd($request->all());
+$pejabatPenandaTangan = $request->pejabat_penanda_tangan;
+            if ($request->hasFile('upload_word_document')) {
+    $file = $request->file('upload_word_document');
+    $fileName = time() . '-surat_srikandi.' . $file->getClientOriginalExtension();
+
+    // Determine the path based on $pejabatPenandaTangan
+    if ($pejabatPenandaTangan == "8000") {
+        $path = public_path('storage/surat-srikandi/8000-Inspektur-Utama/word');
+        $document ='storage/surat-srikandi/8000-Inspektur-Utama/word/' . $fileName;
+
+    } elseif ($pejabatPenandaTangan == "8100") {
+        $path = public_path('storage/surat-srikandi/8100-Inspektur-Wilayah-I/word');
+        $document ='storage/surat-srikandi/8100-Inspektur-Wilayah-I/word/' . $fileName;
+    } elseif ($pejabatPenandaTangan == "8200") {
+        $path = public_path('storage/surat-srikandi/8200-Inspektur-Wilayah-II/word');
+        $document ='storage/surat-srikandi/8200-Inspektur-Wilayah-II/word/' . $fileName;
+    } elseif ($pejabatPenandaTangan == "8300") {
+        $path = public_path('storage/surat-srikandi/8300-Inspektur-Wilayah-III/word');
+        $document ='storage/surat-srikandi/8300-Inspektur-Wilayah-III/word/' . $fileName;
+    } elseif ($pejabatPenandaTangan == "8010") {
+        $path = public_path('storage/surat-srikandi/8010-Kepala-Bagian-Umum/word');
+        $document ='storage/surat-srikandi/8010-Kepala-Bagian-Umum/word/' . $fileName;
+    } else {
+        $path = public_path('storage/surat-srikandi');
+        $document ='storage/surat-srikandi/' . $fileName;
+    }
+
+    // Move the file to the determined path
+    $file->move($path, $fileName);
+
+    // Construct the document path
+}
+
+// Check if the 'upload_pdf_document' file exists in the request
+if ($request->hasFile('upload_pdf_document')) {
+    $file2 = $request->file('upload_pdf_document');
+    $fileName2 = time() . '-surat_srikandi.' . $file2->getClientOriginalExtension();
+
+    // Determine the path for the second file based on $pejabatPenandaTangan
+    if ($pejabatPenandaTangan == "8000") {
+        $path2 = public_path('storage/surat-srikandi/8000-Inspektur-Utama/pdf');
+        $document2 ='storage/surat-srikandi/8000-Inspektur-Utama/pdf/' . $fileName2;
+
+    } elseif ($pejabatPenandaTangan == "8100") {
+        $path2 = public_path('storage/surat-srikandi/8100-Inspektur-Wilayah-I/pdf');
+        $document2 ='storage/surat-srikandi/8100-Inspektur-Wilayah-I/pdf/' . $fileName2;
+    } elseif ($pejabatPenandaTangan == "8200") {
+        $path2 = public_path('storage/surat-srikandi/8200-Inspektur-Wilayah-II/pdf');
+        $document2 ='storage/surat-srikandi/8200-Inspektur-Wilayah-II/pdf/' . $fileName2;
+    } elseif ($pejabatPenandaTangan == "8300") {
+        $path2 = public_path('storage/surat-srikandi/8300-Inspektur-Wilayah-III/pdf');
+        $document2 ='storage/surat-srikandi/8300-Inspektur-Wilayah-III/pdf/' . $fileName2;
+    } elseif ($pejabatPenandaTangan == "8010") {
+        $path2 = public_path('storage/surat-srikandi/8010-Kepala-Bagian-Umum/pdf');
+        $document2 ='storage/surat-srikandi/8010-Kepala-Bagian-Umum/pdf/' . $fileName2;
+    } else {
+        $path2 = public_path('storage/surat-srikandi');
+        $document2 ='storage/surat-srikandi/' . $fileName2;
+    }
+
+    // Move the second file to the determined path
+    $file2->move($path2, $fileName2);
+
+    // Construct the second document path
+}
+
+            $suratSrikandi->update([
+                'jenis_naskah_dinas_srikandi' => $request->jenisNaskahDinas,
+                'tanggal_persetujuan_srikandi' => $request->tanggal_persetujuan_srikandi,
+                'nomor_surat_srikandi' => $request->nomor_surat_srikandi,
+                'derajat_keamanan_srikandi' => $request->derajatKeamanan,
+                'kode_klasifikasi_arsip_srikandi' => $request->kodeKlasifikasiArsip,
+                'perihal_srikandi' => $request->melaksanakan,
+                'kepala_unit_penandatangan_srikandi' => $request->pejabatPenandaTangan,
+                'link_srikandi' => $request->link_srikandi,
+                'user_id' => auth()->user()->id,
+                'id_usulan_surat_srikandi' => $request->usulan_surat_srikandi_id,
+                'document_srikandi_word_path' => $request->hasFile('upload_word_document') ? $document : $suratSrikandi->document_srikandi_word_path,
+                'document_srikandi_pdf_path' => $request->hasFile('upload_pdf_document') ? $document2 : $suratSrikandi->document_srikandi_pdf_path,
+            ]);
+            // update nomor surat pada usulan surat srikandi
+            $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($request->usulan_surat_srikandi_id);
+            $usulanSuratSrikandi->update([
+                'nomor_surat' => $request->nomor_surat_srikandi,
+            ]);
+            return back()->with('status', 'Berhasil Mengubah Surat Srikandi!')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->route('sekretaris.surat-srikandi.index')->with('status', 'Gagal Mengubah Surat Srikandi!')
+                ->with('alert-type', 'danger');
+        }
     }
 
     /**
@@ -391,5 +479,20 @@ class SuratSrikandiController extends Controller
             'pejabatPenandatangan' => $this->pejabatPenandaTangan,
             'year' => $year,
         ]);
+    }
+
+    public function batalSuratSrikandi($id)
+    {
+        try {
+            // change status to dibatalkan
+            $usulanSuratSrikandi = UsulanSuratSrikandi::findOrFail($id);
+            $usulanSuratSrikandi->update([
+                'status' => 'dibatalkan',
+            ]);
+            return redirect()->route('sekretaris.surat-srikandi.index')->with('status', 'Surat Srikandi berhasil dibatalkan')->with('alert-type', 'success');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->route('sekretaris.surat-srikandi.index')->with('status', 'Surat Srikandi gagal dibatalkan, silakan periksa data lagi')->with('alert-type', 'danger');
+        }
     }
 }

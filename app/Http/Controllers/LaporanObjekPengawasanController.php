@@ -83,4 +83,27 @@ class LaporanObjekPengawasanController extends Controller
     {
         //
     }
+
+    public function getLaporanObjekPengawasan($id)
+    {
+        try {
+            $laporanObjekPengawasan = LaporanObjekPengawasan::where('id_objek_pengawasan', $id)->doesntHave('normaHasil')->get();
+            $laporanObjekPengawasan->load('objekPengawasan');
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'data' => $laporanObjekPengawasan
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
 }

@@ -17,7 +17,7 @@
             <h1>Detail Usulan Surat Srikandi</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat/surat-tugas">Usulan Surat Tugas</a>
+                <div class="breadcrumb-item active"><a href="/pegawai/usulan-surat-srikandi">Usulan Surat Srikandi</a>
                 </div>
                 <div class="breadcrumb-item">Detail Usulan</div>
             </div>
@@ -73,9 +73,7 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->kode ?? ''}}
-                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}
-                                </td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kode_klasifikasi_arsip_srikandi }}</td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
@@ -193,8 +191,7 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? '' }}{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}
-                                </td>
+                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip }}</td>
                             </tr>
 
                             <tr>

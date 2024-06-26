@@ -79,8 +79,7 @@
                                 <th>Nomor Surat:</th>
                                 <td>
                                     <span class="badge badge-primary">
-                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                                                                    $kodeHasilPengawasan[$usulan->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $usulan->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
                                     </span>
                                 </td>
                             </tr>
@@ -98,6 +97,14 @@
                                 <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama }}</td>
                             </tr>
                             <tr>
+                                <th>Nama Dokumen:</th>
+                                <td>{{ $usulan->nama_dokumen }}</td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Norma Hasil:</th>
+                                <td>{{ $usulan->masterLaporan->nama ?? "" }}</td>
+                            </tr>
+                            <tr>
                                 <th>Tanggal Usulan:</th>
                                 <td>{{ \Carbon\Carbon::parse($usulan->tanggal)->format('d F Y') }}</td>
                             </tr>
@@ -110,6 +117,11 @@
                                     @foreach ($objek as $objek)
                                     <li>{{ $objek->masterObjek->nama }}
                                         @endforeach
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bulan Pelaporan:</th>
+                                <td>{{ $usulan->laporanPengawasan ? $month[$usulan->laporanPengawasan->month] : '' }}
                                 </td>
                             </tr>
                             @if ($usulan->status_norma_hasil == 'disetujui')

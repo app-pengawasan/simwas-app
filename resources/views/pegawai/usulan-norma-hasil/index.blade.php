@@ -57,7 +57,8 @@
                                             Tahun</label>
                                         <select name="year" id="yearSelect" class="form-control select2">
                                             @foreach ($year as $key => $value)
-                                            <option value="{{ $value->year }}" {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                            <option value="{{ $value->year }}"
+                                                {{ request()->query('year') == $value->year ? 'selected' : '' }}>
                                                 {{ $value->year }}
                                             </option>
                                             @endforeach
@@ -120,19 +121,18 @@
                                                 <td class="capitalize">
                                                     <div
                                                         class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                        
+
                                                         {{  $un->user->name }}
                                                     </div>
                                                 </td>
                                                 <td>
                                                     @if ($un->status_norma_hasil == 'disetujui')
                                                     <span class="badge badge-primary">
-                                                        R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                        $kodeHasilPengawasan[$un->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                        R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
                                                     </span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $jenisNormaHasil[$un->jenis_norma_hasil_id] }}</td>
+                                                <td>{{ $un->masterLaporan->nama ?? "" }}</td>
                                                 <td>{{ date('d F Y', strtotime($un->tanggal)) }}</td>
                                                 @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil
                                                 !=

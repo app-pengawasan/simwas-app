@@ -18,10 +18,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Usulan Surat Tugas</h1>
+            <h1>Usulan Surat Korespondensi</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item">Usulan Surat Tugas</div>
+                <div class="breadcrumb-item">Usulan Surat Korespondensi</div>
             </div>
         </div>
         @include('components.flash')
@@ -33,7 +33,7 @@
                         <div class="d-flex justify-content-between">
                             <p class="mb-4">
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
-                                Menampilkan usulan surat tugas yang perlu persetujuan sekretaris.
+                                Menampilkan usulan surat korespondensi yang perlu persetujuan sekretaris.
                             </p>
                             <div id="download-button">
                             </div>
@@ -99,7 +99,7 @@
                                     </select>
                                 </div>
                                 <div class="d-flex align-items-end">
-                                    <a href="{{ route('pegawai.usulan-surat-srikandi.create') }}" id="create-btn"
+                                    <a href="{{ route('pegawai.usulan-surat-korespondensi.create') }}" id="create-btn"
                                         class="btn btn-primary">
                                         <i class=" fas fa-plus-circle"></i>
                                         Tambah
@@ -154,16 +154,15 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('pegawai.usulan-surat-srikandi.show', $usulan->id) }}"
+                                        <a href="{{ route('pegawai.usulan-surat-korespondensi.show', $usulan->id) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye
                                                 "></i>
                                             Lihat
                                         </a>
                                         @if ($usulan->status == 'disetujui')
-                                        <a href="{{ route('pegawai.usulan-surat-srikandi.download', $usulan->id) }}"
-                                            class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top"
-                                            title="Download Surat Srikandi">
+                                        <a href="/{{ $usulan->directory}}" class="btn btn-primary btn-sm"
+                                            data-toggle="tooltip" data-placement="top" title="Download Surat Srikandi">
                                             <i class="fa-solid fa-file-pdf"></i>
                                             Download
                                             @endif

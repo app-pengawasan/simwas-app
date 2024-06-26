@@ -76,7 +76,6 @@ $("#table-norma-hasil").on("search.dt", function () {
 });
 
 $("#rencana_id").on("change", function () {
-    console.log("change");
     let rencana_id = $(this).val();
     $.ajax({
         url: "/objek-pengawasan-search/",
@@ -97,17 +96,80 @@ $("#rencana_id").on("change", function () {
                     $("#objek_kegiatan").append(
                         '<option value="' +
                             value.id_objek +
+                            '" data-pengawasan="' +
+                            value.id_opengawasan +
                             '">' +
                             value.nama +
                             "</option>"
                     );
                 });
+
+
             } else {
                 $("#objek_kegiatan").prop("disabled", true);
             }
         },
         error: function (data) {
             console.log(data);
+        },
+    });
+});
+$("#objek_kegiatan").on("change", function () {
+    let month = {
+        1: "Januari",
+        2: "Februari",
+        3: "Maret",
+        4: "April",
+        5: "Mei",
+        6: "Juni",
+        7: "Juli",
+        8: "Agustus",
+        9: "September",
+        10: "Oktober",
+        11: "November",
+        12: "Desember",
+    }
+    let id_opengawasan = $(this).find(":selected").data("pengawasan");
+    $.ajax({
+        url: `/objek-pengawasan/laporan/${id_opengawasan}`,
+        type: "GET",
+        data: {
+            id_objek: id_opengawasan,
+        },
+        success: function (data) {
+            // if data not 0
+            $("#bulan_pelaporan").empty();
+            if (data.data.length > 0) {
+                $("#nama_dokumen").val(data.data[0].objek_pengawasan.nama_laporan);
+
+                $("#bulan_pelaporan").prop("disabled", false);
+                // fill option with data.data
+                $("#bulan_pelaporan").append(
+                    '<option value="">Pilih Bulan Pelaporan</option>'
+                );
+                $.each(data.data, function (key, value) {
+                    if (value.status == 0) {
+                        return;
+                    }
+                    $("#bulan_pelaporan").append(
+                        '<option value="' +
+                            value.id +
+                            '">' +
+                            month[value.month] +
+                            "</option>"
+                    );
+                });
+
+            } else {
+                $("#objek_kegiatan_detail").empty();
+            }
+        },
+        error: function (data) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Terjadi kesalahan saat mengambil data",
+            });
         },
     });
 });

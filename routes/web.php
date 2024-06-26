@@ -8,6 +8,7 @@ use App\Http\Controllers\TugasController;
 use App\Http\Controllers\NamaPpController;
 use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SuratKorespondensi;
 use App\Http\Controllers\TimKerjaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterIKUController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\Auth\SingleSignOnController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\NormaHasilAcceptedController;
+use App\Http\Controllers\SuratKorespondensiController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
 use App\Http\Controllers\ArsiparisNormaHasilController;
 use App\Http\Controllers\ArsiparisSuratTugasController;
@@ -55,11 +57,15 @@ use App\Http\Controllers\AnggaranRencanaKerjaController;
 use App\Http\Controllers\ArsiparisKendaliMutuController;
 use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
+use App\Http\Controllers\KodeKlasifikasiArsipController;
 use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\LaporanObjekPengawasanController;
+use App\Http\Controllers\MasterLaporanController;
+use App\Models\MasterLaporan;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +134,10 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('master-pegawai/import', [MasterPegawaiController::class, 'import']);
 
         // Master Unsur, Sub Unsur, Hasil Kerja
+        Route::resource('master-laporan', MasterLaporanController::class);
+        Route::get('master-laporan/edit-status/{id}', [MasterLaporanController::class, 'editStatus']);
+        Route::resource('master-kode-klasifikasi-arsip', KodeKlasifikasiArsipController::class);
+        Route::get('master-kode-klasifikasi-arsip/edit-status/{id}', [KodeKlasifikasiArsipController::class, 'editStatus']);
         Route::resource('master-unsur', MasterUnsurController::class);
         Route::resource('master-subunsur', MasterSubUnsurController::class);
         Route::resource('master-hasil-kerja', MasterHasilKerjaController::class);
@@ -163,6 +173,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::put('tim-kerja/update/{id}', [TimKerjaController::class, 'updateTimKerja']);
         Route::post('tim-kerja/lock/{id}', [TimKerjaController::class, 'lockTimKerja']);
         Route::post('tim-kerja/unlock/{id}', [TimKerjaController::class, 'unlockTimKerja']);
+
 
     });
 
@@ -277,7 +288,20 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('tim/kendali-mutu', TimKendaliMutuController::class);
         Route::get('usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
 
-        Route::resource('usulan-surat-srikandi', UsulanSuratSrikandiController::class);
+        Route::resource('usulan-surat/surat-tugas', UsulanSuratSrikandiController::class)->names([
+            'index' => 'usulan-surat-srikandi.index',
+            'show' => 'usulan-surat-srikandi.show',
+            'update' => 'usulan-surat-srikandi.update',
+            'create' => 'usulan-surat-srikandi.create',
+            'store' => 'usulan-surat-srikandi.store',
+        ]);
+        Route::resource('usulan-surat/surat-korespondensi', SuratKorespondensiController::class)->names([
+            'index' => 'usulan-surat-korespondensi.index',
+            'show' => 'usulan-surat-korespondensi.show',
+            'update' => 'usulan-surat-korespondensi.update',
+            'create' => 'usulan-surat-korespondensi.create',
+            'store' => 'usulan-surat-korespondensi.store',
+        ]);
     });
 
 
@@ -304,6 +328,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
     Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
+    Route::get('/objek-pengawasan/laporan/{id}', [LaporanObjekPengawasanController::class, 'getLaporanObjekPengawasan']);
 
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
@@ -333,6 +358,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('surat-srikandi', SuratSrikandiController::class);
         Route::put('surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
         Route::get('surat-srikandi/download/{id}', [SuratSrikandiController::class, 'downloadSuratSrikandi'])->name('surat-srikandi.download');
+        Route::put('surat-srikandi/batal/{id}', [SuratSrikandiController::class, 'batalSuratSrikandi']);
         Route::get('arsip-surat', [SuratSrikandiController::class, 'arsip'])->name('surat-srikandi.arsip');
         Route::resource('nomor-surat', NomorSuratController::class);
         Route::resource('surat', SuratController::class);

@@ -13,6 +13,11 @@
 @section('main')
 @include('components.sekretaris-header')
 @include('components.sekretaris-sidebar')
+
+@if ($usulanSuratSrikandi->status == 'disetujui')
+
+@include('sekretaris.surat-srikandi.edit')
+@endif
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -31,7 +36,8 @@
 
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
-                        @if ($usulanSuratSrikandi->status == 'disetujui')
+                        @if ($usulanSuratSrikandi->status == 'disetujui' || $usulanSuratSrikandi->status ==
+                        'dibatalkan')
 
                         <h1 class="h4 text-dark mb-4 header-card">Informasi Surat Srikandi</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
@@ -49,11 +55,10 @@
                                 <td>
                                     <a class="badge badge-danger p-2" target="_blank"
                                         href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_pdf_path }}">
-                                        <i
-                                            class="fa-solid fa-file-pdf mr-1"></i>Download</a>
-                                            <a class="badge badge-info p-2" target="_blank"
-                                                href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_word_path }}">
-                                                <i class="fa-solid fa-file-word mr-1"></i>Download</a>
+                                        <i class="fa-solid fa-file-pdf mr-1"></i>Download</a>
+                                    <a class="badge badge-info p-2" target="_blank"
+                                        href="/{{ $usulanSuratSrikandi->suratSrikandi[0]->document_srikandi_word_path }}">
+                                        <i class="fa-solid fa-file-word mr-1"></i>Download</a>
 
                             <tr>
                                 <th>Jenis Naskah Dinas:</th>
@@ -79,7 +84,9 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kode_klasifikasi_arsip_srikandi }}</td>
+                                <td>{{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->kode ?? '' }}
+                                    {{ $usulanSuratSrikandi->suratSrikandi[0]->kodeKlasifikasiArsip->uraian ?? '' }}
+                                </td>
                             </tr>
                             <tr>
                                 <th>Link Srikandi</th>
@@ -105,6 +112,9 @@
                                     @elseif ($usulanSuratSrikandi->status == 'ditolak')
                                     <span class="badge badge-danger"><i
                                             class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak</span>
+                                    @elseif ($usulanSuratSrikandi->status == 'dibatalkan')
+                                    <span class="badge badge-danger"><i
+                                            class="fa-solid fa-ban mr-1"></i>Dibatalkan</span>
                                     @else
                                     <span class="badge badge-light"><i class="fa-regular fa-clock mr-1"></i>Menunggu
                                         Persetujuan</span>
@@ -195,7 +205,8 @@
                             </tr>
                             <tr>
                                 <th>Kode Klasifikasi Arsip:</th>
-                                <td>{{ $usulanSuratSrikandi->kode_klasifikasi_arsip }}</td>
+                                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? ''}}
+                                    {{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}</td>
                             </tr>
 
                             <tr>
@@ -207,13 +218,11 @@
                         {{-- edit and delete button --}}
                         <hr class="my-1">
                         <div class="d-flex justify-content-between mt-4">
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <a class="btn btn-outline-primary mr-2"
                                     href="{{ route('sekretaris.surat-srikandi.index') }}">
                                     <i class="fas fa-arrow-left mr-1"></i> Kembali
                                 </a>
-                                {{-- button to open modal to setujui or tolak --}}
-                                {{-- if status not tolak and setuju --}}
                                 @if ($usulanSuratSrikandi->status == 'usulan')
                                 <button type="button" class="btn btn-danger mr-2" data-toggle="modal"
                                     data-target="#modalTolakSurat">
@@ -225,6 +234,22 @@
                                     <i class="fa-regular fa-circle-check mr-1"></i>
                                     Setujui
                                 </button>
+                                @endif
+                                @if ($usulanSuratSrikandi->status == 'disetujui')
+                                <button type="button" class="btn btn-warning mr-2" data-toggle="modal"
+                                    data-target="#modalEditSurat">
+                                    <i class="fa-regular fa-edit mr-1"></i>
+                                    Ubah Surat
+                                </button>
+                                <form action="/sekretaris/surat-srikandi/batal/{{$usulanSuratSrikandi->id}}"
+                                    method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-danger mr-2" data-toggle="modal">
+                                        <i class="fa-solid fa-ban mr-1"></i>
+                                        Batalkan Persetujuan
+                                    </button>
+                                </form>
                                 @endif
                             </div>
                         </div>
@@ -338,15 +363,14 @@
                     {{-- kode klasifikasi arsip --}}
                     <div class="form-group">
                         <label for="kodeKlasifikasiArsip">Kode Klasifikasi Arsip</label>
-                        <select required
-                            class="form-control select2
-                                                                    @error('kodeKlasifikasiArsip') is-invalid @enderror"
-                            id=" kodeKlasifikasiArsip" name="kodeKlasifikasiArsip">
+                        <select required class="form-control select2
+                            @error('kodeKlasifikasiArsip') is-invalid @enderror" id=" kodeKlasifikasiArsip"
+                            name="kodeKlasifikasiArsip">
                             <option disabled selected value="">Pilih Kode Klasifikasi Arsip</option>
                             @foreach ($kodeKlasifikasiArsip as $kodeKlasifikasiArsip)
-                            <option {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip ? 'selected' : '' }}
-                                value="{{ $kodeKlasifikasiArsip }}">
-                                {{ $kodeKlasifikasiArsip }}</option>
+                            <option {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip->id ? 'selected' : '' }}
+                                value="{{ $kodeKlasifikasiArsip->id }}">
+                                {{ $kodeKlasifikasiArsip->nama }}{{ $kodeKlasifikasiArsip->uraian }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">Kode Klasifikasi Arsip Harus Diisi</div>

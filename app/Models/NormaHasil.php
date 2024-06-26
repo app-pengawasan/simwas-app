@@ -39,5 +39,14 @@ class NormaHasil extends Model
     {
         return $this->hasMany(ObjekNormaHasil::class, 'norma_hasil_id', 'id');
     }
+    public function laporanPengawasan()
+    {
+        return $this->belongsTo(LaporanObjekPengawasan::class, 'laporan_pengawasan_id', 'id');
+    }
+
+    public function masterLaporan()
+    {
+        return $this->belongsTo(MasterLaporan::class, 'jenis_norma_hasil_id', 'id');
+    }
 
 }
