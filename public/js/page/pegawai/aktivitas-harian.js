@@ -13,11 +13,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     nowIndicator: true,
     slotDuration: '01:00:00',
     eventOverlap: false,
+    events: events,
     selectOverlap: function(event) {
         return this.calendar.currentData.currentViewType == 'dayGridMonth';
     },
     headerToolbar: {
-        start: 'prev,next today',
+        start: 'prev,next today excel',
         center: 'title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth' // user can switch between the two
     },
@@ -31,7 +32,16 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         day:      'Hari',
         list:     'List'
     },
-    events: events,
+    customButtons: {
+        excel: {
+            text: 'Excel',
+            click: function() {
+                let bulan = moment(calendar.getDate()).format("MM"); 
+                let tahun = moment(calendar.getDate()).format("YYYY"); 
+                window.location.href = `/pegawai/aktivitas-harian/export/${bulan}/${tahun}`;
+            }
+        }
+    },
     views: {
         dayGridMonth: { // name of view
             eventTimeFormat: function(date) {
@@ -60,14 +70,24 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             eventTimeFormat: {
                 hour: '2-digit',
                 minute: '2-digit'
-            }
+            },
+            eventDidMount: function(info) {
+                document.querySelector(".fc-excel-button").style.display = "inline-block";
+                // alert(JSON)
+                info.el.querySelector('.fc-list-event-title a').innerHTML 
+                    += ` <br><table class="table-borderless"><tbody>
+                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td> 
+                            <td class="pl-0" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
+                        </tr></tbody></table>`;
+            },
         }
     },
     eventDidMount: function(info) {
+        document.querySelector(".fc-excel-button").style.display = "none";
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        let status; let tag;
+        // let status; let tag;
         // $.get(document.location.origin + '/document/realisasi/' + info.event.extendedProps.hasil_kerja)
         //     .done(function() { 
         //         tag = '<a href="' + this.url + '" target="_blank">';
@@ -130,7 +150,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     },
     datesSet: function (dateInfo) {
         // tampilan hover sel untuk monthview
-        $('.fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled)').on({
+        // .fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled), 
+        $('.fc-dayGridMonth-view .fc-daygrid-day-frame').on({
             mouseenter: function() {
                 $(this).append("<div class='hovermonth'>+</div>");
             },
@@ -160,7 +181,9 @@ $('.nav-link').on("click", function () {
     }, 400);
 });
 
-//tampilam sel waktu saat hover (week & day view)
+$('.fc-excel-button').addClass('btn btn-secondary buttons-excel buttons-html5 btn-success');
+
+//tampilan sel waktu saat hover (week & day view)
 $(document).on({
     mouseenter: function() {
         let cellWidth = $('th.fc-col-header-cell').width();

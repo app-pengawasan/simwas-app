@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KendaliMutuTim;
 use App\Models\Sl;
 use App\Models\Stp;
 use App\Models\Stpd;
@@ -13,9 +14,13 @@ use App\Models\Kompetensi;
 use App\Models\NormaHasil;
 use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
+use App\Models\PelaksanaTugas;
 use App\Models\MasterUnitKerja;
+use App\Models\ObjekPengawasan;
 use App\Models\TargetIkuUnitKerja;
 use App\Models\UsulanSuratSrikandi;
+use App\Models\LaporanObjekPengawasan;
+use App\Models\NormaHasilTim;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -269,6 +274,7 @@ class DashboardController extends Controller
         $tugas = RencanaKerja::whereRelation('proyek.timKerja', function (Builder $query) use ($year) {
                     $query->where('tahun', $year);
                  })->get();
+
         return view('arsiparis.index', [
             'tugas' => $tugas,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
@@ -457,6 +463,89 @@ class DashboardController extends Controller
             'ditolakCount' => $ditolakCount,
             'total_usulan' => $totalCount,
         ];
+    }
+
+    function kinerjaTim(Request $request) {
+        $months=[
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        $year = $request->year;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
+                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                        $query->whereIn('status', [1,2]);
+                        $query->where('tahun', $year);
+                    })->get();
+
+        $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $tugas->pluck('id_rencanakerja'))
+                        ->where('status', 'disetujui')->get();
+        $surat_tugas_arr = [];
+
+        foreach ($surat_tugas as $surat) {
+            $surat_tugas_arr[$surat->rencana_kerja_id] = $surat;
+        }
+
+        $laporanObjek = LaporanObjekPengawasan::whereRelation('objekPengawasan', function (Builder $query) use ($tugas) {
+                                $query->whereIn('id_rencanakerja', $tugas->pluck('id_rencanakerja'));
+                            })->where('status', 1)->get();
+
+        $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($laporanObjek) {
+                            $query->where('status_verifikasi_arsiparis', 'disetujui');
+                            $query->whereRelation('normaHasil', function (Builder $q) use ($laporanObjek) {
+                                $q->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
+                            });
+                        })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($laporanObjek) {
+                            $query->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
+                            $query->where('status_verifikasi_arsiparis', 'disetujui');
+                        })->get();
+        $norma_hasil_arr = [];
+
+        foreach ($norma_hasil as $dokumen) {
+            if ($dokumen->jenis == 1) {
+                $bulan_id = $dokumen->normaHasilAccepted->normaHasil->laporan_pengawasan_id;
+                $norma_hasil_arr[$bulan_id] = $dokumen->normaHasilAccepted;
+            }
+            else {
+                $bulan_id = $dokumen->normaHasilDokumen->laporan_pengawasan_id;
+                $norma_hasil_arr[$bulan_id] = $dokumen->normaHasilDokumen;
+            }
+            $norma_hasil_arr[$bulan_id]['jenis'] = $dokumen->jenis;
+        } 
+
+        $kendali_mutu = KendaliMutuTim::whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'))
+                        ->where('status', 'disetujui')->get();
+        $kendali_mutu_arr = [];
+
+        foreach ($kendali_mutu as $dokumen) {
+            $kendali_mutu_arr[$dokumen->laporan_pengawasan_id] = $dokumen;
+        }
+                 
+        return view('pegawai.tugas-tim.index', [
+            'type_menu' => 'tugas-tim',
+            'laporanObjek' => $laporanObjek,
+            'months' => $months,
+            'norma_hasil' => $norma_hasil_arr,
+            'kendali_mutu' => $kendali_mutu_arr,
+            'surat_tugas' => $surat_tugas_arr
+        ]);
     }
 
 }

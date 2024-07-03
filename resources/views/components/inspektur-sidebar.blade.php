@@ -46,7 +46,6 @@
                     </li>
                 </ul>
             </li>
-            </li>
             <li class="nav-item dropdown {{ $type_menu === 'realisasi-jam-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-clock"></i>

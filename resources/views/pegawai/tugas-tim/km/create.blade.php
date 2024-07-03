@@ -11,20 +11,57 @@
             <form id="formNHtim" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
+                        <div class="selectgroup w-100">
+                            <label class="selectgroup-item">
+                                <input type="radio" name="is_ada" value="1" class="selectgroup-input" checked="">
+                                <span class="selectgroup-button">Ada</span>
+                            </label>
+                            <label class="selectgroup-item">
+                                <input type="radio" name="is_ada" value="0" class="selectgroup-input1">
+                                <span class="selectgroup-button1">Tidak Ada</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="tugas">Tugas</label>
                         <div class="">
-                            <select required id="tugas" name="tugas" class="form-control select2">
+                            <select required id="tugas" name="tugas" class="form-control">
                                 <option value="" selected disabled>Pilih Tugas</option>
                                 @foreach ($tugasSaya as $ts)
-                                    @if (!isset($ts->rencanaKerja->kendaliMutu))
+                                    {{-- @if (!isset($ts->rencanaKerja->kendaliMutu))
                                         <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
-                                    @endif
+                                    @endif --}}
+                                    <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
                                 @endforeach
                             </select>
                             <small id="error-tugas" class="text-danger"></small>
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="objek">Objek Pengawasan</label>
+                        <div class="">
+                            <select required id="objek" name="objek" class="form-control">
+                                <option value="" selected disabled>Pilih Objek</option>
+                                @foreach ($oPengawasan as $objek)
+                                    <option value="{{ $objek->id_opengawasan }}" data-tugas="{{ $objek->id_rencanakerja }}">{{ $objek->nama }}</option>
+                                @endforeach
+                            </select>
+                            <small id="error-objek" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="bulan">Bulan Pelaporan</label>
+                        <div class="">
+                            <select required id="bulan" name="bulan" class="form-control">
+                                <option value="" selected disabled>Pilih Bulan</option>
+                                @foreach ($bulanPelaporan as $bulan)
+                                    <option value="{{ $bulan->id }}" data-objek="{{ $bulan->id_objek_pengawasan }}">{{ $months[$bulan->month] }}</option>
+                                @endforeach
+                            </select>
+                            <small id="error-bulan" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group form-ada">
                         <label class="form-label" for="file">File Kendali Mutu</label>
                         <div class="">
                             <input type="url" name="link" id="link" class="form-control link" placeholder="Link File Kendali Mutu" required>
@@ -40,6 +77,13 @@
                                 </button>
                             </div>
                             <small id="error-file" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="form-group form-tidak">
+                        <label class="form-label" for="catatan">Catatan</label>
+                        <div class="">
+                            <textarea rows="4" class="form-control h-auto" id="catatan" name="catatan" required></textarea>
+                            <small id="error-catatan" class="text-danger"></small>
                         </div>
                     </div>
                 </div>

@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\PelaksanaTugas;
-use App\Models\RealisasiKinerja;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Models\PelaksanaTugas;
 use Illuminate\Validation\Rule;
+use App\Models\RealisasiKinerja;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class AktivitasHarianController extends Controller
 {
@@ -29,7 +31,8 @@ class AktivitasHarianController extends Controller
             if ($realisasi->isEmpty()) $event->color = 'orange';
             else {
                 if ($realisasi->contains('status', 1)) $event->color = 'green';
-                else $event->color = 'red';
+                elseif ($realisasi->contains('status', 2)) $event->color = 'red';
+                else $event->color = 'black';
             }
 
             $event->title = $event->pelaksana->rencanaKerja->tugas;
@@ -285,12 +288,6 @@ class AktivitasHarianController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
-            ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
-            ->where('start', date_format(date_create($event->start), 'H:i:s'))
-            ->where('end', date_format(date_create($event->end), 'H:i:s'))
-            ->delete();
-
         $event->delete();
 
         $request->session()->put('status', 'Berhasil menghapus data aktivitas.');
@@ -300,5 +297,50 @@ class AktivitasHarianController extends Controller
             'success' => true,
             'message' => 'Berhasil menghapus data aktivitas',
         ]);
+    }
+
+    public function export($bulan, $tahun) 
+    {
+        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $events = Event::whereMonth('start', $bulan)->whereYear('start', $tahun)
+                    ->whereRelation('pelaksana', function (Builder $query){
+                        $query->where('id_pegawai', auth()->user()->id);
+                    })->orderBy('start')->get();
+        
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $sheet1Data = [
+            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", "Aktivitas"]
+        ];
+
+        foreach ($events as $key => $event) {
+            $start = date_create($event->start);
+            $end = date_create($event->end);
+
+            array_push($sheet1Data, [
+                                        $key + 1, 
+                                        $hari[date_format($start, 'N') - 1],
+                                        date_format($start, 'd-m-Y'), 
+                                        date_format($start, 'H:i').' - '.date_format($end, 'H:i'),
+                                        $event->pelaksana->rencanakerja->tugas,
+                                        preg_replace("/\r|\n/", "; ", $event->aktivitas)
+                                    ]
+            );
+        }
+
+        $sheet->fromArray($sheet1Data);
+
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
+
+        $nama_pegawai = $events[0]->pelaksana->user->name ?? '';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Aktivitas Harian '
+                .$nama_pegawai ?? ''.' '.$bulan.'-'.$tahun.'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
     }
 }

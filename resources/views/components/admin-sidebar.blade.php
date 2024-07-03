@@ -11,7 +11,7 @@
                 <img src="{{ asset('img/simwas.svg') }}" alt="brand" style="width: 42px">
             </a>
         </div>
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" style="margin-bottom: 30px">
             <li class="{{ Request::is('admin') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.dashboard') }}">
                     <i class="fab fa-solid fa-house"></i>
@@ -120,6 +120,58 @@
                         <a class="nav-link" href="/admin/master-laporan">Master Laporan</a>
                     </li>
                 </ul>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Rencana Jam Kerja</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/rencana-jam-kerja/rekap')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/rencana-jam-kerja/rekap">
+                            <span>Rekap Jam Kerja</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('admin/rencana-jam-kerja/pool*') || Request::is('admin/rencana-jam-kerja/detail*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/rencana-jam-kerja/pool">
+                            <span>Pool Jam Kerja</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown {{ $type_menu === 'realisasi-jam-kerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-clock"></i>
+                    <span>Realisasi Jam Kerja</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/realisasi-jam-kerja/rekap')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/realisasi-jam-kerja/rekap">
+                            <span>Rekap Jam Kerja</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('admin/realisasi-jam-kerja/pool*') || Request::is('admin/realisasi-jam-kerja/detail*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/realisasi-jam-kerja/pool">
+                            <span>Pool Jam Kerja</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li
+                class="{{ Request::is('admin/rekap-nilai/*') || Request::is('admin/rekap-nilai') ? 'active' : '' }}">
+                <a class="nav-link" href="/admin/rekap-nilai">
+                    <i class="fas fa-square-poll-vertical"></i>
+                    <span>Rekap Nilai Kinerja Pegawai</span>
+                </a>
+            </li>
+            <li
+                class="{{ Request::is('admin/kinerja-tim/*') || Request::is('admin/kinerja-tim') ? 'active' : '' }}">
+                <a class="nav-link" href="/admin/kinerja-tim">
+                    <i class="fas fa-people-group"></i>
+                    <span>Kinerja Tim</span>
+                </a>
             </li>
         </ul>
         @include('components.footer')
