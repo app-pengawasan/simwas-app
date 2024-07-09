@@ -20,7 +20,13 @@ class SidebarPegawai
         $year = date('Y');
 
         // Usulan Norma Hasil Ketua
-        $usulanNormaHasilCountSidebar = NormaHasil::with('normaHasilAccepted')->where('user_id', $id_pegawai)->where('status_norma_hasil', 'diperiksa')->whereYear('created_at', date('Y'))->count();
+        $usulanNormaHasilCountSidebar = NormaHasil::with('normaHasilAccepted')
+            ->whereHas('rencanaKerja.timKerja', function ($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai);
+            })
+            ->where('status_norma_hasil', 'diperiksa')
+            ->whereYear('created_at', date('Y'))
+            ->count();
 
         // Penyusunan Tim Kerja
         $timKerjaPenyusunanCountSidebar = TimKerja::with('ketua', 'iku')

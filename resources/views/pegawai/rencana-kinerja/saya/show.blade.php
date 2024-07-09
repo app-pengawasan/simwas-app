@@ -121,7 +121,7 @@
                                                     ?>
                                                     <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
                                                     <td>
-                                                        @if ($rencanaKerja->kategori_pelaksanatugas == 'gt')
+                                                        {{-- @if ($rencanaKerja->kategori_pelaksanatugas == 'gt')
                                                             {{ $hasilKerja2[$pelaksana->pt_hasil] }}
                                                         @elseif ($pelaksana->pt_jabatan == 4)
                                                             Kertas Kerja
@@ -131,7 +131,8 @@
                                                             @else
                                                                 {{ $hasilKerja[$pelaksana->pt_hasil] }}
                                                             @endif
-                                                        @endif
+                                                        @endif --}}
+                                                        {{$pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja }}
                                                     </td>
                                                 </tr>
                                             @endforeach

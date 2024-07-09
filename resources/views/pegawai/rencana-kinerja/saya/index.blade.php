@@ -74,7 +74,7 @@
                                             {{ $jabatanPelaksana[$ts->pt_jabatan] }}
                                         </td>
                                         <td>
-                                            @if ($ts->pt_jabatan == 3)
+                                            {{-- @if ($ts->pt_jabatan == 3)
                                                 @if ($ts->pt_hasil == 2)
                                                     Kertas Kerja
                                                 @else
@@ -84,7 +84,8 @@
                                                 Kertas Kerja
                                             @else
                                                 {{ $hasilKerja2[$ts->pt_hasil] }}
-                                            @endif
+                                            @endif --}}
+                                            {{$ts->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $ts->pt_jabatan )->first()->hasil_kerja }}
                                         </td>
                                         <td class="convert" value="{{ $ts->total }}">{{ $ts->total }}</td>
                                         {{-- <td>
