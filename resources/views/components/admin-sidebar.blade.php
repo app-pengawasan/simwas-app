@@ -116,7 +116,7 @@
                     <li class="{{ Request::is('admin/master-kode-klasifikasi-arsip') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-kode-klasifikasi-arsip">Master KKA</a>
                     </li>
-                    <li class="{{ Request::is('admin/kode-klasifikasi-arsip') ? 'active' : '' }}">
+                    <li class="{{ Request::is('admin/master-laporan') ? 'active' : '' }}">
                         <a class="nav-link" href="/admin/master-laporan">Master Laporan</a>
                     </li>
                 </ul>
