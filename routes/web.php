@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MasterLaporan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PpController;
 use App\Http\Controllers\WordController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\PegawaiTugasController;
 use App\Http\Controllers\WilayahKerjaController;
 use App\Http\Controllers\MasterKinerjaController;
+use App\Http\Controllers\MasterLaporanController;
 use App\Http\Controllers\MasterPegawaiController;
 use App\Http\Controllers\MasterSasaranController;
 use App\Http\Controllers\ObjekKegiatanController;
@@ -35,6 +37,8 @@ use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\PelaksanaTugasController;
 use App\Http\Controllers\TimKendaliMutuController;
+use App\Http\Controllers\AdminKinerjaTimController;
+use App\Http\Controllers\AdminRekapNilaiController;
 use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\DataKepegawaianController;
 use App\Http\Controllers\MasterUnitKerjaController;
@@ -53,6 +57,7 @@ use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
 use App\Http\Controllers\UsulanSuratSrikandiController;
+use App\Http\Controllers\AdminRencanaJamKerjaController;
 use App\Http\Controllers\AnggaranRencanaKerjaController;
 use App\Http\Controllers\ArsiparisKendaliMutuController;
 use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
@@ -60,12 +65,12 @@ use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\KodeKlasifikasiArsipController;
 use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use App\Http\Controllers\AdminRealisasiJamKerjaController;
+use App\Http\Controllers\LaporanObjekPengawasanController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
-use App\Http\Controllers\LaporanObjekPengawasanController;
-use App\Http\Controllers\MasterLaporanController;
-use App\Models\MasterLaporan;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,7 +179,24 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('tim-kerja/lock/{id}', [TimKerjaController::class, 'lockTimKerja']);
         Route::post('tim-kerja/unlock/{id}', [TimKerjaController::class, 'unlockTimKerja']);
 
+        //Rencana Jam Kerja
+        Route::get('rencana-jam-kerja/rekap', [AdminRencanaJamKerjaController::class, 'rekap']);
+        Route::get('rencana-jam-kerja/pool', [AdminRencanaJamKerjaController::class, 'pool']);
+        Route::get('rencana-jam-kerja/pool/{id}/{year}', [AdminRencanaJamKerjaController::class, 'show']);
+        Route::get('rencana-jam-kerja/detail/{id}', [AdminRencanaJamKerjaController::class, 'detailTugas']);
 
+        //Realisasi Jam Kerja
+        Route::get('realisasi-jam-kerja/rekap', [AdminRealisasiJamKerjaController::class, 'rekap']);
+        Route::get('realisasi-jam-kerja/pool', [AdminRealisasiJamKerjaController::class, 'pool']);
+        Route::get('realisasi-jam-kerja/pool/{id}/{year}', [AdminRealisasiJamKerjaController::class, 'show']);
+        Route::get('realisasi-jam-kerja/detail/{id}', [AdminRealisasiJamKerjaController::class, 'detailTugas']);
+
+        //Kinerja Tim
+        Route::resource('kinerja-tim', AdminKinerjaTimController::class);
+        Route::get('kinerja-tim/{id}/{bulan}', [AdminKinerjaTimController::class, 'show']);
+
+        //Rekap Nilai
+        Route::resource('rekap-nilai', AdminRekapNilaiController::class);
     });
 
 
@@ -248,6 +270,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('penilaian-kinerja/detail/{id}', [InspekturPenilaianKinerjaController::class, 'detail']);
         Route::get('penilaian-kinerja/{pegawai_dinilai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'show']);
         Route::get('penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
+        Route::get('penilaian-kinerja/export/{pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'export']);
     });
 
 
@@ -269,6 +292,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Aktivitas Harian
         Route::resource('aktivitas-harian', AktivitasHarianController::class);
+        Route::get('aktivitas-harian/export/{bulan}/{tahun}', [AktivitasHarianController::class, 'export']);
 
         //Isi Realisasi
         Route::resource('realisasi', RealisasiController::class);
@@ -278,6 +302,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('nilai-berjenjang/nilai/{id}', [PenilaianBerjenjangController::class, 'getNilai']);
         Route::get('nilai-berjenjang/detail/{id}', [PenilaianBerjenjangController::class, 'detail']);
         Route::get('nilai-berjenjang/{pegawai_dinilai}/{bulan}/{tahun}', [PenilaianBerjenjangController::class, 'show']);
+        Route::get('nilai-berjenjang/export/{pegawai}/{bulan}/{tahun}', [PenilaianBerjenjangController::class, 'export']);
 
         //Laporan Kinerja
         Route::resource('laporan-kinerja', PegawaiLaporanKinerjaController::class);
@@ -286,6 +311,12 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('tim/norma-hasil', TimNormaHasilController::class);
         Route::resource('tim/surat-tugas', TimSuratTugasController::class);
         Route::resource('tim/kendali-mutu', TimKendaliMutuController::class);
+        Route::get('tim', [DashboardController::class, 'kinerjaTim']);
+        Route::get('tim/surat-tugas/view/{nomor}', [TimSuratTugasController::class, 'view'])->name('tim.surat-tugas.view');
+        Route::get('tim/norma-hasil/downloadUsulan/{id}', [TimNormaHasilController::class, 'downloadUsulan']);
+        Route::get('tim/norma-hasil/viewLaporan/{id}/{jenis}', [TimNormaHasilController::class, 'viewLaporan']);
+        Route::get('tim/kendali-mutu/download/{id}', [TimKendaliMutuController::class, 'download']);
+        
         Route::get('usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
 
         Route::resource('usulan-surat/surat-tugas', UsulanSuratSrikandiController::class)->names([
@@ -342,9 +373,6 @@ Route::group(['middleware'=>'auth'], function(){
         return view('word');
     });
     Route::post('word', [WordController::class, 'index'])->name('word.index');
-
-    //Kompetensi
-
 
     /**
      * ---------------------------------------------------------------------------

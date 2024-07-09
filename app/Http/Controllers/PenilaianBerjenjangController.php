@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
 use App\Http\Controllers\Controller;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class PenilaianBerjenjangController extends Controller
 {
@@ -267,7 +269,8 @@ class PenilaianBerjenjangController extends Controller
             if ($realisasi->isEmpty()) $event->color = 'orange';
             else {
                 if ($realisasi->contains('status', 1)) $event->color = 'green';
-                else $event->color = 'red';
+                elseif ($realisasi->contains('status', 2)) $event->color = 'red';
+                else $event->color = 'black';
             }
             // $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
             //             ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
@@ -362,30 +365,48 @@ class PenilaianBerjenjangController extends Controller
         ]);
     }
 
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy($id)
-    // {
-    //     RencanaKerja::where('id_rencanakerja', $id)->delete();
+    public function export($pegawai, $bulan, $tahun) 
+    {
+        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $events = Event::whereMonth('start', $bulan)->whereYear('start', $tahun)
+                    ->whereRelation('pelaksana', function (Builder $query) use ($pegawai) {
+                        $query->where('id_pegawai', $pegawai);
+                    })->orderBy('start')->get();
+        
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $sheet1Data = [
+            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", "Aktivitas"]
+        ];
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data Berhasil Dihapus!',
-    //     ]);
-    // }
+        foreach ($events as $key => $event) {
+            $start = date_create($event->start);
+            $end = date_create($event->end);
 
-    // public function sendToAnalis($id){
-    //     TimKerja::where('id_timkerja', $id)
-    //     ->update(['status' => 2]);
+            array_push($sheet1Data, [
+                                        $key + 1, 
+                                        $hari[date_format($start, 'N') - 1],
+                                        date_format($start, 'd-m-Y'), 
+                                        date_format($start, 'H:i').' - '.date_format($end, 'H:i'),
+                                        $event->pelaksana->rencanakerja->tugas,
+                                        preg_replace("/\r|\n/", "; ", $event->aktivitas)
+                                    ]
+            );
+        }
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil Mengirim Rencana Kerja!',
-    //     ]);
+        $sheet->fromArray($sheet1Data);
 
-    // }
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
+
+        $nama_pegawai = $events[0]->pelaksana->user->name ?? '';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Aktivitas Harian '
+                .$nama_pegawai.' '.$bulan.'-'.$tahun.'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
+    }
 }

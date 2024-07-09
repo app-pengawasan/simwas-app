@@ -1,9 +1,9 @@
 $("#tugas").prop("disabled", true); //disable pilihan tugas
 $("#proyek").prop("disabled", true); //disable pilihan proyek
+$("#objek").prop("disabled", true); //disable pilihan objek
+$("#bulan").prop("disabled", true); //disable pilihan bulan
 $('.disabled').show(); //show pilihan "Pilih Tugas" dan "Pilih Proyek"
 $('.disabled').prop("selected", true);
-if ($('#status').val() != '1') $('.status_change').hide(); //sembunyikan kegiatan dan capaian jika status belum selesai
-if ($('#status').val() != '2') $('.status_change_2').hide(); 
 $("#aktivitas tbody tr").hide();
 
 //hide clockpicker saat discroll
@@ -34,15 +34,6 @@ $("#proyek").on("change", function () {
 
 $("#tugas").on("change", function () {
     $("#aktivitas tbody tr").hide();
-    let hasil_kerja = $(this).find(":selected").attr('data-hasil');
-    $("#kegiatan").val('Menyusun ' + hasil_kerja);
-    $("#kegiatan").removeClass('is-invalid');
-    $("#error-kegiatan").text("");
-    $("#kegiatan").closest('.form-group').addClass('was-validated');
-    $("#capaian").val(hasil_kerja + ' sebanyak 1 dokumen');
-    $("#capaian").removeClass('is-invalid');
-    $("#error-capaian").text("");
-    $("#capaian").closest('.form-group').addClass('was-validated');
     $(`#aktivitas tr[data-tugas="${$(this).val()}"]`).show();
 
     let i = 0;
@@ -50,36 +41,38 @@ $("#tugas").on("change", function () {
         i = i + +$(this).text();
     });
     $('#jam').text(i + ' jam');
+    
+    let data = $(this).find(":selected");
+    $("#hasil").text(data.attr('data-hasil-kerja'));
+    $("#rencana_kerja").val(data.attr('data-rencana-kinerja'));
+    $("#iki").val(data.attr('data-iki'));
+    $("#kegiatan").val(data.attr('data-kegiatan'));
+    $("#capaian").val(data.attr('data-capaian'));
+
+    let jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    $('#peran').text(jabatanPelaksana[$(this).find(":selected").attr('data-peran') - 1]);
+
+    $("#objek option").hide(); //hide option" objek
+    $('.objek-dis').show(); //show pilihan "Pilih Objek"
+    $('.objek-dis').prop("selected", true);
+    $("#objek").prop("disabled", false); //enable pilihan objek
+    $(`#objek option[data-rencana="${$(this).find(":selected").attr('data-rencana')}"]`).show(); //show option objek sesuai tugas yang dipilih
+});
+
+$("#objek").on("change", function () {
+    $("#bulan option").hide(); //hide option" bulan
+    $('.bulan-dis').show(); //show pilihan "Pilih Bulan"
+    $('.bulan-dis').prop("selected", true);
+    $("#bulan").prop("disabled", false); //enable pilihan bulan
+    $(`#bulan option[data-objek="${$(this).val()}"]`).show(); //show option bulan sesuai objek yang dipilih
 });
 
 $("#status").on("change", function () {
     if ($(this).val() == '1') {
-        let hasil_kerja = $('#tugas').find(":selected").attr('data-hasil');
-
-        // $('#catatan').prop("required", false);
-        $('#alasan').prop("required", false);
-        $('.status_change').show();
-        $('.status_change_2').hide();
-
-        $('#kegiatan').prop("required", true);
-        $("#kegiatan").val('Menyusun ' + hasil_kerja);
-        $("#kegiatan").removeClass('is-invalid');
-        $("#error-kegiatan").text("");
-        $("#kegiatan").closest('.form-group').addClass('was-validated');
-
-        $('#capaian').prop("required", true);
-        $("#capaian").val(hasil_kerja + ' sebanyak 1 dokumen');
-        $("#capaian").removeClass('is-invalid');
-        $("#error-capaian").text("");
-        $("#capaian").closest('.form-group').addClass('was-validated');
+        $('#catatan').prop("required", false);
     } 
     else {
-        // $('#catatan').prop("required", true);
-        $('#alasan').prop("required", true);
-        $('.status_change').hide();
-        $('.status_change_2').show();
-        $('#kegiatan').prop("required", false);
-        $('#capaian').prop("required", false);
+        $('#catatan').prop("required", true);
     } 
 });
 
@@ -146,6 +139,8 @@ const clearError = () => {
     $("#error-end").text("");
     $("#error-tugas").text("");
     $("#error-status").text("");
+    $("#error-rencana_kerja").text("");
+    $("#error-iki").text("");
     $("#error-kegiatan").text("");
     $("#error-capaian").text("");
     $("#error-catatan").text("");
@@ -154,50 +149,61 @@ const clearError = () => {
 $("#myform").on("submit", function (e) {
     e.preventDefault();
 
-    let data = new FormData($('#myform')[0]);
-    let token = $("meta[name='csrf-token']").attr("content");
+    if (($('#jam').text() == '0 jam') && $('#status').val() == '1') {
+        Swal.fire({
+            title: "Laporkan aktivitas tugas ini!",
+            text: "Jam realisasi 0 jam, Anda tidak bisa mengisi realisasi tugas ini.",
+            icon: "error",
+            confirmButtonColor: "var(--danger)",
+            confirmButtonText: "Tutup",
+          });
+        e.preventDefault();
+    } else {
+        let data = new FormData($('#myform')[0]);
+        let token = $("meta[name='csrf-token']").attr("content");
 
-    data.append('_token', token);
+        data.append('_token', token);
 
-    // Reset invalid message while modal open
-    clearError();
-    $("#error-hasil_kerja").text("");
-    $("#error-file").text("");
+        // Reset invalid message while modal open
+        clearError();
+        $("#error-hasil_kerja").text("");
+        $("#error-file").text("");
 
-    $.ajax({
-        url: `/pegawai/realisasi`,
-        contentType: false,
-        processData: false,
-        type: "POST",
-        cache: false,
-        data: data,
-        success: function (response) {
-            window.location.href = "/pegawai/realisasi";
-        },
-        error: function (error) {
-            $('form').removeClass('was-validated');
-            $('.form-group').addClass('was-validated');
-            
-            let errorResponses = error.responseJSON;
-            let errors = Object.entries(errorResponses.errors);
-            
-            errors.forEach(([key, value]) => {
-                let errorMessage = document.getElementById(`error-${key}`);
-                errorMessage.innerText = value.join('\n');
-                $(`#${key}`).addClass('is-invalid');
-                $(`#${key}`).closest('.form-group').removeClass('was-validated');
-                $(`#${key}`).on("input", function () {
-                    $(this).closest('.form-group').addClass('was-validated');
-                    $(`#error-${key}`).text("");
+        $.ajax({
+            url: `/pegawai/realisasi`,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            cache: false,
+            data: data,
+            success: function (response) {
+                window.location.href = "/pegawai/realisasi";
+            },
+            error: function (error) {
+                $('form').removeClass('was-validated');
+                $('.form-group').addClass('was-validated');
+                
+                let errorResponses = error.responseJSON;
+                let errors = Object.entries(errorResponses.errors);
+                
+                errors.forEach(([key, value]) => {
+                    let errorMessage = document.getElementById(`error-${key}`);
+                    errorMessage.innerText = value.join('\n');
+                    $(`#${key}`).addClass('is-invalid');
+                    $(`#${key}`).closest('.form-group').removeClass('was-validated');
+                    $(`#${key}`).on("input", function () {
+                        $(this).closest('.form-group').addClass('was-validated');
+                        $(`#error-${key}`).text("");
+                    });
+                    $(`#${key}`).on("change", function () {
+                        $(this).closest('.form-group').addClass('was-validated');
+                        $(`#error-${key}`).text("");
+                    });
                 });
-                $(`#${key}`).on("change", function () {
-                    $(this).closest('.form-group').addClass('was-validated');
-                    $(`#error-${key}`).text("");
-                });
-            });
-            
-        },
-    });
+                
+            },
+        });
+    }
 });
 
 $("#myeditform").on("submit", function (e) {
@@ -306,7 +312,7 @@ let table = $("#table-realisasi")
                 className: "btn-success",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 6, 8],
+                    columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
                     return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
@@ -318,7 +324,7 @@ let table = $("#table-realisasi")
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 6, 8],
+                    columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
                     return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
@@ -326,7 +332,7 @@ let table = $("#table-realisasi")
                 },
             },
         ],
-        order: [[9, 'desc']]
+        order: [[10, 'desc']]
     }).api();
 
 let today = new Date(); 
@@ -344,8 +350,8 @@ $.fn.dataTableExt.afnFiltering.push(
     function (setting, data, index) {
         var selectedBulan = $('select#filterBulan option:selected').val();
         var selectedTahun = $('select#filterTahun option:selected').val();
-        if ((data[3].substr(5, 2) == selectedBulan || selectedBulan == 'all') 
-            && data[3].substr(0, 4) == selectedTahun) return true;
+        if ((data[12] == selectedBulan || selectedBulan == 'all') 
+            && data[11] == selectedTahun) return true;
         else return false;
     }
 );

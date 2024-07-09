@@ -80,8 +80,8 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($t->suratTugas->path) }}"
-                                                        class="badge btn-primary" download><i
+                                                    <a target="blank" href="{{ route('tim.surat-tugas.view', $t->suratTugas->nomor) }}"
+                                                        class="badge btn-primary"><i
                                                             class="fa fa-download"></i></a>
                                                 </td>
                                             @else <td></td><td></td>
@@ -100,8 +100,8 @@
 
                                             @if (isset($t->normaHasil[0]->normaHasilAccepted->laporan_path))
                                                 <td>
-                                                    <a target="blank" href="{{ asset($t->normaHasil[0]->normaHasilAccepted->laporan_path) }}"
-                                                        class="badge btn-primary" download><i
+                                                    <a target="blank" href="{{ route('tim.norma-hasil.view-laporan', $t->normaHasil[0]->normaHasilAccepted->id) }}"
+                                                        class="badge btn-primary"><i
                                                             class="fa fa-download"></i></a>
                                                 </td>
                                             @else <td></td>
@@ -132,9 +132,15 @@
 
                                             @if (isset($t->kendaliMutu->path) && $t->kendaliMutu->status == 'disetujui')
                                                 <td>
-                                                    <a target="blank" href="{{ asset($t->kendaliMutu->path) }}"
-                                                        class="badge btn-primary" download><i
-                                                            class="fa fa-download"></i></a>
+                                                    @if (file_exists($t->kendaliMutu->path))
+                                                        <a target="blank" href="{{ route('tim.kendali-mutu.download', $t->kendaliMutu->id) }}"
+                                                            class="badge btn-primary"><i
+                                                                class="fa fa-download"></i></a> 
+                                                    @else
+                                                        <a target="blank" href="{{ $t->kendaliMutu->path }}"
+                                                            class="badge btn-primary"><i
+                                                                class="fa fa-download"></i></a> 
+                                                    @endif
                                                 </td>
                                             @else <td></td>
                                             @endif

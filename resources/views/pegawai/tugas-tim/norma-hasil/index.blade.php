@@ -53,6 +53,8 @@
                                             <th style="width: 10px; text-align:center">No</th>
                                             <th>Tugas</th>
                                             <th>Nomor Dokumen</th>
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Verifikasi Arsiparis</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -61,27 +63,39 @@
                                         @foreach ($laporan as $lnm)
                                         <tr>
                                             <td></td>
-                                            <td>{{ $lnm->normaHasil->rencanaKerja->tugas }}</td>
+                                            <td>{{ $lnm->rencanaKerja->tugas }}</td>
                                             <td>
-                                                <span class="badge badge-primary">
-                                                    R-{{ $lnm->nomor_norma_hasil}}/{{ $lnm->unit_kerja}}/{{ $lnm->kode_klasifikasi_arsip}}/{{
-                                                    $kodeHasilPengawasan[$lnm->kode_norma_hasil]}}/{{ date('Y', strtotime($lnm->tanggal_norma_hasil)) }}
-                                                </span>
+                                                @if ($lnm->jenis == 1)
+                                                    <span class="badge badge-primary">
+                                                        R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-primary">
+                                                        Dokumen
+                                                    </span>
+                                                @endif
                                             </td>
+                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
+                                                   $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama }}</td>
+                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month] }}</td>
                                             <td>
+                                                @php
+                                                    $status = $lnm->normaHasilAccepted->status_verifikasi_arsiparis ??
+                                                              $lnm->normaHasilDokumen->status_verifikasi_arsiparis;
+                                                @endphp
                                                 <span class="badge
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
+                                                    {{ $status == 'diperiksa' ? 'badge-primary' : '' }}
+                                                    {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $status == 'ditolak' ? 'badge-danger' : '' }}
                                                     text-capitalize"><i class="
-                                                        {{ $lnm->status_verifikasi_arsiparis == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
-                                                        {{ $lnm->status_verifikasi_arsiparis == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
-                                                        {{ $lnm->status_verifikasi_arsiparis == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
-                                                    "></i>{{ $lnm->status_verifikasi_arsiparis }}
+                                                        {{ $status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                    "></i>{{ $status }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="/pegawai/tim/norma-hasil/{{ $lnm->id_norma_hasil }}"
+                                                <a href="/pegawai/tim/norma-hasil/{{ $lnm->id }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>
@@ -119,56 +133,8 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-{{-- <script>
-        $(document).ready(function() {
-            $('#table-pengelolaan-dokumen-pegawai').DataTable( {
-            "columnDefs": [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
-            });
-        });
-    </script> --}}
 
 <!-- Page Specific JS File -->
-<script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+<script src="{{ asset('js') }}/page/pegawai/norma-hasil-tim.js"></script>
 
-<script>
-    document.forms['formNHtim'].reset();
-    
-    $(".submit-btn").on("click", function (e) {
-        e.preventDefault();
-
-        $("#error-nomor").text("");
-        $("#error-file").text("");
-        
-        let data = new FormData($('#formNHtim')[0]);
-        let token = $("meta[name='csrf-token']").attr("content");
-        data.append('_token', token);
-
-        $.ajax({
-            url: `/pegawai/tim/norma-hasil`,
-            contentType: false,
-            processData: false,
-            type: "POST",
-            cache: false,
-            data: data,
-            success: function (response) {
-                location.reload();
-            },
-            error: function (error) {
-                let errorResponses = error.responseJSON;
-                let errors = Object.entries(errorResponses.errors);
-
-                errors.forEach(([key, value]) => {
-                    let errorMessage = document.getElementById(`error-${key}`);
-                    errorMessage.innerText = `${value}`;
-                });
-                console.log(errors);
-            },
-        });
-    });
-</script>
 @endpush

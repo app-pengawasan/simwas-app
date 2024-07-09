@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class InspekturRencanaJamKerjaController extends Controller
 {
-    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
 
     protected $unitkerja = [
         '8000'    => 'Inspektorat Utama',
@@ -162,8 +162,7 @@ class InspekturRencanaJamKerjaController extends Controller
                         })
                         ->whereRelation('user', function (Builder $query){
                             $query->where('unit_kerja', auth()->user()->unit_kerja);
-                        })
-                        ->get();
+                        })->get();
         }
 
         $count = $tugas

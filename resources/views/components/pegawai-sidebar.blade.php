@@ -88,32 +88,6 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown {{ $type_menu === 'tugas-tim' ? 'active active-dropdown' : '' }}">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-people-group"></i>
-                    <span>Tugas Tim</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li
-                        class="{{ Request::is('pegawai/tim/surat-tugas') || Request::is('pegawai/tim/surat-tugas/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/tim/surat-tugas">
-                            <span>Surat Tugas</span>
-                        </a>
-                    </li>
-                    <li
-                        class="{{ Request::is('pegawai/tim/norma-hasil') || Request::is('pegawai/tim/norma-hasil/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/tim/norma-hasil">
-                            <span>Norma Hasil</span>
-                        </a>
-                    </li>
-                    <li
-                        class="{{ Request::is('pegawai/tim/kendali-mutu') || Request::is('pegawai/tim/kendali-mutu/*')  ? 'active' : '' }}">
-                        <a class="nav-link" href="/pegawai/tim/kendali-mutu">
-                            <span>Kendali Mutu</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
             <li class="{{ Request::is('pegawai/laporan-kinerja*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/laporan-kinerja">
@@ -154,6 +128,39 @@
                     <span>Norma Hasil</span>
                 </a>
             </li>
+            <li class="nav-item dropdown {{ $type_menu === 'tugas-tim' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-people-group"></i>
+                    <span>Kinerja Tim</span>
+                </a>
+                <ul class="dropdown-menu">
+                    {{-- <li
+                        class="{{ Request::is('pegawai/tim/surat-tugas') || Request::is('pegawai/tim/surat-tugas/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/tim/surat-tugas">
+                            <span>Surat Tugas</span>
+                        </a>
+                    </li> --}}
+                    <li
+                        class="{{ Request::is('pegawai/tim')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/tim">
+                            <span>Monitoring</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/tim/norma-hasil') || Request::is('pegawai/tim/norma-hasil/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/tim/norma-hasil">
+                            <span>Norma Hasil</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('pegawai/tim/kendali-mutu') || Request::is('pegawai/tim/kendali-mutu/*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/pegawai/tim/kendali-mutu">
+                            <span>Kendali Mutu</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="menu-header">Pengembangan Kompetensi</li>
             <li class="{{ Request::is('pegawai/kompetensi*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/kompetensi">

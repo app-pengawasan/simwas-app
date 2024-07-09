@@ -58,6 +58,8 @@
                                             <th style="width: 10px; text-align:center">No</th>
                                             <th>Tugas</th>
                                             <th>Nomor Dokumen</th>
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                             <th class="never">tahun</th>
@@ -67,23 +69,39 @@
                                         @foreach ($laporan as $lnm)
                                         <tr>
                                             <td></td>
-                                            <td>{{ $lnm->normaHasil->rencanaKerja->tugas }}</td>
+                                            <td>{{ $lnm->rencanaKerja->tugas }}</td>
                                             <td>
-                                                <span class="badge badge-primary">
-                                                    R-{{ $lnm->nomor_norma_hasil}}/{{ $lnm->unit_kerja}}/{{ $lnm->kode_klasifikasi_arsip}}/{{
-                                                    $kodeHasilPengawasan[$lnm->kode_norma_hasil]}}/{{ date('Y', strtotime($lnm->tanggal_norma_hasil)) }}
-                                                </span>
+                                                @if ($lnm->jenis == 1)
+                                                    <span class="badge badge-primary">
+                                                        R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-primary">
+                                                        Dokumen
+                                                    </span>
+                                                @endif
                                             </td>
+                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
+                                                    $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama }}</td>
+                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month] }}</td>
                                             <td>
+                                                @php
+                                                    $status = $lnm->normaHasilAccepted->status_verifikasi_arsiparis ??
+                                                            $lnm->normaHasilDokumen->status_verifikasi_arsiparis;
+                                                @endphp
                                                 <span class="badge
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
-                                                    {{ $lnm->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
-                                                    text-capitalize">{{ $lnm->status_verifikasi_arsiparis }}
+                                                    {{ $status == 'diperiksa' ? 'badge-primary' : '' }}
+                                                    {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    text-capitalize"><i class="
+                                                        {{ $status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                    "></i>{{ $status }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="/arsiparis/norma-hasil/{{ $lnm->id_norma_hasil }}"
+                                                <a href="/arsiparis/norma-hasil/{{ $lnm->id }}"
                                                     class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>

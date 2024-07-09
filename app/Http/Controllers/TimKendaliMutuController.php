@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KendaliMutuTim;
 use App\Models\StKinerja;
 use App\Models\NormaHasil;
 use Illuminate\Http\Request;
-use App\Models\PelaksanaTugas;
-use App\Models\NormaHasilAccepted;
 use App\Models\SuratTugasTim;
+use App\Models\KendaliMutuTim;
+use App\Models\PelaksanaTugas;
+use App\Models\ObjekPengawasan;
+use Illuminate\Validation\Rule;
+use App\Models\NormaHasilAccepted;
 use Illuminate\Support\Facades\File;
+use App\Models\LaporanObjekPengawasan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,16 +66,65 @@ class TimKendaliMutuController extends Controller
     public function index()
     {
         $id_pegawai = auth()->user()->id;
+
+        $months=[
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
+                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) {
                         $query->whereIn('status', [1,2]);
                     })->get();
-        $dokumen = KendaliMutuTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))->get();
+
+        // $dokumen = KendaliMutuTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))->get();
+        $dokumen = KendaliMutuTim::whereRelation('laporanObjekPengawasan.objekPengawasan', function (Builder $query) use ($tugasSaya) {
+                        $query->whereIn('id_rencanakerja', $tugasSaya->pluck('id_rencanakerja'));
+                    })->get();
+
+        $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai) {
+                            $query->where('id', $id_pegawai);
+                        })->get();
+    
+        $bulanPelaporan = LaporanObjekPengawasan::whereIn('id_objek_pengawasan', $oPengawasan->pluck('id_opengawasan'))
+                            ->where('status', 1)->get();
+        
+        //menghapus bulan yang sudah terisi realisasinya
+        foreach ($bulanPelaporan as $key => $bulan) {
+            if (KendaliMutuTim::where('laporan_pengawasan_id', $bulan->id)->get()->isNotEmpty())
+                $bulanPelaporan->forget($key);
+        }
+        
+        //menghapus objek yang sudah terisi semua realisasinya
+        foreach ($oPengawasan as $key => $objek) {
+            if (!$bulanPelaporan->pluck('id_objek_pengawasan')->contains($objek->id_opengawasan)) 
+                $oPengawasan->forget($key);
+        }
+
+        // //menghapus tugas yang sudah terisi realisasinya
+        foreach ($tugasSaya as $key => $ts) {
+            if (!$oPengawasan->pluck('id_rencanakerja')->contains($ts->id_rencanakerja)) 
+                $tugasSaya->forget($key);
+        }
+                    
         return view('pegawai.tugas-tim.km.index', [
             // 'draf' => $draf,
             'type_menu' => 'tugas-tim',
             'tugasSaya' => $tugasSaya,
-            'dokumen'     => $dokumen
+            'dokumen'     => $dokumen,
+            'oPengawasan' => $oPengawasan,
+            'bulanPelaporan' => $bulanPelaporan,
+            'months'    => $months
             // 'laporan' => $laporan
         ]);
     }
@@ -96,14 +148,18 @@ class TimKendaliMutuController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            'is_ada' => 'required',
             'tugas' => ['required', 'string'],
-            'file' => ['required_if:link,0', 'file', 'mimes:rar,zip', 'max:5120'],
-            'link' => ['required_if:file,0', 'url']
+            'objek' => ['required'],
+            'bulan' => ['required'],
+            'catatan' => ['required_if:is_ada,0'],
+            'file' => [Rule::requiredIf(!isset($request->link) && $request->is_ada == 1), 'file', 'mimes:rar,zip', 'max:5120'],
+            'link' => [Rule::requiredIf(!isset($request->file) && $request->is_ada == 1), 'nullable', 'url']
         ];
 
         $messages = [
             'required' => ':attribute harus diisi',
-            'require_if' => ':attribute harus diisi',
+            'required_if' => ':attribute harus diisi',
             'max' => 'Ukuran file maksimal 5MB',
             'url' => 'Isi berupa url/link valid atau pilih file rar/zip',
             'mimes' => 'Format file harus rar/zip'
@@ -126,9 +182,10 @@ class TimKendaliMutuController extends Controller
         } else $path = $validateData['link'];
 
         KendaliMutuTim::create([
-            'tugas_id' => $validateData['tugas'],
+            'laporan_pengawasan_id' => $validateData['bulan'],
             'path' => $path,
             'status' => 'diperiksa',
+            'catatan' => $validateData['catatan'],
         ]);
 
         // return back with success message
@@ -145,12 +202,12 @@ class TimKendaliMutuController extends Controller
      */
     public function show($id)
     {
-        $surat = KendaliMutuTim::findOrfail($id);
+        // $surat = KendaliMutuTim::findOrfail($id);
 
-        return view('pegawai.tugas-tim.km.show', [
-            'type_menu' => 'tugas-tim',
-            'surat'     => $surat
-        ]);
+        // return view('pegawai.tugas-tim.km.show', [
+        //     'type_menu' => 'tugas-tim',
+        //     'surat'     => $surat
+        // ]);
     }
 
     /**
@@ -223,5 +280,12 @@ class TimKendaliMutuController extends Controller
     public function destroy(NormaHasil $normaHasil)
     {
         //
+    }
+
+    public function download($id)
+    {
+        $surat = KendaliMutuTim::findOrfail($id);
+        $file = public_path($surat->path);
+        return response()->download($file);
     }
 }

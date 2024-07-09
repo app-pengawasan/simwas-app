@@ -101,11 +101,17 @@
                                         @foreach ($dokumen as $km)
                                         <tr>
                                             <td></td>
-                                            <td>{{ $km->rencanaKerja->tugas }}</td>
-                                            <td>
-                                                <a target="blank" href="{{ asset($km->path) }}"
-                                                    class="badge btn-primary" download><i
-                                                        class="fa fa-download"></i> Download</a>    
+                                            <td>{{ $km->laporanObjekPengawasan->objekPengawasan->rencanaKerja->tugas }}</td>
+                                            <td>   
+                                                @if (file_exists($km->path))
+                                                    <a target="blank" href="/pegawai/tim/kendali-mutu/download/{{ $km->id }}"
+                                                        class="badge btn-primary"><i
+                                                            class="fa fa-download"></i> Download</a> 
+                                                @else
+                                                    <a target="blank" href="{{ $km->path }}"
+                                                        class="badge btn-primary"><i
+                                                            class="fa fa-download"></i> Download</a> 
+                                                @endif
                                             </td>
                                             <td>
                                                 <span class="badge
