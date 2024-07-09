@@ -148,7 +148,7 @@ class TimSuratTugasController extends Controller
      */
     public function show($nomor)
     {
-        $surat = SuratTugasTim::where('nomor', $nomor)->get();
+        $surat = SuratTugasTim::where('nomor', $nomor)->get(); 
         $tugas = $surat->pluck('rencanaKerja.tugas');
 
         return view('pegawai.tugas-tim.st.show', [
@@ -218,5 +218,12 @@ class TimSuratTugasController extends Controller
     public function destroy(NormaHasil $normaHasil)
     {
         //
+    }
+
+    public function view($nomor)
+    {
+        $surat = SuratTugasTim::where('nomor', $nomor)->first();
+        $file = public_path($surat->path);
+        return response()->file($file);
     }
 }

@@ -31,7 +31,11 @@
                                     </a>
                                 </div>
                             </div>
-                            @php $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja']; @endphp
+                            @php
+                                $jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+                                $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                                                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                            @endphp
                             <form enctype="multipart/form-data" name="myeditform" id="myeditform" class="needs-validation" novalidate="">
                                 <div class="card-body">
                                     <input type="hidden" name="id" id="id" value="{{ $realisasi->id }}">
@@ -59,18 +63,7 @@
                                         <label class="col-sm-2 col-form-label" for="tugas">Tugas</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" name="tugas" id="tugas" required disabled>
-                                                @if ($realisasi->pelaksana->pt_jabatan == 3)
-                                                    @if ($realisasi->pelaksana->pt_hasil == 2)
-                                                        @php $hasil = 'Kertas Kerja'; @endphp
-                                                    @else
-                                                        @php $hasil = $hasilKerja[$realisasi->pelaksana->pt_hasil]; @endphp
-                                                    @endif
-                                                @elseif ($realisasi->pelaksana->pt_jabatan == 4)
-                                                    @php $hasil = 'Kertas Kerja'; @endphp
-                                                @else
-                                                    @php $hasil = $hasilKerja2[$realisasi->pelaksana->pt_hasil]; @endphp
-                                                @endif
-                                                <option value="{{ $realisasi->id_pelaksana }}" data-hasil="{{ $hasil }}" selected>
+                                                <option value="{{ $realisasi->id_pelaksana }}" selected>
                                                     {{ $realisasi->pelaksana->rencanaKerja->tugas }}
                                                 </option>
                                             </select>
@@ -78,6 +71,40 @@
                                         </div>
                                     </div>
                                     <input type="hidden" name="id_pelaksana" value="{{ $realisasi->id_pelaksana }}">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="objek">Objek Pengawasan</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="objek" id="objek" required disabled>
+                                                <option value="{{ $realisasi->laporanObjekPengawasan->objekPengawasan->id_opengawasan }}" selected>
+                                                    {{ $realisasi->laporanObjekPengawasan->objekPengawasan->nama }}
+                                                </option>
+                                            </select>
+                                            <small id="error-objek" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="bulan">Bulan Pelaporan</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="bulan" id="bulan" required disabled>
+                                                <option value="{{ $realisasi->laporanObjekPengawasan->id }}" selected>
+                                                    {{ $months[$realisasi->laporanObjekPengawasan->month - 1] }}
+                                                </option>
+                                            </select>
+                                            <small id="error-bulan" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="peran">Peran</label>
+                                        <div class="col-sm-10 align-self-center" id="peran" style="color: #495057">
+                                            {{ $jabatanPelaksana[$realisasi->pelaksana->pt_jabatan - 1] }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="hasil">Hasil Kerja</label>
+                                        <div class="col-sm-10 align-self-center" id="hasil" style="color: #495057">
+                                            {{ $realisasi->pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $realisasi->pelaksana->pt_jabatan )->first()->hasil_kerja }}
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="edit-aktivitas">Aktivitas</label>
                                         <div class="col-sm-10">
@@ -99,7 +126,7 @@
                                                         <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center">
                                                             <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
                                                             <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
-                                                            <td>{{ $event->aktivitas }} </td>
+                                                            <td style="white-space: pre-line;">{{ $event->aktivitas }} </td>
                                                             <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                                         </tr>
                                                     @endforeach
@@ -111,8 +138,36 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label" for="jam">Jam Realisasi</label>
-                                        <div class="col-sm-10" id="jam">
+                                        <div class="col-sm-10 align-self-center" id="jam"  style="color: #495057">
                                             
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="rencana_kerja">Rencana Kinerja</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" id="rencana_kerja" name="rencana_kerja" required>{{ $realisasi->rencana_kerja }}</textarea>
+                                            <small id="error-rencana_kerja" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="iki">IKI</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" id="iki" name="iki" required>{{ $realisasi->iki }}</textarea>
+                                            <small id="error-iki" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" id="kegiatan" name="kegiatan" required>{{ $realisasi->kegiatan }}</textarea>
+                                            <small id="error-kegiatan" class="text-danger"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label" for="capaian">Capaian</label>
+                                        <div class="col-sm-10">
+                                            <textarea rows="5" class="form-control h-auto" id="capaian" name="capaian" required>{{ $realisasi->capaian }}</textarea>
+                                            <small id="error-capaian" class="text-danger"></small>
                                         </div>
                                     </div>
                                     {{-- <div class="form-group row">
@@ -157,25 +212,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row status_change">
-                                        <label class="col-sm-2 col-form-label" for="kegiatan">Kegiatan</label>
-                                        <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" 
-                                                id="kegiatan" name="kegiatan" required>{{ $realisasi->kegiatan }}
-                                            </textarea>
-                                            <small id="error-kegiatan" class="text-danger"></small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row status_change">
-                                        <label class="col-sm-2 col-form-label" for="capaian">Capaian</label>
-                                        <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" 
-                                                id="capaian" name="capaian" required>{{ $realisasi->capaian }}
-                                            </textarea>
-                                            <small id="error-capaian" class="text-danger"></small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row status_change">
-                                        <label class="col-sm-2 col-form-label" for="edit-link">Hasil Kerja</label>
+                                        <label class="col-sm-2 col-form-label" for="edit-link">Bukti Dukung</label>
                                         <div class="col-sm-10">
                                             <input type="url" name="edit-link" id="edit-link" class="form-control" placeholder="Link Hasil Kerja"
                                                 {{-- @if (!file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja)) --}}
@@ -204,13 +241,6 @@
                                         <div class="col-sm-10">
                                             <textarea rows="5" class="form-control h-auto" name="catatan" id="catatan">{{ $realisasi->catatan }}</textarea>
                                             <small id="error-catatan" class="text-danger"></small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row status_change_2">
-                                        <label class="col-sm-2 col-form-label" for="alasan">Alasan</label>
-                                        <div class="col-sm-10">
-                                            <textarea rows="5" class="form-control h-auto" name="alasan" id="alasan">{{ $realisasi->alasan }}</textarea>
-                                            <small id="error-alasan" class="text-danger"></small>
                                         </div>
                                     </div>
                                     <div class="card-footer text-right pr-1">
@@ -245,6 +275,6 @@
         $(`.jam`).each(function() {
             i = i + +$(this).text();
         });
-        $('#jam').text(i);
+        $('#jam').text(i + " jam");
     </script>
 @endpush

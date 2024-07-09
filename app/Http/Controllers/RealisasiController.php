@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\LaporanObjekPengawasan;
+use App\Models\ObjekPengawasan;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
@@ -16,12 +18,14 @@ class RealisasiController extends Controller
 {
     protected $colorText = [
         1   => 'success',
-        2   => 'danger'
+        2   => 'danger',
+        3   => 'dark',
     ];
 
     protected $status = [
         1   => 'Selesai',
-        2   => 'Dibatalkan'
+        2   => 'Dibatalkan',
+        3   => 'Tidak Selesai'
     ];
 
     protected $hasilKerja = [
@@ -84,10 +88,29 @@ class RealisasiController extends Controller
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                         $query->whereIn('status', [1,2]);
                     })->get();
+        
+        $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai){
+            $query->where('id', $id_pegawai);
+        })->get();
+    
+        $bulanPengawasan = LaporanObjekPengawasan::whereIn('id_objek_pengawasan', $oPengawasan->pluck('id_opengawasan'))
+                    ->where('status', 1)->get(); 
+        
+        //menghapus bulan yang sudah terisi realisasinya
+        foreach ($bulanPengawasan as $key => $bulan) {
+            if (RealisasiKinerja::where('id_laporan_objek', $bulan->id)->get()->isNotEmpty())
+                $bulanPengawasan->forget($key);
+        }
+        
+        //menghapus objek yang sudah terisi semua realisasinya
+        foreach ($oPengawasan as $key => $objek) {
+            if (!$bulanPengawasan->pluck('id_objek_pengawasan')->contains($objek->id_opengawasan)) 
+                $oPengawasan->forget($key);
+        }
 
-        //menghapus tugas yang sudah terisi realisasinya
+        // //menghapus tugas yang sudah terisi realisasinya
         foreach ($tugasSaya as $key => $ts) {
-            if (RealisasiKinerja::where('id_pelaksana', $ts->id_pelaksana)->get()->isNotEmpty())
+            if (!$oPengawasan->pluck('id_rencanakerja')->contains($ts->id_rencanakerja)) 
                 $tugasSaya->forget($key);
         }
 
@@ -114,7 +137,9 @@ class RealisasiController extends Controller
                 'hasilKerja'    => $this->hasilKerja,
                 'timkerja'      => $tim,
                 'proyeks'       => $proyek,
-                'events'        => $events
+                'events'        => $events,
+                'oPengawasan'   => $oPengawasan,
+                'bulanPengawasan' => $bulanPengawasan
             ]
         );
     }
@@ -144,8 +169,8 @@ class RealisasiController extends Controller
 
         $rules = [
             'tugas'         => 'required',
-            'tim'         => 'required',
-            'proyek'         => 'required',
+            'tim'           => 'required',
+            'proyek'        => 'required',
             // 'tgl'           => 'required|date_format:Y-m-d',
             // 'start'         => [
             //                     'required',
@@ -160,13 +185,16 @@ class RealisasiController extends Controller
             //                     Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
             //                 ],
             'status'        => 'required',
-            'kegiatan'      => 'required_if:status,1',
-            'capaian'       => 'required_if:status,1',
+            'bulan'         => 'required',
+            'rencana_kerja' => 'required',
+            'iki'           => 'required',
+            'kegiatan'      => 'required',
+            'capaian'       => 'required',
             'hasil_kerja'   => 'required_if:status,1|nullable|url',
             // 'link'          => 'required_if:file,0|url',
             // 'file'          => 'required_if:link,0|mimes:pdf|max:500',
             // 'catatan'       => 'string',
-            'alasan'       => 'required_if:status,2',
+            'catatan'       => 'required_unless:status,1',
         ];
 
         // ($duplicateBetween != 0) ? $timeMessage = 'Ada aktivitas di antara jam mulai dan selesai ini'
@@ -174,7 +202,8 @@ class RealisasiController extends Controller
 
         $customMessages = [
             'required' => ':attribute harus diisi',
-            'required_if' => ':attribute harus diisi',
+            'required_if' => ':attribute harus diisi jika status selesai',
+            'required_unless' => ':attribute harus diisi jika status bukan selesai',
             'url' => ':attribute harus berupa url/link',
         ];
 
@@ -194,11 +223,8 @@ class RealisasiController extends Controller
         // }
 
         $realisasiData['id_pelaksana'] = $realisasiData['tugas'];
-        $realisasiData['catatan'] = $request->catatan;
-        if ($realisasiData['status'] == 2) {
-            $realisasiData['kegiatan'] = null;
-            $realisasiData['capaian'] = null;
-        }
+        $realisasiData['id_laporan_objek'] = $realisasiData['bulan'];
+        // $realisasiData['catatan'] = $request->catatan;
 
         //create realisasi
         RealisasiKinerja::where('id_pelaksana', $realisasiData['tugas'])->where('status', 1)->update(['status' => 2]);
@@ -334,12 +360,19 @@ class RealisasiController extends Controller
             //                         Rule::when($duplicateEnd != 0 || $duplicateBetween != 0, ['boolean'])
             //                     ],
             'status'        => 'required',
-            'kegiatan'      => 'required_if:status,1',
-            'capaian'       => 'required_if:status,1',
-            'edit-link'     => 'required_if:status,1|url',
-            // 'edit-file'     => 'nullable|mimes:pdf|max:500',
-            // 'catatan'       => 'required_if:status,2',
-            'alasan'       => 'required_if:status,2',
+            'rencana_kerja' => 'required',
+            'iki'           => 'required',
+            'kegiatan'      => 'required',
+            'capaian'       => 'required',
+            'edit-link'     => 'required_if:status,1|nullable|url',
+            'catatan'       => 'required_unless:status,1',
+
+            // 'status'        => 'required',
+            // 'hasil_kerja'   => 'required_if:status,1|nullable|url',
+            // 'link'          => 'required_if:file,0|url',
+            // 'file'          => 'required_if:link,0|mimes:pdf|max:500',
+            // 'catatan'       => 'string',
+            
         ];
 
         // ($duplicateBetween != 0) ? $timeMessage = 'Ada aktivitas di antara jam mulai dan selesai ini'
@@ -348,6 +381,7 @@ class RealisasiController extends Controller
         $customMessages = [
             'required' => ':attribute harus diisi',
             'required_if' => ':attribute harus diisi',
+            'required_unless' => ':attribute harus diisi jika status bukan selesai',
             'url' => ':attribute harus berupa url/link',
         ];
 
@@ -359,7 +393,7 @@ class RealisasiController extends Controller
 
         $validateData = $request->validate($rules);
 
-        File::delete(public_path()."/document/realisasi/".$realisasi->hasil_kerja);
+        // File::delete(public_path()."/document/realisasi/".$realisasi->hasil_kerja);
 
         // if (array_key_exists("edit-link", $validateData) && $validateData['edit-link'] != '')
         //     $validateData['hasil_kerja'] = $validateData['edit-link'];
@@ -371,18 +405,8 @@ class RealisasiController extends Controller
 
         $validateData['hasil_kerja'] = $validateData['edit-link'];
         $validateData['catatan'] = $request->catatan;
-        if ($validateData['status'] == 2) {
-            $validateData['kegiatan'] = null;
-            $validateData['capaian'] = null;
-            $validateData['catatan'] = null;
-            $validateData['hasil_kerja'] = null;
-        } else {
-            $validateData['alasan'] = null;
-            RealisasiKinerja::where('id_pelaksana', $request->id_pelaksana)
-                            ->where('status', 1)->update(['status' => 2]);
-        }
 
-        $realisasiEdit = RealisasiKinerja::where('id', $id)->update(Arr::except($validateData, ['edit-link', 'edit-file']));
+        $realisasiEdit = RealisasiKinerja::where('id', $id)->update(Arr::except($validateData, ['edit-link']));
 
         // Event::where('id', $event->id)->update(['start' => $start, 'end' => $end]);
 

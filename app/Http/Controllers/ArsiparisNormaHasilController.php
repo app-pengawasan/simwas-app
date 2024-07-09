@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StKinerja;
 use App\Models\NormaHasil;
 use Illuminate\Http\Request;
+use App\Models\NormaHasilTim;
 use App\Models\PelaksanaTugas;
 use App\Models\NormaHasilAccepted;
 use Illuminate\Database\Eloquent\Builder;
@@ -59,13 +60,34 @@ class ArsiparisNormaHasilController extends Controller
     public function index()
     {
         $this->authorize('arsiparis');
-        $laporan = NormaHasilAccepted::latest()
-                   ->whereNot('status_verifikasi_arsiparis', 'belum unggah')
-                   ->get();
+
+        $months=[
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        $laporan = NormaHasilTim::latest()
+                    ->whereRelation('normaHasilAccepted', function (Builder $query){
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    })->orWhereRelation('normaHasilDokumen', function (Builder $query){
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    })->get();
+
         return view('arsiparis.norma-hasil.index', [
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'type_menu' => 'tugas-tim',
-            'laporan' => $laporan
+            'laporan' => $laporan,
+            'months' => $months
         ]);
     }
 
@@ -87,10 +109,16 @@ class ArsiparisNormaHasilController extends Controller
      */
     public function store(Request $request)
     {
-        $laporan = NormaHasilAccepted::where('id_norma_hasil', $request->norma_hasil);
-        $laporan->update([
-            'status_verifikasi_arsiparis' => 'disetujui',
-        ]);
+        $laporan = NormaHasilTim::findOrFail($request->norma_hasil);
+        if ($request->jenis == 1) {
+            $laporan->normaHasilAccepted->update([
+                'status_verifikasi_arsiparis' => 'disetujui',
+            ]);
+        } else {
+            $laporan->normaHasilDokumen->update([
+                'status_verifikasi_arsiparis' => 'disetujui',
+            ]);
+        }
         return redirect()->back()->with('success', 'Norma Hasil Berhasil Disetujui');
     }
 
@@ -102,8 +130,9 @@ class ArsiparisNormaHasilController extends Controller
      * @param  \App\Models\NormaHasil  $normaHasil
      * @return \Illuminate\Http\Response
      */
-    public function show(NormaHasil $norma_hasil)
+    public function show($id)
     {
+        $norma_hasil = NormaHasilTim::findOrFail($id);
         return view('arsiparis.norma-hasil.show', [
             "usulan" => $norma_hasil,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
@@ -134,11 +163,20 @@ class ArsiparisNormaHasilController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $laporan = NormaHasilAccepted::where('id_norma_hasil', $id);
-        $laporan->update([
-            'status_verifikasi_arsiparis' => 'ditolak',
-            'catatan_arsiparis' => $request->alasan
-        ]);
+        $laporan = NormaHasilTim::findOrFail($id);
+
+        if ($request->jenis == 1) {
+            $laporan->normaHasilAccepted->update([
+                'status_verifikasi_arsiparis' => 'ditolak',
+                'catatan_arsiparis' => $request->alasan
+            ]);
+        } else {
+            $laporan->normaHasilDokumen->update([
+                'status_verifikasi_arsiparis' => 'ditolak',
+                'catatan_arsiparis' => $request->alasan
+            ]);
+        }
+        
         return redirect()->back()->with('success', 'Norma Hasil Berhasil Ditolak');
     }
 

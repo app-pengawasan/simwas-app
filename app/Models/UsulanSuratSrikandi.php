@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UsulanSuratSrikandi extends Model
 {
@@ -34,6 +35,10 @@ class UsulanSuratSrikandi extends Model
     public function kodeKlasifikasiArsip()
     {
         return $this->belongsTo(KodeKlasifikasiArsip::class, 'kode_klasifikasi_arsip', 'id');
+    }
+    public function rencanaKerja(): BelongsTo
+    {
+        return $this->belongsTo(RencanaKerja::class, "rencana_kerja_id","id_rencanakerja");
     }
 
 }

@@ -23,4 +23,9 @@ class RealisasiKinerja extends Model
     {
         return $this->belongsTo(User::class, "penilai", "id");
     }
+
+    public function laporanObjekPengawasan(): BelongsTo
+    {
+        return $this->belongsTo(LaporanObjekPengawasan::class, "id_laporan_objek", "id");
+    }
 }

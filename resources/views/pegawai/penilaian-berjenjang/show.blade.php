@@ -29,12 +29,10 @@
                     </div>
                     <div class="modal-body">
                         <ul class="legend">
-                            {{-- <li><span class="jingga"></span> Sedang Dikerjakan</li>
-                            <li><span class="hijau"></span> Selesai</li>
-                            <li><span class="merah"></span> Dibatalkan</li> --}}
                             <li><span class="badge jingga">Sedang Dikerjakan</span></li>
                             <li><span class="badge hijau">Selesai</span></li>
                             <li><span class="badge merah">Dibatalkan</span></li>
+                            <li><span class="badge hitam">Tidak Selesai</span></li>
                         </ul>
                         <center><div id='calendar' style="width: 90%"></div></center>
                     </div>
@@ -185,6 +183,7 @@
     <!-- Page Specific JS File -->
     <script>
         var events = @json($events);
+        var pegawai = @json($realisasiDinilai[0]->pelaksana->id_pegawai);
     </script>
     <script src="{{ asset('js/page/pegawai/penilaian-berjenjang.js') }}"></script>
 @endpush

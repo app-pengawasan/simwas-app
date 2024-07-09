@@ -98,8 +98,8 @@
                                                 <th>File Surat Tugas</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($surat->path) }}"
-                                                        class="badge btn-primary" download><i
+                                                    <a target="blank" href="{{ route('tim.surat-tugas.view', $surat->nomor) }}"
+                                                        class="badge btn-primary"><i
                                                             class="fa fa-download"></i> Download</a>
                                                     @if ($surat->status != 'disetujui')
                                                         <button type="button" class="ml-2 btn btn-warning btn-sm" data-toggle="modal"

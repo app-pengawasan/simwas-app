@@ -21,7 +21,6 @@
             <div class="section-header">
                 <h1>Detail Realisasi</h1>
             </div>
-            @php $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja']; @endphp
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -60,23 +59,13 @@
                                     <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Jabatan</th>
+                                    <th>Peran</th>
                                     <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                 </tr>
                                 <tr>
                                     <th>Hasil Kerja</th>
                                     <td>
-                                        @if ($realisasi->pelaksana->pt_jabatan == 3)
-                                            @if ($realisasi->pelaksana->pt_hasil == 2)
-                                                Kertas Kerja
-                                            @else
-                                                {{ $hasilKerja[$realisasi->pelaksana->pt_hasil] }}
-                                            @endif
-                                        @elseif ($realisasi->pelaksana->pt_jabatan == 4)
-                                            Kertas Kerja
-                                        @else
-                                            {{ $hasilKerja2[$realisasi->pelaksana->pt_hasil] }}
-                                        @endif
+                                        {{ $realisasi->pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $realisasi->pelaksana->pt_jabatan )->first()->hasil_kerja }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,7 +100,7 @@
                                                     <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center show">
                                                         <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
                                                         <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
-                                                        <td>{{ $event->aktivitas }} </td>
+                                                        <td style="white-space: pre-line;">{{ $event->aktivitas }} </td>
                                                         <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
                                                     </tr>
                                                 @endforeach

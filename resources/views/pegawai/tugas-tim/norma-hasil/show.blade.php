@@ -26,6 +26,7 @@
                     @method('PUT')
                     @csrf
                     <div class="form-group">
+                        <input type="hidden" name="jenis" value="{{ $usulan->jenis }}">
                         <label for="alasan">File Laporan</label>
                         <input type="file" name="nama" id="nama" class="form-control" accept=".pdf" required>
                         <small id="error-file" class="text-danger"></small>
@@ -72,8 +73,12 @@
                                                 <i class="fas fa-chevron-circle-left"></i> Kembali
                                             </a>
                                         </div>
+                                        
+                                        @php
+                                            $status = $usulan->normaHasilAccepted->status_verifikasi_arsiparis ?? $usulan->normaHasilDokumen->status_verifikasi_arsiparis;
+                                        @endphp
 
-                                        @include('components.timeline.timeline-steps')
+                                        @include('components.timeline.timeline-nh')
 
                                         <table class="table">
                                             <tr>
@@ -82,54 +87,66 @@
                                                 <td>{{ $usulan->rencanaKerja->tugas }}</td>
 
                                                 {{-- Status Disetujui --}}
-                                                @if ($usulan->status_norma_hasil == 'disetujui')
+                                                {{-- @if ($usulan->status_norma_hasil == 'disetujui') --}}
                                             <tr>
                                                 <th>Nomor Surat</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <span class="badge badge-primary">
-                                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                        $kodeHasilPengawasan[$usulan->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                    </span>
+                                                    @if ($usulan->jenis == 1)
+                                                        <span class="badge badge-primary">
+                                                            R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $usulan->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-primary">
+                                                            Dokumen
+                                                        </span>
+                                                    @endif
                                                 </td>
                                             </tr>
-                                            @endif
+                                            {{-- @endif --}}
 
-                                            <tr>
-                                                <th>Nama Dokumen</th>
-                                                <th>:</th>
-                                                <td>{{ $usulan->nama_dokumen }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Tanggal Usulan</th>
-                                                <th>:</th>
-                                                <td>{{ $usulan->tanggal }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Draft Norma Hasil</th>
-                                                <th>:</th>
-                                                <td>
-                                                    <a target="blank" href="{{ $usulan->document_path }}" class="badge btn-primary" download>
-                                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
-                                                        Buka Draft Norma Hasil
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @if ($usulan->status_norma_hasil == 'ditolak')
+                                            @if ($usulan->jenis == 1)
+                                                <tr>
+                                                    <th>Nama Dokumen</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->normaHasilAccepted->normaHasil->nama_dokumen }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tanggal Usulan</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->normaHasilAccepted->normaHasil->tanggal }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Draft Norma Hasil</th>
+                                                    <th>:</th>
+                                                    <td>
+                                                        <a target="blank" href="downloadUsulan/{{ $usulan->normaHasilAccepted->normaHasil->id }}"
+                                                            class="badge btn-primary"><i
+                                                                class="fa fa-download"></i> Download</a>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            {{-- @if ($usulan->status_norma_hasil == 'ditolak')
                                             <tr>
                                                 <th>Alasan Penolakan</th>
                                                 <th>:</th>
                                                 <td>{{ $usulan->catatan_norma_hasil }}</td>
                                             </tr>
-                                            @endif
+                                            @endif --}}
                                             <tr>
-                                                <th>Laporan Norma Hasil</th>
+                                                <th>Norma Hasil Tim</th>
                                                 <th>:</th>
                                                 <td>
-                                                    <a target="blank" href="{{ asset($usulan->normaHasilAccepted->laporan_path) }}"
-                                                        class="badge btn-primary" download><i
-                                                            class="fa fa-download"></i> Download</a>
-                                                    @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis != 'disetujui')
+                                                    @if ($usulan->jenis == 1)
+                                                        <a target="blank" href="viewLaporan/{{ $usulan->normaHasilAccepted->id }}/1"
+                                                            class="badge btn-primary"><i
+                                                                class="fa fa-download"></i> Download</a>
+                                                    @else
+                                                        <a target="blank" href="viewLaporan/{{ $usulan->normaHasilDokumen->id }}/2"
+                                                            class="badge btn-primary"><i
+                                                                class="fa fa-download"></i> Download</a>
+                                                    @endif
+                                                    @if ($status != 'disetujui')
                                                         <button type="button" class="ml-2 btn btn-warning btn-sm" data-toggle="modal"
                                                         data-target="#staticBackdrop">
                                                             <i class="fas fa-edit m-0"></i></button>
@@ -141,19 +158,19 @@
                                                 <th>:</th>
                                                 <td>
                                                     <span class="badge
-                                                        {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
-                                                        {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
-                                                        {{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
-                                                            text-capitalize">{{ $usulan->normaHasilAccepted->status_verifikasi_arsiparis }}
+                                                        {{ $status == 'diperiksa' ? 'badge-primary' : '' }}
+                                                        {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                        {{ $status == 'ditolak' ? 'badge-danger' : '' }}
+                                                            text-capitalize">{{ $status }}
                                                     </span>
                                                 </td>
                                             </tr>
-                                            @if ($usulan->normaHasilAccepted->status_verifikasi_arsiparis == 'ditolak')
-                                            <tr>
-                                                <th>Alasan Penolakan</th>
-                                                <th>:</th>
-                                                <td>{{ $usulan->normaHasilAccepted->catatan_arsiparis }}</td>
-                                            </tr>
+                                            @if ($status == 'ditolak')
+                                                <tr>
+                                                    <th>Alasan Penolakan</th>
+                                                    <th>:</th>
+                                                    <td>{{ $usulan->normaHasilAccepted->catatan_arsiparis ?? $usulan->normaHasilDokumen->catatan_arsiparis }}</td>
+                                                </tr>
                                             @endif
 
                                         </table>

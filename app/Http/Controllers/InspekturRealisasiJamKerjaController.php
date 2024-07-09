@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class InspekturRealisasiJamKerjaController extends Controller
 {
-    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
 
     protected $unitkerja = [
         '8000'    => 'Inspektorat Utama',

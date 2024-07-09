@@ -28,18 +28,18 @@
                             {{ session()->forget(['alert-type', 'status']) }}
                             <div class="d-flex mb-2 row" style="gap:10px">
                                 <div class="form-group col pr-0" style="margin-bottom: 0;">
-                                    <label for="filterBulan" style="margin-bottom: 0;">Bulan</label>
-                                    <select class="form-control" id="filterBulan">
+                                    <label for="filterBulan" style="margin-bottom: 0;">Bulan Pelaporan</label>
+                                    <select class="form-control select2" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
-                                        <option value="01">Januari</option>
-                                        <option value="02">Februari</option>
-                                        <option value="03">Maret</option>
-                                        <option value="04">April</option>
-                                        <option value="05">Mei</option>
-                                        <option value="06">Juni</option>
-                                        <option value="07">Juli</option>
-                                        <option value="08">Agustus</option>
-                                        <option value="09">September</option>
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maret</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Agustus</option>
+                                        <option value="9">September</option>
                                         <option value="10">Oktober</option>
                                         <option value="11">November</option>
                                         <option value="12">Desember</option>
@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="form-group col pl-0" style="margin-bottom: 0;">
                                     <label for="filterTahun" style="margin-bottom: 0;">Tahun</label>
-                                    <select class="form-control" id="filterTahun" name="filterTahun">
+                                    <select class="form-control select2" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
                                             <option value="{{ $year + $i }}">{{ $year + $i }}</option>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
-                                    <a type="button" class="btn btn-primary" href="/pegawai/realisasi/create">
+                                    <a type="button" class="btn btn-primary m-0" href="/pegawai/realisasi/create">
                                         <i class="fas fa-plus-circle"></i>
                                         Tambah
                                     </a>
@@ -71,22 +71,32 @@
                                             <th>Tim</th>
                                             <th>Proyek</th>
                                             <th>Tugas</th>
-                                            <th>Waktu Unggah</th>
+                                            {{-- <th>Waktu Unggah</th> --}}
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Status</th>
                                             <th>Bukti Dukung</th>
                                             <th>Catatan</th>
                                             <th>Aksi</th>
                                             <th class="never">Link Bukti Dukung</th>
                                             <th class="never">created_at</th>
+                                            <th class="never">tahun</th>
+                                            <th class="never">bulan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                                                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                                        @endphp
                                         @foreach ($realisasi as $r)
                                             <tr>
                                                 <td>{{ $r->pelaksana->rencanaKerja->proyek->timkerja->nama }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
                                                 <td>{{ $r->pelaksana->rencanaKerja->tugas }}</td>
-                                                <td>{{ $r->updated_at }}</td>
+                                                {{-- <td>{{ $r->updated_at }}</td> --}}
+                                                <td>{{ $r->laporanObjekPengawasan->objekPengawasan->nama }}</td>
+                                                <td>{{ $months[$r->laporanObjekPengawasan->month - 1] }}</td>
                                                 {{-- <td>{{ date("d-m-Y", strtotime($r->tgl)) }}<br>
                                                     ({{ date("H:i", strtotime($r->start)) }} - {{ date("H:i", strtotime($r->end)) }})
                                                 </td> --}}
@@ -94,8 +104,8 @@
 
                                                 @if ($r->status == 1)
                                                     <td>
-                                                        <a class="btn btn-primary" href="{{ $r->hasil_kerja }}" target="_blank">
-                                                                <i class="fa fa-download"></i>
+                                                        <a class="btn btn-primary btn-sm" href="{{ $r->hasil_kerja }}" target="_blank">
+                                                                <i class="fa fa-eye"></i>
                                                         </a>
                                                     </td>
                                                 @else
@@ -110,7 +120,7 @@
 
                                                 <td>
                                                     <div class="btn-group dropdown">
-                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
                                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right shadow-lg">
@@ -122,7 +132,6 @@
                                                             <a class="dropdown-item" href="/pegawai/realisasi/{{ $r->id }}/edit">
                                                                 <i class="fas fa-edit text-warning mr-2"></i>
                                                                 Edit
-                                                            </a>
                                                             </a>
                                                             <a class="dropdown-item delete-btn" href="javascript:void(0)"
                                                             data-id="{{ $r->id }}">
@@ -142,6 +151,8 @@
                                                 </td>
 
                                                 <td>{{ $r->created_at }}</td>
+                                                <td>{{ $r->pelaksana->rencanaKerja->proyek->timkerja->tahun }}</td>
+                                                <td>{{ $r->laporanObjekPengawasan->month }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -6,8 +6,12 @@ use App\Models\StKinerja;
 use App\Models\NormaHasil;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
+use App\Models\ObjekPengawasan;
 use App\Models\NormaHasilAccepted;
 use Illuminate\Support\Facades\File;
+use App\Models\LaporanObjekPengawasan;
+use App\Models\NormaHasilDokumen;
+use App\Models\NormaHasilTim;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,25 +65,95 @@ class TimNormaHasilController extends Controller
     public function index()
     {
         $id_pegawai = auth()->user()->id;
+
+        $months=[
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
                         $query->whereIn('status', [1,2]);
-                    })->pluck('id_rencanakerja');
-        $draf = NormaHasil::latest()->whereIn('tugas_id', $tugasSaya)
+                    })->get();
+
+        $draf = NormaHasil::latest()->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                 ->where('status_norma_hasil', 'disetujui')
                 ->whereRelation('normaHasilAccepted', function (Builder $query){
                     $query->where('status_verifikasi_arsiparis', 'belum unggah');
                 })->get();
-        $laporan = NormaHasilAccepted::latest()
-                    ->whereRelation('normaHasil', function (Builder $query) use ($tugasSaya) {
-                        $query->whereIn('tugas_id', $tugasSaya);
-                    })->whereNot('status_verifikasi_arsiparis', 'belum unggah')
-                      ->get();
+
+        $laporan = NormaHasilTim::latest()
+                    ->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
+                    ->whereRelation('normaHasilAccepted', function (Builder $query){
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    })->orWhereRelation('normaHasilDokumen', function (Builder $query){
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    })->get();
+
+        // menghapus tugas yang sudah diunggah atau belum ada nomor
+        foreach ($tugasSaya as $key => $ts) {
+            if (!$draf->pluck('tugas_id')->contains($ts->id_rencanakerja)) 
+                $tugasSaya->forget($key);
+        }
+
+        $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai){
+            $query->where('id', $id_pegawai);
+        })->get();
+    
+        $bulanPelaporan = LaporanObjekPengawasan::whereIn('id_objek_pengawasan', $oPengawasan->pluck('id_opengawasan'))
+                    ->where('status', 1)->get();
+
+        //menghapus bulan yang sudah terisi norma hasilnya
+        foreach ($bulanPelaporan as $key => $bulan) {
+            $cekBulan = NormaHasilTim::
+                        whereRelation('normaHasilAccepted.normaHasil', function (Builder $query) use ($bulan) {
+                            $query->where('laporan_pengawasan_id', $bulan->id);
+                        })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($bulan) {
+                            $query->where('laporan_pengawasan_id', $bulan->id);
+                        })->get()->isNotEmpty();
+            if ($cekBulan) $bulanPelaporan->forget($key);
+        }
+
+        //menghapus objek yang sudah terisi semua norma hasilnya
+        foreach ($oPengawasan as $key => $objek) {
+            if (!$bulanPelaporan->pluck('id_objek_pengawasan')->contains($objek->id_opengawasan)) 
+                $oPengawasan->forget($key);
+        }
+
+        //menghapus tugas yang sudah terisi semua norma hasilnya
+        foreach ($tugasSaya as $key => $ts) {
+            if (!$oPengawasan->pluck('id_rencanakerja')->contains($ts->id_rencanakerja)) 
+                $tugasSaya->forget($key);
+        }
+
+        //menghapus nomor yang sudah terisi norma hasilnya
+        foreach ($draf as $key => $un) {
+            $cekBulan = NormaHasilTim::
+                        whereRelation('normaHasilDokumen', function (Builder $query) use ($un) {
+                            $query->where('laporan_pengawasan_id', $un->laporan_pengawasan_id);
+                        })->get();
+            if ($cekBulan) $draf->forget($key);
+        }
+
         return view('pegawai.tugas-tim.norma-hasil.index', [
             'draf' => $draf,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'type_menu' => 'tugas-tim',
-            'laporan' => $laporan
+            'laporan' => $laporan,
+            'tugasSaya' => $tugasSaya,
+            'months' => $months,
+            'oPengawasan' => $oPengawasan,
+            'bulanPelaporan' => $bulanPelaporan
         ]);
     }
 
@@ -102,12 +176,17 @@ class TimNormaHasilController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'nomor' => ['required', 'string', 'max:26'],
+            'tugas' => 'required',
+            'jenis' => 'required',
+            'bulan' => 'required',
+            'objek' => 'required_if:jenis,2',
+            'nomor' => ['required_if:jenis,1', 'string', 'max:26'],
             'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
         ];
 
         $messages = [
             'required' => ':attribute harus diisi',
+            'required_if' => ':attribute harus diisi',
             'max' => 'Jumlah karakter maksimal 26',
             'file.max' => 'Ukuran file maksimal 1MB',
             'mimes' => 'Format file harus pdf'
@@ -127,11 +206,29 @@ class TimNormaHasilController extends Controller
         $file->move($path, $fileName);
         $laporan_path = 'storage/tim/norma-hasil/' . $fileName;
 
-        $norma_hasil_acc = NormaHasilAccepted::where('id_norma_hasil', $validateData['nomor'])->first();
-        $norma_hasil_acc->update([
-            'laporan_path' => $laporan_path,
-            'status_verifikasi_arsiparis' => 'diperiksa'
-        ]);
+        if ($validateData['jenis'] == 1) {
+            $norma_hasil_acc = NormaHasilAccepted::where('id_norma_hasil', $validateData['nomor'])->first();
+            $norma_hasil_acc->update([
+                'laporan_path' => $laporan_path,
+                'status_verifikasi_arsiparis' => 'diperiksa'
+            ]);
+            NormaHasilTim::create([
+                'jenis' => $validateData['jenis'],
+                'tugas_id' => $validateData['tugas'],
+                'laporan_id' => $norma_hasil_acc->id
+            ]);
+        } else {
+            $dokumen = NormaHasilDokumen::create([
+                'laporan_pengawasan_id' => $validateData['bulan'],
+                'laporan_path' => $laporan_path,
+                'status_verifikasi_arsiparis' => 'diperiksa'
+            ]);
+            NormaHasilTim::create([
+                'jenis' => $validateData['jenis'],
+                'tugas_id' => $validateData['tugas'],
+                'dokumen_id' => $dokumen->id
+            ]);
+        }
 
         // return back with success message
         return redirect()->back()->with('success', 'Laporan Norma Hasil Berhasil Diunggah');
@@ -145,8 +242,9 @@ class TimNormaHasilController extends Controller
      * @param  \App\Models\NormaHasil  $normaHasil
      * @return \Illuminate\Http\Response
      */
-    public function show(NormaHasil $norma_hasil)
+    public function show($id)
     {
+        $norma_hasil = NormaHasilTim::findOrFail($id);
         return view('pegawai.tugas-tim.norma-hasil.show', [
             "usulan" => $norma_hasil,
             'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
@@ -186,8 +284,11 @@ class TimNormaHasilController extends Controller
 
         $request->validate($rules);
 
-        $laporan = NormaHasilAccepted::where('id_norma_hasil', $id)->first();
-        $laporan_path_old = $laporan->laporan_path;
+        $laporan = NormaHasilTim::findOrFail($id);
+
+        if ($request->jenis == 1) $laporan_path_old = $laporan->normaHasilAccepted->laporan_path;
+        else $laporan_path_old = $laporan->normaHasilDokumen->laporan_path;
+        
         File::delete(public_path().'/'.$laporan_path_old);
 
         $file = $request->file('nama');
@@ -196,11 +297,19 @@ class TimNormaHasilController extends Controller
         $file->move($path, $fileName);
         $laporan_path = 'storage/tim/norma-hasil/' . $fileName;
 
-        $laporan->update([
-            'laporan_path' => $laporan_path,
-            'status_verifikasi_arsiparis' => 'diperiksa',
-            'catatan_arsiparis' => NULL
-        ]);
+        if ($request->jenis == 1) {
+            $laporan->normaHasilAccepted->update([
+                'laporan_path' => $laporan_path,
+                'status_verifikasi_arsiparis' => 'diperiksa',
+                'catatan_arsiparis' => NULL
+            ]);
+        } else {
+            $laporan->normaHasilDokumen->update([
+                'laporan_path' => $laporan_path,
+                'status_verifikasi_arsiparis' => 'diperiksa',
+                'catatan_arsiparis' => NULL
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Laporan Norma Hasil Berhasil Diedit');
     }
@@ -214,5 +323,20 @@ class TimNormaHasilController extends Controller
     public function destroy(NormaHasil $normaHasil)
     {
         //
+    }
+
+    public function downloadUsulan($id)
+    {
+        $norma_hasil = NormaHasil::findOrFail($id);
+        $file = public_path($norma_hasil->document_path);
+        return response()->download($file);
+    }
+
+    public function viewLaporan($id, $jenis)
+    {
+        if ($jenis == 1) $norma_hasil = NormaHasilAccepted::findOrFail($id);
+        else $norma_hasil = NormaHasilDokumen::findOrFail($id);
+        $file = public_path($norma_hasil->laporan_path);
+        return response()->file($file);
     }
 }

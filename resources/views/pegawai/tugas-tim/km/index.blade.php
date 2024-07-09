@@ -92,6 +92,8 @@
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
                                             <th style="width: 20%">Tugas</th>
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Dokumen</th>
                                             <th>Verifikasi Arsiparis</th>
                                             <th>Catatan</th>
@@ -102,11 +104,21 @@
                                         @foreach ($dokumen as $km)
                                         <tr>
                                             <td></td>
-                                            <td>{{ $km->rencanaKerja->tugas }}</td>
+                                            <td>{{ $km->laporanObjekPengawasan->objekPengawasan->rencanaKerja->tugas }}</td>
+                                            <td>{{ $km->laporanObjekPengawasan->objekPengawasan->nama }}</td>
+                                            <td>{{ $months[$km->laporanObjekPengawasan->month] }}</td>
                                             <td>
-                                                <a target="blank" href="{{ asset($km->path) }}"
-                                                    class="badge btn-primary" download><i
-                                                        class="fa fa-download"></i></a>    
+                                                @if (file_exists($km->path))
+                                                    <a class="badge btn-primary"
+                                                    href="kendali-mutu/download/{{ $km->id }}" target="_blank">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                @else
+                                                    <a class="badge btn-primary"
+                                                    href="{{ $km->path }}" target="_blank">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td>
                                                 <span class="badge
@@ -173,119 +185,6 @@
     </script> --}}
 
 <!-- Page Specific JS File -->
-<script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
-<script>
-    $('#myeditform')[0].reset();
-    $('#formNHtim')[0].reset();
+<script src="{{ asset('js') }}/page/pegawai/kendali-mutu-tim.js"></script>
 
-    $('.edit-btn').on("click", function () {
-        $('#km_id').val($(this).attr('data-id'));
-    });
-
-    $('#edit-submit').on("click", function (e) {
-        e.preventDefault();
-        let data = new FormData($('#myeditform')[0]);
-        let token = $("meta[name='csrf-token']").attr("content");
-        let id = $('#km_id').val();
-        data.append('_token', token);
-        data.append('_method', "PUT");
-        
-        $("#error-edit-file").text("");
-        $("#error-edit-link").text("");
-
-        if ($('#edit-file').val() != '' && $('#edit-file')[0].files[0].size / 1024 > 5120)
-            $('#error-edit-file').text('Ukuran file maksimal 5MB');
-
-        $.ajax({
-            url: `/pegawai/tim/kendali-mutu/${id}`,
-            headers: { 'X-CSRF-Token': token },
-            contentType: false,
-            processData: false,
-            type: "POST",
-            cache: false,
-            data: data,
-            success: function (response) {
-                location.reload();
-            },
-            error: function (error) {
-                console.log(error);
-                let errorResponses = error.responseJSON;
-                let errors = Object.entries(errorResponses.errors);
-
-                errors.forEach(([key, value]) => {
-                    let errorMessage = document.getElementById(`error-${key}`);
-                    errorMessage.innerText = value.join('\n');
-                });
-            },
-        });
-    });
-
-    $(".link").on("input", function () {
-        if ($(this).val() != '') {
-            $(".file").prop("disabled", true);
-            $('.file').prop("required", false);
-            $(`.file`).removeClass('is-invalid');
-        }
-        else {
-            $(".file").prop("disabled", false);
-            $('.file').prop("required", true);
-        }
-    });
-
-    $(".file").on("change", function () {
-        if ($(this).val() != '') {
-            $(".link").prop("disabled", true);
-            $('.link').prop("required", false);
-            $(`.link`).removeClass('is-invalid');
-        } 
-        else {
-            $(".link").prop("disabled", false);
-            $('.link').prop("required", true);
-        }
-    });
-
-    $(".clear").on("click", function () {
-        $(`.file`).removeClass('is-invalid');
-        $('.file').val('');
-        $(".link").prop("disabled", false);
-        $('.link').prop("required", true);
-    });
-
-    $(".submit-btn").on("click", function (e) {
-        e.preventDefault();
-        let data = new FormData($('#formNHtim')[0]);
-        let token = $("meta[name='csrf-token']").attr("content");
-
-        data.append('_token', token);
-
-        // Reset invalid message while modal open
-        $("#error-tugas").text("");
-        $("#error-file").text("");
-        $("#error-link").text("");
-
-        if ($('#file').val() != '' && $('#file')[0].files[0].size / 1024 > 5120)
-            $('#error-file').text('Ukuran file maksimal 5MB');
-
-        $.ajax({
-            url: '/pegawai/tim/kendali-mutu',
-            contentType: false,
-            processData: false,
-            type: "POST",
-            cache: false,
-            data: data,
-            success: function (response) {
-                location.reload();
-            },
-            error: function (error) {
-                let errorResponses = error.responseJSON;
-                let errors = Object.entries(errorResponses.errors);
-
-                errors.forEach(([key, value]) => {
-                    let errorMessage = document.getElementById(`error-${key}`);
-                    errorMessage.innerText = `${value}`;
-                });
-            },
-        });
-    });
-</script>
 @endpush

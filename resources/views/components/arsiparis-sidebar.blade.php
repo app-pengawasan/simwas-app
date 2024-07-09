@@ -18,12 +18,12 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="{{ Request::is('arsiparis/surat-tugas*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('arsiparis/surat-tugas*') ? 'active' : '' }}">
                 <a class="nav-link" href="/arsiparis/surat-tugas">
                     <i class="fas fa-solid fa-envelope"></i>
                     <span>Surat Tugas</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="{{ Request::is('arsiparis/norma-hasil*') ? 'active' : '' }}">
                 <a class="nav-link" href="/arsiparis/norma-hasil">
                     <i class="fas fa-check"></i>

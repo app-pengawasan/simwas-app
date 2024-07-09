@@ -15,8 +15,8 @@ class KendaliMutuTim extends Model
     protected $guarded = ['id'];
     public $incrementing = false;
 
-    public function rencanaKerja()
+    public function laporanObjekPengawasan()
     {
-        return $this->belongsTo(RencanaKerja::class, 'tugas_id', 'id_rencanakerja');
+        return $this->belongsTo(laporanObjekPengawasan::class, 'laporan_pengawasan_id', 'id');
     }
 }
