@@ -39,7 +39,7 @@
                                             $currentYear = date('Y');
                                             $lastThreeYears = range($currentYear, $currentYear - 3);
                                             @endphp
-                        
+
                                             @foreach ($lastThreeYears as $year)
                                             <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
                                             </option>
@@ -114,7 +114,7 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
-    
+
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>

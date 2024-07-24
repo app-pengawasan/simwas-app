@@ -222,10 +222,7 @@ $("#btn-tambah-tugas").on("click", function (e) {
     }
     let id_proyek = $("#create-proyek").val();
 
-    if (
-        tugas == "" ||
-        hasilkerja == ""
-    ) {
+    if (tugas == "" || hasilkerja == "") {
         return;
     }
     Swal.fire({
@@ -330,10 +327,7 @@ $("#btn-edit-tugas").on("click", function (e) {
     let melaksanakan = $("#edit-melaksanakan").val();
     let capaian = $("#edit-capaian").val();
 
-    if (
-        tugas == "" ||
-        hasilkerja == ""
-    ) {
+    if (tugas == "" || hasilkerja == "") {
         return;
     }
     Swal.fire({
@@ -499,6 +493,16 @@ $(".delete-btn").on("click", function (e) {
                         timer: 3000,
                     });
                     location.reload();
+                },
+                error: function (error) {
+                    Swal.fire({
+                        type: "error",
+                        icon: "error",
+                        title: "Gagal!",
+                        text: "Data gagal dihapus karena masih terdapat data yang terkait",
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
                 },
             });
         }
@@ -732,7 +736,7 @@ $("#btn-edit-proyek").on("click", function () {
     let token = $("meta[name='csrf-token']").attr("content");
     $("#error-edit-nama_proyek").text("");
     $("#error-edit-rk_anggota").text("");
-    if (nama_proyek == "" ) {
+    if (nama_proyek == "") {
         if (nama_proyek == "") {
             $("#error-edit-nama_proyek").text("Nama Proyek harus diisi");
         }
