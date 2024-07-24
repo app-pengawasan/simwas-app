@@ -11,6 +11,7 @@ use App\Models\MasterTujuan;
 use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
+use App\Models\PelaksanaTugas;
 use App\Models\MasterHasilKerja;
 use App\Http\Controllers\Controller;
 use App\Models\OperatorRencanaKinerja;
@@ -279,6 +280,13 @@ class KetuaTimRencanaKerjaController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        $pelaksana = PelaksanaTugas::where('id_rencanakerja', $id)->get();
+        if (count($pelaksana) > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tugas Tim Kerja tidak bisa dihapus karena sudah memiliki pelaksana',
+            ], 409);
+        }
         RencanaKerja::where('id_rencanakerja', $id)->delete();
 
         $request->session()->put('status', 'Berhasil menghapus Tugas Tim Kerja.');

@@ -47,7 +47,7 @@ class AdminKinerjaTimController extends Controller
         } else {
             $year = $year;
         }
-        
+
         $data_tim = [];
         $timkerja = TimKerja::where('tahun', $year)->get();
 
@@ -56,20 +56,27 @@ class AdminKinerjaTimController extends Controller
             $data_tim[$tim->id_timkerja]['nama'] = $tim->nama;
             $data_tim[$tim->id_timkerja]['pjk'] = $tim->ketua->name;
             //data tiap bulan
-            for ($i=1; $i < 13; $i++) { 
+            for ($i=1; $i < 13; $i++) {
                 $laporanobjek = LaporanObjekPengawasan::
                                 whereRelation('objekPengawasan.rencanakerja.proyek.timkerja', function (Builder $query) use ($tim) {
                                     $query->where('id_timkerja', $tim->id_timkerja);
-                                })->where('month', $i)->where('status', 1)->get(); 
+                                })->where('month', $i)->where('status', 1)->get();
 
                 //jumlah tugas
                 $jumlah_tugas = $laporanobjek->countBy('objekPengawasan.id_rencanakerja')->count();
-                if ($jumlah_tugas == 0) continue;
-                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = $jumlah_tugas; 
+                if ($jumlah_tugas == 0) {
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_st'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = '-';
+                    continue;
+                }
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = $jumlah_tugas;
 
                 $surat_tugas = UsulanSuratSrikandi::where('status', 'disetujui')
                                 ->whereIn('rencana_kerja_id', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'))
-                                ->get(); 
+                                ->get();
                 //jumlah surat tugas yang disetujui
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_st'] = $surat_tugas->count();
 
@@ -98,6 +105,7 @@ class AdminKinerjaTimController extends Controller
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = $kendali_mutu->count();
             }
         }
+        // dd($data_tim);
 
         return view('admin.kinerja-tim.index',[
             'type_menu'     => 'kinerja-tim',
@@ -118,10 +126,10 @@ class AdminKinerjaTimController extends Controller
         $laporanObjek = LaporanObjekPengawasan::where('month', $bulan)->where('status', 1)
                         ->whereRelation('objekPengawasan.rencanakerja.proyek.timkerja', function (Builder $query) use ($id) {
                             $query->where('id_timkerja', $id);
-                        })->get(); 
-        
+                        })->get();
+
         $surat_tugas = UsulanSuratSrikandi::where('status', 'disetujui')
-                        ->whereIn('rencana_kerja_id', $laporanObjek->pluck('objekPengawasan.id_rencanakerja'))   
+                        ->whereIn('rencana_kerja_id', $laporanObjek->pluck('objekPengawasan.id_rencanakerja'))
                         ->get();
         $surat_tugas_arr = [];
         foreach ($surat_tugas as $surat) {
@@ -148,7 +156,7 @@ class AdminKinerjaTimController extends Controller
                 $norma_hasil_arr[$bulan_id] = $dokumen->normaHasilDokumen;
             }
             $norma_hasil_arr[$bulan_id]['jenis'] = $dokumen->jenis;
-        } 
+        }
 
         $kendali_mutu = KendaliMutuTim::whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'))
                         ->where('status', 'disetujui')->get();
@@ -156,7 +164,7 @@ class AdminKinerjaTimController extends Controller
         foreach ($kendali_mutu as $dokumen) {
             $kendali_mutu_arr[$dokumen->laporan_pengawasan_id] = $dokumen;
         }
-        
+
         return view('admin.kinerja-tim.show', [
             'type_menu' => 'kinerja-tim',
             'laporanObjek' => $laporanObjek,
