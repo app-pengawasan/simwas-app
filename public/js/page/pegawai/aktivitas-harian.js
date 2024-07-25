@@ -50,15 +50,6 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 if (eDate[4] === 0) return moment(eDate).format('ha');
                 else return moment(eDate).format('h.ma')
             },
-            // selectable: true,
-            // select: function(selectionInfo) {
-            //     let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
-            //     let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
-            //     let selisih = Date.parse(endDate) - Date.parse(startDate);
-            //     //jika hanya memilih sehari pindah ke view day, jika memilih berhari-hari pindah ke view week
-            //     if (selisih == 86400000) calendar.changeView('timeGridDay', startDate); 
-            //     else calendar.changeView('timeGridWeek', startDate);
-            // }
         },
         timeGrid: {
             eventTimeFormat: {
@@ -72,8 +63,6 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 minute: '2-digit'
             },
             eventDidMount: function(info) {
-                document.querySelector(".fc-excel-button").style.display = "inline-block";
-                // alert(JSON)
                 info.el.querySelector('.fc-list-event-title a').innerHTML 
                     += ` <br><table class="table-borderless"><tbody>
                         <tr><td class="pl-0"><strong>Aktivitas: </strong></td> 
@@ -82,40 +71,28 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             },
         }
     },
+    viewDidMount: function (arg) {
+        if (arg.view.type == "listMonth") {
+            document.querySelector(".fc-excel-button").style.display = "inline-block";
+        }
+        else {
+            document.querySelector(".fc-excel-button").style.display = "none";
+        }
+    },
     eventDidMount: function(info) {
-        document.querySelector(".fc-excel-button").style.display = "none";
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        // let status; let tag;
-        // $.get(document.location.origin + '/document/realisasi/' + info.event.extendedProps.hasil_kerja)
-        //     .done(function() { 
-        //         tag = '<a href="' + this.url + '" target="_blank">';
-        //         desc();
-        //     }).fail(function() { 
-        //         tag = '<a href ="' + info.event.extendedProps.hasil_kerja + '" target="_blank">';
-        //         desc();
-        //     }) 
-        // let desc = () => {
-        //     if (info.event.extendedProps.status == 1) status = tag + '<span class="badge badge-success">Selesai</span></a>';
-        //     else status = tag + '<span class="badge badge-primary">Belum Selesai</span></a>';
         $(info.el).popover({ 
             sanitize: false,
             title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
                 '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
             trigger: 'click',
             placement: 'right',
-            // template: '<div class="popover bs-popover-top" role="tooltip" x-placement="top"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
             html: true,
             content: '<h3>' + info.event.title + '</h3>' + 
                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
                     + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
-                    // + '<table><tbody>'
-                    // + '<tr><td>Tim</td><td> : ' + info.event.extendedProps.tim + '</td></tr>'
-                    // + '<tr><td>Proyek</td><td> : ' + info.event.extendedProps.proyek + '</td></tr>'
-                    // + '<tr><td>Status Realisasi</td><td> : ' + status + '</td></tr>'
-                    // + '<tr><td>Catatan</td><td> : ' + (info.event.extendedProps.catatan || '-') + '</td></tr>'
-                    // + '</tbody></table>',
         });
         // }
     },
@@ -150,7 +127,6 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     },
     datesSet: function (dateInfo) {
         // tampilan hover sel untuk monthview
-        // .fc-dayGridMonth-view .fc-daygrid-day:not(.fc-day-disabled), 
         $('.fc-dayGridMonth-view .fc-daygrid-day-frame').on({
             mouseenter: function() {
                 $(this).append("<div class='hovermonth'>+</div>");
