@@ -58,6 +58,38 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="filter-month" style="margin-bottom: 0;">Jenis Surat</label>
+                                    <select name="filter-surat" id="filter-surat" class="form-control select2">
+                                        <option value="Semua">Semua</option>
+                                        @foreach ( $jenisNaskahDinasPenugasan as $key => $jenis)
+                                        <option value="{{ $jenis }}">
+                                            {{ $jenis }}
+                                        </option>
+                                        @endforeach
+                                        @foreach ( $jenisNaskahDinasKorespondensi as $key => $jenis)
+                                        <option value="{{ $jenis }}">
+                                            {{ $jenis }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                {{-- filter kode klasifikasi arsip --}}
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label for="filter-kka" style="margin-bottom: 0;">Kode Klasifikasi Arsip</label>
+                                    <select name="filter-kka" id="filter-kka" class="form-control select2">
+                                        <option disabled value="">Pilih Kode Klasifikasi Arsip</option>
+                                        <option value="Semua">Semua</option>
+                                        @foreach ($kodeKlasifikasiArsip as $kodeKlasifikasiArsip)
+                                        <option
+                                            {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip->id ? 'selected' : '' }}
+                                            value="{{ $kodeKlasifikasiArsip->kode }}">
+                                            {{ $kodeKlasifikasiArsip->kode }} {{ $kodeKlasifikasiArsip->uraian }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <form id="yearForm" action="" method="GET">
                                     @csrf
                                     <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
@@ -83,10 +115,11 @@
                                         <th style="width: 10px;">No</th>
                                         <th>Nomor Surat</th>
                                         <th>Nama Pengaju</th>
-                                        <th>Tanggal Persetujuan Srikandi</th>
+                                        <th>Tanggal</th>
                                         <th>Unit Kerja</th>
-                                        <th>Link Srikandi</th>
-                                        <th>Aksi</th>
+                                        <th style="width: 10px;">Kode Klasifikasi Arsip</th>
+                                        <th>Jenis Surat</th>
+                                        <th style="width: 50px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,31 +133,24 @@
                                         <td class="text-capitalize">
                                             <div
                                                 class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
-                                                
+
                                                 {{  $usulan->usulanSuratSrikandi->user->name }}
                                             </div>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($usulan->tanggal_persetujuan_srikandi)->format('d F Y') }}
                                         </td>
                                         <td>{{ $usulan->kepala_unit_penandatangan_srikandi }}</td>
-                                        <td>
-                                            <a target="_blank" class="badge badge-primary"
-                                                href="{{ $usulan->link_srikandi }}">
-                                                <i class="fa-solid fa-link mr-1"></i>
-                                                Buka Link Srikandi</a>
-                                        </td>
+                                        <td>{{ $usulan->kodeKlasifikasiArsip->kode ?? '' }}</td>
+                                        <td>{{ $usulan->usulanSuratSrikandi->jenis_naskah_dinas_penugasan ? $jenisNaskahDinasPenugasan[$usulan->usulanSuratSrikandi->jenis_naskah_dinas_penugasan] : $jenisNaskahDinasKorespondensi[$usulan->usulanSuratSrikandi->jenis_naskah_dinas_korespondensi] }}
                                         <td>
                                             <a href="{{ route('sekretaris.surat-srikandi.show', $usulan->id_usulan_surat_srikandi) }}"
                                                 class="btn btn-primary btn-sm">
-                                                <i class="fas fa-eye
-                                                "></i>
-                                                Detail
+                                                <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="{{ route('sekretaris.surat-srikandi.download', $usulan->id_usulan_surat_srikandi) }}"
                                                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                                                 data-placement="top" title="Download Surat Srikandi">
-                                                <i class="fa-solid fa-file-pdf"></i>
-                                                Download
+                                                <i class="fas fa-file-pdf"></i>
                                         </td>
                                         @endforeach
                                 </tbody>
@@ -218,7 +244,7 @@
 
     $(".dataTables_filter input").attr(
     "placeholder",
-    "Cari Rencana Kerja..."
+    "Cari Arsip..."
     );
     // add padding x 10px to .dataTables_filter input
     $(".dataTables_filter input").css("padding", "0 10px");
@@ -226,20 +252,31 @@
 
     function filterTable() {
     let filterUnitKerja = $("#filter-unit_kerja").val();
+    let filterSurat = $("#filter-surat").val();
+    let filterKka = $("#filter-kka").val();
+
+    if (filterSurat === "Semua") {
+    filterSurat = "";
+    }
+    if (filterKka === "Semua") {
+    filterKka = "";
+    }
 
 
     if (filterUnitKerja === "Semua") {
     filterUnitKerja = "";
     }
-    if (filterUnitKerja != "") {
-    table.column(4).search("^" + filterUnitKerja + "$", true, false).draw();
-    }
-    else {
+
+
     table
     .column(4)
     .search(filterUnitKerja, true, false)
+    .column(6)
+    .search(filterSurat, true, false)
+    .column(5)
+    .search(filterKka, true, false)
     .draw();
-    }
+
 
     // reset numbering in table first column
     table
@@ -250,7 +287,8 @@
     });
     }
 
-    $("#filter-unit_kerja").on("change", function () {
+    $("#filter-unit_kerja, #filter-surat, #filter-kka"
+    ).on("change", function () {
     filterTable();
     });
 

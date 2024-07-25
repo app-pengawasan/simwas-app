@@ -110,8 +110,7 @@ class NormaHasilController extends Controller
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
                             $query->whereIn('status', [1, 2]);
                         })->whereHas('pelaksana', function ($query) {
-                            $query->where('id_pegawai', auth()->user()->id)
-                                ->whereIn('pt_jabatan', [2, 3]);
+                            $query->where('id_pegawai', auth()->user()->id);
                         })->get();
         $masterLaporan = MasterLaporan::where('is_aktif', 1)->get();
         // $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();

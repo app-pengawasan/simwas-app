@@ -163,6 +163,7 @@ class SuratSrikandiController extends Controller
 
         $year = $year->sortByDesc('year');
 
+
         return view('sekretaris.surat-srikandi.index', [
             'type_menu' => 'surat-srikandi',
             'usulanSuratSrikandi' => $usulanSuratSrikandi,
@@ -467,17 +468,21 @@ if ($request->hasFile('upload_pdf_document')) {
         }
 
 
+                $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();
 
-        foreach ($suratSrikandi as $surat) {
-            $surat->tanggal = date('d F Y', strtotime($surat->updated_at));
-        }
-        $year = SuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->orderBy('year', 'desc')->get();
+                foreach ($suratSrikandi as $surat) {
+                    $surat->tanggal = date('d F Y', strtotime($surat->updated_at));
+                }
+                $year = SuratSrikandi::selectRaw('YEAR(created_at) year')->distinct()->orderBy('year', 'desc')->get();
 
         return view('sekretaris.arsip.index', [
+            'kodeKlasifikasiArsip' => $kodeKlasifikasiArsip,
             'type_menu' => 'surat-srikandi',
             'suratSrikandi' => $suratSrikandi,
             'pejabatPenandatangan' => $this->pejabatPenandaTangan,
             'year' => $year,
+            'jenisNaskahDinasKorespondensi' => $this->jenisNaskahDinasKorespondensi,
+            'jenisNaskahDinasPenugasan' => $this->jenisNaskahDinasPenugasan,
         ]);
     }
 

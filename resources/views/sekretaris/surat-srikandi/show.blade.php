@@ -33,12 +33,10 @@
             <div class=" col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         @if ($usulanSuratSrikandi->status == 'disetujui' || $usulanSuratSrikandi->status ==
                         'dibatalkan')
-
                         @include('components.pegawai.surat')
                         @endif
                         @include('components.pegawai.usulan-surat')
@@ -166,7 +164,8 @@
                         {{ $errors->has('nomor_surat_srikandi') ? 'has-error' : '' }}">
                         <label for="nomor_surat_srikandi">Nomor Surat Srikandi</label>
                         <input required type="text" class="form-control" name="nomor_surat_srikandi"
-                            id="nomor_surat_srikandi" value="{{ old('nomor_surat_srikandi') }}">
+                            id="nomor_surat_srikandi" value="{{ old('nomor_surat_srikandi') }}"
+                            placeholder="Masukkan Nomor Surat Srikandi">
                         @if ($errors->has('nomor_surat_srikandi'))
                         <span class="help-block
                             text-danger">{{ $errors->first('nomor_surat_srikandi') }}</span>
@@ -197,7 +196,7 @@
                             @foreach ($kodeKlasifikasiArsip as $kodeKlasifikasiArsip)
                             <option {{ old('kodeKlasifikasiArsip') == $kodeKlasifikasiArsip->id ? 'selected' : '' }}
                                 value="{{ $kodeKlasifikasiArsip->id }}">
-                                {{ $kodeKlasifikasiArsip->nama }}{{ $kodeKlasifikasiArsip->uraian }}</option>
+                                {{ $kodeKlasifikasiArsip->kode }} {{ $kodeKlasifikasiArsip->uraian }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">Kode Klasifikasi Arsip Harus Diisi</div>
@@ -231,7 +230,7 @@
                         {{ $errors->has('link_srikandi') ? 'has-error' : '' }}">
                         <label for="link_srikandi">Link Srikandi</label>
                         <input required type="url" class="form-control" name="link_srikandi" id="link_srikandi"
-                            value="{{ old('link_srikandi') }}">
+                            value="{{ old('link_srikandi') }}" placeholder="Masukkan Link/URL Surat Srikandi">
                         @if ($errors->has('link_srikandi'))
                         <span class="help-block
                             text-danger">{{ $errors->first('link_srikandi') }}</span>
