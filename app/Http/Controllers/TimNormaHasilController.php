@@ -141,7 +141,7 @@ class TimNormaHasilController extends Controller
             $cekBulan = NormaHasilTim::
                         whereRelation('normaHasilDokumen', function (Builder $query) use ($un) {
                             $query->where('laporan_pengawasan_id', $un->laporan_pengawasan_id);
-                        })->get();
+                        })->get()->isNotEmpty();
             if ($cekBulan) $draf->forget($key);
         }
 
