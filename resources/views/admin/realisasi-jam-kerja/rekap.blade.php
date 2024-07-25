@@ -70,6 +70,7 @@
                                             <tr>
                                                 <th rowspan="2" class="align-middle">No.</th>
                                                 <th rowspan="2" class="align-middle">Pegawai</th>
+                                                <th rowspan="2" class="align-middle">Detail</th>
                                                 <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
                                             </tr>
                                             <tr>
@@ -89,10 +90,17 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($jam_kerja as $jam)
+                                            @foreach ($jam_kerja as $key => $jam)
                                             <tr>
                                                 <td></td>
                                                 <td>{{ $jam[0]->name }}</td>
+                                                <td>
+                                                    <a class="btn btn-primary detail"
+                                                        href="/admin/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                        style="width: 42px">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
                                                 @isset($jam[1]) 
                                                     <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
                                                     <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
@@ -238,6 +246,10 @@
             $('#yearUnit').val(year);
             $('#unitForm').find('[name="_token"]').remove();
             $('#unitForm').submit();
+        });
+
+        $(".detail").attr('href', function(_, el){
+            return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
     </script>
 @endpush

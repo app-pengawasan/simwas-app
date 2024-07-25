@@ -33,7 +33,7 @@
                             <div class="card-body">
                                 <div class="row mb-4 pb-0">
                                     <div class="col-md-4">
-                                        <a class="btn btn-primary" href="/inspektur/rencana-jam-kerja/pool">
+                                        <a class="btn btn-primary" href="{{ url()->previous() }}">
                                             <i class="fas fa-chevron-circle-left"></i> Kembali
                                         </a>
                                     </div>
