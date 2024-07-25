@@ -65,24 +65,26 @@
                                     <tbody>
                                         @foreach ($data_tim as $id => $tim)
                                             @foreach ($tim['data_bulan'] as $bulan => $data)
-                                                <tr class="table-bordered">
-                                                    <td></td>
-                                                    <td>{{ $tim['nama'] }}</td>
-                                                    <td>{{ $tim['pjk'] }}</td>
-                                                    <td>{{ $months[$bulan] }}</td>
-                                                    <td>{{ $data['jumlah_tugas'] }}</td>
-                                                    <td>{{ $data['jumlah_st'] }}</td>
-                                                    <td>{{ $data['target_nh'] }}</td>
-                                                    <td>{{ $data['jumlah_nh'] }}</td>
-                                                    <td>{{ $data['jumlah_km'] }}</td>
-                                                    <td>
-                                                        <a class="btn btn-primary btn-sm" id="detail"
-                                                            href="/admin/kinerja-tim/{{ $id }}/{{ $bulan }}"
-                                                            style="width: 42px">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                @if ($data['jumlah_tugas'] != '-')
+                                                    <tr class="table-bordered">
+                                                        <td></td>
+                                                        <td>{{ $tim['nama'] }}</td>
+                                                        <td>{{ $tim['pjk'] }}</td>
+                                                        <td>{{ $months[$bulan] }}</td>
+                                                        <td>{{ $data['jumlah_tugas'] }}</td>
+                                                        <td>{{ $data['jumlah_st'] }}</td>
+                                                        <td>{{ $data['target_nh'] }}</td>
+                                                        <td>{{ $data['jumlah_nh'] }}</td>
+                                                        <td>{{ $data['jumlah_km'] }}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary btn-sm" id="detail"
+                                                                href="/admin/kinerja-tim/{{ $id }}/{{ $bulan }}"
+                                                                style="width: 42px">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
                                         @endforeach
                                     </tbody>
