@@ -83,7 +83,7 @@ class TimNormaHasilController extends Controller
 
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->whereIn('status', [1,2]);
+                        $query->whereIn('status', [0,1,2]);
                     })->get();
 
         $draf = NormaHasil::latest()->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
@@ -102,14 +102,14 @@ class TimNormaHasilController extends Controller
 
         // menghapus tugas yang sudah diunggah atau belum ada nomor
         foreach ($tugasSaya as $key => $ts) {
-            if (!$draf->pluck('tugas_id')->contains($ts->id_rencanakerja)) 
+            if (!$draf->pluck('tugas_id')->contains($ts->id_rencanakerja))
                 $tugasSaya->forget($key);
         }
 
         $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai){
             $query->where('id', $id_pegawai);
         })->get();
-    
+
         $bulanPelaporan = LaporanObjekPengawasan::whereIn('id_objek_pengawasan', $oPengawasan->pluck('id_opengawasan'))
                     ->where('status', 1)->get();
 
@@ -126,13 +126,13 @@ class TimNormaHasilController extends Controller
 
         //menghapus objek yang sudah terisi semua norma hasilnya
         foreach ($oPengawasan as $key => $objek) {
-            if (!$bulanPelaporan->pluck('id_objek_pengawasan')->contains($objek->id_opengawasan)) 
+            if (!$bulanPelaporan->pluck('id_objek_pengawasan')->contains($objek->id_opengawasan))
                 $oPengawasan->forget($key);
         }
 
         //menghapus tugas yang sudah terisi semua norma hasilnya
         foreach ($tugasSaya as $key => $ts) {
-            if (!$oPengawasan->pluck('id_rencanakerja')->contains($ts->id_rencanakerja)) 
+            if (!$oPengawasan->pluck('id_rencanakerja')->contains($ts->id_rencanakerja))
                 $tugasSaya->forget($key);
         }
 
@@ -288,7 +288,7 @@ class TimNormaHasilController extends Controller
 
         if ($request->jenis == 1) $laporan_path_old = $laporan->normaHasilAccepted->laporan_path;
         else $laporan_path_old = $laporan->normaHasilDokumen->laporan_path;
-        
+
         File::delete(public_path().'/'.$laporan_path_old);
 
         $file = $request->file('nama');

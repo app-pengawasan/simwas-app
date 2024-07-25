@@ -19,4 +19,8 @@ class NormaHasilDokumen extends Model
     {
         return $this->belongsTo(LaporanObjekPengawasan::class, 'laporan_pengawasan_id', 'id');
     }
+    public function normaHasilTim()
+    {
+        return $this->belongsTo(NormaHasilTim::class, 'id', 'dokumen_id' );
+    }
 }

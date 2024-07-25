@@ -20,4 +20,8 @@ class NormaHasilAccepted extends Model
     {
         return $this->belongsTo(NormaHasil::class, 'id_norma_hasil', 'id');
     }
+
+    public function normaHasilTim(){
+        return $this->hasOne(NormaHasilTim::class, 'laporan_id', 'id');
+    }
 }

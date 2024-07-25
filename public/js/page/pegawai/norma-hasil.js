@@ -103,8 +103,6 @@ $("#rencana_id").on("change", function () {
                             "</option>"
                     );
                 });
-
-
             } else {
                 $("#objek_kegiatan").prop("disabled", true);
             }
@@ -128,7 +126,7 @@ $("#objek_kegiatan").on("change", function () {
         10: "Oktober",
         11: "November",
         12: "Desember",
-    }
+    };
     let id_opengawasan = $(this).find(":selected").data("pengawasan");
     $.ajax({
         url: `/objek-pengawasan/laporan/${id_opengawasan}`,
@@ -140,7 +138,9 @@ $("#objek_kegiatan").on("change", function () {
             // if data not 0
             $("#bulan_pelaporan").empty();
             if (data.data.length > 0) {
-                $("#nama_dokumen").val(data.data[0].objek_pengawasan.nama_laporan);
+                $("#nama_dokumen").val(
+                    data.data[0].objek_pengawasan.nama_laporan
+                );
 
                 $("#bulan_pelaporan").prop("disabled", false);
                 // fill option with data.data
@@ -159,7 +159,6 @@ $("#objek_kegiatan").on("change", function () {
                             "</option>"
                     );
                 });
-
             } else {
                 $("#objek_kegiatan_detail").empty();
             }
@@ -180,23 +179,13 @@ $("#objek_kegiatan").select2({
 });
 
 function filterTable() {
-    let filterSurat = $("#filter-surat").val();
     let filterStatus = $("#filter-status").val();
-    console.log(filterYear, filterSurat, filterStatus);
 
-    if (filterSurat == "Semua") {
-        filterSurat = "";
-    }
     if (filterStatus == "Semua") {
         filterStatus = "";
     }
 
-    table
-        .column(1)
-        .search(filterSurat, true, false)
-        .column(4)
-        .search(filterStatus, true, false)
-        .draw();
+    table.column(4).search(filterStatus, true, false).draw();
 
     // reset numbering in table first column
     table

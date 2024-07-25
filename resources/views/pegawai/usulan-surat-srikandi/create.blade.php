@@ -129,57 +129,6 @@
                                             </div>
                                         </div>
 
-                                        <div id="kegiatanWrapper">
-                                            <div class="form-group">
-                                                <label for="kegiatan">Kegiatan</label>
-                                                <select required
-                                                    class="form-control select2 @error('kegiatan') is-invalid @enderror"
-                                                    id="kegiatan" name="kegiatan">
-                                                    <option disabled selected value="">Pilih Kegiatan</option>
-                                                    @foreach ($kegiatan as $key => $kegiatan)
-                                                    <option {{ old('kegiatan') == $key ? 'selected' : '' }}
-                                                        value="{{ $key }}">
-                                                        {{ $kegiatan }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div class="invalid-feedback">Kegiatan Harus Diisi</div>
-                                            </div>
-                                        </div>
-
-                                        <div id="kegiatanPengawasanWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="kegiatanPengawasan">Kegiatan Pengawasan</label>
-                                                <select required
-                                                    class="form-control select2 @error('kegiatanPengawasan') is-invalid @enderror"
-                                                    id="kegiatanPengawasan" name="kegiatanPengawasan">
-                                                    <option disabled selected value="">Pilih Kegiatan Pengawasan
-                                                    </option>
-                                                    @foreach ($kegiatanPengawasan as $key => $kegiatanPengawasan)
-                                                    <option {{ old('kegiatanPengawasan') == $key ? 'selected' : '' }}
-                                                        value="{{ $key }}">
-                                                        {{ $kegiatanPengawasan }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div id="pendukungPengawasanWrapper" class="d-none">
-                                            <div class="form-group">
-                                                <label for="pendukungPengawasan">Pendukung Pengawasan</label>
-                                                <select required
-                                                    class="form-control select2 @error('pendukungPengawasan') is-invalid @enderror"
-                                                    id="pendukungPengawasan" name="pendukungPengawasan">
-                                                    <option disabled selected value="">Pilih Pendukung Pengawasan
-                                                    </option>
-                                                    @foreach ($pendukungPengawasan as $key => $pendukungPengawasan)
-                                                    <option {{ old('pendukungPengawasan') == $key ? 'selected' : '' }}
-                                                        value="{{ $key }}">
-                                                        {{ $pendukungPengawasan }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <label for="derajatKeamanan">Derajat Keamanan</label>
                                             <select required

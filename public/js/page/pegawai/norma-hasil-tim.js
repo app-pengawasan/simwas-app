@@ -28,7 +28,7 @@ $(function () {
         .container()
         .appendTo("#table-pengelolaan-dokumen-pegawai_wrapper .col-md-6:eq(0)");
 });
-    
+
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
     $("#bulan").prop("disabled", false); //enable pilihan bulan
@@ -38,7 +38,7 @@ $(".submit-btn").on("click", function (e) {
     $("#error-tugas").text("");
     $("#error-bulan").text("");
     $("#error-objek").text("");
-    
+
     let data = new FormData($('#formNHtim')[0]);
     let token = $("meta[name='csrf-token']").attr("content");
     data.append('_token', token);

@@ -98,97 +98,98 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped display responsive"
-                                        id="table-norma-hasil">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 10px; text-align:center">No</th>
-                                                <th>Nama Pengusul</th>
-                                                <th style="width: 180px;">Nomor Surat</th>
-                                                <th style="width: 170px;">Jenis Norma Hasil</th>
-                                                <th style="width: 120px;">Tanggal Usulan</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($usulan as $un)
-                                            <tr>
-                                                <td style="text-align:center">
-                                                    {{ $loop->iteration }}
-                                                </td>
-                                                <td class="capitalize">
-                                                    <div
-                                                        class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped display responsive"
+                                    id="table-norma-hasil">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px; text-align:center">No</th>
+                                            <th>Nama Pengusul</th>
+                                            <th style="width: 180px;">Nomor Surat</th>
+                                            <th style="width: 170px;">Jenis Norma Hasil</th>
+                                            <th style="width: 120px;">Tanggal Usulan</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($usulan as $un)
+                                        <tr>
+                                            <td style="text-align:center">
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td class="capitalize">
+                                                <div
+                                                    class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
 
-                                                        {{  $un->user->name }}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    @if ($un->status_norma_hasil == 'disetujui')
-                                                    <span class="badge badge-primary">
-                                                        R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                    </span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $un->masterLaporan->nama ?? "" }}</td>
-                                                <td>{{ date('d F Y', strtotime($un->tanggal)) }}</td>
-                                                @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil
-                                                !=
-                                                'ditolak')
-                                                <td>
-                                                    @if ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                    'belum unggah')
-                                                    <span class="badge badge-dark">Menunggu Upload Laporan</span>
-                                                    @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                    'diperiksa')
-                                                    <span class="badge badge-dark"><i
-                                                            class="fa-regular fa-clock mr-1"></i>Diperiksa
-                                                        Arsiparis</span>
-                                                    @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                    'disetujui')
-                                                    <span class="badge badge-success"><i
-                                                            class="fa-regular fa-circle-check mr-1"></i>Disetujui
-                                                        Arsiparis</span>
-                                                    @endif
-                                                </td>
-                                                @else
-                                                <td>
-                                                    <span class="badge
+                                                    {{  $un->user->name }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if ($un->status_norma_hasil == 'disetujui')
+                                                <span class="badge badge-primary">
+                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                </span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $un->masterLaporan->nama ?? "" }}</td>
+                                            <td>{{ date('d F Y', strtotime($un->tanggal)) }}</td>
+                                            @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil
+                                            !=
+                                            'ditolak')
+                                            <td>
+                                                @if ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'belum unggah')
+                                                <span class="badge badge-dark">Menunggu Upload Laporan</span>
+                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'diperiksa')
+                                                <span class="badge badge-dark"><i
+                                                        class="fa-regular fa-clock mr-1"></i>Diperiksa
+                                                    Arsiparis</span>
+                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                                'disetujui')
+                                                <span class="badge badge-success"><i
+                                                        class="fa-regular fa-circle-check mr-1"></i>Disetujui
+                                                    Arsiparis</span>
+                                                @endif
+                                            </td>
+                                            @else
+                                            <td>
+                                                <span class="badge
                                                     {{ $un->status_norma_hasil == 'diperiksa' ? 'badge-warning' : '' }}
                                                     {{ $un->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
                                                     {{ $un->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
                                                         text-capitalize">
-                                                        @if ($un->status_norma_hasil == 'diperiksa')<i
-                                                            class="fa-regular fa-clock mr-1"></i>
-                                                        @elseif ($un->status_norma_hasil == 'ditolak')<i
-                                                            class="fa-solid fa-triangle-exclamation mr-1"></i>
-                                                        @elseif ($un->status_norma_hasil == 'disetujui')<i
-                                                            class="fa-regular fa-circle-check mr-1"></i>
-                                                        @endif
+                                                    @if ($un->status_norma_hasil == 'diperiksa')<i
+                                                        class="fa-regular fa-clock mr-1"></i>
+                                                    @elseif ($un->status_norma_hasil == 'ditolak')<i
+                                                        class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                                    @elseif ($un->status_norma_hasil == 'disetujui')<i
+                                                        class="fa-regular fa-circle-check mr-1"></i>
+                                                    @endif
 
-                                                        {{$un->status_norma_hasil }}
-                                                    </span>
-                                                </td>
-                                                @endif
-                                                <td>
-                                                    <a href="{{ route('ketua-tim.usulan-norma-hasil.show', $un->id) }}"
-                                                        class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-eye
+                                                    {{$un->status_norma_hasil }}
+                                                </span>
+                                            </td>
+                                            @endif
+                                            <td>
+                                                <a href="{{ route('ketua-tim.usulan-norma-hasil.show', $un->id) }}"
+                                                    class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-eye
                                                     "></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 </div>
 @endsection

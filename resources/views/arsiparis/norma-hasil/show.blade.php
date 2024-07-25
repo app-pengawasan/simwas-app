@@ -80,7 +80,8 @@
                                         </div>
 
                                         @php
-                                            $status = $usulan->normaHasilAccepted->status_verifikasi_arsiparis ?? $usulan->normaHasilDokumen->status_verifikasi_arsiparis;
+                                        $status = $usulan->normaHasilAccepted->status_verifikasi_arsiparis ??
+                                        $usulan->normaHasilDokumen->status_verifikasi_arsiparis;
                                         @endphp
 
                                         @include('components.timeline.timeline-nh')
@@ -98,52 +99,55 @@
                                                 <th>:</th>
                                                 <td>
                                                     @if ($usulan->jenis == 1)
-                                                        <span class="badge badge-primary">
-                                                            R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $usulan->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                        </span>
+                                                    <span class="badge badge-primary">
+                                                        R-{{ $usulan->normaHasilAccepted->nomor_norma_hasil}}/{{ $usulan->normaHasilAccepted->unit_kerja}}/{{ $usulan->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $usulan->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($usulan->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    </span>
                                                     @else
-                                                        <span class="badge badge-primary">
-                                                            Dokumen
-                                                        </span>
+                                                    <span class="badge badge-primary">
+                                                        Dokumen
+                                                    </span>
                                                     @endif
                                                 </td>
                                             </tr>
                                             {{-- @endif --}}
 
                                             @if ($usulan->jenis == 1)
-                                                <tr>
-                                                    <th>Nama Dokumen</th>
-                                                    <th>:</th>
-                                                    <td>{{ $usulan->normaHasilAccepted->normaHasil->nama_dokumen }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Tanggal Usulan</th>
-                                                    <th>:</th>
-                                                    <td>{{ $usulan->normaHasilAccepted->normaHasil->tanggal }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Draft Norma Hasil</th>
-                                                    <th>:</th>
-                                                    <td>
-                                                        <a target="blank" href="/pegawai/tim/norma-hasil/downloadUsulan/{{ $usulan->normaHasilAccepted->normaHasil->id }}"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-download"></i> Download</a>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <th>Nama Dokumen</th>
+                                                <th>:</th>
+                                                <td>{{ $usulan->normaHasilAccepted->normaHasil->nama_dokumen }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tanggal Usulan</th>
+                                                <th>:</th>
+                                                <td>{{ $usulan->normaHasilAccepted->normaHasil->tanggal }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Draft Norma Hasil</th>
+                                                <th>:</th>
+                                                <td>
+                                                    <a target="blank"
+                                                        href="{{ $usulan->normaHasilAccepted->normaHasil->document_path }}"
+                                                        class="badge btn-primary"><i class="fa fa-download"></i>
+                                                        Lihat</a>
+                                                </td>
+                                            </tr>
                                             @endif
-                                            
+
                                             <tr>
                                                 <th>Norma Hasil Tim</th>
                                                 <th>:</th>
                                                 <td>
                                                     @if ($usulan->jenis == 1)
-                                                        <a target="blank" href="/pegawai/tim/norma-hasil/viewLaporan/{{ $usulan->normaHasilAccepted->id }}/1"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-download"></i> Download</a>
+                                                    <a target="blank"
+                                                        href="/pegawai/tim/norma-hasil/viewLaporan/{{ $usulan->normaHasilAccepted->id }}/1"
+                                                        class="badge btn-primary"><i class="fa fa-download"></i>
+                                                        Download</a>
                                                     @else
-                                                        <a target="blank" href="/pegawai/tim/norma-hasil/viewLaporan/{{ $usulan->normaHasilDokumen->id }}/2"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-download"></i> Download</a>
+                                                    <a target="blank"
+                                                        href="/pegawai/tim/norma-hasil/viewLaporan/{{ $usulan->normaHasilDokumen->id }}/2"
+                                                        class="badge btn-primary"><i class="fa fa-download"></i>
+                                                        Download</a>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -160,11 +164,12 @@
                                                 </td>
                                             </tr>
                                             @if ($status == 'ditolak')
-                                                <tr>
-                                                    <th>Alasan Penolakan</th>
-                                                    <th>:</th>
-                                                    <td>{{ $usulan->normaHasilAccepted->catatan_arsiparis ?? $usulan->normaHasilDokumen->catatan_arsiparis }}</td>
-                                                </tr>
+                                            <tr>
+                                                <th>Alasan Penolakan</th>
+                                                <th>:</th>
+                                                <td>{{ $usulan->normaHasilAccepted->catatan_arsiparis ?? $usulan->normaHasilDokumen->catatan_arsiparis }}
+                                                </td>
+                                            </tr>
                                             @endif
                                         </table>
                                     </div>
