@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="section-body">
-            @include('components.flash')
+            @include('components.flash-error')
             {{ session()->forget(['alert-type', 'status']) }}
             <div class="row">
                 <div class="col-md-12">
@@ -70,8 +70,9 @@
                                 {{-- Bulan Pelaporan --}}
                                 <div class="form-group
                                     @if ($errors->has('bulan_laporan')) is-invalid @endif">
-                                    <label for="bulan_pelaporan">Objek Kegiatan</label>
-                                    <select id="bulan_pelaporan" name="bulan_pelaporan" disabled data-placeholder="Pilih Bulan Pelaporan" class="form-control select2">
+                                    <label for="bulan_pelaporan">Bulan Pelaporan</label>
+                                    <select id="bulan_pelaporan" name="bulan_pelaporan" disabled
+                                        data-placeholder="Pilih Bulan Pelaporan" class="form-control select2">
                                         class="form-control select2">
                                         <option value="">Pilih Bulan Pelaporan</option>
                                     </select>
@@ -89,11 +90,11 @@
                                     <select required id="jenis_norma_hasil" name="jenis_norma_hasil"
                                         class="form-control select2" data-placeholder="Pilih Jenis Laporan">
                                         <option value=""></option>
-                                    @foreach ($masterLaporan as $masterLaporan)
+                                        @foreach ($masterLaporan as $masterLaporan)
                                         <option value="{{ $masterLaporan->id }}"
                                             {{ old('jenis_norma_hasil') == $masterLaporan->id ? 'selected' : '' }}>
                                             {{ $masterLaporan->kode }} - {{ $masterLaporan->nama }}</option>
-                                    @endforeach
+                                        @endforeach
                                     </select>
                                     @if ($errors->has('jenis_norma_hasil'))
                                     <div class="invalid-feedback">
@@ -118,7 +119,7 @@
                                         @if ($errors->has('file')) is-invalid @endif">
                                     <label for="url_norma_hasil">Link Dokumen</label>
                                     <input placeholder="Masukkan URL/Link dokumen" type="url" id="url_norma_hasil"
-                                        name="url_norma_hasil" class="form-control" required>
+                                        required name="url_norma_hasil" class="form-control">
                                     @if ($errors->has('url_norma_hasil'))
                                     <div class="invalid-feedback">
                                         {{ $errors->first('url-norma-hasil') }}

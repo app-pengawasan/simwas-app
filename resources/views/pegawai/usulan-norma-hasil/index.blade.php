@@ -129,7 +129,7 @@
                                             <td>
                                                 @if ($un->status_norma_hasil == 'disetujui')
                                                 <span class="badge badge-primary">
-                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil ?? ''}}/{{ $un->normaHasilAccepted->unit_kerja ?? ''}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip ?? ''}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil ?? '')) }}
                                                 </span>
                                                 @endif
                                             </td>

@@ -252,7 +252,7 @@ $("#btn-submit-edit-objek").on("click", function (e) {
         error: function (error) {
             Swal.fire({
                 title: "Gagal!",
-                text: "Silakan isi form dengan benar",
+                text: error.responseJSON.message,
                 icon: "error",
                 confirmButtonColor: "var(--primary)",
             });

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MasterLaporan;
+use App\Models\KodeKlasifikasiArsip;
+use App\Models\TimKerja;
 use App\Models\StKinerja;
 use App\Models\NormaHasil;
 use Illuminate\Http\Request;
+use App\Models\MasterLaporan;
 use App\Models\NormaHasilTim;
 use App\Models\PelaksanaTugas;
 use App\Models\NormaHasilAccepted;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class ArsiparisNormaHasilController extends Controller
@@ -162,7 +165,6 @@ class ArsiparisNormaHasilController extends Controller
 
 
         return view('arsiparis.norma-hasil.index', [
-            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'type_menu' => 'tugas-tim',
             'laporan' => $laporan,
             'months' => $months,
@@ -227,12 +229,40 @@ class ArsiparisNormaHasilController extends Controller
      * @param  \App\Models\NormaHasil  $normaHasil
      * @return \Illuminate\Http\Response
      */
-    public function edit(NormaHasil $norma_hasil)
+    public function edit($id)
     {
-        $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
-        return view('pegawai.norma-hasil.edit', [
-            "usulan" => $norma_hasil,
-            "stks" => $stks
+        $months=[
+            0 => 'Pilih Bulan',
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+        $normaHasilTim = NormaHasilTim::findOrFail($id);
+        $normaHasilAccepted = $normaHasilTim->normaHasilAccepted;
+        $normaHasilUsulan = $normaHasilTim->normaHasilAccepted->normaHasil;
+        $timKerja = TimKerja::get();
+        $pengusul = User::get();
+        $klasifikasi = KodeKlasifikasiArsip::get();
+        $masterLaporan = MasterLaporan::get();
+        return view('arsiparis.norma-hasil.edit', [
+            'normaHasilTim' => $normaHasilTim,
+            'normaHasilAccepted' => $normaHasilAccepted,
+            'normaHasilUsulan' => $normaHasilUsulan,
+            'timKerja' => $timKerja,
+            'pengusul' => $pengusul,
+            'klasifikasi' => $klasifikasi,
+            'masterLaporan' => $masterLaporan,
+            'unit_kerja' => $this->unit_kerja,
+            'months' => $months,
         ]);
     }
 
@@ -260,6 +290,37 @@ class ArsiparisNormaHasilController extends Controller
         }
 
         return redirect()->back()->with('success', 'Norma Hasil Berhasil Ditolak');
+    }
+
+    public function updateNormaHasil(Request $request, $id)
+    {
+        try {
+            // dd($request->all());
+            $normaHasilUsulan = NormaHasil::findOrFail($id);
+            $normaHasilUsulan->update([
+                'user_id' => $request->nama_pengusul,
+                'tanggal' => $request->tanggal_norma_hasil,
+                'unit_kerja' => $request->unit_kerja,
+                'tugas_id' => $request->rencana_id,
+                'jenis_norma_hasil' => $request->jenis_norma_hasil,
+                'document_path' => $request->url_norma_hasil,
+                'laporan_pengawasan_id' => $request->bulan_pelaporan,
+            ]);
+            $normaHasilAccepted = NormaHasilAccepted::where('id_norma_hasil', $normaHasilUsulan->id)->first();
+            $normaHasilAccepted->update([
+                'tanggal_norma_hasil' => $request->tanggal_norma_hasil,
+                'unit_kerja' => $request->unit_kerja,
+            ]);
+            $normaHasilTim = NormaHasilTim::where('laporan_id',$normaHasilUsulan->normaHasilAccepted->id)->first();
+            $normaHasilTim->update([
+                'tugas_id' => $request->rencana_id,
+            ]);
+            return redirect('/arsiparis/norma-hasil/'.$normaHasilTim->id)->with('success', 'Norma Hasil Berhasil Diubah');
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
+
     }
 
     /**

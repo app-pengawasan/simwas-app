@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\MasterLaporan;
+use App\Models\TempNormaHasil;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PpController;
 use App\Http\Controllers\WordController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\MasterAnggaranController;
 use App\Http\Controllers\MasterPimpinanController;
 use App\Http\Controllers\MasterSubUnsurController;
 use App\Http\Controllers\PelaksanaTugasController;
+use App\Http\Controllers\TempNormaHasilController;
 use App\Http\Controllers\TimKendaliMutuController;
 use App\Http\Controllers\AdminKinerjaTimController;
 use App\Http\Controllers\AdminRekapNilaiController;
@@ -316,7 +318,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('tim/norma-hasil/downloadUsulan/{id}', [TimNormaHasilController::class, 'downloadUsulan']);
         Route::get('tim/norma-hasil/viewLaporan/{id}/{jenis}', [TimNormaHasilController::class, 'viewLaporan']);
         Route::get('tim/kendali-mutu/download/{id}', [TimKendaliMutuController::class, 'download']);
-        
+
         Route::get('usulan-surat-srikandi/download/{id}', [UsulanSuratSrikandiController::class, 'downloadUsulanSurat'])->name('usulan-surat-srikandi.download');
 
         Route::resource('usulan-surat/surat-tugas', UsulanSuratSrikandiController::class)->names([
@@ -364,6 +366,9 @@ Route::group(['middleware'=>'auth'], function(){
     Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
     Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
     Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
+    Route::get('/tugas-list', [TugasController::class, 'getRencanaKerjaList']);
+    // migrate norma hasil
+    Route::get('/norma-hasil/migrate', [TempNormaHasilController::class, 'migrateNormaHasil']);
 
 
 
@@ -415,6 +420,8 @@ Route::group(['middleware'=>'auth'], function(){
     Route::prefix('arsiparis')->name('arsiparis.')->group(function () {
         Route::get('/', [DashboardController::class, 'arsiparis'])->name('dashboard');
         Route::resource('norma-hasil', ArsiparisNormaHasilController::class);
+        Route::get('norma-hasil/edit/{id}', [ArsiparisNormaHasilController::class, 'edit']);
+        Route::put('norma-hasil/update-norma-hasil/{id}', [ArsiparisNormaHasilController::class, 'updateNormaHasil'])->name('norma-hasil.update-norma-hasil');
         Route::resource('surat-tugas', ArsiparisSuratTugasController::class);
         Route::resource('kendali-mutu', ArsiparisKendaliMutuController::class);
     });

@@ -31,6 +31,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
+                        @include('components.flash-error')
                         <div class="d-flex justify-content-between">
                             <p>
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
@@ -70,8 +71,7 @@
                                         <td>{{ $unsur->nama_unsur }}</td>
                                         <td>
                                             <div class="d-flex">
-                                                <button type="button"
-                                                    class="btn btn-warning btn-sm edit-button"
+                                                <button type="button" class="btn btn-warning btn-sm edit-button"
                                                     data-toggle="modal" data-target="#modal-edit-master-unsur"
                                                     data-id="{{ $unsur->id }}" data-nama="{{ $unsur->nama_unsur }}">
                                                     <i class="fas fa-edit"></i>

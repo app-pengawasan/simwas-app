@@ -31,6 +31,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
+                        @include('components.flash-error')
                         <div class="d-flex justify-content-between">
                             <p>
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>

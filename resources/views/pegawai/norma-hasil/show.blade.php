@@ -51,7 +51,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Detail Usulan Surat</h1>
+            <h1>Detail Usulan Norma Hasil</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
                 <div class="breadcrumb-item active"><a href="/pegawai/norma-hasil">Norma Hasil</a></div>
@@ -86,19 +86,19 @@
                             @endif
                             <tr>
                                 <th>Tugas:</th>
-                                <td>{{ $usulan->rencanaKerja->tugas }}</td>
+                                <td>{{ $usulan->rencanaKerja->tugas ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Proyek:</th>
-                                <td>{{ $usulan->rencanaKerja->proyek->nama_proyek }}</td>
+                                <td>{{ $usulan->rencanaKerja->proyek->nama_proyek ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Tim Kerja:</th>
-                                <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama }}</td>
+                                <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Nama Dokumen:</th>
-                                <td>{{ $usulan->nama_dokumen }}</td>
+                                <td>{{ $usulan->nama_dokumen ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th>Jenis Norma Hasil:</th>
@@ -167,18 +167,20 @@
                                     'disetujui')
                                     <span class="badge badge-success">Norma Hasil Telah Diverifikasi
                                         Arsiparis</span>
-
+                                    @elseif ($usulan->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                    'ditolak')
+                                    <span class="badge badge-danger">Laporan Ditolak
+                                        Arsiparis</span>
                                     @endif
                                 </td>
                                 @else
                                 <td>
-                                    <span
-                                        class="badge
-                                                                                                    {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
-                                                                                                    {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
-                                                                                                    {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
-                                                                                                        text-capitalize">{{
-                                                                                                        $usulan->status_norma_hasil }}
+                                    <span class="badge
+                                        {{ $usulan->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
+                                        {{ $usulan->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
+                                        {{ $usulan->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
+                                            text-capitalize">{{
+                                            $usulan->status_norma_hasil }}
                                     </span>
                                 </td>
                                 @endif

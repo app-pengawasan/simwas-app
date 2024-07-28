@@ -67,6 +67,7 @@ class TimNormaHasilController extends Controller
         $id_pegawai = auth()->user()->id;
 
         $months=[
+            0 => '',
             1 => 'Januari',
             2 => 'Februari',
             3 => 'Maret',

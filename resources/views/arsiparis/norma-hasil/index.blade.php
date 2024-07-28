@@ -141,11 +141,11 @@
                                             <td class="text-center">
                                                 {{ $loop->iteration }}
                                             </td>
-                                            <td>{{ $lnm->rencanaKerja->tugas }}</td>
+                                            <td>{{ $lnm->rencanaKerja->tugas ?? "" }}</td>
                                             <td>
                                                 @if ($lnm->jenis == 1)
                                                 <span class="badge badge-primary">
-                                                    R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                    R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode?? $lnm->normaHasilAccepted->kode_norma_hasil ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
                                                 </span>
                                                 @else
                                                 <span class="badge badge-primary">
@@ -153,12 +153,12 @@
                                                 </span>
                                                 @endif
                                             </td>
-                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->nama ?? "" }}
+                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->nama ?? $lnm->normaHasilAccepted->kode_norma_hasil ?? "" }}
                                             </td>
                                             <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
-                                                    $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama }}
+                                                    $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama ?? "" }}
                                             </td>
-                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month] }}
+                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month ?? 0] }}
                                             </td>
                                             <td>
                                                 @php

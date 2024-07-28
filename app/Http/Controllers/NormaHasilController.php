@@ -136,7 +136,6 @@ class NormaHasilController extends Controller
         $tanggal = date('Y-m-d');
         // dd($request->all());
 
-        try {
             NormaHasil::create([
                 'user_id' => $user_id,
                 'unit_kerja' => $unit_kerja,
@@ -159,9 +158,6 @@ class NormaHasilController extends Controller
             ]);
 
             return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
-        } catch (\Exception $e) {
-            return redirect('pegawai/norma-hasil')->with('error', 'Gagal mengajukan usulan norma hasil!');
-        }
 
     }
 
