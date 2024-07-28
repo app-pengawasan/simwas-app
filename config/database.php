@@ -1,5 +1,4 @@
 <?php
-use Doctrine\DBAL\Types\StringType;
 
 use Illuminate\Support\Str;
 
@@ -119,11 +118,7 @@ return [
     | such as APC or Memcached. Laravel makes it easy to dig right in.
     |
     */
-    'dbal' => [
-    'types' => [
-        'enum' => StringType::class,
-    ],
-],
+
 
     'redis' => [
 

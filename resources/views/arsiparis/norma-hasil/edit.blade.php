@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash-error')
-                        <form method="POST"
+                        <form method="post"
                             action="{{ route('arsiparis.norma-hasil.update-norma-hasil', $normaHasilUsulan->id) }}"
                             id="logins-part" class="needs-validation" novalidate enctype="multipart/form-data">
                             @csrf
