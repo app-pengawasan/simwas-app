@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('km_tims', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
+
+        Schema::table('km_tims', function (Blueprint $table) {
             $table->text('path')->nullable()->change();
-            $table->enum('status', ['diperiksa', 'disetujui', 'ditolak', 'tidak ada'])->change();
+            $table->enum('status', ['diperiksa', 'disetujui', 'ditolak', 'tidak ada']);
         });
     }
 
