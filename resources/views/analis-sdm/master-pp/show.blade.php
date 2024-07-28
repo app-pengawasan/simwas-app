@@ -39,9 +39,14 @@
                                     <select required id="peserta" name="peserta" class="form-control select2">
                                         <option value="" selected disabled>Pilih Peserta</option>
                                         <option value="100">Pengawasan (Auditor Pertama)</option>
-                                        <option value="200">Auditor Muda</option>
-                                        <option value="300">Auditor Madya/Utama</option>
-                                        <option value="400">Semua Jenjang</option>
+                                        <option value="200">Pengawasan (Auditor Muda)</option>
+                                        <option value="300">Pengawasan (Auditor Madya/Utama)</option>
+                                        <option value="400">Pengawasan (semua jenjang)</option>
+                                        <option value="500">Manajemen</option>
+                                        <option value="600">Pengelolaan Keuangan dan Barang</option>
+                                        <option value="700">Sumber Daya Manusia</option>
+                                        <option value="800">Arsip dan Diseminasi Pengawasan</option>
+                                        <option value="900">Teknologi Informasi dan Multimedia</option>
                                     </select>
                                 @endif
                                 <label for="nama" class="mt-3">Nama Kompetensi Pegawai</label>

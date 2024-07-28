@@ -183,7 +183,14 @@ const enableNamapp = (pp) => {
     $('.disabled').show();
     $('.disabled').prop("selected", true);
     $(`.nama_pp_id option[data-pp="${pp}"]`).show();
-    $('.nama_pp_id option[value="999"]').show();
+    $(".nama_pp_id").prop("disabled", false);
+}
+
+const enableNamapp3 = (peserta) => {
+    $(".nama_pp_id option").hide();
+    $('.disabled').show();
+    $('.disabled').prop("selected", true);
+    $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
     $(".nama_pp_id").prop("disabled", false);
 }
 
@@ -251,6 +258,7 @@ $(".peserta").on("change", function () {
     $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
     clearError();
     hideOthers();
+    $('#nama_pp_other').hide();
 });
 
 $(".submit-btn").on("click", function (e) {
@@ -297,8 +305,8 @@ $(".edit-btn").on("click", function () {
     clearError();
     let dataId = $(this).attr("data-id");
     let url;
-    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/${dataId}`;
-    else url = `/pegawai/kompetensi/${dataId}`;
+    if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/getData/${dataId}`;
+    else url = `/pegawai/kompetensi/getData/${dataId}`;
     $.ajax({
         url: url,
         type: "GET",
@@ -315,6 +323,13 @@ $(".edit-btn").on("click", function () {
             $("#edit-pp").val(pp_id);
             $("#edit-catatan").val(response.data[0].catatan);
             $("#edit-peserta").val(response.peserta);
+            $("#edit-tgl_mulai").val(response.data[0].tgl_mulai);
+            $("#edit-tgl_selesai").val(response.data[0].tgl_selesai);
+            $("#edit-durasi").val(response.data[0].durasi);
+            $("#edit-tgl_sertifikat").val(response.data[0].tgl_sertifikat);
+            $("#edit-penyelenggara").val(response.penyelenggara);
+            $("#edit-jumlah_peserta").val(response.data[0].jumlah_peserta);
+            $("#edit-ranking").val(response.data[0].ranking);
 
             if (pp_id == 999) {
                 showOtherPp();
@@ -323,14 +338,16 @@ $(".edit-btn").on("click", function () {
                 showOtherNamapp();
                 $('.nama_pp_lain').val(nama_pp_lain);
             } else if (pp_id == 1 | pp_id == 2 | pp_id == 3) {
-                enableNamapp(pp_id);
+                if (pp_id == 3) {
+                    showPeserta();
+                    enableNamapp3(response.peserta);
+                } else enableNamapp(pp_id);
                 hideOthers();
                 $('.nama_pp_id').val(nama_pp_id);
                 if (nama_pp_id == 999) {
                     showOtherNamapp();
                     $('.nama_pp_lain').val(nama_pp_lain);
                 }
-                if (pp_id == 3) showPeserta();
             } else {
                 disableNamapp();
                 showOtherNamapp();

@@ -181,10 +181,13 @@ class TimKendaliMutuController extends Controller
             $path = 'storage/tim/km/' . $fileName;
         } else $path = $validateData['link'];
 
+        if ($request->is_ada == 0) $status = 'tidak ada';
+        else $status = 'diperiksa';
+
         KendaliMutuTim::create([
             'laporan_pengawasan_id' => $validateData['bulan'],
             'path' => $path,
-            'status' => 'diperiksa',
+            'status' => $status,
             'catatan' => $validateData['catatan'],
         ]);
 

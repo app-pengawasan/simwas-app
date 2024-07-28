@@ -34,4 +34,9 @@ class Kompetensi extends Model
     {
         return $this->belongsTo(NamaPp::class);
     }
+
+    public function penyelenggaraDiklat()
+    {
+        return $this->belongsTo(MasterPenyelenggara::class, "penyelenggara", "id");
+    }
 }

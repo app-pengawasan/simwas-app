@@ -91,7 +91,7 @@ class TimNormaHasilController extends Controller
                 ->where('status_norma_hasil', 'disetujui')
                 ->whereRelation('normaHasilAccepted', function (Builder $query){
                     $query->where('status_verifikasi_arsiparis', 'belum unggah');
-                })->get();
+                })->get(); 
 
         $laporan = NormaHasilTim::latest()
                     ->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
@@ -100,12 +100,6 @@ class TimNormaHasilController extends Controller
                     })->orWhereRelation('normaHasilDokumen', function (Builder $query){
                         $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
                     })->get();
-
-        // menghapus tugas yang sudah diunggah atau belum ada nomor
-        foreach ($tugasSaya as $key => $ts) {
-            if (!$draf->pluck('tugas_id')->contains($ts->id_rencanakerja))
-                $tugasSaya->forget($key);
-        }
 
         $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai){
             $query->where('id', $id_pegawai);

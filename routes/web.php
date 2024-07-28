@@ -55,6 +55,7 @@ use App\Http\Controllers\SuratKorespondensiController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
 use App\Http\Controllers\ArsiparisNormaHasilController;
 use App\Http\Controllers\ArsiparisSuratTugasController;
+use App\Http\Controllers\MasterPenyelenggaraController;
 use App\Http\Controllers\PegawaiRencanaKerjaController;
 use App\Http\Controllers\PenilaianBerjenjangController;
 use App\Http\Controllers\PimpinanRencanKerjaController;
@@ -236,6 +237,8 @@ Route::group(['middleware'=>'auth'], function(){
         ]);
         Route::resource('namaPp', NamaPpController::class);
         Route::resource('kelola-kompetensi', AnalisKompetensiController::class);
+        Route::get('kelola-kompetensi/getData/{id}', [AnalisKompetensiController::class, 'getData']);
+        Route::resource('master-penyelenggara', MasterPenyelenggaraController::class);
         Route::resource('master-data-kepegawaian', DataKepegawaianController::class);
         Route::get('master-data-kepegawaian-nonaktif', [DataKepegawaianController::class, 'nonaktif']);
         Route::get('data-kepegawaian', [DataKepegawaianController::class, 'kelola']);
@@ -299,6 +302,7 @@ Route::group(['middleware'=>'auth'], function(){
                 'destroy' => 'pegawai.norma-hasil.destroy',
         ]);
         Route::resource('kompetensi', PegawaiKompetensiController::class);
+        Route::get('kompetensi/getData/{id}', [PegawaiKompetensiController::class, 'getData']);
 
         //Aktivitas Harian
         Route::resource('aktivitas-harian', AktivitasHarianController::class);

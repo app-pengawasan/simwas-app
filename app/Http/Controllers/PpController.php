@@ -10,9 +10,14 @@ class PpController extends Controller
 {
     private $peserta = [
         '100' => 'Pengawasan (Auditor Pertama)',
-        '200' => 'Auditor Muda',
-        '300' => 'Auditor Madya/Utama',
-        '400' => 'Semua Jenjang'
+        '200' => 'Pengawasan (Auditor Muda)',
+        '300' => 'Pengawasan (Auditor Madya/Utama)',
+        '400' => 'Pengawasan (semua jenjang)',
+        '500' => 'Manajemen',
+        '600' => 'Pengelolaan Keuangan dan Barang',
+        '700' => 'Sumber Daya Manusia',
+        '800' => 'Arsip dan Diseminasi Pengawasan',
+        '900' => 'Teknologi Informasi dan Multimedia',
     ];
 
     /**

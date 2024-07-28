@@ -61,7 +61,7 @@ class ArsiparisKendaliMutuController extends Controller
     public function index()
     {
         $this->authorize('arsiparis');
-        $dokumen = KendaliMutuTim::latest()->get();
+        $dokumen = KendaliMutuTim::latest()->whereNot('status', 'tidak ada')->get();
         return view('arsiparis.km.index', [
             'dokumen' => $dokumen
         ]);

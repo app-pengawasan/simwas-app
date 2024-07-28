@@ -87,30 +87,32 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($pps as $pp)
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    @if ($pp->id > 3)
-                                                        {{ $pp->jenis }}
-                                                    @else
-                                                        <a href="/analis-sdm/pp/{{ $pp->id }}">{{ $pp->jenis }}</a>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                @if ($pp->id > 3)
-                                                    <form method="post" action="/analis-sdm/pp/{{ $pp->id }}">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <input type="hidden" name="nonaktifkan" value="1">
-                                                        <input type="hidden" name="is_aktif" value="0">
-                                                        <input type="hidden" name="id" value="{{ $pp->id }}">
-                                                        <button type="submit" class="btn btn-sm btn-danger">Nonaktifkan</button>
-                                                    </form>
-                                                @else
-                                                    -
+                                                @if ($pp->id != 999)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>
+                                                            @if ($pp->id > 3)
+                                                                {{ $pp->jenis }}
+                                                            @else
+                                                                <a href="/analis-sdm/pp/{{ $pp->id }}">{{ $pp->jenis }}</a>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                        @if ($pp->id > 3)
+                                                            <form method="post" action="/analis-sdm/pp/{{ $pp->id }}">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="hidden" name="nonaktifkan" value="1">
+                                                                <input type="hidden" name="is_aktif" value="0">
+                                                                <input type="hidden" name="id" value="{{ $pp->id }}">
+                                                                <button type="submit" class="btn btn-sm btn-danger">Nonaktifkan</button>
+                                                            </form>
+                                                        @else
+                                                            -
+                                                        @endif
+                                                        </td>
+                                                    </tr>
                                                 @endif
-                                                </td>
-                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
