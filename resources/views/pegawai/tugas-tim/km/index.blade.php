@@ -107,28 +107,36 @@
                                             <td>{{ $km->laporanObjekPengawasan->objekPengawasan->rencanaKerja->tugas }}</td>
                                             <td>{{ $km->laporanObjekPengawasan->objekPengawasan->nama }}</td>
                                             <td>{{ $months[$km->laporanObjekPengawasan->month] }}</td>
-                                            <td>
-                                                @if (file_exists($km->path))
-                                                    <a class="badge btn-primary"
-                                                    href="kendali-mutu/download/{{ $km->id }}" target="_blank">
-                                                        <i class="fa fa-download"></i>
-                                                    </a>
-                                                @else
-                                                    <a class="badge btn-primary"
-                                                    href="{{ $km->path }}" target="_blank">
-                                                        <i class="fa fa-download"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
+                                            
+                                            @if ($km->status == 'tidak ada')
+                                                <td></td>
+                                            @else
+                                                <td>
+                                                    @if (file_exists($km->path))
+                                                        <a class="badge btn-primary"
+                                                        href="kendali-mutu/download/{{ $km->id }}" target="_blank">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    @else
+                                                        <a class="badge btn-primary"
+                                                        href="{{ $km->path }}" target="_blank">
+                                                            <i class="fa fa-download"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            @endif
+
                                             <td>
                                                 <span class="badge
                                                     {{ $km->status == 'diperiksa' ? 'badge-primary' : '' }}
                                                     {{ $km->status == 'disetujui' ? 'badge-success' : '' }}
                                                     {{ $km->status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    {{ $km->status == 'tidak ada' ? 'badge-dark' : '' }}
                                                     text-capitalize"><i class="
                                                         {{ $km->status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
                                                         {{ $km->status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
-                                                        {{ $km->status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                        {{ $km->status == 'ditolak' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
+                                                        {{ $km->status == 'tidak ada' ? 'fa-regular fa-circle-xmark mr-1' : '' }}
                                                     "></i>{{ $km->status }}
                                                 </span>
                                             </td>

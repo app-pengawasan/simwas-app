@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KodeKlasifikasiArsip;
+use App\Models\TimKerja;
 use App\Models\StKinerja;
 use App\Models\NormaHasil;
 use Illuminate\Http\Request;
+use App\Models\MasterLaporan;
 use App\Models\NormaHasilTim;
 use App\Models\PelaksanaTugas;
 use App\Models\NormaHasilAccepted;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class ArsiparisNormaHasilController extends Controller
 {
+    protected $unit_kerja = [
+        '8000' => 'Inspektorat Utama',
+        '8010' => 'Bagian Umum Inspektorat Utama',
+        '8100' => 'Inspektorat Wilayah I',
+        '8200' => 'Inspektorat Wilayah II',
+        '8300' => 'Inspektorat Wilayah III'
+    ];
     private $kodeHasilPengawasan = [
         "110" => 'LHA',
         "120" => 'LHK',
@@ -57,11 +68,87 @@ class ArsiparisNormaHasilController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('arsiparis');
+        $year = $request->year;
+        $unit_kerja = $request->unit_kerja;
+
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
+
+        $laporan = NormaHasilTim::latest()
+            ->where(function ($query) use ($year) {
+                $query->whereYear('created_at', $year)
+                    ->whereRelation('normaHasilAccepted', function (Builder $query) {
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    })
+                    ->orWhereRelation('normaHasilDokumen', function (Builder $query) {
+                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
+                    });
+            })
+            ->get();
+
+
+
+        $normaHasilBelumUpload = NormaHasilAccepted::where('status_verifikasi_arsiparis', 'belum unggah')->whereYear('created_at', $year);
+
+        if (!is_null($unit_kerja)) {
+            $normaHasilBelumUpload = $normaHasilBelumUpload->whereHas('normaHasil', function (Builder $query) use ($unit_kerja) {
+                $query->whereHas('rencanaKerja', function (Builder $query) use ($unit_kerja) {
+                    $query->where('unit_kerja', $unit_kerja);
+                });
+            });
+            $laporan = NormaHasilTim::latest()
+                ->whereRelation('normaHasilAccepted', function (Builder $query) use ($unit_kerja) {
+                    $query->whereNot('status_verifikasi_arsiparis', 'belum unggah')
+                        ->whereHas('normaHasil', function (Builder $query) use ($unit_kerja) {
+                            $query->whereHas('rencanaKerja.timKerja', function (Builder $query) use ($unit_kerja) {
+                                $query->where('unit_kerja', $unit_kerja);
+                            });
+                        });
+                })->whereYear('created_at', $year)
+                // whererelation where normaHasilTim->rencaKerja->unit_kerja = $unit_kerja and status_verifikasi_arsiparis != tes
+                ->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($unit_kerja) {
+                    $query->whereNot('status_verifikasi_arsiparis', 'belum unggah')
+                        ->whereHas('normaHasilTim', function (Builder $query) use ($unit_kerja) {
+                            $query->whereHas('rencanaKerja.timKerja', function (Builder $query) use ($unit_kerja) {
+                                $query->where('unitkerja', $unit_kerja);
+                            });
+                        });
+                })
+                ->whereYear('created_at', $year)
+                ->get();
+
+
+        }
+
+        $normaHasilBelumUpload = $normaHasilBelumUpload->get();
+
+
+        $jenisNormaHasil = MasterLaporan::get();
+
+
+        $currentYear = date('Y');
+
+        $year = NormaHasilTim::selectRaw('YEAR(created_at) as year')->distinct()->get();
+
+        $yearValues = $year->pluck('year')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['year' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('year');
+
 
         $months=[
+            0 => '',
             1 => 'Januari',
             2 => 'Februari',
             3 => 'Maret',
@@ -76,18 +163,15 @@ class ArsiparisNormaHasilController extends Controller
             12 => 'Desember'
         ];
 
-        $laporan = NormaHasilTim::latest()
-                    ->whereRelation('normaHasilAccepted', function (Builder $query){
-                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
-                    })->orWhereRelation('normaHasilDokumen', function (Builder $query){
-                        $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');
-                    })->get();
 
         return view('arsiparis.norma-hasil.index', [
-            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
             'type_menu' => 'tugas-tim',
             'laporan' => $laporan,
-            'months' => $months
+            'months' => $months,
+            'normaHasilBelumUpload' => $normaHasilBelumUpload,
+            'year' => $year,
+            'jenisNormaHasil' => $jenisNormaHasil,
+            'unit_kerja' => $this->unit_kerja,
         ]);
     }
 
@@ -145,12 +229,40 @@ class ArsiparisNormaHasilController extends Controller
      * @param  \App\Models\NormaHasil  $normaHasil
      * @return \Illuminate\Http\Response
      */
-    public function edit(NormaHasil $norma_hasil)
+    public function edit($id)
     {
-        $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
-        return view('pegawai.norma-hasil.edit', [
-            "usulan" => $norma_hasil,
-            "stks" => $stks
+        $months=[
+            0 => 'Pilih Bulan',
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+        $normaHasilTim = NormaHasilTim::findOrFail($id);
+        $normaHasilAccepted = $normaHasilTim->normaHasilAccepted;
+        $normaHasilUsulan = $normaHasilTim->normaHasilAccepted->normaHasil;
+        $timKerja = TimKerja::get();
+        $pengusul = User::get();
+        $klasifikasi = KodeKlasifikasiArsip::get();
+        $masterLaporan = MasterLaporan::get();
+        return view('arsiparis.norma-hasil.edit', [
+            'normaHasilTim' => $normaHasilTim,
+            'normaHasilAccepted' => $normaHasilAccepted,
+            'normaHasilUsulan' => $normaHasilUsulan,
+            'timKerja' => $timKerja,
+            'pengusul' => $pengusul,
+            'klasifikasi' => $klasifikasi,
+            'masterLaporan' => $masterLaporan,
+            'unit_kerja' => $this->unit_kerja,
+            'months' => $months,
         ]);
     }
 
@@ -176,8 +288,39 @@ class ArsiparisNormaHasilController extends Controller
                 'catatan_arsiparis' => $request->alasan
             ]);
         }
-        
+
         return redirect()->back()->with('success', 'Norma Hasil Berhasil Ditolak');
+    }
+
+    public function updateNormaHasil(Request $request, $id)
+    {
+        try {
+            // dd($request->all());
+            $normaHasilUsulan = NormaHasil::findOrFail($id);
+            $normaHasilUsulan->update([
+                'user_id' => $request->nama_pengusul,
+                'tanggal' => $request->tanggal_norma_hasil,
+                'unit_kerja' => $request->unit_kerja,
+                'tugas_id' => $request->rencana_id,
+                'jenis_norma_hasil' => $request->jenis_norma_hasil,
+                'document_path' => $request->url_norma_hasil,
+                'laporan_pengawasan_id' => $request->bulan_pelaporan,
+            ]);
+            $normaHasilAccepted = NormaHasilAccepted::where('id_norma_hasil', $normaHasilUsulan->id)->first();
+            $normaHasilAccepted->update([
+                'tanggal_norma_hasil' => $request->tanggal_norma_hasil,
+                'unit_kerja' => $request->unit_kerja,
+            ]);
+            $normaHasilTim = NormaHasilTim::where('laporan_id',$normaHasilUsulan->normaHasilAccepted->id)->first();
+            $normaHasilTim->update([
+                'tugas_id' => $request->rencana_id,
+            ]);
+            return redirect('/arsiparis/norma-hasil/'.$normaHasilTim->id)->with('success', 'Norma Hasil Berhasil Diubah');
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+
+
     }
 
     /**

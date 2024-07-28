@@ -56,15 +56,19 @@
                                             <th style="text-align:center" rowspan="2">Tugas</th>
                                             <th style="text-align:center" rowspan="2">Objek Pengawasan</th>
                                             <th style="text-align:center" rowspan="2">Bulan Pelaporan</th>
-                                            <th style="text-align:center" colspan="2">Surat Tugas</th>
-                                            <th style="text-align:center" colspan="2">Norma Hasil</th>
-                                            <th style="text-align:center" rowspan="2">Kendali Mutu</th>
+                                            <th style="text-align:center" colspan="3">Surat Tugas</th>
+                                            <th style="text-align:center" colspan="3">Norma Hasil</th>
+                                            <th style="text-align:center" colspan="2">Kendali Mutu</th>
                                         </tr>
                                         <tr>
                                             <th style="text-align:center">Nomor Surat Tugas</th>
                                             <th style="text-align:center">File</th>
+                                            <th style="text-align:center">Status Verifikasi Sekretaris</th>
                                             <th style="text-align:center">Nomor Laporan</th>
                                             <th style="text-align:center">File</th>
+                                            <th style="text-align:center">Status Verifikasi Arsiparis</th>
+                                            <th style="text-align:center">File</th>
+                                            <th style="text-align:center">Status Verifikasi Arsiparis</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -78,20 +82,45 @@
                                             <td>{{ $bulan->objekPengawasan->nama }}</td>
                                             <td>{{ $months[$bulan->month] }}</td>
                                             @if (isset($surat_tugas[$bulan->objekPengawasan->id_rencanakerja]))
+                                                @if ($surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->status == 'disetujui')
+                                                    <td>
+                                                        <span class="badge badge-primary">
+                                                            {{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->nomor_surat }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a class="badge btn-primary" target="_blank"
+                                                            href="/{{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->suratSrikandi[0]->document_srikandi_pdf_path }}">
+                                                            <i class="fa fa-eye mr-1"></i>Lihat</a>
+                                                    </td>
+                                                @else
+                                                    <td></td>
+                                                    <td>
+                                                        <a class="badge btn-primary" target="_blank"
+                                                            href="/{{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->directory }}">
+                                                            <i class="fa fa-file-arrow-down mr-1"></i>Download</a>   
+                                                    </td>
+                                                @endif
                                                 <td>
-                                                    <span class="badge badge-primary">
-                                                        {{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->nomor_surat }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <a class="badge badge-primary p-2" target="_blank"
-                                                        href="/{{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->suratSrikandi[0]->document_srikandi_pdf_path }}">
-                                                        <i class="fa-solid fa-eye mr-1"></i>Lihat</a>
+                                                    @php $status = $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->status ?? '' @endphp
+                                                    <span class="badge
+                                                    {{ $status == 'usulan' ? 'badge-light' : '' }}
+                                                    {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    {{ $status == 'dibatalkan' ? 'badge-danger' : '' }}
+                                                    text-capitalize"><i class="
+                                                        {{ $status == 'usulan' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
+                                                        {{ $status == 'dibatalkan' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
+                                                    "></i>{{ $status }}
                                                 </td>
                                             @else
                                                 <td></td>
                                                 <td></td>
+                                                <td></td>
                                             @endif
+                                            
                                             @if (isset($norma_hasil[$bulan->id]))
                                                 @if ($norma_hasil[$bulan->id]->jenis == 1)
                                                     <td>
@@ -126,19 +155,52 @@
                                                 <td></td>
                                             @endif
 
-                                            @if (isset($kendali_mutu[$bulan->id]->path))
+                                            <td>
+                                                @php $status = $norma_hasil[$bulan->id]->status_verifikasi_arsiparis ?? '' @endphp
+                                                <span class="badge
+                                                    {{ $status == 'diperiksa' ? 'badge-light' : '' }}
+                                                    {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    text-capitalize"><i class="
+                                                        {{ $status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
+                                                    "></i>{{ $status }}
+                                                </span>
+                                            </td>
+
+                                            @if (isset($kendali_mutu[$bulan->id]))
+                                                @if ($kendali_mutu[$bulan->id]->status != 'tidak ada')
+                                                    <td>
+                                                        @if (file_exists($kendali_mutu[$bulan->id]->path))
+                                                            <a target="blank" href="/pegawai/tim/kendali-mutu/download/{{ $kendali_mutu[$bulan->id]->id }}"
+                                                                class="badge btn-primary"><i
+                                                                    class="fa fa-eye mr-1"></i> Lihat</a>
+                                                        @else
+                                                            <a target="blank" href="{{ $kendali_mutu[$bulan->id]->path }}"
+                                                                class="badge btn-primary"><i
+                                                                    class="fa fa-eye mr-1"></i> Lihat</a>
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td></td>
+                                                @endif
                                                 <td>
-                                                    @if (file_exists($kendali_mutu[$bulan->id]->path))
-                                                        <a target="blank" href="/pegawai/tim/kendali-mutu/download/{{ $kendali_mutu[$bulan->id]->id }}"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-eye mr-1"></i> Lihat</a>
-                                                    @else
-                                                        <a target="blank" href="{{ $kendali_mutu[$bulan->id]->path }}"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-eye mr-1"></i> Lihat</a>
-                                                    @endif
+                                                    @php $status = $kendali_mutu[$bulan->id]->status ?? '' @endphp
+                                                    <span class="badge
+                                                    {{ $status == 'diperiksa' ? 'badge-light' : '' }}
+                                                    {{ $status == 'disetujui' ? 'badge-success' : '' }}
+                                                    {{ $status == 'ditolak' ? 'badge-danger' : '' }}
+                                                    {{ $status == 'tidak ada' ? 'badge-dark' : '' }}
+                                                    text-capitalize"><i class="
+                                                        {{ $status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
+                                                        {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
+                                                        {{ $status == 'tidak ada' ? 'fa-regular fa-circle-xmark mr-1' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
+                                                    "></i>{{ $status }}
                                                 </td>
                                             @else
+                                                <td></td>
                                                 <td></td>
                                             @endif
                                         </tr>
@@ -183,7 +245,7 @@
         lengthChange: false,
         autoWidth: false,
         scrollX: true,
-        rowsGroup: [1, 4, 5, 2],
+        rowsGroup: [1, 4, 5, 6, 2],
         buttons: [
             {
                 extend: "excel",

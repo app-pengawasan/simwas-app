@@ -112,7 +112,8 @@
             </tr>
             <tr>
                 <th>Kode Klasifikasi Arsip:</th>
-                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? '' }}{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}
+                <td>{{ $usulanSuratSrikandi->kodeKlasifikasiArsip->kode ?? '' }}
+                    {{ $usulanSuratSrikandi->kodeKlasifikasiArsip->uraian ?? '' }}
                 </td>
             </tr>
 

@@ -197,7 +197,7 @@ class ObjekPengawasanController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memperbarui Objek Pengawasan',
+                'message' => 'Gagal memperbarui Objek Pengawasan, karena telah dilakukan pengisian norma hasil.',
             ], 500);
         }
     }

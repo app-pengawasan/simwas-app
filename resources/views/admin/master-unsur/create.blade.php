@@ -16,7 +16,11 @@
                         <label class="form-label" for="namaUnsur">Nama Unsur</label>
                         <div class="">
                             <input type="text" class="form-control" name="namaUnsur" id="namaUnsur" required
-                                placeholder="Masukkan Nama Unsur">
+                                placeholder="Masukkan Nama Unsur" value="{{ old('namaUnsur') }}">
+                            @error('namaUnsur')
+                            <small id="error-unsur" class="text-danger">{{ $message }}</small>
+                            @enderror
+
                             <small id="error-unsur" class="text-danger"></small>
                         </div>
                     </div>

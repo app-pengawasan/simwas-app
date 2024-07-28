@@ -43,4 +43,12 @@ class TugasController extends Controller
             'anggota' => $anggota
         ]);
     }
+    // get rencana kerja list by timkerja
+    public function getRencanaKerjaList(Request $request) {
+        $id_timkerja = $request->input('timkerja_id');
+        $rencana_kerja = RencanaKerja::where('id_timkerja', $id_timkerja)->get();
+        return response()->json([
+            'data' => $rencana_kerja
+        ]);
+    }
 }

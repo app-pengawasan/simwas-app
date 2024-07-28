@@ -24,7 +24,13 @@ class StoreMasterUnsurRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'namaUnsur' => ['required', 'string', 'max:100'],
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'namaUnsur.required' => 'Nama unsur harus diisi',
         ];
     }
 }

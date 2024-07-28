@@ -266,7 +266,28 @@ class SuratKorespondensiController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->all());
+        $rules = [
+            'pejabatPenandaTangan' => 'required',
+            'jenisNaskahDinasKorespondensi' => 'required',
+            'derajatKeamanan' => 'required',
+            'perihal' => 'required',
+            'kodeKlasifikasiArsip' => 'required',
+            'usulanTanggal' => 'required',
+            'file' => 'mimes:doc,docx|max:2048',
+        ];
+        $messages = [
+            'pejabatPenandaTangan.required' => 'Pejabat Penanda Tangan wajib diisi',
+            'jenisNaskahDinasKorespondensi.required' => 'Jenis Naskah Dinas Korespondensi wajib diisi',
+            'derajatKeamanan.required' => 'Derajat Keamanan wajib diisi',
+            'perihal.required' => 'Perihal wajib diisi',
+            'kodeKlasifikasiArsip.required' => 'Kode Klasifikasi Arsip wajib diisi',
+            'usulanTanggal.required' => 'Usulan Tanggal wajib diisi',
+            'file.mimes' => 'File harus berformat doc, docx',
+            'file.max' => 'File maksimal 2MB',
+        ];
+
+        $request->validate($rules, $messages);
+
 
         $pejabatPenandaTangan = $request->pejabatPenandaTangan;
         if ($request->file('file') != null) {

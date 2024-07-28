@@ -27,6 +27,11 @@
                     <span>Kompetensi Pegawai</span>
                 </a>
                 <ul class="dropdown-menu">
+                    <li class="{{ Request::is('analis-sdm/master-penyelenggara*') ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/master-penyelenggara">
+                            <span>Master Penyelenggara Diklat</span>
+                        </a>
+                    </li>
                     <li class="{{ Request::is('analis-sdm/pp*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('analis-sdm.pp') }}">
                             <span>Master Kompetensi Pegawai</span>

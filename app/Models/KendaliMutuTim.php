@@ -17,6 +17,6 @@ class KendaliMutuTim extends Model
 
     public function laporanObjekPengawasan()
     {
-        return $this->belongsTo(laporanObjekPengawasan::class, 'laporan_pengawasan_id', 'id');
+        return $this->belongsTo(LaporanObjekPengawasan::class, 'laporan_pengawasan_id', 'id');
     }
 }

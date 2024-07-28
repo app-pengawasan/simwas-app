@@ -206,7 +206,10 @@
                                                 @if (!isset($rencanaKerja->pelaksana[$i]))
                                                 <td class="font-italic"> Belum ditentukan </td>
                                                 <td> PIC </td>
-                                                <td class="font-italic"> {{
+                                                @if (count($rencanaKerja->hasilKerja->masterKinerja) < 1) <td>Belum
+                                                    tersedia</td>
+                                                    @else
+                                                    <td class="font-italic"> {{
                                                         $rencanaKerja->hasilKerja->masterKinerja[0]
                                                         ->masterKinerjaPegawai
                                                         ->where('pt_jabatan', 3 )
@@ -214,60 +217,66 @@
                                                         ->hasil_kerja ?? 'Belum tersedia'
 
                                                         }} </td>
-                                                <td class="font-italic"> Belum ditentukan </td>
-                                                <td>
-                                                    @if ($timKerja->status < 2) <button
-                                                        class="btn btn-sm btn-primary btn-create-pelaksana"
-                                                        type="button" data-toggle="modal" data-disable=false
-                                                        data-target="#modal-create-pelaksana" data-hasilkerja=1
-                                                        data-jabatan=3>
-                                                        <i class="fa-solid fa-plus mr-1"></i>
-                                                        Tambah Pelaksana
-                                                        </button>
+                                                    @endif
+                                                    <td class="font-italic"> Belum ditentukan </td>
+                                                    <td>
+                                                        @if ($timKerja->status < 2) <button
+                                                            class="btn btn-sm btn-primary btn-create-pelaksana"
+                                                            type="button" data-toggle="modal" data-disable=false
+                                                            data-target="#modal-create-pelaksana" data-hasilkerja=1
+                                                            data-jabatan=3>
+                                                            <i class="fa-solid fa-plus mr-1"></i>
+                                                            Tambah Pelaksana
+                                                            </button>
+                                                            @endif
+                                                    </td>
+                                                    @else
+                                                    <td>
+                                                        {{ $rencanaKerja->pelaksana[$i]->user->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $jabatanPelaksana[$rencanaKerja->pelaksana[$i]->pt_jabatan - 1] }}
+                                                    </td>
+                                                    @if ($rencanaKerja->kategori_pelaksanatugas == 'ngt')
+                                                    @if (count($rencanaKerja->hasilKerja->masterKinerja) < 1) <td>Belum
+                                                        tersedia</td>
+                                                        @else
+                                                        <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $i < 1 ? 3 : 4 )->first()->hasil_kerja }}
+                                                        </td>
                                                         @endif
-                                                </td>
-                                                @else
-                                                <td>
-                                                    {{ $rencanaKerja->pelaksana[$i]->user->name }}
-                                                </td>
-                                                <td>
-                                                    {{ $jabatanPelaksana[$rencanaKerja->pelaksana[$i]->pt_jabatan - 1] }}
-                                                </td>
-                                                @if ($rencanaKerja->kategori_pelaksanatugas == 'ngt')
-                                                <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->
-                                               where('pt_jabatan', $i < 1 ? 3 : 4 )->first()->hasil_kerja }}</td>
-                                                @else
-                                                <td>
-                                                    {{ $rencanaKerja->pelaksana[$i]->hasil->id }}
-                                                </td>
-                                                @endif
-                                                <td>
-                                                    {{
+                                                        @else
+                                                        <td>
+                                                            {{ $rencanaKerja->pelaksana[$i]->hasil->id }}
+                                                        </td>
+                                                        @endif
+                                                        <td>
+                                                            {{
                                                         $rencanaKerja->pelaksana[$i]->jan + $rencanaKerja->pelaksana[$i]->feb + $rencanaKerja->pelaksana[$i]->mar + $rencanaKerja->pelaksana[$i]->apr + $rencanaKerja->pelaksana[$i]->mei + $rencanaKerja->pelaksana[$i]->jun + $rencanaKerja->pelaksana[$i]->jul + $rencanaKerja->pelaksana[$i]->agu + $rencanaKerja->pelaksana[$i]->sep + $rencanaKerja->pelaksana[$i]->okt + $rencanaKerja->pelaksana[$i]->nov + $rencanaKerja->pelaksana[$i]->des
                                                         }}
-                                                </td>
-                                                <td>
-                                                    @if ($timKerja->status < 2) <button
-                                                        class="btn btn-warning btn-edit-pelaksana btn-sm" type="button"
-                                                        data-toggle="modal" data-disable=false
-                                                        data-target="#modal-edit-pelaksana"
-                                                        data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
-                                                        <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        @endif
-                                                        @if ($i >= 1)
+                                                        </td>
+                                                        <td>
+                                                            @if ($timKerja->status < 2) <button
+                                                                class="btn btn-warning btn-edit-pelaksana btn-sm"
+                                                                type="button" data-toggle="modal" data-disable=false
+                                                                data-target="#modal-edit-pelaksana"
+                                                                data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
+                                                                <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                @endif
+                                                                @if ($i >= 1)
 
-                                                        <button class="btn btn-danger btn-delete-pelaksana btn-sm"
-                                                            type="button"
-                                                            data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
+                                                                <button
+                                                                    class="btn btn-danger btn-delete-pelaksana btn-sm"
+                                                                    type="button"
+                                                                    data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                                @endif
+                                                        </td>
                                                         @endif
-                                                </td>
-                                                @endif
-                                                </tr>
-                                                @endfor
-                                                @endif
+                                                        </tr>
+                                                        @endfor
+                                                        @endif
                                     </table>
                                     @if (
                                     ($rencanaKerja->kategori_pelaksanatugas == 'gt' && count($rencanaKerja->pelaksana) >

@@ -60,7 +60,8 @@
                                             Tahun</label>
                                         <select name="year" id="yearSelect" class="form-control select2">
                                             @foreach ($year as $key => $value)
-                                            <option value="{{ $value->year }}" {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                            <option value="{{ $value->year }}"
+                                                {{ request()->query('year') == $value->year ? 'selected' : '' }}>
                                                 {{ $value->year }}
                                             </option>
                                             @endforeach
@@ -73,124 +74,127 @@
                                     <select name="jabatan" id="filter-surat" class="form-control select2">
                                         <option value="">Semua</option>
                                         @foreach ($jenisNormaHasil as $key => $value)
-                                        <option value="{{ $value }}" {{ request()->jabatan == $key ? 'selected' : '' }}>
-                                            {{ $value }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
-                                {{-- status,diperiksa, ditolak, disetujui --}}
-                                <div class="form-group
+                                        <option value="{{ $value }}"
+                                {{ request()->jabatan == $key ? 'selected' : '' }}>
+                                {{ $value }}
+                                </option>
+                                @endforeach
+                                </select>
+                            </div> --}}
+                            {{-- status,diperiksa, ditolak, disetujui --}}
+                            <div class="form-group
                                     {{ request()->status ? 'd-none' : '' }}"
-                                    style="margin-bottom: 0; max-width: 200px;">
-                                    <label for="filter-status" style="margin-bottom: 0;">
-                                        Status</label>
-                                    <select name="status" id="filter-status" class="form-control select2">
-                                        <option value="">Semua</option>
-                                        <option value="diperiksa"
-                                            {{ request()->status == 'diperiksa' ? 'selected' : '' }}>
-                                            Diperiksa
-                                        </option>
-                                        <option value="ditolak" {{ request()->status == 'ditolak' ? 'selected' : '' }}>
-                                            Ditolak
-                                        </option>
-                                        <option value="disetujui"
-                                            {{ request()->status == 'disetujui' ? 'selected' : '' }}>
-                                            Disetujui
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div style="gap:10px" class="d-flex align-items-end">
-                                    <a href="/pegawai/norma-hasil/create" id="create-btn" class="btn btn-primary">
-                                        <i class=" fas fa-plus-circle"></i>
-                                        Tambah
-                                    </a>
-                                </div>
+                                style="margin-bottom: 0; max-width: 200px;">
+                                <label for="filter-status" style="margin-bottom: 0;">
+                                    Status</label>
+                                <select name="status" id="filter-status" class="form-control select2">
+                                    <option value="">Semua</option>
+                                    <option value="diperiksa" {{ request()->status == 'diperiksa' ? 'selected' : '' }}>
+                                        Diperiksa
+                                    </option>
+                                    <option value="ditolak" {{ request()->status == 'ditolak' ? 'selected' : '' }}>
+                                        Ditolak
+                                    </option>
+                                    <option value="disetujui" {{ request()->status == 'disetujui' ? 'selected' : '' }}>
+                                        Disetujui
+                                    </option>
+                                </select>
                             </div>
-                            <div>
-                                <table class="table table-bordered table-striped display responsive"
-                                    id="table-norma-hasil">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px; text-align:center">No</th>
-                                            <th style="width: 200px;">Jenis Norma Hasil</th>
-                                            <th style="width: 180px;">Nomor Surat</th>
-                                            <th style="width: 100px;">Tanggal Usulan</th>
-                                            <th style="width: 180px;">Status</th>
-                                            <th style="width: 50px;">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($usulan as $un)
-                                        <tr>
-                                            <td class="text-center" style="width: 10px; text-align:center" scope="row">
-                                                {{ $loop->iteration }}
-                                            </td>
-                                            <td>{{ $un->masterLaporan->nama ?? "" }}</td>
-                                            <td>
-                                                @if ($un->status_norma_hasil == 'disetujui')
-                                                <span class="badge badge-primary">
-                                                    R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                </span>
-                                                @endif
-                                            </td>
-                                            <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
-                                            @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil !=
+
+                            <div style="gap:10px" class="d-flex align-items-end">
+                                <a href="/pegawai/norma-hasil/create" id="create-btn" class="btn btn-primary">
+                                    <i class=" fas fa-plus-circle"></i>
+                                    Tambah
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <table class="table table-bordered table-striped display responsive" id="table-norma-hasil">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px; text-align:center">No</th>
+                                        <th style="width: 200px;">Jenis Norma Hasil</th>
+                                        <th style="width: 180px;">Nomor Surat</th>
+                                        <th style="width: 100px;">Tanggal Usulan</th>
+                                        <th style="width: 180px;">Status</th>
+                                        <th style="width: 50px;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($usulan as $un)
+                                    <tr>
+                                        <td class="text-center" style="width: 10px; text-align:center" scope="row">
+                                            {{ $loop->iteration }}
+                                        </td>
+                                        <td>{{ $un->masterLaporan->nama ?? "" }}</td>
+                                        <td>
+                                            @if ($un->status_norma_hasil == 'disetujui')
+                                            <span class="badge badge-primary">
+                                                R-{{ $un->normaHasilAccepted->nomor_norma_hasil}}/{{ $un->normaHasilAccepted->unit_kerja}}/{{ $un->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $un->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                            </span>
+                                            @endif
+                                        </td>
+                                        <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
+                                        @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil !=
+                                        'ditolak')
+                                        <td>
+                                            @if ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                            'belum unggah')
+                                            <span class="badge badge-dark">Menunggu Upload Laporan</span>
+                                            @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                            'diperiksa')
+                                            <span class="badge badge-dark"><i
+                                                    class="fa-regular fa-clock mr-1"></i>Diperiksa Arsiparis</span>
+                                            @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
+                                            'disetujui')
+                                            <span class="badge badge-success"><i
+                                                    class="fa-regular fa-circle-check mr-1"></i>Disetujui
+                                                Arsiparis</span>
+                                            @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
                                             'ditolak')
-                                            <td>
-                                                @if ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                'belum unggah')
-                                                <span class="badge badge-dark">Menunggu Upload Laporan</span>
-                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                'diperiksa')
-                                                <span class="badge badge-dark"><i
-                                                        class="fa-regular fa-clock mr-1"></i>Diperiksa Arsiparis</span>
-                                                @elseif ($un->normaHasilAccepted->status_verifikasi_arsiparis ==
-                                                'disetujui')
-                                                <span class="badge badge-success"><i
-                                                        class="fa-regular fa-circle-check mr-1"></i>Disetujui
-                                                        Arsiparis</span>
-                                                @endif
-                                            </td>
-                                            @else
-                                            <td>
-                                                <span class="badge
+                                            <span class="badge badge-danger"><i
+                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>Ditolak
+                                                Arsiparis</span>
+
+                                            @endif
+                                        </td>
+                                        @else
+                                        <td>
+                                            <span class="badge
                                                         {{ $un->status_norma_hasil == 'diperiksa' ? 'badge-light' : '' }}
                                                         {{ $un->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
                                                         {{ $un->status_norma_hasil == 'disetujui' ? 'badge-success' : '' }}
                                                             text-capitalize">
-                                                    @if ($un->status_norma_hasil == 'diperiksa')<i
-                                                        class="fa-regular fa-clock mr-1"></i>
-                                                    @elseif ($un->status_norma_hasil == 'ditolak')<i
-                                                        class="fa-solid fa-triangle-exclamation mr-1"></i>
-                                                    @elseif ($un->status_norma_hasil == 'disetujui')<i
-                                                        class="fa-regular fa-circle-check mr-1"></i>
-                                                    @endif
+                                                @if ($un->status_norma_hasil == 'diperiksa')<i
+                                                    class="fa-regular fa-clock mr-1"></i>
+                                                @elseif ($un->status_norma_hasil == 'ditolak')<i
+                                                    class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                                @elseif ($un->status_norma_hasil == 'disetujui')<i
+                                                    class="fa-regular fa-circle-check mr-1"></i>
+                                                @endif
 
-                                                    {{$un->status_norma_hasil }}
-                                                </span>
-                                            </td>
-                                            @endif
-                                            <td>
-                                                <a href="/pegawai/norma-hasil/{{ $un->id }}"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-eye
+                                                {{$un->status_norma_hasil }}
+                                            </span>
+                                        </td>
+                                        @endif
+                                        <td>
+                                            <a href="/pegawai/norma-hasil/{{ $un->id }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye
                                                     "></i>
-                                                    Lihat
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                                Lihat
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>
 @endsection
 

@@ -73,7 +73,7 @@
                                                     {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
                                                     <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
-                                                        <i class="fas fa-download"></i>
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                     {{-- @else
                                                         <a class="btn btn-primary"
@@ -93,6 +93,9 @@
                                                     </td>
                                                 @endif
                                                 <td>
+                                                    <a href="/pegawai/kompetensi/{{ $k->id }}" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
                                                     <a href="javascript:void(0)" class="btn btn-sm edit-btn btn-warning"
                                                         data-id="{{ $k->id }}"
                                                         data-toggle="modal" data-target="#modal-edit-kompetensi">

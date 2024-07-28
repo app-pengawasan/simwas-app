@@ -76,8 +76,8 @@
                                                 @endif
                                             </td>
                                             <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
-                                                   $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama }}</td>
-                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month] }}</td>
+                                                   $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama ?? "" }}</td>
+                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month ?? 0] }}</td>
                                             <td>
                                                 @php
                                                     $status = $lnm->normaHasilAccepted->status_verifikasi_arsiparis ??

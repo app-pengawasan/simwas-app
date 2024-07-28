@@ -495,8 +495,8 @@ class DashboardController extends Controller
                         $query->where('tahun', $year);
                     })->get();
 
-        $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $tugas->pluck('id_rencanakerja'))
-                        ->where('status', 'disetujui')->get();
+        $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $tugas->pluck('id_rencanakerja'))->get();
+                        // ->where('status', 'disetujui')->get();
         $surat_tugas_arr = [];
 
         foreach ($surat_tugas as $surat) {
@@ -508,13 +508,13 @@ class DashboardController extends Controller
                             })->where('status', 1)->get();
 
         $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($laporanObjek) {
-                            $query->where('status_verifikasi_arsiparis', 'disetujui');
+                            // $query->where('status_verifikasi_arsiparis', 'disetujui');
                             $query->whereRelation('normaHasil', function (Builder $q) use ($laporanObjek) {
                                 $q->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
                             });
                         })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($laporanObjek) {
                             $query->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
-                            $query->where('status_verifikasi_arsiparis', 'disetujui');
+                            // $query->where('status_verifikasi_arsiparis', 'disetujui');
                         })->get();
         $norma_hasil_arr = [];
 
@@ -530,8 +530,8 @@ class DashboardController extends Controller
             $norma_hasil_arr[$bulan_id]['jenis'] = $dokumen->jenis;
         } 
 
-        $kendali_mutu = KendaliMutuTim::whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'))
-                        ->where('status', 'disetujui')->get();
+        $kendali_mutu = KendaliMutuTim::whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'))->get();
+                        // ->where('status', 'disetujui')->get();
         $kendali_mutu_arr = [];
 
         foreach ($kendali_mutu as $dokumen) {

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\NamaPp;
 use App\Models\Kompetensi;
 use Illuminate\Http\Request;
+use App\Models\MasterPenyelenggara;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 // use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class PegawaiKompetensiController extends Controller
         $kompetensi = Kompetensi::all()->where('pegawai_id', auth()->user()->id);
         $pp = Pp::all()->whereNotIn('is_aktif', [0]);
         $nama_pp = NamaPp::whereNot('id', '999')->get();
+        $penyelenggara = MasterPenyelenggara::all();
 
         return view('pegawai.kompetensi.index',[
             'type_menu'     => 'kompetensi',
@@ -42,6 +44,7 @@ class PegawaiKompetensiController extends Controller
             'status'        => $this->status,
             'pps'            => $pp,
             'nama_pps'       => $nama_pp,
+            'penyelenggara' => $penyelenggara,
             'role'          => 'pegawai'
         ])->with('kompetensi', $kompetensi);
     }
@@ -69,14 +72,25 @@ class PegawaiKompetensiController extends Controller
             'pp_lain'       => 'required_if:pp_id,==,999',
             'nama_pp_id'        => 'required',
             'nama_pp_lain'   => 'required_if:nama_pp_id,==,999',
-            'create-sertifikat'    => 'required|mimes:pdf|max:500'
+            'create-sertifikat'    => 'required|mimes:pdf|max:500',
+            'tgl_mulai'         => 'required|date|before_or_equal:tgl_selesai',
+            'tgl_selesai'         => 'required|date|after_or_equal:tgl_mulai',
+            'tgl_sertifikat'         => 'required|date',
+            'durasi'         => 'required|decimal:0,2',
+            'penyelenggara'         => 'required',
+            'jumlah_peserta'         => 'nullable|integer',
+            'ranking'         => 'nullable|integer',
         ];
 
         $messages = [
             'required' => 'Harus diisi',
             'required_if' => 'Harus diisi',
             'mimes' => 'Format file harus pdf',
-            'max' => 'Ukuran file maksimal 500KB'
+            'max' => 'Ukuran file maksimal 500KB',
+            'integer' => 'Angka bilangan bulat',
+            'decimal' => 'Nilai maksimal memiliki 2 angka desimal. Contoh: 98.67',
+            'before_or_equal' => 'Tanggal mulai tidak boleh setelah tanggal selesai.',
+            'after_or_equal' => 'Tanggal selesai tidak boleh sebelum tanggal mulai.'
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -114,15 +128,14 @@ class PegawaiKompetensiController extends Controller
      */
     public function show($id)
     {
-        $kompetensi = Kompetensi::where('id', $id)->get();
-        $peserta = $kompetensi->first()->namaPp->peserta;
+        $kompetensi = Kompetensi::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Detail Data Kompetensi',
-            'data'    => $kompetensi,
-            'peserta' => $peserta
-        ]);
+        return view('components.kelola-kompetensi.show',[
+            'type_menu'     => 'kompetensi',
+            'role'          => 'pegawai',
+            'colorText'     => $this->colorText,
+            'status'        => $this->status,
+        ])->with('kompetensi', $kompetensi);
     }
 
     /**
@@ -152,14 +165,25 @@ class PegawaiKompetensiController extends Controller
             'edit-pp_lain'       => 'required_if:edit-pp,==,999',
             'edit-nama_pp'        => 'required|not_in:null',
             'edit-nama_pp_lain'   => 'required_if:edit-nama_pp,==,999',
-            'edit-sertifikat'     => 'nullable|mimes:pdf|max:500'
+            'edit-sertifikat'     => 'nullable|mimes:pdf|max:500',
+            'edit-tgl_mulai'         => 'required|date|before_or_equal:edit-tgl_selesai',
+            'edit-tgl_selesai'         => 'required|date|after_or_equal:edit-tgl_mulai',
+            'edit-tgl_sertifikat'         => 'required|date',
+            'edit-durasi'         => 'required|decimal:0,2',
+            'edit-penyelenggara'         => 'required',
+            'edit-jumlah_peserta'         => 'nullable|integer',
+            'edit-ranking'         => 'nullable|integer',
         ];
 
         $messages = [
             'required' => 'Harus diisi',
             'required_if' => 'Harus diisi',
             'mimes' => 'Format file harus pdf',
-            'max' => 'Ukuran file maksimal 500KB'
+            'max' => 'Ukuran file maksimal 500KB',
+            'integer' => 'Angka bilangan bulat',
+            'decimal' => 'Nilai maksimal memiliki 2 angka desimal. Contoh: 98.67',
+            'before_or_equal' => 'Tanggal mulai tidak boleh setelah tanggal selesai.',
+            'after_or_equal' => 'Tanggal selesai tidak boleh sebelum tanggal mulai.'
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -173,7 +197,14 @@ class PegawaiKompetensiController extends Controller
         $data = [
             'pp_id'     => $validateData['edit-pp'],
             'nama_pp_id'   => $validateData['edit-nama_pp'],
-            'catatan'      => $request['edit-catatan']
+            'catatan'      => $request['edit-catatan'],
+            'tgl_mulai' => $validateData['edit-tgl_mulai'],
+            'tgl_selesai' => $validateData['edit-tgl_selesai'],
+            'tgl_sertifikat' => $validateData['edit-tgl_sertifikat'],
+            'durasi' => $validateData['edit-durasi'],
+            'penyelenggara' => $validateData['edit-penyelenggara'],
+            'jumlah_peserta' => $validateData['edit-jumlah_peserta'],
+            'ranking' => $validateData['edit-ranking'],
         ];
 
         if (isset($validateData['edit-pp_lain'])) 
@@ -218,6 +249,21 @@ class PegawaiKompetensiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menghapus data kompetensi',
+        ]);
+    }
+
+    public function getData($id)
+    {
+        $kompetensi = Kompetensi::where('id', $id)->get();
+        $peserta = $kompetensi->first()->namaPp->peserta;
+        $penyelenggara = $kompetensi->first()->penyelenggaraDiklat->id;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Kompetensi',
+            'data'    => $kompetensi,
+            'peserta' => $peserta,
+            'penyelenggara' => $penyelenggara
         ]);
     }
 }

@@ -24,7 +24,19 @@ class StoreMasterHasilKerjaRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'masterUnsurId' => 'required',
+            'masterSubUnsurId' => 'required',
+            'namaHasilKerja' => 'required',
+            'status' => 'required',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'masterUnsurId.required' => 'Unsur tidak boleh kosong',
+            'masterSubUnsurId.required' => 'Sub Unsur tidak boleh kosong',
+            'namaHasilKerja.required' => 'Nama Hasil Kerja tidak boleh kosong',
+            'status.required' => 'Status tidak boleh kosong',
         ];
     }
 }

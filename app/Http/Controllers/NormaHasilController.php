@@ -110,8 +110,7 @@ class NormaHasilController extends Controller
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
                             $query->whereIn('status', [1, 2]);
                         })->whereHas('pelaksana', function ($query) {
-                            $query->where('id_pegawai', auth()->user()->id)
-                                ->whereIn('pt_jabatan', [2, 3]);
+                            $query->where('id_pegawai', auth()->user()->id);
                         })->get();
         $masterLaporan = MasterLaporan::where('is_aktif', 1)->get();
         // $stks = StKinerja::latest()->where('user_id', auth()->user()->id)->where('status', 5)->get();
@@ -137,7 +136,6 @@ class NormaHasilController extends Controller
         $tanggal = date('Y-m-d');
         // dd($request->all());
 
-        try {
             NormaHasil::create([
                 'user_id' => $user_id,
                 'unit_kerja' => $unit_kerja,
@@ -160,9 +158,6 @@ class NormaHasilController extends Controller
             ]);
 
             return redirect('pegawai/norma-hasil')->with('success', 'Berhasil mengajukan usulan norma hasil!');
-        } catch (\Exception $e) {
-            return redirect('pegawai/norma-hasil')->with('error', 'Gagal mengajukan usulan norma hasil!');
-        }
 
     }
 

@@ -1,5 +1,5 @@
 $(function () {
-    let table;
+    var table;
 
     if ($("#table-norma-hasil").length) {
         table = $("#table-norma-hasil")
@@ -75,41 +75,40 @@ $(function () {
                 cell.innerHTML = i + 1;
             });
     });
-});
+    function filterTable() {
+        let filterSurat = $("#filter-surat").val();
+        let filterStatus = $("#filter-status").val();
 
-function filterTable() {
-    let filterSurat = $("#filter-surat").val();
-    let filterStatus = $("#filter-status").val();
+        if (filterSurat == "Semua") {
+            filterSurat = "";
+        }
+        if (filterStatus == "Semua") {
+            filterStatus = "";
+        }
 
-    if (filterSurat == "Semua") {
-        filterSurat = "";
+        table
+            .column(3)
+            .search(filterSurat, true, false)
+            .column(5)
+            .search(filterStatus, true, false)
+            .draw();
+
+        // reset numbering in table first column
+        table
+            .column(0, { search: "applied", order: "applied" })
+            .nodes()
+            .each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
     }
-    if (filterStatus == "Semua") {
-        filterStatus = "";
-    }
+    $("#filter-surat, #filter-status").on("change", function () {
+        filterTable();
+    });
 
-    table
-        .column(3)
-        .search(filterSurat, true, false)
-        .column(5)
-        .search(filterStatus, true, false)
-        .draw();
-
-    // reset numbering in table first column
-    table
-        .column(0, { search: "applied", order: "applied" })
-        .nodes()
-        .each(function (cell, i) {
-            cell.innerHTML = i + 1;
-        });
-}
-$("#filter-surat, #filter-status").on("change", function () {
-    filterTable();
-});
-
-$("#yearSelect").on("change", function () {
-    let year = $(this).val();
-    $("#yearForm").attr("action", `?year=${year}`);
-    $("#yearForm").find('[name="_token"]').remove();
-    $("#yearForm").submit();
+    $("#yearSelect").on("change", function () {
+        let year = $(this).val();
+        $("#yearForm").attr("action", `?year=${year}`);
+        $("#yearForm").find('[name="_token"]').remove();
+        $("#yearForm").submit();
+    });
 });

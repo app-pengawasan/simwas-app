@@ -31,6 +31,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('components.flash')
+                        @include('components.flash-error')
                         <div class="d-flex justify-content-between">
                             <p>
                                 <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
@@ -62,6 +63,7 @@
                                         <th>Nama Hasil Kerja</th>
                                         <th>Status</th>
                                         <th>Nama Subunsur</th>
+                                        <th>Master Kinerja</th>
                                         <th style="min-width: 98px">Aksi</th>
                                     </tr>
                                 </thead>
@@ -75,6 +77,15 @@
 
                                         }}</td>
                                         <td>{{ $hasilKerja->masterSubUnsur->nama_sub_unsur}}</td>
+                                        <td>
+                                            @if (count($hasilKerja->masterKinerja) > 0)
+                                            <span class="badge badge-success">Sudah Diisi</span>
+                                            @else
+                                            <span class="badge badge-danger">
+                                                <a href="{{ route('admin.master-kinerja.index', $hasilKerja->id) }}"
+                                                    class="text-white">Belum Diisi</a>
+                                            </span>
+                                            @endif
                                         <td>
                                             <div class="d-flex">
                                                 <button type="button" class="btn btn-warning btn-sm edit-button"

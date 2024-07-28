@@ -36,28 +36,98 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="form-group mb-2">
-                                <label for="yearSelect">Tahun Pengajuan</label>
-                                <select name="year" id="yearSelect" class="form-control select2 col-md-1">
-                                    @php
-                                    $currentYear = date('Y');
-                                    $lastThreeYears = range($currentYear, $currentYear - 3);
-                                    @endphp
-                
-                                    @foreach ($lastThreeYears as $year)
-                                    <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
-                                    </option>
-                                    @endforeach
-                                </select>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-3">
+                                    <span class="badge alert-primary mr-2"><i class="fas fa-info"></i></span>
+                                    Halaman ini menampilkan daftar usulan norma hasil yang diajukan oleh pegawai.
+                                </p>
+                                <div id="download-button">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
+                                <div class="form-group flex-grow-1" style="margin-bottom: 0;">
+                                    <div id="filter-search-wrapper">
+                                    </div>
+                                </div>
+                                {{-- tahun from $tahun --}}
+                                <form id="yearForm" action="" method="GET">
+                                    @csrf
+                                    <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                        <label for="filter-tahun" style="margin-bottom: 0;">
+                                            Tahun</label>
+                                        <select name="year" id="filter-tahun" class="form-control select2">
+                                            @foreach ($year as $key => $value)
+                                            <option value="{{ $value->year }}"
+                                                {{ request()->query('year') == $value->year ? 'selected' : '' }}>
+                                                {{ $value->year }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
+                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-unit-kerja" style="margin-bottom: 0;">
+                                        Unit Kerja</label>
+                                    <select name="unit_kerja" id="filter-unit-kerja" class="form-control select2">
+                                        <option value="">Semua</option>
+                                        @foreach ($unit_kerja as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request()->unit_kerja == $key ? 'selected' : '' }}>
+                                            {{ $value }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-surat" style="margin-bottom: 0;">
+                                        Jenis</label>
+                                    <select name="jabatan" id="filter-surat" class="form-control select2">
+                                        <option value="">Semua</option>
+                                        @foreach ($jenisNormaHasil as $key => $value)
+                                        <option value="{{ $value->nama }}">
+                                            {{ $value->nama }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                {{-- status,diperiksa, ditolak, disetujui --}}
+                                <div class="form-group
+                                                                                            {{ request()->status ? 'd-none' : '' }}"
+                                    style="margin-bottom: 0; max-width: 200px;">
+                                    <label for="filter-status" style="margin-bottom: 0;">
+                                        Status</label>
+                                    <select name="status" id="filter-status" class="form-control select2">
+                                        <option value="">Semua</option>
+                                        <option value="diperiksa"
+                                            {{ request()->status == 'diperiksa' ? 'selected' : '' }}>
+                                            Diperiksa
+                                        </option>
+                                        <option value="ditolak" {{ request()->status == 'ditolak' ? 'selected' : '' }}>
+                                            Ditolak
+                                        </option>
+                                        <option value="disetujui"
+                                            {{ request()->status == 'disetujui' ? 'selected' : '' }}>
+                                            Disetujui
+                                        </option>
+                                        {{-- belum upload --}}
+                                        <option value="belum upload"
+                                            {{ request()->status == 'belum-upload' ? 'selected' : '' }}>
+                                            Belum Upload
+                                        </option>
+
+
+                                    </select>
+                                </div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped display responsive"
-                                    id="table-pengelolaan-dokumen-pegawai">
+                                    id="table-norma-hasil">
                                     <thead>
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
                                             <th>Tugas</th>
                                             <th>Nomor Dokumen</th>
+                                            <th>Jenis</th>
                                             <th>Objek Pengawasan</th>
                                             <th>Bulan Pelaporan</th>
                                             <th>Status</th>
@@ -68,26 +138,32 @@
                                     <tbody>
                                         @foreach ($laporan as $lnm)
                                         <tr>
-                                            <td></td>
-                                            <td>{{ $lnm->rencanaKerja->tugas }}</td>
+                                            <td class="text-center">
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>{{ $lnm->rencanaKerja->tugas ?? "" }}</td>
                                             <td>
                                                 @if ($lnm->jenis == 1)
-                                                    <span class="badge badge-primary">
-                                                        R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                    </span>
+                                                <span class="badge badge-primary">
+                                                    R-{{ $lnm->normaHasilAccepted->nomor_norma_hasil}}/{{ $lnm->normaHasilAccepted->unit_kerja}}/{{ $lnm->normaHasilAccepted->kode_klasifikasi_arsip}}/{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode?? $lnm->normaHasilAccepted->kode_norma_hasil ?? "" }}/{{ date('Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) }}
+                                                </span>
                                                 @else
-                                                    <span class="badge badge-primary">
-                                                        Dokumen
-                                                    </span>
+                                                <span class="badge badge-primary">
+                                                    Dokumen
+                                                </span>
                                                 @endif
                                             </td>
+                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->nama ?? $lnm->normaHasilAccepted->kode_norma_hasil ?? "" }}
+                                            </td>
                                             <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
-                                                    $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama }}</td>
-                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month] }}</td>
+                                                    $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama ?? "" }}
+                                            </td>
+                                            <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month ?? 0] }}
+                                            </td>
                                             <td>
                                                 @php
-                                                    $status = $lnm->normaHasilAccepted->status_verifikasi_arsiparis ??
-                                                            $lnm->normaHasilDokumen->status_verifikasi_arsiparis;
+                                                $status = $lnm->normaHasilAccepted->status_verifikasi_arsiparis ??
+                                                $lnm->normaHasilDokumen->status_verifikasi_arsiparis;
                                                 @endphp
                                                 <span class="badge
                                                     {{ $status == 'diperiksa' ? 'badge-primary' : '' }}
@@ -96,21 +172,50 @@
                                                     text-capitalize"><i class="
                                                         {{ $status == 'diperiksa' ? 'fa-regular fa-clock mr-1' : '' }}
                                                         {{ $status == 'disetujui' ? 'fa-regular fa-circle-check mr-1' : '' }}
-                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation' : '' }}
+                                                        {{ $status == 'ditolak' ? 'fa-solid fa-triangle-exclamation mr-1' : '' }}
                                                     "></i>{{ $status }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <a href="/arsiparis/norma-hasil/{{ $lnm->id }}"
-                                                    class="btn btn-info btn-sm">
+                                                    class="btn btn-primary btn-sm">
                                                     <i class="fas fa-eye
                                                     "></i>
-                                                    Detail
                                                 </a>
                                             </td>
                                             <td>{{ substr($lnm->tanggal_norma_hasil, 0, 4) }}</td>
                                         </tr>
                                         @endforeach
+                                        @foreach ($normaHasilBelumUpload as $normaHasil)
+                                        <tr>
+                                            <td class="text-center">
+                                                {{ $loop->iteration + count($laporan) }}
+                                            </td>
+                                            <td>{{ $normaHasil->normaHasil->rencanaKerja->tugas }}</td>
+                                            <td>
+                                                <span class="badge badge-primary">
+                                                    R-{{ $normaHasil->nomor_norma_hasil}}/{{ $normaHasil->unit_kerja}}/{{ $normaHasil->kode_klasifikasi_arsip}}/{{ $normaHasil->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($normaHasil->tanggal_norma_hasil)) }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $normaHasil->normaHasil->masterLaporan->nama ?? "" }}</td>
+                                            <td>
+                                                {{ $normaHasil->normaHasil->laporanPengawasan->objekPengawasan->nama ?? "" }}
+                                            </td>
+                                            <td>
+                                                {{ $months[$normaHasil->normaHasil->laporanPengawasan->month?? 0] }}
+                                            </td>
+                                            <td><span class="badge badge-warning">
+                                                    Belum Upload
+                                                </span></td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                        @endforeach
+
                                     </tbody>
                                 </table>
                             </div>
@@ -140,46 +245,5 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-{{-- <script>
-        $(document).ready(function() {
-            $('#table-pengelolaan-dokumen-pegawai').DataTable( {
-            "columnDefs": [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
-            });
-        });
-    </script> --}}
-
-<!-- Page Specific JS File -->
-<script>
-    let table = $("#table-pengelolaan-dokumen-pegawai")
-        .dataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [],
-            columnDefs: [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
-        }).api();
-
-    $('#yearSelect').on("change", function () {
-        table.draw();
-    });
-    
-    $.fn.dataTableExt.afnFiltering.push(
-        function (setting, data, index) {
-            var selectedYear = $('select#yearSelect option:selected').val();
-            if (data[5] == selectedYear) return true;
-            else return false;
-        }
-    );
-</script>
+<script src="{{ asset('js') }}/page/arsiparis/norma-hasil.js"></script>
 @endpush

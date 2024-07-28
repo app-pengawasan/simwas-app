@@ -103,7 +103,7 @@
                                                 <td>
                                                     <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
-                                                        <i class="fas fa-download"></i>
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ $k->catatan }}</td>
@@ -118,12 +118,16 @@
                                                 @endif
                                                 <td>
                                                     <div class="btn-group dropdown">
-                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
                                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                                         data-id="{{ $k->id }}">
                                                             {{-- <i class="fas fa-stamp"></i> --}}...
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                            <a href="/analis-sdm/kelola-kompetensi/{{ $k->id }}" class="dropdown-item">
+                                                                <i class="fas fa-circle-info text-primary mr-2"></i>
+                                                                Detail
+                                                            </a>
                                                             <a href="javascript:void(0)" class="dropdown-item edit-btn"
                                                                 data-id="{{ $k->id }}"
                                                                 data-toggle="modal" data-target="#modal-edit-kompetensi">
