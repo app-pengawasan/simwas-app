@@ -289,7 +289,15 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('rencana-jam-kerja', [PegawaiRencanaKerjaController::class, 'rencanaJamKerja']);
         Route::put('rencana-kinerja/send/{id}', [PegawaiRencanaKerjaController::class, 'sendToAnalis']);
         Route::resource('tim-pelaksana', PegawaiTugasController::class);
-        Route::resource('norma-hasil', NormaHasilController::class);
+        Route::resource('norma-hasil', NormaHasilController::class)->names([
+                'index' => 'pegawai.norma-hasil.index',
+                'create' => 'pegawai.norma-hasil.create',
+                'store' => 'pegawai.norma-hasil.store',
+                'show' => 'pegawai.norma-hasil.show',
+                'edit' => 'pegawai.norma-hasil.edit',
+                'update' => 'pegawai.norma-hasil.update',
+                'destroy' => 'pegawai.norma-hasil.destroy',
+        ]);
         Route::resource('kompetensi', PegawaiKompetensiController::class);
 
         //Aktivitas Harian
@@ -310,8 +318,24 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('laporan-kinerja', PegawaiLaporanKinerjaController::class);
 
         //Tugas Tim
-        Route::resource('tim/norma-hasil', TimNormaHasilController::class);
-        Route::resource('tim/surat-tugas', TimSuratTugasController::class);
+        Route::resource('tim/norma-hasil', TimNormaHasilController::class)->names([
+            'index' => 'pegawai.tim.norma-hasil.index',
+            'create' => 'pegawai.tim.norma-hasil.create',
+            'store' => 'pegawai.tim.norma-hasil.store',
+            'show' => 'pegawai.tim.norma-hasil.show',
+            'edit' => 'pegawai.tim.norma-hasil.edit',
+            'update' => 'pegawai.tim.norma-hasil.update',
+            'destroy' => 'pegawai.tim.norma-hasil.destroy',
+        ]);
+        Route::resource('tim/surat-tugas', TimSuratTugasController::class)->names([
+            'index' => 'pegawai.tim.surat-tugas.index',
+            'create' => 'pegawai.tim.surat-tugas.create',
+            'store' => 'pegawai.tim.surat-tugas.store',
+            'show' => 'pegawai.tim.surat-tugas.show',
+            'edit' => 'pegawai.tim.surat-tugas.edit',
+            'update' => 'pegawai.tim.surat-tugas.update',
+            'destroy' => 'pegawai.tim.surat-tugas.destroy',
+        ]);
         Route::resource('tim/kendali-mutu', TimKendaliMutuController::class);
         Route::get('tim', [DashboardController::class, 'kinerjaTim']);
         Route::get('tim/surat-tugas/view/{nomor}', [TimSuratTugasController::class, 'view'])->name('tim.surat-tugas.view');
