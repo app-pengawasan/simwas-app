@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Builder;
 class ArsiparisNormaHasilController extends Controller
 {
     protected $unit_kerja = [
-        '8000' => 'Inspektorat Utama',
-        '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Inspektorat Wilayah I',
-        '8200' => 'Inspektorat Wilayah II',
-        '8300' => 'Inspektorat Wilayah III'
+        '08000' => 'Inspektorat Utama',
+        '08010' => 'Bagian Umum Inspektorat Utama',
+        '08100' => 'Inspektorat Wilayah I',
+        '08200' => 'Inspektorat Wilayah II',
+        '08300' => 'Inspektorat Wilayah III'
     ];
     private $kodeHasilPengawasan = [
         "110" => 'LHA',
