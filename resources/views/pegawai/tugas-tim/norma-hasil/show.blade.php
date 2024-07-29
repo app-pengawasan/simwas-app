@@ -119,10 +119,9 @@
                                 <th>Draft Norma Hasil</th>
 
                                 <td>
-                                    <a target="blank"
-                                        href="downloadUsulan/{{ $usulan->normaHasilAccepted->normaHasil->id }}"
-                                        class="badge btn-primary"><i class="fa fa-download"></i>
-                                        Download</a>
+                                    <a target="blank" href="{{ $usulan->normaHasilAccepted->normaHasil->document_path }}" class="badge btn-primary">
+                                        <i class="fa fa-solid fa-up-right-from-square mr-1"></i>
+                                        Buka Draft Norma Hasil</a>
                                 </td>
                             </tr>
                             @endif
@@ -139,11 +138,11 @@
                                 <td>
                                     @if ($usulan->jenis == 1)
                                     <a target="blank" href="viewLaporan/{{ $usulan->normaHasilAccepted->id }}/1"
-                                        class="badge btn-primary"><i class="fa fa-download"></i>
+                                        class="badge btn-primary"><i class="fa fa-download mr-1"></i>
                                         Download</a>
                                     @else
                                     <a target="blank" href="viewLaporan/{{ $usulan->normaHasilDokumen->id }}/2"
-                                        class="badge btn-primary"><i class="fa fa-download"></i>
+                                        class="badge btn-primary"><i class="fa fa-download mr-1"></i>
                                         Download</a>
                                     @endif
                                     @if ($status != 'disetujui')

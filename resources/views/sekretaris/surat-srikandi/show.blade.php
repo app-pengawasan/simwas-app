@@ -163,6 +163,7 @@
                     <div class="form-group
                         {{ $errors->has('nomor_surat_srikandi') ? 'has-error' : '' }}">
                         <label for="nomor_surat_srikandi">Nomor Surat Srikandi</label>
+                        <span class="text-muted">Contoh: B-1557/08200/PW.110/12/2023</span>
                         <input required type="text" class="form-control" name="nomor_surat_srikandi"
                             id="nomor_surat_srikandi" value="{{ old('nomor_surat_srikandi') }}"
                             placeholder="Masukkan Nomor Surat Srikandi">

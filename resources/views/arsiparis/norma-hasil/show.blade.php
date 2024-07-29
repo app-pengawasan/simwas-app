@@ -110,6 +110,10 @@
                                 <th>Tim Kerja:</th>
                                 <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama ?? "" }}</td>
                             </tr>
+                            <tr>
+                                <th>Ketua Tim:</th>
+                                <td>{{ $usulan->rencanaKerja->proyek->timKerja->ketua->name ?? "" }}</td>
+                            </tr>
 
                             {{-- @endif --}}
 
@@ -193,12 +197,15 @@
                                         class="fa-regular fa-circle-check mr-1"></i>Setujui</button>
                             </form>
                         </div>
-                        @endif
+                        @else
+                        @if ($usulan->jenis == 1)
                         <div class="d-flex justify-content-end">
                             <a href="/arsiparis/norma-hasil/edit/{{ $usulan->id }}" class="btn btn-warning mt-4">
                                 <i class="fa-regular fa-pen-to-square mr-1"></i>
                                 Edit</a>
                         </div>
+                        @endif
+                        @endif
 
                     </div>
                 </div>

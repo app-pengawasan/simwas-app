@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KodeKlasifikasiArsip;
+use App\Models\User;
 use App\Models\TimKerja;
 use App\Models\StKinerja;
 use App\Models\NormaHasil;
@@ -11,17 +11,18 @@ use App\Models\MasterLaporan;
 use App\Models\NormaHasilTim;
 use App\Models\PelaksanaTugas;
 use App\Models\NormaHasilAccepted;
-use App\Models\User;
+use App\Models\KodeKlasifikasiArsip;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Builder;
 
 class ArsiparisNormaHasilController extends Controller
 {
     protected $unit_kerja = [
-        '8000' => 'Inspektorat Utama',
-        '8010' => 'Bagian Umum Inspektorat Utama',
-        '8100' => 'Inspektorat Wilayah I',
-        '8200' => 'Inspektorat Wilayah II',
-        '8300' => 'Inspektorat Wilayah III'
+        '08000' => 'Inspektorat Utama',
+        '08010' => 'Bagian Umum Inspektorat Utama',
+        '08100' => 'Inspektorat Wilayah I',
+        '08200' => 'Inspektorat Wilayah II',
+        '08300' => 'Inspektorat Wilayah III'
     ];
     private $kodeHasilPengawasan = [
         "110" => 'LHA',
@@ -295,22 +296,39 @@ class ArsiparisNormaHasilController extends Controller
     public function updateNormaHasil(Request $request, $id)
     {
         try {
-            // dd($request->all());
             $normaHasilUsulan = NormaHasil::findOrFail($id);
             $normaHasilUsulan->update([
                 'user_id' => $request->nama_pengusul,
                 'tanggal' => $request->tanggal_norma_hasil,
                 'unit_kerja' => $request->unit_kerja,
                 'tugas_id' => $request->rencana_id,
-                'jenis_norma_hasil' => $request->jenis_norma_hasil,
+                'jenis_norma_hasil_id' => $request->jenis_norma_hasil,
                 'document_path' => $request->url_norma_hasil,
                 'laporan_pengawasan_id' => $request->bulan_pelaporan,
             ]);
-            $normaHasilAccepted = NormaHasilAccepted::where('id_norma_hasil', $normaHasilUsulan->id)->first();
-            $normaHasilAccepted->update([
+
+            $file = $request->file('file');
+            if ($file == null) {
+                $normaHasilAccepted = NormaHasilAccepted::where('id_norma_hasil', $normaHasilUsulan->id)->first();
+                $normaHasilAccepted->update([
                 'tanggal_norma_hasil' => $request->tanggal_norma_hasil,
                 'unit_kerja' => $request->unit_kerja,
+                'kode_norma_hasil' =>  $request->jenis_norma_hasil,
             ]);
+
+            } else {
+                $fileName = time() . '-laporan-norma-hasil.' . $file->getClientOriginalExtension();
+                $path = public_path('storage/tim/norma-hasil');
+                $file->move($path, $fileName);
+                $laporan_path = 'storage/tim/norma-hasil/' . $fileName;
+                $normaHasilAccepted = NormaHasilAccepted::where('id_norma_hasil', $normaHasilUsulan->id)->first();
+                $normaHasilAccepted->update([
+                'tanggal_norma_hasil' => $request->tanggal_norma_hasil,
+                'unit_kerja' => $request->unit_kerja,
+                'laporan_path' => $laporan_path,
+            ]);
+            }
+
             $normaHasilTim = NormaHasilTim::where('laporan_id',$normaHasilUsulan->normaHasilAccepted->id)->first();
             $normaHasilTim->update([
                 'tugas_id' => $request->rencana_id,

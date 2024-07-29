@@ -19,6 +19,18 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
+            <h1>Detail Norma Hasil</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="/arsiparis/dashboard">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="/arsiparis/norma-hasil">Laporan Norma Hasil</a></div>
+                <div class="breadcrumb-item active"><a href="{{"/arsiparis/norma-hasil/".$normaHasilTim->id
+                        }}
+
+                    ">Norma Hasil</a></div>
+                <div class="breadcrumb-item">Ubah Norma Hasil</a></div>
+            </div>
+        </div>
+        <div class="section-header">
             <h1>Ubah Norma Hasil</h1>
         </div>
         <div class="row">
@@ -90,7 +102,7 @@
                                 <label for="rencana_id">Tugas</label>
                                 <select id="rencana_id" name="rencana_id"
                                     class="form-control select2 @error('rencana_id') is-invalid @enderror"
-                                    data-placeholder="Pilih Tugas" disabled>
+                                    data-placeholder="Pilih Tugas">
                                     <option value="{{ $normaHasilUsulan->tugas_id ?? '' }}">
                                         {{ $normaHasilUsulan->rencanaKerja->tugas ?? ''}}</option>
                                 </select>
@@ -107,7 +119,7 @@
                                 <label for="objek_kegiatan">Objek Kegiatan</label>
                                 <select id="objek_kegiatan" name="objek_kegiatan"
                                     data-placeholder="{{ $normaHasilUsulan->laporanPengawasan->objekPengawasan->nama ?? 'Pilih objek kegiatan' }}"
-                                    class="form-control select2" disabled>
+                                    class="form-control select2">
                                     <option value=""></option>
                                 </select>
                                 @if ($errors->has('objek_kegiatan'))
@@ -123,7 +135,7 @@
                                 <label for="bulan_pelaporan">Bulan Pelaporan</label>
                                 <select id="bulan_pelaporan" name="bulan_pelaporan"
                                     data-placeholder="{{ $months[$normaHasilUsulan->laporanPengawasan->month ?? '0'] }}"
-                                    class="form-control select2" disabled>
+                                    class="form-control select2">
                                     class="form-control select2">
                                     <option value=""></option>
                                 </select>
@@ -138,7 +150,7 @@
                                 @if ($errors->has('jenis_norma_hasil')) is-invalid @endif">
                                 <label for="jenis_norma_hasil">Pilih Jenis Laporan</label>
                                 <select id="jenis_norma_hasil" name="jenis_norma_hasil" class="form-control select2"
-                                    data-placeholder="Pilih Jenis Laporan">
+                                    data-placeholder="Pilih Jenis Laporan" required>
                                     <option value=""></option>
                                     @foreach ($masterLaporan as $masterLaporan)
                                     <option value="{{ $masterLaporan->id }}"
@@ -154,7 +166,7 @@
                             </div>
                             <div class="form-group
                                 @if ($errors->has('file')) is-invalid @endif">
-                                <label for="url_norma_hasil">Link Dokumen</label>
+                                <label for="url_norma_hasil">Link Dokumen (Draft Norma Hasil)</label>
                                 <input placeholder="Masukkan URL/Link dokumen" type="url" id="url_norma_hasil"
                                     name="url_norma_hasil" class="form-control"
                                     value="{{ $normaHasilUsulan->document_path }}">
@@ -164,6 +176,31 @@
                                 </div>
                                 @endif
                             </div>
+                            {{-- file upload --}}
+                            <div class="form-group
+                                @error('file') is-invalid @enderror">
+
+                                <label for="file">Upload Dokumen (Laporan Norma Hasil)
+                                </label>
+                                @if ($normaHasilAccepted->laporan_path)
+                                <a href="/{{ $normaHasilAccepted->laporan_path }}" target="_blank">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Lihat Dokumen
+                                </a>
+                                @else
+                                <span class="text-danger">Belum terdapat dokumen yang diunggah</span>
+                                @endif
+
+
+                                <input type="file" id="file" name="file"
+                                    class="form-control @error('file') is-invalid @enderror" accept=".pdf">
+                                @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
                             {{-- date Tanggal Norma Hasil --}}
                             <div class="form-group
                                 @error('tanggal_norma_hasil') is-invalid @enderror">
