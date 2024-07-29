@@ -101,6 +101,10 @@
                                 <td>{{ $usulan->rencanaKerja->proyek->timKerja->nama }}</td>
                             </tr>
                             <tr>
+                                <th>Ketua Tim:</th>
+                                <td>{{ $usulan->rencanaKerja->proyek->timKerja->ketua->name }}</td>
+                            </tr>
+                            <tr>
                                 <th>Nama Dokumen:</th>
                                 <td>{{ $usulan->nama_dokumen }}</td>
                             </tr>

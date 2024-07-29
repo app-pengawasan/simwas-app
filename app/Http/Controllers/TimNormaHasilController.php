@@ -91,7 +91,7 @@ class TimNormaHasilController extends Controller
                 ->where('status_norma_hasil', 'disetujui')
                 ->whereRelation('normaHasilAccepted', function (Builder $query){
                     $query->where('status_verifikasi_arsiparis', 'belum unggah');
-                })->get(); 
+                })->get();
 
         $laporan = NormaHasilTim::latest()
                     ->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
@@ -332,6 +332,10 @@ class TimNormaHasilController extends Controller
         if ($jenis == 1) $norma_hasil = NormaHasilAccepted::findOrFail($id);
         else $norma_hasil = NormaHasilDokumen::findOrFail($id);
         $file = public_path($norma_hasil->laporan_path);
-        return response()->file($file);
+        if ($file == public_path('')) {
+            return redirect()->back()->with('error', 'File tidak ditemukan');
+        } else {
+            return response()->file($file);
+        }
     }
 }

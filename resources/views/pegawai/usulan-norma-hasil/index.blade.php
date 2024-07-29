@@ -123,7 +123,7 @@
                                                 <div
                                                     class="d-flex flex-row text-capitalize align-items-center jutify-content-center">
 
-                                                    {{  $un->user->name }}
+                                                    {{  $un->user->name ?? "" }}
                                                 </div>
                                             </td>
                                             <td>
