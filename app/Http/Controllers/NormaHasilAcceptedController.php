@@ -84,7 +84,7 @@ private $hasilPengawasan = [
             $year = $year;
         }
         // find normahasil where rencanakerja->timkerja where id_ketua is this auth
-        $usulan = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
+        $usulan = NormaHasil::with('user', 'normaHasilAccepted', 'masterLaporan')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
             $query->where('id_ketua', auth()->user()->id);
         })->get();
         $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();

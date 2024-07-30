@@ -81,7 +81,7 @@ class ArsiparisNormaHasilController extends Controller
             $year = $year;
         }
 
-        $laporan = NormaHasilTim::latest()
+        $laporan = NormaHasilTim::with('rencanaKerja','normaHasilAccepted.normaHasil.masterLaporan','normaHasilAccepted.normaHasil.laporanPengawasan.objekPengawasan')->latest()
             ->where(function ($query) use ($year) {
                 $query->whereYear('created_at', $year)
                     ->whereRelation('normaHasilAccepted', function (Builder $query) {
@@ -95,7 +95,7 @@ class ArsiparisNormaHasilController extends Controller
 
 
 
-        $normaHasilBelumUpload = NormaHasilAccepted::where('status_verifikasi_arsiparis', 'belum unggah')->whereYear('created_at', $year);
+        $normaHasilBelumUpload = NormaHasilAccepted::with('normaHasil.masterLaporan','normaHasil.laporanPengawasan.objekPengawasan','normaHasil.rencanaKerja')->where('status_verifikasi_arsiparis', 'belum unggah')->whereYear('created_at', $year);
 
         if (!is_null($unit_kerja)) {
             $normaHasilBelumUpload = $normaHasilBelumUpload->whereHas('normaHasil', function (Builder $query) use ($unit_kerja) {

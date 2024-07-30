@@ -50,7 +50,7 @@ $("#modal-5").fireModal({
   onFormSubmit: function(modal, e, form) {
     // Form Data
     let form_data = $(e.target).serialize();
-    console.log(form_data)
+    // console.log(form_data)
 
     // DO AJAX HERE
     let fake_ajax = setTimeout(function() {
@@ -63,7 +63,7 @@ $("#modal-5").fireModal({
     e.preventDefault();
   },
   shown: function(modal, form) {
-    console.log(form)
+    // console.log(form)
   },
   buttons: [
     {

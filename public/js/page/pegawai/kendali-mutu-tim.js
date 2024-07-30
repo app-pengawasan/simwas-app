@@ -34,7 +34,7 @@ $('#edit-submit').on("click", function (e) {
     let id = $('#km_id').val();
     data.append('_token', token);
     data.append('_method', "PUT");
-    
+
     $("#error-edit-file").text("");
     $("#error-edit-link").text("");
 
@@ -53,7 +53,6 @@ $('#edit-submit').on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -82,7 +81,7 @@ $(".file").on("change", function () {
         $(".link").prop("disabled", true);
         $('.link').prop("required", false);
         $(`.link`).removeClass('is-invalid');
-    } 
+    }
     else {
         $(".link").prop("disabled", false);
         $('.link').prop("required", true);

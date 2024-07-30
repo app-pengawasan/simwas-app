@@ -109,9 +109,9 @@ $(".submit-btn").on("click", function (e) {
                     let errorMessage = document.getElementById(`error-${key}`);
                     errorMessage.innerText = `${value}`;
                 }
-                console.log(`error-${key}`);
+                // console.log(`error-${key}`);
             });
-            console.log(error);
+            // console.log(error);
         },
     });
 });
@@ -132,13 +132,13 @@ $("#unit_kerja").on("change", function (e) {
                 kodekegiatanvalue = kodeunitkerja.concat("0", Number(count));
                 $("#kode_kegiatan").val(kodekegiatanvalue);
             }
-            console.log(Number(count));
+            // console.log(Number(count));
         },
         error: function (error) {
-            console.log(error);
+            // console.log(error);
         },
     });
-    console.log();
+    // console.log();
 });
 
 $(".edit-btn").on("click", function () {
@@ -153,7 +153,7 @@ $(".edit-btn").on("click", function () {
             $("#edit-kode_kegiatan").val(response.data[0].kode_kegiatan);
             $("#edit-nama").val(response.data[0].nama);
 
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
         },
     });
 });
@@ -214,7 +214,7 @@ $("#btn-edit-submit").on("click", function (e) {
             $("#modal-edit-objekkegiatan").modal("hide");
         },
         error: function (error) {
-            console.log(error.responseJSON);
+            // console.log(error.responseJSON);
         },
     });
 });

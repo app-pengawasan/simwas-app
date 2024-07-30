@@ -72,7 +72,7 @@ class NormaHasilController extends Controller
         }
         $currentYear = date('Y');
 
-        $usulan = NormaHasil::with('normaHasilAccepted')
+        $usulan = NormaHasil::with('normaHasilAccepted', 'masterLaporan')
             ->where('user_id', auth()->user()->id)
             ->whereYear('created_at', $year)
             ->latest()

@@ -29,7 +29,7 @@ $("#tim_kerja").on("change", function () {
             }
         },
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         },
     });
 });
@@ -67,7 +67,7 @@ $("#rencana_id").on("change", function () {
             }
         },
         error: function (data) {
-            console.log(data);
+            // console.log(data);
         },
     });
 });

@@ -31,20 +31,20 @@ $(function () {
 
 $("#id_hasilkerja").on("change", function () {
     let dataId = $("#id_hasilkerja option:selected").val();
-    console.log(dataId);
+    // console.log(dataId);
     $.ajax({
         url: `/admin/master-hasil/${dataId}`,
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             $("#subunsur1").val(response.data[0].subunsur1);
             $("#subunsur2").val(response.data[0].subunsur2);
             $("#kategori_hasilkerja").val(response.data[0].kategori_hasilkerja);
             $("#kategori_pelaksana").val(response.data[0].kategori_pelaksana);
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -63,7 +63,7 @@ $(".edit-btn").on("click", function () {
     let dataId = $(this).attr("data-id");
     dataId = JSON.stringify(dataId);
     let url = "/pegawai/tim-pelaksana/" + dataId;
-    console.log(url);
+    // console.log(url);
 });
 
 $("#btn-edit-submit").on("click", function (e) {
@@ -98,10 +98,10 @@ $("#btn-edit-submit").on("click", function (e) {
 
             $("#modal-edit-masteriku").modal("hide");
             setTimeout(location.reload(), 1000);
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
         },
         error: function (error) {
-            console.log(error.responseJSON);
+            // console.log(error.responseJSON);
         },
     });
 });
@@ -142,7 +142,7 @@ $(".delete-btn").on("click", function (e) {
                     setTimeout(location.reload(), 1000);
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }
@@ -185,7 +185,7 @@ $("#btn-send-rencana-kerja").on("click", function (e) {
                     setTimeout(location.reload(), 1000);
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }
@@ -231,7 +231,7 @@ $("#btn-admin-submit-rk").on("click", function (e) {
                     );
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }
@@ -276,7 +276,7 @@ $("#btn-admin-send-back").on("click", function (e) {
                     );
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }

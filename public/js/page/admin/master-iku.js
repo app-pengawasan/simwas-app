@@ -139,7 +139,7 @@ $(".edit-btn").on("click", function () {
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             $("#edit-id_iku").val(response.data[0].id_iku);
             $("#edit-sasaran").val(response.data[0].id_sasaran);
             let idtujuan = $("#edit-sasaran option:selected").data("idtujuan");
@@ -147,7 +147,7 @@ $(".edit-btn").on("click", function () {
             $("#edit-iku").val(response.data[0].iku);
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });

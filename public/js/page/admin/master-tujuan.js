@@ -72,7 +72,7 @@ $(function () {
 });
 
 $("#create-btn").on("click", function (e) {
-    console.log("modal open");
+    // console.log("modal open");
     // Reset invalid message while modal open
     $("#error-id_tujuan").text("");
     $("#error-tahun_mulai").text("");
@@ -142,7 +142,7 @@ $(".edit-btn").on("click", function () {
             $("#edit-tahun_mulai").val(response.data[0].tahun_mulai);
             $("#edit-tahun_selesai").val(response.data[0].tahun_selesai);
             $("#edit-tujuan").val(response.data[0].tujuan);
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
         },
     });
 });

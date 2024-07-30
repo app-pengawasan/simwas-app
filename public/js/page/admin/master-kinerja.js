@@ -125,7 +125,6 @@ $("#editHasilKerjaID").on("change", function () {
             $("#edit-status").val(data.kategori_pelaksana);
 
             if (data.kategori_pelaksana == "ngt") {
-                console.log("ngt");
                 $("#edit-gugus-tugas").hide();
                 $("#edit-gugus-tugas")
                     .find("input, select, textarea")
@@ -341,29 +340,24 @@ $("#submit-edit-button").on("click", function () {
     for (const [key, value] of Object.entries(roles)) {
         if ($(`#editHasilKerja_${value}`).val() == "") {
             error = true;
-            console.log(value);
             $(`#editHasilKerja_${value}`).addClass("is-invalid");
         }
         if ($(`#editRencanaKinerja_${value}`).val() == "") {
             error = true;
-            console.log(value);
             $(`#editRencanaKinerja_${value}`).addClass("is-invalid");
         }
         if ($(`#editIki_${value}`).val() == "") {
             error = true;
-            console.log(value);
 
             $(`#editIki_${value}`).addClass("is-invalid");
         }
         if ($(`#editKegiatan_${value}`).val() == "") {
             error = true;
-            console.log(value);
 
             $(`#editKegiatan_${value}`).addClass("is-invalid");
         }
         if ($(`#editCapaian_${value}`).val() == "") {
             error = true;
-            console.log(value);
 
             $(`#editCapaian_${value}`).addClass("is-invalid");
         }

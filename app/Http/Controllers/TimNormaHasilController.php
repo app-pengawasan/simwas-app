@@ -87,13 +87,15 @@ class TimNormaHasilController extends Controller
                         $query->whereIn('status', [0,1,2]);
                     })->get();
 
-        $draf = NormaHasil::latest()->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
+        $draf = NormaHasil::with('masterLaporan')->latest()->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                 ->where('status_norma_hasil', 'disetujui')
                 ->whereRelation('normaHasilAccepted', function (Builder $query){
                     $query->where('status_verifikasi_arsiparis', 'belum unggah');
                 })->get();
 
-        $laporan = NormaHasilTim::latest()
+        $laporan = NormaHasilTim::
+                    with('rencanaKerja','normaHasilAccepted.normaHasil.masterLaporan')->
+                    latest()
                     ->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                     ->whereRelation('normaHasilAccepted', function (Builder $query){
                         $query->whereNot('status_verifikasi_arsiparis', 'belum unggah');

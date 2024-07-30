@@ -18,7 +18,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Detail Tugas {{ str_ireplace('tugas ', '', $rencanaKerja->tugas) }}</h1>
-                
+
             </div>
             <div class="row">
                 <div class=" col-md-12">
@@ -117,7 +117,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $pelaksana->user->name }}</td>
                                                     <?php
-                                                    $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+                                                    $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'Penanggung Jawab Kegiatan'];
                                                     $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
                                                     ?>
                                                     <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
