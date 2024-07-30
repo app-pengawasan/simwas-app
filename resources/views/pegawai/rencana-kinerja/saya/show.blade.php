@@ -116,7 +116,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $pelaksana->user->name }}</td>
                                             <?php
-                                                    $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+                                                    $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim','Penanggung Jawab Kegiatan'];
                                                     $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
                                                     ?>
                                             <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>

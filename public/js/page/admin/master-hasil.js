@@ -32,7 +32,7 @@ $(function () {
 });
 
 $("#create-btn").on("click", function (e) {
-    console.log("modal open");
+    // console.log("modal open");
     // Reset invalid message while modal open
     $("#error-unsur").text("");
     $("#error-subunsur1").text("");
@@ -80,7 +80,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            // console.log(errors);
         },
     });
 });
@@ -104,7 +104,7 @@ $(".edit-btn").on("click", function () {
             );
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });

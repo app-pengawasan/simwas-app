@@ -69,20 +69,19 @@
                                 <tbody>
                                     @foreach ($hasilKinerja as $item)
                                     <tr>
-                                        <td
-                                        class="text-center"
-                                        >{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $item->masterHasilKerja->nama_hasil_kerja }}</td>
-                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [1, 5])->first()->hasil_kerja }}
+                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [1, 5])->first()->hasil_kerja ?? '-' }}
                                         </td>
-                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [2, 3])->first()->hasil_kerja }}
+                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [2, 3])->first()->hasil_kerja ?? '-' }}
                                         </td>
-                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [4])->first()->hasil_kerja }}
+                                        <td>{{ $item->masterKinerjaPegawai->whereIn('pt_jabatan', [4])->first()->hasil_kerja ?? '-' }}
                                         </td>
                                         <td>
                                             <div class="d-flex">
-                                                <button type="button" class="btn btn-warning btn-sm btn-edit" data-toggle="modal"
-                                                    data-target="#modal-edit-master-kinerja" data-id="{{ $item->id }}">
+                                                <button type="button" class="btn btn-warning btn-sm btn-edit"
+                                                    data-toggle="modal" data-target="#modal-edit-master-kinerja"
+                                                    data-id="{{ $item->id }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <form id="form-delete-{{ $item->id }}" class="ml-1"

@@ -22,8 +22,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         center: 'title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth' // user can switch between the two
     },
-    allDayContent:  { 
-        html: '<i class="fa-regular fa-clock"></i>' 
+    allDayContent:  {
+        html: '<i class="fa-regular fa-clock"></i>'
     },
     buttonText: {
         today:    'Hari ini',
@@ -36,8 +36,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         excel: {
             text: 'Excel',
             click: function() {
-                let bulan = moment(calendar.getDate()).format("MM"); 
-                let tahun = moment(calendar.getDate()).format("YYYY"); 
+                let bulan = moment(calendar.getDate()).format("MM");
+                let tahun = moment(calendar.getDate()).format("YYYY");
                 window.location.href = `/pegawai/aktivitas-harian/export/${bulan}/${tahun}`;
             }
         }
@@ -63,9 +63,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 minute: '2-digit'
             },
             eventDidMount: function(info) {
-                info.el.querySelector('.fc-list-event-title a').innerHTML 
+                info.el.querySelector('.fc-list-event-title a').innerHTML
                     += ` <br><table class="table-borderless"><tbody>
-                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td> 
+                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td>
                             <td class="pl-0" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
                         </tr></tbody></table>`;
             },
@@ -83,14 +83,14 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        $(info.el).popover({ 
+        $(info.el).popover({
             sanitize: false,
             title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
                 '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
             trigger: 'click',
             placement: 'right',
             html: true,
-            content: '<h3>' + info.event.title + '</h3>' + 
+            content: '<h3>' + info.event.title + '</h3>' +
                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
                     + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
         });
@@ -103,7 +103,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         $('#error-start').text('');
         $('#error-end').text('');
         $('#error-aktivitas').text('');
-        
+
         let start = moment(selectionInfo.start).format("HH:mm");
         let end = moment(selectionInfo.end).format("HH:mm");
         let startDate = moment(selectionInfo.start).format("YYYY-MM-DD");
@@ -268,7 +268,7 @@ $("#btn-edit-submit").on("click", function (e) {
     $('#error-edit-end').text('');
     $('#error-edit-aktivitas').text('');
     $('#error-edit-tgl').text('');
-    
+
     let token = $("meta[name='csrf-token']").attr("content");
     let tgl = $("#edit-tgl").val();
     let start = $("#edit-start").val();
@@ -297,7 +297,7 @@ $("#btn-edit-submit").on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(errors);
+                // console.log(errors);
                 let errorMessage = document.getElementById(`error-edit-${key}`);
                 errorMessage.innerText = `${value}`;
             });

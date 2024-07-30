@@ -147,7 +147,7 @@ $(document).on("click", ".hapus-button", function () {
     }).then((result) => {
         if (result.isConfirmed) {
             $("#form-" + id).trigger("submit");
-            console.log("#form-" + id);
+            // console.log("#form-" + id);
         }
     });
 });

@@ -19,8 +19,8 @@
                             <select class="form-control select2" name="editHasilKerjaID" id="editHasilKerjaID" required
                                 data-placeholder="Pilih Hasil Kerja">
                                 <option value=""></option>
-                                @foreach ($hasilKerja as $hasilKerja)
-                                <option value="{{ $hasilKerja->id }}">{{ $hasilKerja->nama_hasil_kerja }}</option>
+                                @foreach ($hasilKerjaAll as $hasilKerjaAll)
+                                <option value="{{ $hasilKerjaAll->id }}">{{ $hasilKerjaAll->nama_hasil_kerja }}</option>
                                 @endforeach
                             </select>
                         </div>

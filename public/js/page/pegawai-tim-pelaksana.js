@@ -25,7 +25,7 @@ $("#create-okategori").on("change", function (e) {
             });
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -95,7 +95,7 @@ $(".btn-delete-objek").on("click", function (e) {
     e.preventDefault();
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
-    console.log(dataId);
+    // console.log(dataId);
     Swal.fire({
         title: "Apakah Anda Yakin?",
         text: "Data tidak dapat dipulihkan!",
@@ -118,10 +118,10 @@ $(".btn-delete-objek").on("click", function (e) {
                     location.reload();
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
-            console.log(dataId);
+            // console.log(dataId);
         }
     });
 });
@@ -169,7 +169,7 @@ $(".btn-edit-objek").on("click", function (e) {
 
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -193,7 +193,7 @@ $("#edit-okategori").on("change", function (e) {
             });
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -420,7 +420,7 @@ $(".btn-edit-anggaran").on("click", function (e) {
         method: "GET",
         cache: false,
         success: function (response) {
-            console.log(response.data);
+            // console.log(response.data);
             $("#id_rkanggaran").val(response.data.id_rkanggaran);
             $("#edit-uraian").val(response.data.uraian);
             $("#edit-volume").val(response.data.volume);
@@ -433,7 +433,7 @@ $(".btn-edit-anggaran").on("click", function (e) {
             );
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -472,12 +472,12 @@ $("#btn-submit-edit-anggaran").on("click", function (e) {
         },
         error: function (error) {
             let errorResponses = error.responseJSON;
-            console.log(errorResponses);
+            // console.log(errorResponses);
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
                 let errorMessage = document.getElementById(`error-edit-${key}`);
-                console.log(errorMessage);
+                // console.log(errorMessage);
                 errorMessage.innerText = `${value}`;
             });
         },
@@ -489,7 +489,7 @@ $(".btn-delete-anggaran").on("click", function (e) {
     e.preventDefault();
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
-    console.log("test");
+    // console.log("test");
 
     Swal.fire({
         title: "Apakah Anda Yakin?",
@@ -787,7 +787,7 @@ $(".btn-edit-pelaksana").on("click", function (e) {
             $("#edit-desember").val(response.data.des.replace(".", ","));
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -944,7 +944,7 @@ $("#btn-edit-pelaksana").on("click", function (e) {
             location.reload();
         },
         error: function (error) {
-            console.log(error);
+            // console.log(error);
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -959,7 +959,7 @@ $("#btn-edit-pelaksana").on("click", function (e) {
 // Taruh dipaling bawah, Soalnya nanti ngaruh ke function yang laen
 let rupiah = document.getElementsByClassName("rupiah");
 for (i = 0; i <= rupiah.length - 1; i++) {
-    console.log(rupiah[i]);
+    // console.log(rupiah[i]);
     let tmp = rupiah[i].innerText.toString();
     rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
 }

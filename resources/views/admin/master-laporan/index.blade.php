@@ -141,6 +141,6 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
-<script src="{{ asset('js') }}/page/admin/master-Laporan.js"></script>
+<script src="{{ asset('js') }}/page/admin/master-laporan.js"></script>
 
 @endpush

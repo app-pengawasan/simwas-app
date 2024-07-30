@@ -59,7 +59,7 @@ $('.jam-kerja').on('click', function() {
     $('#title').text('Rencana Jam Kerja');
 });
 
-let today = new Date(); 
+let today = new Date();
 $('#filterTahun').val(today.getFullYear());
 
 $('#filterTahun').on("change", function () {
@@ -111,7 +111,6 @@ $(".disable-btn").on("click", function (e) {
                     setTimeout(location.reload(), 3000);
                 },
                 error: function (e) {
-                    console.log(e);
                 },
             });
         }
