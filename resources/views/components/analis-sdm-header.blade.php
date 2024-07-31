@@ -11,13 +11,13 @@
     <ul class="navbar-nav navbar-right">
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="{{env('APP_ENV') == 'local' ? asset('img/avatar/avatar-1.png')  : session('profile_picture') }}"
+                <img alt="image" src="{{config('app.env') == 'local' ? asset('img/avatar/avatar-1.png')  : session('profile_picture') }}"
                     style="object-fit: cover; width: 30px; height: 30px;" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 {{-- <div class="dropdown-title">Logged in 5 min ago</div> --}}
-                <a target="_blank" href="{{ env("PROFILE_URL") }}" class="dropdown-item has-icon">
+                <a target="_blank" href="{{ config("auth.sso.profileUrl") }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
                 <div class="dropdown-divider"></div>

@@ -74,15 +74,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php 
-                                            $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des']; 
+                                        @php
+                                            $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
                                             $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                                         @endphp
-                                        @foreach ($realisasiDone as $tahun => $items) 
+                                        @foreach ($realisasiDone as $tahun => $items)
                                             @foreach ($items as $month => $realisasiList)
                                                 @foreach ($realisasiList as $key => $realisasi)
-                                                    @php 
-                                                        $rencana_jam = 0; 
+                                                    @php
+                                                        $rencana_jam = 0;
                                                         foreach ($bulans as $bulan) {
                                                             $rencana_jam += $realisasi->pelaksana[$bulan];
                                                         }
@@ -92,7 +92,7 @@
                                                         <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                                         <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                         <td>{{ $rencana_jam }}</td>
-                                                        <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
+                                                        <td>{{ $jamRealisasi[$realisasi->id_pelaksana] ?? '' }}</td>
                                                         <td>
                                                             @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                                 <a class="btn btn-primary"
@@ -104,9 +104,9 @@
                                                                 href="{{ $realisasi->hasil_kerja }}" target="_blank">
                                                                     <i class="fa fa-download"></i>
                                                                 </a>
-                                                            @endif    
+                                                            @endif
                                                         </td>
-                                                        <td>{{ $realisasi->nilai }}</td> 
+                                                        <td>{{ $realisasi->nilai }}</td>
                                                         <td>{{ $nilai_ins->where('bulan', $month)->where('tahun', $tahun)->first()->nilai ?? null }}</td>
                                                         <td>{{ $month }}</td>
                                                         <td>{{ $tahun }}</td>
@@ -174,7 +174,7 @@
                             columns: [1, 2, 3, 4, 10, 6, 7],
                         },
                         messageTop: function () {
-                            return $(":selected", '#filterBulan').text() + ', ' 
+                            return $(":selected", '#filterBulan').text() + ', '
                                    + $(":selected", '#filterTahun').text();
                         },
                     },
@@ -186,7 +186,7 @@
                             columns: [1, 2, 3, 4, 10, 6, 7],
                         },
                         messageTop: function () {
-                            return $(":selected", '#filterBulan').text() + ', ' 
+                            return $(":selected", '#filterBulan').text() + ', '
                                    + $(":selected", '#filterTahun').text();
                         },
                     }
@@ -197,13 +197,13 @@
                 if ($(this).val() == 'all') $('.bulan').show();
                 table.draw();
                 if ($(this).val() != 'all') $('.bulan').hide();
-            }); 
-            
+            });
+
             $('#filterTahun').on("change", function () {
                 table.draw();
             });
 
-            
+
             $.fn.dataTableExt.afnFiltering.push(
                 function (setting, data, index) {
                     var selectedBulan = $('select#filterBulan option:selected').val();
@@ -213,7 +213,7 @@
                     else return false;
                 }
                 );
-                
+
             table.draw();
             $('.bulan').hide();
     </script>

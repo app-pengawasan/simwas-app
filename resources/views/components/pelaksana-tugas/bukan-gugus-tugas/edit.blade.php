@@ -19,6 +19,7 @@
                                 <option value="2">Ketua Tim</option>
                                 <option value="3">PIC</option>
                                 <option value="4">Anggota Tim</option>
+                                <option value="5">Penanggung Jawab Kegiatan</option>
                             </select>
                         </div>
                     </div>
@@ -40,32 +41,32 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-januari">Januari</label>
-                                <input type="text" id="edit-januari" class="form-control jam-kerja" name="edit-januari" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-januari" class="form-control jam-kerja" name="edit-januari"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-januari" class="text-danger"></small>
                             </div>
                             {{-- februari --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-februari">Februari</label>
-                                <input type="text" id="edit-februari" class="form-control jam-kerja" name="edit-februari"
-                                    required style="min-width: 60px;">
+                                <input type="text" id="edit-februari" class="form-control jam-kerja"
+                                    name="edit-februari" required style="min-width: 60px;">
                                 <small id="error-edit-februari" class="text-danger"></small>
                             </div>
                             {{-- maret --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-maret">Maret</label>
-                                <input type="text" id="edit-maret" class="form-control jam-kerja" name="edit-maret" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-maret" class="form-control jam-kerja" name="edit-maret"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-maret" class="text-danger"></small>
                             </div>
                             {{-- april --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-april">April</label>
-                                <input type="text" id="edit-april" class="form-control jam-kerja" name="edit-april" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-april" class="form-control jam-kerja" name="edit-april"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-april" class="text-danger"></small>
                             </div>
                             {{-- mei --}}
@@ -80,56 +81,56 @@
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-juni">Juni</label>
-                                <input type="text" id="edit-juni" class="form-control jam-kerja" name="edit-juni" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-juni" class="form-control jam-kerja" name="edit-juni"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-juni" class="text-danger"></small>
                             </div>
                             {{-- juli --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-juli">Juli</label>
-                                <input type="text" id="edit-juli" class="form-control jam-kerja" name="edit-juli" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-juli" class="form-control jam-kerja" name="edit-juli"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-juli" class="text-danger"></small>
                             </div>
                             {{-- agustus --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-agustus">Agustus</label>
-                                <input type="text" id="edit-agustus" class="form-control jam-kerja" name="edit-agustus" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-agustus" class="form-control jam-kerja" name="edit-agustus"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-agustus" class="text-danger"></small>
                             </div>
                             {{-- september --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-september">September</label>
-                                <input type="text" id="edit-september" class="form-control jam-kerja" name="edit-september"
-                                    required style="min-width: 60px;">
+                                <input type="text" id="edit-september" class="form-control jam-kerja"
+                                    name="edit-september" required style="min-width: 60px;">
                                 <small id="error-edit-september" class="text-danger"></small>
                             </div>
                             {{-- oktober --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-oktober">Oktober</label>
-                                <input type="text" id="edit-oktober" class="form-control jam-kerja" name="edit-oktober" required
-                                    style="min-width: 60px;">
+                                <input type="text" id="edit-oktober" class="form-control jam-kerja" name="edit-oktober"
+                                    required style="min-width: 60px;">
                                 <small id="error-edit-oktober" class="text-danger"></small>
                             </div>
                             {{-- november --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-november">November</label>
-                                <input type="text" id="edit-november" class="form-control jam-kerja" name="edit-november"
-                                    required style="min-width: 60px;">
+                                <input type="text" id="edit-november" class="form-control jam-kerja"
+                                    name="edit-november" required style="min-width: 60px;">
                                 <small id="error-edit-november" class="text-danger"></small>
                             </div>
                             {{-- desember --}}
                             <div class="d-flex flex-column">
                                 <label class="form-label
                                                                         " for="edit-desember">Desember</label>
-                                <input type="text" id="edit-desember" class="form-control jam-kerja" name="edit-desember"
-                                    required style="min-width: 60px;">
+                                <input type="text" id="edit-desember" class="form-control jam-kerja"
+                                    name="edit-desember" required style="min-width: 60px;">
                                 <small id="error-edit-desember" class="text-danger"></small>
                             </div>
                         </div>

@@ -24,6 +24,7 @@ return [
         'clientId' => env('SSO_CLIENT_ID'),
         'clientSecret' => env('SSO_CLIENT_SECRET'),
         'redirectUri' => env('SSO_REDIRECT_URI'),
+        'profileUrl' => env('PROFILE_URL'),
     ],
 
     /*
