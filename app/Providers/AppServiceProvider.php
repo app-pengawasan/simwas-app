@@ -3,14 +3,15 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades;
-use App\View\Composers\SidebarPegawai;
-use App\View\Composers\SidebarSekretaris;
+use Illuminate\Support\Facades\URL;
 use App\View\Composers\SidebarAdmin;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
+use App\View\Composers\SidebarPegawai;
+use Illuminate\Support\ServiceProvider;
 use App\View\Composers\SidebarPerencana;
+use App\View\Composers\SidebarSekretaris;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrapFive();
+
+        // force to use https
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
 
         Gate::define('sekretaris', function (User $user) {
             return $user->is_sekma == true || $user->is_sekwil == true;
