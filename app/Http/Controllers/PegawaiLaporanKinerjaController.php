@@ -64,7 +64,7 @@ class PegawaiLaporanKinerjaController extends Controller
         $realisasiAll = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query){
                             $query->where('id_pegawai', auth()->user()->id);
                         })->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                        ->get(); 
+                        ->get();
 
         $jamRealisasi = $realisasiAll->groupBy('id_pelaksana')
                             ->map(function ($items) {
@@ -79,7 +79,7 @@ class PegawaiLaporanKinerjaController extends Controller
 
         $realisasiDone = $realisasiDone->map->groupBy(function ($realisasi) {
                             return date("m",strtotime($realisasi->updated_at));
-                        }); 
+                        });
 
         $nilai_ins = NilaiInspektur::where('id_pegawai', auth()->user()->id)->get(); 
         return view('pegawai.laporan-kinerja.index', [
@@ -123,7 +123,7 @@ class PegawaiLaporanKinerjaController extends Controller
         //     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
         //         $query->where('status', 6);
         //     })->select('id_pelaksana');
-        
+
         // //realisasi untuk dinilai
         // if ($bulan == 'all') {
         //     $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugas)
@@ -133,7 +133,7 @@ class PegawaiLaporanKinerjaController extends Controller
         //     $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugas)->where('status', 1)
         //                         ->whereYear('tgl', $tahun)->whereMonth('tgl', $bulan)->get();
         //     $realisasiDinilaiAll = RealisasiKinerja::whereIn('id_pelaksana', $tugas)->get();
-        // } 
+        // }
 
         // $jamRealisasi = $realisasiDinilaiAll->groupBy('id_pelaksana')
         //                     ->map(function ($items) {
@@ -187,7 +187,7 @@ class PegawaiLaporanKinerjaController extends Controller
     //         'kembali'       => 'nilai-inspektur'
     //         ])
     //         ->with('realisasi', $realisasi);
-    // }    
+    // }
 
     // /**
     //  * Show the form for editing the specified resource.
@@ -220,6 +220,6 @@ class PegawaiLaporanKinerjaController extends Controller
      */
     public function destroy($id)
     {
-        
+
     }
 }

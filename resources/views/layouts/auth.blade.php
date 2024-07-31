@@ -12,7 +12,7 @@
             content="Sistem Informasi Manajemen Pengawasan Inspektorat Utama Badan Pusat Statistik">
 
         <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="{{ env('APP_URL') }}">
+        <meta property="og:url" content="{{ config('app.url') }}">
         <meta property="og:type" content="website">
         <meta property="og:title" content="Sistem Informasi Manajemen Pengawasan">
         <meta property="og:description"
@@ -21,7 +21,7 @@
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="{{ env('APP_URL') }}">
+        <meta property="twitter:url" content="{{ config('app.url') }}">
         <meta name="twitter:title" content="Sistem Informasi Manajemen Pengawasan">
         <meta name="twitter:description"
             content="Sistem Informasi Manajemen Pengawasan Inspektorat Utama Badan Pusat Statistik">
