@@ -7,6 +7,8 @@ use App\Http\Requests\StoreMasterKinerjaRequest;
 use App\Http\Requests\UpdateMasterKinerjaRequest;
 use App\Models\MasterHasilKerja;
 use App\Models\MasterKinerjaPegawai;
+use App\Models\RencanaKerja;
+use Illuminate\Support\Facades\DB;
 
 class MasterKinerjaController extends Controller
 {
@@ -18,13 +20,15 @@ class MasterKinerjaController extends Controller
     public function index()
     {
         $this->authorize('admin');
-        $hasilKerja = MasterHasilKerja::all();
+        $hasilKerja = MasterHasilKerja::whereDoesntHave('masterKinerja')->get();
+        $hasilKerjaAll = MasterHasilKerja::all();
         $hasilKinerja = MasterKinerja::with('masterHasilKerja', 'masterKinerjaPegawai')->latest()->get();
 
         return view('admin.master-kinerja.index', [
             'type_menu' => 'rencana-kinerja',
             'hasilKerja' => $hasilKerja,
             'hasilKinerja' => $hasilKinerja,
+            'hasilKerjaAll' => $hasilKerjaAll,
         ]);
     }
 
@@ -46,8 +50,7 @@ class MasterKinerjaController extends Controller
      */
     public function store(StoreMasterKinerjaRequest $request)
     {
-        // dd($request->all());
-       $roles = [
+        $roles = [
             1 =>  'pengendaliTeknis',
             2 =>  'ketuaTim',
             3 =>  'PIC',
@@ -56,8 +59,12 @@ class MasterKinerjaController extends Controller
         ];
 
         $data = $request->all();
+        // validate if the data already exists
+
 
         try {
+            // db transaction
+            DB::beginTransaction();
             MasterKinerja::create([
                 'hasil_kerja_id' => $data['hasilKerjaID'],
             ]);
@@ -77,6 +84,7 @@ class MasterKinerjaController extends Controller
                     'capaian' => $data['capaian_'.$value],
                 ]);
             }
+            DB::commit();
             return redirect()->route('admin.master-kinerja.index')->with('status', 'Data berhasil ditambahkan')->with('alert-type', 'success');
         } catch (\Throwable $th) {
             if ($th->errorInfo[1] == 1062) {
@@ -126,7 +134,6 @@ class MasterKinerjaController extends Controller
             4 =>  'anggotaTim',
             5 =>  'penanggungJawabKegiatan',
         ];
-
         $data = $request->all();
 
         try {
@@ -167,6 +174,13 @@ class MasterKinerjaController extends Controller
      */
     public function destroy(MasterKinerja $masterKinerja)
     {
+
+        // if masterHasilKerja used in rencana_kerjas, then cannot delete
+        $isUsed = RencanaKerja::where('id_hasilkerja', $masterKinerja->masterHasilKerja->id)->count();
+        if ($isUsed > 0) {
+            return redirect()->route('admin.master-kinerja.index')->with('status', 'Data gagal dihapus, data sudah digunakan')->with('alert-type', 'danger');
+        }
+
         try {
             $masterKinerja->masterKinerjaPegawai()->delete();
             $masterKinerja->delete();

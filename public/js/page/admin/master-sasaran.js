@@ -113,7 +113,7 @@ $(".submit-btn").on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(key);
+                // console.log(key);
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
@@ -155,7 +155,7 @@ $(".edit-btn").on("click", function () {
             });
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });

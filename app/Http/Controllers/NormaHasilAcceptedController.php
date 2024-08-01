@@ -12,40 +12,41 @@ use Illuminate\Http\Request;
 class NormaHasilAcceptedController extends Controller
 {
 
-    protected $month=[
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember'
-        ];
+protected $month=[
+        0 => '',
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
 
-    private $kodeHasilPengawasan = [
-    "110" => 'LHA',
-    "120" => 'LHK',
-    "130" => 'LHT',
-    "140" => 'LHI',
-    "150" => 'LHR',
-    "160" => 'LHE',
-    "170" => 'LHP',
-    "180" => 'LHN',
-    "190" => 'LTA',
-    "200" => 'LTR',
-    "210" => 'LTE',
-    "220" => 'LKP',
-    "230" => 'LKS',
-    "240" => 'LKB',
-    "500" => 'EHP',
-    "510" => 'LTS',
-    "520" => 'PHP',
-    "530" => 'QAP'
+private $kodeHasilPengawasan = [
+"110" => 'LHA',
+"120" => 'LHK',
+"130" => 'LHT',
+"140" => 'LHI',
+"150" => 'LHR',
+"160" => 'LHE',
+"170" => 'LHP',
+"180" => 'LHN',
+"190" => 'LTA',
+"200" => 'LTR',
+"210" => 'LTE',
+"220" => 'LKP',
+"230" => 'LKS',
+"240" => 'LKB',
+"500" => 'EHP',
+"510" => 'LTS',
+"520" => 'PHP',
+"530" => 'QAP'
 ];
 private $hasilPengawasan = [
     "110" => "Laporan Hasil Audit Kepatuhan",
@@ -83,7 +84,7 @@ private $hasilPengawasan = [
             $year = $year;
         }
         // find normahasil where rencanakerja->timkerja where id_ketua is this auth
-        $usulan = NormaHasil::with('user', 'normaHasilAccepted')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
+        $usulan = NormaHasil::with('user', 'normaHasilAccepted', 'masterLaporan')->latest()->whereYear('created_at', $year)->whereHas('rencanaKerja.timkerja', function ($query) {
             $query->where('id_ketua', auth()->user()->id);
         })->get();
         $year = NormaHasil::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year', 'desc')->get();
@@ -132,7 +133,7 @@ private $hasilPengawasan = [
         $tanggal = date('Y-m-d');
         $norma_hasil = NormaHasil::find($request->norma_hasil);
 
-        $nomor_norma_hasil = NormaHasilAccepted::where('kode_norma_hasil', $norma_hasil->jenis_norma_hasil_id)->orderBy('nomor_norma_hasil', 'desc')->first();
+        $nomor_norma_hasil = NormaHasilAccepted::where('kode_norma_hasil', $norma_hasil->jenis_norma_hasil_id)->whereYear('tanggal_norma_hasil', date('Y'))->orderBy('nomor_norma_hasil', 'desc')->first();
         if ($nomor_norma_hasil) {
             if (date('Y', strtotime($nomor_norma_hasil->tanggal_norma_hasil)) != date('Y')) {
                 $nomor_norma_hasil = 1;

@@ -199,20 +199,26 @@
                                             @endfor
                                             @else
                                             <?php
-                                            $jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
-                                            $jumlahPelaksana = count($rencanaKerja->pelaksana) < 1 ? 1 : count($rencanaKerja->pelaksana);
+                                            $jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
+                                            $jumlahPelaksana = count($rencanaKerja->pelaksana) < 2 ? 2 : count($rencanaKerja->pelaksana);
                                             ?>
                                             @for ($i = 0; $i < $jumlahPelaksana; $i++) <tr>
                                                 @if (!isset($rencanaKerja->pelaksana[$i]))
                                                 <td class="font-italic"> Belum ditentukan </td>
-                                                <td> PIC </td>
+                                                @if ($i == 0)
+                                                <td> PJK </td>
+                                                @elseif ($i == 1)
+                                                <td> PIC</td>
+                                                @endif
                                                 @if (count($rencanaKerja->hasilKerja->masterKinerja) < 1) <td>Belum
                                                     tersedia</td>
                                                     @else
                                                     <td class="font-italic"> {{
                                                         $rencanaKerja->hasilKerja->masterKinerja[0]
                                                         ->masterKinerjaPegawai
-                                                        ->where('pt_jabatan', 3 )
+                                                        ->where('pt_jabatan',
+                                                        $i == 0 ? 5 : 3
+                                                        )
                                                         ->first()
                                                         ->hasil_kerja ?? 'Belum tersedia'
 
@@ -224,7 +230,7 @@
                                                             class="btn btn-sm btn-primary btn-create-pelaksana"
                                                             type="button" data-toggle="modal" data-disable=false
                                                             data-target="#modal-create-pelaksana" data-hasilkerja=1
-                                                            data-jabatan=3>
+                                                            data-jabatan={{ $i == 0 ? 5 : 3 }}>
                                                             <i class="fa-solid fa-plus mr-1"></i>
                                                             Tambah Pelaksana
                                                             </button>
@@ -241,7 +247,7 @@
                                                     @if (count($rencanaKerja->hasilKerja->masterKinerja) < 1) <td>Belum
                                                         tersedia</td>
                                                         @else
-                                                        <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $i < 1 ? 3 : 4 )->first()->hasil_kerja }}
+                                                        <td>{{ $rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $rencanaKerja->pelaksana[$i]->pt_jabatan )->first()->hasil_kerja }}
                                                         </td>
                                                         @endif
                                                         @else
@@ -264,14 +270,14 @@
                                                                 </button>
                                                                 @endif
                                                                 @if ($i >= 1)
-
-                                                                <button
+                                                                @if ($timKerja->status < 2) <button
                                                                     class="btn btn-danger btn-delete-pelaksana btn-sm"
                                                                     type="button"
                                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                                     <i class="fas fa-trash"></i>
-                                                                </button>
-                                                                @endif
+                                                                    </button>
+                                                                    @endif
+                                                                    @endif
                                                         </td>
                                                         @endif
                                                         </tr>
@@ -331,15 +337,17 @@
                                         <td class="rupiah">{{ $anggaran->harga }}</td>
                                         <td class="rupiah">{{ $anggaran->total }}</td>
                                         <td>
-                                            <button class="btn btn-warning btn-edit-anggaran btn-sm" type="button"
+                                            @if ($timKerja->status < 2) <button
+                                                class="btn btn-warning btn-edit-anggaran btn-sm" type="button"
                                                 data-toggle="modal" data-target="#modal-edit-anggaran"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
                                                 <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-delete-anggaran btn-sm" type="button"
-                                                data-id="{{ $anggaran->id_rkanggaran }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                                </button>
+                                                <button class="btn btn-danger btn-delete-anggaran btn-sm" type="button"
+                                                    data-id="{{ $anggaran->id_rkanggaran }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                @endif
                                         </td>
                                     </tr>
                                     <?php $totalAnggaran += $anggaran->total; ?>
@@ -396,15 +404,17 @@
                                     <td>{{ $objek->nama_laporan }}</td>
                                     <td>{{ $objek->laporanObjekPengawasan->where('status', 1)->count() }}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-edit-objek btn-sm" type="button"
+                                        @if ($timKerja->status < 2) <button
+                                            class="btn btn-warning btn-edit-objek btn-sm" type="button"
                                             data-toggle="modal" data-target="#modal-edit-objek"
                                             data-id="{{ $objek->id_opengawasan }}">
                                             <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-delete-objek btn-sm" type="button"
-                                            data-id="{{ $objek->id_opengawasan }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                            </button>
+                                            <button class="btn btn-danger btn-delete-objek btn-sm" type="button"
+                                                data-id="{{ $objek->id_opengawasan }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            @endif
                                     </td>
                                 </tr>
                                 @endforeach

@@ -108,7 +108,6 @@ $("#rencana_id").on("change", function () {
             }
         },
         error: function (data) {
-            console.log(data);
         },
     });
 });

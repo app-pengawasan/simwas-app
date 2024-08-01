@@ -159,7 +159,6 @@ $("#create-hasilkerja").on("change", function () {
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
             $("#create-unsur").val(response.data[0].unsur);
             $("#create-subunsur1").val(response.data[0].subunsur1);
             $("#create-subunsur2").val(response.data[0].subunsur2);
@@ -168,7 +167,6 @@ $("#create-hasilkerja").on("change", function () {
             );
         },
         error: function (e) {
-            console.log(e);
         },
     });
 });
@@ -267,7 +265,6 @@ $("#btn-tambah-tugas").on("click", function (e) {
                 showConfirmButton: false,
                 timer: 3000,
             });
-            console.log(error);
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
 
@@ -384,20 +381,17 @@ $("#btn-edit-tugas").on("click", function (e) {
 
 $("#id_hasilkerja").on("change", function () {
     let dataId = $("#id_hasilkerja option:selected").val();
-    console.log(dataId);
     $.ajax({
         url: `/admin/master-hasil/${dataId}`,
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
             $("#subunsur1").val(response.data[0].subunsur1);
             $("#subunsur2").val(response.data[0].subunsur2);
             $("#kategori_hasilkerja").val(response.data[0].kategori_hasilkerja);
             $("#kategori_pelaksana").val(response.data[0].kategori_pelaksana);
         },
         error: function (e) {
-            console.log(e);
         },
     });
 });
@@ -416,7 +410,6 @@ $(".edit-btn").on("click", function () {
     let dataId = $(this).attr("data-id");
     dataId = JSON.stringify(dataId);
     let url = "/pegawai/tim-pelaksana/" + dataId;
-    console.log(url);
 });
 
 $("#btn-edit-submit").on("click", function (e) {
@@ -451,10 +444,8 @@ $("#btn-edit-submit").on("click", function (e) {
 
             $("#modal-edit-masteriku").modal("hide");
             setTimeout(location.reload(), 1000);
-            console.log(response.data[0]);
         },
         error: function (error) {
-            console.log(error.responseJSON);
         },
     });
 });
@@ -537,7 +528,6 @@ $("#btn-send-rencana-kerja").on("click", function (e) {
                     location.reload();
                 },
                 error: function (e) {
-                    console.log(e);
                 },
             });
         }
@@ -572,7 +562,6 @@ $("#btn-admin-submit-rk").on("click", function (e) {
                     location.reload();
                 },
                 error: function (e) {
-                    console.log(e);
                 },
             });
         }
@@ -607,7 +596,6 @@ $("#btn-admin-send-back").on("click", function (e) {
                     location.reload();
                 },
                 error: function (e) {
-                    console.log(e);
                 },
             });
         }
@@ -803,7 +791,6 @@ $("#create-hasil_kerja").on("change", function () {
             }
         },
         error: function (e) {
-            console.log(e);
         },
     });
 });
@@ -824,7 +811,6 @@ $("#edit-hasil_kerja").on("change", function () {
             }
         },
         error: function (e) {
-            console.log(e);
         },
     });
 });

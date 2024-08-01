@@ -18,6 +18,15 @@ return [
         'passwords' => 'users',
     ],
 
+    'sso' => [
+        'authServerUrl' => env('SSO_AUTH_SERVER_URL'),
+        'realm' => env('SSO_REALM'),
+        'clientId' => env('SSO_CLIENT_ID'),
+        'clientSecret' => env('SSO_CLIENT_SECRET'),
+        'redirectUri' => env('SSO_REDIRECT_URI'),
+        'profileUrl' => env('PROFILE_URL'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -94,6 +103,7 @@ return [
             'throttle' => 60,
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

@@ -28,16 +28,16 @@ if ($('#role').val() == 'analis sdm') {
     $('#filterUnitKerja').on("change", function () {
         table.draw();
     });
-    
+
     $('#filterJenis').on("change", function () {
         table.draw();
     });
-    
+
     $.fn.dataTableExt.afnFiltering.push(
         function (setting, data, index) {
             var selectedUnit = $('select#filterUnitKerja option:selected').val();
             var selectedJenis = $('select#filterJenis option:selected').val();
-            if ((data[8] == selectedUnit || selectedUnit == 'all') && 
+            if ((data[8] == selectedUnit || selectedUnit == 'all') &&
                 (data[9] == selectedJenis || selectedJenis == 'all')) return true;
             else return false;
         }
@@ -102,7 +102,7 @@ $.fn.dataTableExt.afnFiltering.push(
             // if not table should be ignored
             return true;
         }
-        
+
         var selected = $('select#filterPegawai option:selected').val();
         var selectedJenis = $('select#filterJenis option:selected').val();
         if (data[3] == selected && (data[5] == selectedJenis || selectedJenis == 'all')) {
@@ -113,7 +113,7 @@ $.fn.dataTableExt.afnFiltering.push(
 );
 
 tabled.draw();
-    
+
 const clearError = () => {
     $("#error-pegawai_id").text("");
     $("#error-pp").text("");
@@ -218,7 +218,7 @@ $(".pp_id").on("change", function () {
     if (pp === "1" || pp === "2" || pp === "3") {
         enableNamapp(pp);
         hideOthers();
-    } 
+    }
     else {
         if (pp === "999") {
             showOtherPp();
@@ -230,7 +230,7 @@ $(".pp_id").on("change", function () {
     }
 
     if (pp === "3") {
-        showPeserta();    
+        showPeserta();
         disableNamapp();
         $(".nama_pp_id option").hide();
         $('.disabled').show();
@@ -263,13 +263,13 @@ $(".peserta").on("change", function () {
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
-    let data = new FormData($('#myform')[0]); 
+    let data = new FormData($('#myform')[0]);
     let token = $("meta[name='csrf-token']").attr("content");
     if (!data.get("nama_pp_id")) data.append('nama_pp_id', $("#nama_pp_id").val());
     if (data.get("nama_pp_id") == 'null') data.delete('nama_pp_id');
     if (data.get("pp_lain") == '') data.delete('pp_lain');
     if (data.get("nama_pp_lain") == '') data.delete('nama_pp_lain');
-    data.append('_token', token); 
+    data.append('_token', token);
 
     let url;
     if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi`;
@@ -296,7 +296,7 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            console.log(errors);
+            // console.log(errors);
         },
     });
 });
@@ -390,7 +390,7 @@ $("#btn-edit-submit").on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(key);
+                // console.log(key);
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
@@ -436,7 +436,7 @@ $(".approval-btn").on("click", function () {
     let dataId = $(this).attr("data-id");
     let status = $(this).attr("status-id");
     let token = $("meta[name='csrf-token']").attr("content");
-    let btn; 
+    let btn;
 
     if (status === "1") btn = "Setujui";
     else btn = "Tolak";

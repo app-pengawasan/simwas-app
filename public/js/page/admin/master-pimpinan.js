@@ -157,7 +157,7 @@ $(".delete-btn").on("click", function (e) {
                     setTimeout(location.reload(), 1500);
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }

@@ -96,7 +96,7 @@ let rupiah = document.getElementsByClassName("rupiah");
 
 $(".delete-btn").on("click", function (e) {
     e.preventDefault();
-    console.log("klik");
+    // console.log("klik");
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
@@ -138,7 +138,7 @@ $(".delete-btn").on("click", function (e) {
                         showConfirmButton: false,
                         timer: 3000,
                     });
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }

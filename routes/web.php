@@ -458,8 +458,3 @@ Route::group(['middleware'=>'auth'], function(){
 
 
 Route::redirect('/', '/pegawai/dashboard')->name('dashboard');
-
-// If in production, force https
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}

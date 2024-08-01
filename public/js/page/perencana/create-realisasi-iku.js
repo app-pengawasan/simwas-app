@@ -244,7 +244,6 @@ $(document).ready(function () {
             totalTargetTriwulan4 += targetTriwulan4;
         });
 
-        console.log("totalTriwulan1", totalTargetTriwulan1);
         $("#target-total-triwulan1").val(totalTargetTriwulan1);
         $("#target-total-triwulan2").val(totalTargetTriwulan2);
         $("#target-total-triwulan3").val(totalTargetTriwulan3);

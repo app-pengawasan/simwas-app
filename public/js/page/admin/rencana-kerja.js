@@ -192,7 +192,7 @@ $(".edit-btn").on("click", function () {
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             $("#edit-id_iku").val(response.data[0].id_iku);
             $("#edit-id_sasaran").val(response.data[0].id_sasaran);
             let idtujuan = $("#edit-id_sasaran option:selected").data(
@@ -202,7 +202,7 @@ $(".edit-btn").on("click", function () {
             $("#edit-iku").val(response.data[0].iku);
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -242,10 +242,10 @@ $("#btn-edit-submit").on("click", function (e) {
 
             $("#modal-edit-masteriku").modal("hide");
             setTimeout(location.reload(), 1000);
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
         },
         error: function (error) {
-            console.log(error.responseJSON);
+            // console.log(error.responseJSON);
         },
     });
 });
@@ -277,7 +277,7 @@ $(".delete-btn").on("click", function () {
                     location.reload();
                 },
                 error: function (e) {
-                    console.log(e);
+                    // console.log(e);
                 },
             });
         }
@@ -323,7 +323,7 @@ $(".btn-edit-timkerja").on("click", function () {
             $("#edit-operator").trigger("change");
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -335,7 +335,7 @@ $("#edit-iku").on("change", function () {
         type: "GET",
         cache: false,
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             $("#edit-id_iku").val(response.data[0].id_iku);
             $("#edit-id_sasaran").val(response.data[0].id_sasaran);
             let idtujuan = $("#edit-id_sasaran option:selected").data(
@@ -345,7 +345,7 @@ $("#edit-iku").on("change", function () {
             // $("#edit-iku").val(response.data[0].iku);
         },
         error: function (e) {
-            console.log(e);
+            // console.log(e);
         },
     });
 });
@@ -389,7 +389,7 @@ $("#submit-edit-btn").on("click", function (e) {
 
             $("#modal-edit-timkerja").modal("hide");
             setTimeout(location.reload(), 3000);
-            console.log(response.data[0]);
+            // console.log(response.data[0]);
         },
         error: function (error) {
             Swal.fire({

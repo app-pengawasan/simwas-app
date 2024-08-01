@@ -72,7 +72,7 @@ class NormaHasilController extends Controller
         }
         $currentYear = date('Y');
 
-        $usulan = NormaHasil::with('normaHasilAccepted')
+        $usulan = NormaHasil::with('normaHasilAccepted', 'masterLaporan')
             ->where('user_id', auth()->user()->id)
             ->whereYear('created_at', $year)
             ->latest()
@@ -132,7 +132,7 @@ class NormaHasilController extends Controller
     {
         $user_id = auth()->user()->id;
         $rencanaKerja = RencanaKerja::find($request->rencana_id);
-        $unit_kerja = $rencanaKerja->timkerja->unitkerja;
+        $unit_kerja = '0'.$rencanaKerja->timkerja->unitkerja;
         $tanggal = date('Y-m-d');
         // dd($request->all());
 

@@ -41,7 +41,7 @@ $("#tugas").on("change", function () {
         i = i + +$(this).text();
     });
     $('#jam').text(i + ' jam');
-    
+
     let data = $(this).find(":selected");
     $("#hasil").text(data.attr('data-hasil-kerja'));
     $("#rencana_kerja").val(data.attr('data-rencana-kinerja'));
@@ -70,10 +70,10 @@ $("#objek").on("change", function () {
 $("#status").on("change", function () {
     if ($(this).val() == '1') {
         $('#catatan').prop("required", false);
-    } 
+    }
     else {
         $('#catatan').prop("required", true);
-    } 
+    }
 });
 
 // $("#link").on("input", function () {
@@ -103,7 +103,7 @@ $("#status").on("change", function () {
 //         $("#link").prop("disabled", true);
 //         $('#link').prop("required", false);
 //         $(`#link`).removeClass('is-invalid');
-//     } 
+//     }
 //     else {
 //         $("#link").prop("disabled", false);
 //         $('#link').prop("required", true);
@@ -114,7 +114,7 @@ $("#status").on("change", function () {
 //     if ($(this).val() != '') {
 //         $("#edit-link").prop("disabled", true);
 //         $(`#edit-link`).removeClass('is-invalid');
-//     } 
+//     }
 //     else {
 //         $("#edit-link").prop("disabled", false);
 //     }
@@ -182,10 +182,10 @@ $("#myform").on("submit", function (e) {
             error: function (error) {
                 $('form').removeClass('was-validated');
                 $('.form-group').addClass('was-validated');
-                
+
                 let errorResponses = error.responseJSON;
                 let errors = Object.entries(errorResponses.errors);
-                
+
                 errors.forEach(([key, value]) => {
                     let errorMessage = document.getElementById(`error-${key}`);
                     errorMessage.innerText = value.join('\n');
@@ -200,7 +200,7 @@ $("#myform").on("submit", function (e) {
                         $(`#error-${key}`).text("");
                     });
                 });
-                
+
             },
         });
     }
@@ -235,10 +235,10 @@ $("#myeditform").on("submit", function (e) {
         error: function (error) {
             $('form').removeClass('was-validated');
             $('.form-group').addClass('was-validated');
-            
+
             let errorResponses = error.responseJSON;
             let errors = Object.entries(errorResponses.errors);
-            
+
             errors.forEach(([key, value]) => {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = value.join('\n');
@@ -253,7 +253,7 @@ $("#myeditform").on("submit", function (e) {
                     $(`#error-${key}`).text("");
                 });
             });
-            
+
         },
     });
 });
@@ -293,7 +293,6 @@ $(".delete-btn").on("click", function (e) {
                     setTimeout(window.location.href = "/pegawai/realisasi", 1500);
                 },
                 error: function (e) {
-                    console.log(e);
                 },
             });
         }
@@ -315,7 +314,7 @@ let table = $("#table-realisasi")
                     columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' +
                             $(":selected", '#filterTahun').text();
                 },
             },
@@ -327,7 +326,7 @@ let table = $("#table-realisasi")
                     columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' + 
+                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' +
                             $(":selected", '#filterTahun').text();
                 },
             },
@@ -335,7 +334,7 @@ let table = $("#table-realisasi")
         order: [[10, 'desc']]
     }).api();
 
-let today = new Date(); 
+let today = new Date();
 $('#filterTahun').val(today.getFullYear());
 
 $('#filterBulan').on("change", function () {
@@ -350,7 +349,7 @@ $.fn.dataTableExt.afnFiltering.push(
     function (setting, data, index) {
         var selectedBulan = $('select#filterBulan option:selected').val();
         var selectedTahun = $('select#filterTahun option:selected').val();
-        if ((data[12] == selectedBulan || selectedBulan == 'all') 
+        if ((data[12] == selectedBulan || selectedBulan == 'all')
             && data[11] == selectedTahun) return true;
         else return false;
     }

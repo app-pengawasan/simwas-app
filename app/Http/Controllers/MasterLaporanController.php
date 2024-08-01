@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NormaHasil;
 use App\Models\MasterLaporan;
 use App\Http\Requests\StoreMasterLaporanRequest;
 use App\Http\Requests\UpdateMasterLaporanRequest;
@@ -110,6 +111,12 @@ class MasterLaporanController extends Controller
      */
     public function destroy($id)
     {
+        // find normaHasil by jenis_norma_hasil == $id, if exist, return error
+        // find normaHasil by jenis_norma_hasil == $id, if exist, return error
+        $normaHasil = NormaHasil::where('jenis_norma_hasil_id', $id)->first();
+        if ($normaHasil) {
+            return redirect()->route('admin.master-laporan.index')->with('status', 'Data gagal dihapus, data masih digunakan')->with('alert-type', 'danger');
+        }
         try {
             MasterLaporan::destroy($id);
             return redirect()->route('admin.master-laporan.index')->with('status', 'Data berhasil dihapus')->with('alert-type', 'success');

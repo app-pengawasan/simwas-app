@@ -17,7 +17,7 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return $(":selected", '#filterBulan').text() + ' ' + 
+                    return $(":selected", '#filterBulan').text() + ' ' +
                            $(":selected", '#filterTahun').text() + '; ' +
                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
                 },
@@ -30,7 +30,7 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return $(":selected", '#filterBulan').text() + ' ' + 
+                    return $(":selected", '#filterBulan').text() + ' ' +
                            $(":selected", '#filterTahun').text() + '; ' +
                            'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
                 },
@@ -167,7 +167,6 @@ $('.submit-btn').on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(errors);
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
@@ -202,7 +201,6 @@ $('.submit-edit-btn').on("click", function (e) {
             let errors = Object.entries(errorResponses.errors);
 
             errors.forEach(([key, value]) => {
-                console.log(errors);
                 let errorMessage = document.getElementById(`error-edit-${key}`);
                 errorMessage.innerText = `${value}`;
             });
@@ -226,8 +224,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         center: 'title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth' // user can switch between the two
     },
-    allDayContent:  { 
-        html: '<i class="fa-regular fa-clock"></i>' 
+    allDayContent:  {
+        html: '<i class="fa-regular fa-clock"></i>'
     },
     buttonText: {
         today:    'Hari ini',
@@ -240,8 +238,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         excel: {
             text: 'Excel',
             click: function() {
-                let bulan = moment(calendar.getDate()).format("MM"); 
-                let tahun = moment(calendar.getDate()).format("YYYY"); 
+                let bulan = moment(calendar.getDate()).format("MM");
+                let tahun = moment(calendar.getDate()).format("YYYY");
                 window.location.href = `/pegawai/nilai-berjenjang/export/${pegawai}/${bulan}/${tahun}`;
             }
         }
@@ -260,7 +258,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 let endDate = moment(selectionInfo.end).format("YYYY-MM-DD");
                 let selisih = Date.parse(endDate) - Date.parse(startDate);
                 //jika hanya memilih sehari pindah ke view day, jika memilih berhari-hari pindah ke view week
-                if (selisih == 86400000) calendar.changeView('timeGridDay', startDate); 
+                if (selisih == 86400000) calendar.changeView('timeGridDay', startDate);
                 else calendar.changeView('timeGridWeek', startDate);
             }
         },
@@ -278,9 +276,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             eventDidMount: function(info) {
                 document.querySelector(".fc-excel-button").style.display = "inline-block";
                 // alert(JSON)
-                info.el.querySelector('.fc-list-event-title a').innerHTML 
+                info.el.querySelector('.fc-list-event-title a').innerHTML
                     += ` <br><table class="table-borderless"><tbody>
-                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td> 
+                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td>
                             <td class="pl-0" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
                         </tr></tbody></table>`;
             },
@@ -291,14 +289,14 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         moment.locale('id');
         let startdate = moment(info.event.start);
         let enddate = moment(info.event.end);
-        $(info.el).popover({ 
+        $(info.el).popover({
             sanitize: false,
             title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
                 '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
             trigger: 'click',
             placement: 'right',
             html: true,
-            content: '<h3>' + info.event.title + '</h3>' + 
+            content: '<h3>' + info.event.title + '</h3>' +
                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
                     + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
         });

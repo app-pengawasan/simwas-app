@@ -248,9 +248,8 @@
                                                             <td>{{ $loop->iteration }}.</td>
                                                             <td>{{ $pelaksana->user->name }}</td>
                                                             <?php
-                                                                                            $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
-                                                                                            $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
-                                                                                            ?>
+                                                                $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'Penanggung Jawab Kegiatan'];
+                                                                ?>
                                                             <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
                                                             <td>
                                                                 {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )

@@ -21,7 +21,7 @@ class MasterHasilKerjaController extends Controller
     {
         $this->authorize('admin');
 
-        $masterHasilKerjas = MasterHasilKerja::with('masterSubUnsur')->latest()->get();
+        $masterHasilKerjas = MasterHasilKerja::with('masterSubUnsur','masterKinerja')->latest()->get();
         $masterSubUnsurs = MasterSubUnsur::all();
         $masterUnsurs = MasterUnsur::all();
         return view('admin.master-hasil-kerja.index', [
