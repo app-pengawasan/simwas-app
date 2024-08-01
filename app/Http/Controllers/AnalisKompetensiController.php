@@ -114,7 +114,7 @@ class AnalisKompetensiController extends Controller
 
         $validateData['status'] = 1;
         $validateData['approved_by'] = auth()->user()->id;
-        $validateData['catatan'] = $request->catatan;
+        // $validateData['catatan'] = $request->catatan;
 
         // $validateData = $request->validate($rules);
 
@@ -170,15 +170,32 @@ class AnalisKompetensiController extends Controller
     {
         $this->authorize('analis_sdm');
 
-        if($request->approval) {
+        if ($request->terima) {
             $kompetensiEdit = Kompetensi::where('id', $id)->update([
-                'status' => $request->status,
+                'status' => 1,
                 'approved_by' => auth()->user()->id
             ]);
 
-            if ($request->status == "1") $str = "menyetujui";
-            else $str = "menolak";
-            $request->session()->put('status', 'Berhasil '.$str.' data kompetensi.');
+            $request->session()->put('status', 'Berhasil menyetujui data kompetensi.');
+            $request->session()->put('alert-type', 'success');
+
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Data Berhasil Diperbarui',
+                'data'      => $kompetensiEdit
+            ]);
+        }
+
+        if ($request->tolak) {
+            $request->validate(['catatan' => 'required'], ['required' => 'Harus diisi']);
+
+            $kompetensiEdit = Kompetensi::where('id', $id)->update([
+                'catatan' => $request->catatan,
+                'status' => 2,
+                'approved_by' => auth()->user()->id
+            ]);
+
+            $request->session()->put('status', 'Berhasil menolak data kompetensi.');
             $request->session()->put('alert-type', 'success');
 
             return response()->json([
@@ -227,7 +244,7 @@ class AnalisKompetensiController extends Controller
         $data = [
             'pp_id'     => $validateData['edit-pp'],
             'nama_pp_id'   => $validateData['edit-nama_pp'],
-            'catatan'      => $request['edit-catatan'],
+            // 'catatan'      => $request['edit-catatan'],
             'tgl_mulai' => $validateData['edit-tgl_mulai'],
             'tgl_selesai' => $validateData['edit-tgl_selesai'],
             'tgl_sertifikat' => $validateData['edit-tgl_sertifikat'],

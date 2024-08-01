@@ -13,7 +13,7 @@
                     <input type="hidden" name="tgl" id="tgl">
                     <div class="form-group">
                         <label class="form-label" for="id_pelaksana">Tugas</label>
-                        <select class="form-control" name="id_pelaksana" id="id_pelaksana" required>
+                        <select class="form-control select2" name="id_pelaksana" id="id_pelaksana" required>
                             <option value="" selected disabled>Pilih Tugas</option>
                             @foreach ($tugasSaya as $ts)
                                 <option value="{{ $ts->id_pelaksana }}">{{ $ts->rencanaKerja->tugas }}</option>

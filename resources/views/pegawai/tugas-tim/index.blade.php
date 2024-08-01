@@ -59,6 +59,9 @@
                                             <th style="text-align:center" colspan="3">Surat Tugas</th>
                                             <th style="text-align:center" colspan="3">Norma Hasil</th>
                                             <th style="text-align:center" colspan="2">Kendali Mutu</th>
+                                            <th style="display: none" rowspan="2">File Surat Tugas</th>
+                                            <th style="display: none" rowspan="2">File Norma Hasil</th>
+                                            <th style="display: none" rowspan="2">File Kendali Mutu</th>
                                         </tr>
                                         <tr>
                                             <th style="text-align:center">Nomor Surat Tugas</th>
@@ -203,6 +206,44 @@
                                                 <td></td>
                                                 <td></td>
                                             @endif
+
+                                            @if (isset($surat_tugas[$bulan->objekPengawasan->id_rencanakerja]))
+                                                @if ($surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->status == 'disetujui')
+                                                    <td style="display: none">{{ url('/') }}/{{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->suratSrikandi[0]->document_srikandi_pdf_path }}</td>
+                                                @else
+                                                    <td style="display: none">{{ url('/') }}/{{ $surat_tugas[$bulan->objekPengawasan->id_rencanakerja]->directory }}</td>
+                                                @endif
+                                            @else
+                                                <td style="display: none"></td>
+                                            @endif
+
+                                            @if (isset($norma_hasil[$bulan->id]->laporan_path))
+                                                <td style="display: none">
+                                                    @if ($norma_hasil[$bulan->id]->jenis == 1)
+                                                        {{ url('/') }}/pegawai/tim/norma-hasil/viewLaporan/{{ $norma_hasil[$bulan->id]->id }}/1
+                                                    @else
+                                                        {{ url('/') }}/pegawai/tim/norma-hasil/viewLaporan/{{ $norma_hasil[$bulan->id]->id }}/2
+                                                    @endif
+                                                </td>
+                                            @else
+                                                <td style="display: none"></td>
+                                            @endif
+
+                                            @if (isset($kendali_mutu[$bulan->id]))
+                                                @if ($kendali_mutu[$bulan->id]->status != 'tidak ada')
+                                                    <td style="display: none">
+                                                        @if (file_exists($kendali_mutu[$bulan->id]->path))
+                                                            {{ url('/') }}/pegawai/tim/kendali-mutu/download/{{ $kendali_mutu[$bulan->id]->id }}
+                                                        @else
+                                                            {{ $kendali_mutu[$bulan->id]->path }}
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td style="display: none"></td>
+                                                @endif
+                                            @else
+                                                <td style="display: none"></td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -252,6 +293,9 @@
                 className: "btn-success",
                 messageTop: function () {
                     return $('.section-header h1').text();
+                },
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 12, 6, 7, 13, 9, 14, 11],
                 },
             }
         ],

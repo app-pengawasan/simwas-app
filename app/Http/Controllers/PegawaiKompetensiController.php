@@ -106,7 +106,7 @@ class PegawaiKompetensiController extends Controller
 
         $validateData['status'] = 3;
         $validateData['pegawai_id'] = auth()->user()->id;
-        $validateData['catatan'] = $request->catatan;
+        // $validateData['catatan'] = $request->catatan;
 
         // $validateData = $request->validate($rules);
 
@@ -197,7 +197,7 @@ class PegawaiKompetensiController extends Controller
         $data = [
             'pp_id'     => $validateData['edit-pp'],
             'nama_pp_id'   => $validateData['edit-nama_pp'],
-            'catatan'      => $request['edit-catatan'],
+            // 'catatan'      => $request['edit-catatan'],
             'tgl_mulai' => $validateData['edit-tgl_mulai'],
             'tgl_selesai' => $validateData['edit-tgl_selesai'],
             'tgl_sertifikat' => $validateData['edit-tgl_sertifikat'],

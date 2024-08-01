@@ -12,8 +12,8 @@
 @endpush
 
 @section('main')
-@include('components.inspektur-header')
-@include('components.inspektur-sidebar')
+@include('components.admin-header')
+@include('components.admin-sidebar')
 <div class="main-content">
     <section class="section">
         <div class="section-header">

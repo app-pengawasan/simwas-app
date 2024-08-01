@@ -74,38 +74,38 @@ class AdminKinerjaTimController extends Controller
                 }
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = $jumlah_tugas;
 
-                $surat_tugas = UsulanSuratSrikandi::where('status', 'disetujui')
-                                ->whereIn('rencana_kerja_id', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'))
+                $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'))
+                                // ->where('status', 'disetujui')
                                 ->get();
-                //jumlah surat tugas yang disetujui
+                //jumlah surat tugas masuk
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_st'] = $surat_tugas->count();
 
                 //jumlah target norma hasil
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = $laporanobjek->count();
 
                 $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i) {
-                                    $query->where('status_verifikasi_arsiparis', 'disetujui');
+                                    // $query->where('status_verifikasi_arsiparis', 'disetujui');
                                     $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i) {
                                                 $q->where('month', $i)->where('status', 1);
                                             });
                                 })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i) {
-                                    $query->where('status_verifikasi_arsiparis', 'disetujui');
+                                    // $query->where('status_verifikasi_arsiparis', 'disetujui');
                                     $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i) {
                                         $q->where('month', $i)->where('status', 1);
                                     });
-                                })->get(); //belom year btw
+                                })->get();
                 //jumlah norma hasil masuk
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = $norma_hasil->count();
 
-                $kendali_mutu = KendaliMutuTim::where('status', 'disetujui')
-                                    ->whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i) {
-                                        $query->where('month', $i)->where('status', 1);
-                                    })->get();
+                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i) {
+                                                    $query->where('month', $i)->where('status', 1);
+                                                })
+                                                // ->where('status', 'disetujui')
+                                                ->get();
                 //jumlah kendali mutu
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = $kendali_mutu->count();
             }
         }
-        // dd($data_tim);
 
         return view('admin.kinerja-tim.index',[
             'type_menu'     => 'kinerja-tim',

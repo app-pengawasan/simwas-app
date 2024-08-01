@@ -47,7 +47,7 @@
                                         </select>
                                     </div>
                                 </form>
-                                <table class="table table-bordered display responsive" id="table-inspektur-kinerja">
+                                <table class="table table-bordered display responsive" id="table-inspektur-kinerja" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -77,7 +77,7 @@
                                                         <td>{{ $data['jumlah_nh'] }}</td>
                                                         <td>{{ $data['jumlah_km'] }}</td>
                                                         <td>
-                                                            <a class="btn btn-primary btn-sm" id="detail"
+                                                            <a class="btn btn-primary btn-sm"
                                                                 href="/admin/kinerja-tim/{{ $id }}/{{ $bulan }}"
                                                                 style="width: 42px">
                                                                 <i class="fas fa-eye"></i>
@@ -131,9 +131,6 @@
                 {
                     extend: "excel",
                     className: "btn-success",
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6],
-                    },
                 }
             ],
             columnDefs: [{
@@ -147,10 +144,6 @@
         $('#yearSelect').on('change', function() {
             $('#yearForm').find('[name="_token"]').remove();
             $('#yearForm').submit();
-        });
-
-        $("#detail").attr('href', function(_, el){
-            return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
     </script>
 @endpush

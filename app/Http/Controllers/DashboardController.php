@@ -26,29 +26,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
 {
-    private $kodeHasilPengawasan = [
-        "110" => 'LHA',
-        "120" => 'LHK',
-        "130" => 'LHT',
-        "140" => 'LHI',
-        "150" => 'LHR',
-        "160" => 'LHE',
-        "170" => 'LHP',
-        "180" => 'LHN',
-        "190" => 'LTA',
-        "200" => 'LTR',
-        "210" => 'LTE',
-        "220" => 'LKP',
-        "230" => 'LKS',
-        "240" => 'LKB',
-        "500" => 'EHP',
-        "510" => 'LTS',
-        "520" => 'PHP',
-        "530" => 'QAP'
+    protected $months = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
     ];
-
-
-
 
     function admin(Request $request) {
         $year = $request->year;
@@ -271,16 +262,126 @@ class DashboardController extends Controller
             $year = $year;
         }
 
-        $tugas = RencanaKerja::whereRelation('proyek.timKerja', function (Builder $query) use ($year) {
-                    $query->where('tahun', $year);
-                 })->get();
+        $data_tim = [];
+        $timkerja = TimKerja::where('tahun', $year)->get();
 
-        return view('arsiparis.index', [
-            'tugas' => $tugas,
-            'kodeHasilPengawasan' => $this->kodeHasilPengawasan,
-        ]);
+        //data tiap tim
+        foreach ($timkerja as $tim) {
+            $data_tim[$tim->id_timkerja]['nama'] = $tim->nama;
+            $data_tim[$tim->id_timkerja]['pjk'] = $tim->ketua->name;
+            //data tiap bulan
+            for ($i=1; $i < 13; $i++) {
+                $laporanobjek = LaporanObjekPengawasan::
+                                whereRelation('objekPengawasan.rencanakerja.proyek.timkerja', function (Builder $query) use ($tim) {
+                                    $query->where('id_timkerja', $tim->id_timkerja);
+                                })->where('month', $i)->where('status', 1)->get();
+
+                //jumlah tugas
+                $jumlah_tugas = $laporanobjek->countBy('objekPengawasan.id_rencanakerja')->count();
+                if ($jumlah_tugas == 0) {
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_st'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = '-';
+                    $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = '-';
+                    continue;
+                }
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_tugas'] = $jumlah_tugas;
+
+                $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'))
+                                // ->where('status', 'disetujui')
+                                ->get();
+                //jumlah surat tugas masuk
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_st'] = $surat_tugas->count();
+
+                //jumlah target norma hasil
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = $laporanobjek->count();
+
+                $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i) {
+                                    // $query->where('status_verifikasi_arsiparis', 'disetujui');
+                                    $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i) {
+                                                $q->where('month', $i)->where('status', 1);
+                                            });
+                                })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i) {
+                                    // $query->where('status_verifikasi_arsiparis', 'disetujui');
+                                    $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i) {
+                                        $q->where('month', $i)->where('status', 1);
+                                    });
+                                })->get();
+                //jumlah norma hasil masuk
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = $norma_hasil->count();
+
+                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i) {
+                                                    $query->where('month', $i)->where('status', 1);
+                                                })
+                                                // ->where('status', 'disetujui')
+                                                ->get();
+                //jumlah kendali mutu
+                $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = $kendali_mutu->count();
+            }
+        }
+
+        return view('arsiparis.index',[
+            'type_menu'     => 'kinerja-tim',
+            'months'    => $this->months
+        ])->with('data_tim', $data_tim);
     }
 
+    function detailKinerjaTim($id, $bulan) {
+        $this->authorize('arsiparis');
+
+        $laporanObjek = LaporanObjekPengawasan::where('month', $bulan)->where('status', 1)
+                        ->whereRelation('objekPengawasan.rencanakerja.proyek.timkerja', function (Builder $query) use ($id) {
+                            $query->where('id_timkerja', $id);
+                        })->get();
+
+        $surat_tugas = UsulanSuratSrikandi::whereIn('rencana_kerja_id', $laporanObjek->pluck('objekPengawasan.id_rencanakerja'))
+                        // ->where('status', 'disetujui')
+                        ->get();
+        $surat_tugas_arr = [];
+        foreach ($surat_tugas as $surat) {
+            $surat_tugas_arr[$surat->rencana_kerja_id] = $surat;
+        }
+
+        $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($laporanObjek) {
+                            // $query->where('status_verifikasi_arsiparis', 'disetujui');
+                            $query->whereRelation('normaHasil', function (Builder $q) use ($laporanObjek) {
+                                $q->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
+                            });
+                        })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($laporanObjek) {
+                            $query->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
+                            // $query->where('status_verifikasi_arsiparis', 'disetujui');
+                        })->get();
+        $norma_hasil_arr = [];
+        foreach ($norma_hasil as $dokumen) {
+            if ($dokumen->jenis == 1) {
+                $bulan_id = $dokumen->normaHasilAccepted->normaHasil->laporan_pengawasan_id;
+                $norma_hasil_arr[$bulan_id] = $dokumen->normaHasilAccepted;
+            }
+            else {
+                $bulan_id = $dokumen->normaHasilDokumen->laporan_pengawasan_id;
+                $norma_hasil_arr[$bulan_id] = $dokumen->normaHasilDokumen;
+            }
+            $norma_hasil_arr[$bulan_id]['jenis'] = $dokumen->jenis;
+        }
+
+        $kendali_mutu = KendaliMutuTim::whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'))->get();
+                        // ->where('status', 'disetujui')->get();
+        $kendali_mutu_arr = [];
+        foreach ($kendali_mutu as $dokumen) {
+            $kendali_mutu_arr[$dokumen->laporan_pengawasan_id] = $dokumen;
+        }
+
+        return view('arsiparis.show', [
+            'type_menu' => 'kinerja-tim',
+            'laporanObjek' => $laporanObjek,
+            'months' => $this->months,
+            'norma_hasil' => $norma_hasil_arr,
+            'kendali_mutu' => $kendali_mutu_arr,
+            'surat_tugas' => $surat_tugas_arr,
+            'bulan' => $bulan
+        ]);
+    }
 
 
     // Admin
