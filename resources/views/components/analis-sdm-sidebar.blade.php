@@ -45,7 +45,6 @@
                     </li>
                 </ul>
             </li>
-            </li>
             <li class="nav-item dropdown {{ $type_menu === 'data-kepegawaian' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fab fa-stumbleupon-circle"></i>

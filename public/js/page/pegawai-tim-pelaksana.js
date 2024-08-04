@@ -1,4 +1,3 @@
-
 // Tambah Objek Pengawasan
 $("#btn-create-objek").on("click", function (e) {
     $("#error-kategori_objek").text("");
@@ -74,7 +73,6 @@ $("#btn-submit-objek").on("click", function (e) {
             oktober: $(`input[name="create-Oktober"]:checked`).val(),
             november: $(`input[name="create-November"]:checked`).val(),
             desember: $(`input[name="create-Desember"]:checked`).val(),
-
         },
         success: function (response) {
             location.reload();
@@ -118,7 +116,13 @@ $(".btn-delete-objek").on("click", function (e) {
                     location.reload();
                 },
                 error: function (e) {
-                    // console.log(e);
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Data tidak dapat dihapus",
+                        icon: "error",
+                        confirmButtonColor: "var(--primary)",
+                        timer: 2000,
+                    });
                 },
             });
             // console.log(dataId);
@@ -130,7 +134,6 @@ $(".btn-delete-objek").on("click", function (e) {
 $(".btn-edit-objek").on("click", function (e) {
     let id = $(this).data("id");
     $("#edit-id").val(id);
-
 
     $.ajax({
         url: `/ketua-tim/objek-pengawasan/detail/${id}`,
@@ -145,28 +148,29 @@ $(".btn-edit-objek").on("click", function (e) {
             }, 1000);
             $("#edit-nama-laporan").val(response.data.nama_laporan);
             var bulan = {
-                1 : "Januari",
-                2 : "Februari",
-                3 : "Maret",
-                4 : "April",
-                5 : "Mei",
-                6 : "Juni",
-                7 : "Juli",
-                8 : "Agustus",
-                9 : "September",
-                10 : "Oktober",
-                11 : "November",
-                12 : "Desember",
-            }
-            response.data.laporan_objek_pengawasan.forEach(element => {
+                1: "Januari",
+                2: "Februari",
+                3: "Maret",
+                4: "April",
+                5: "Mei",
+                6: "Juni",
+                7: "Juli",
+                8: "Agustus",
+                9: "September",
+                10: "Oktober",
+                11: "November",
+                12: "Desember",
+            };
+            response.data.laporan_objek_pengawasan.forEach((element) => {
                 // iterate bulan
                 for (const [key, value] of Object.entries(bulan)) {
-                    if(element.month == key){
-                        $(`input[name="edit-${value}"][value="${element.status}"]`).prop("checked", true);
+                    if (element.month == key) {
+                        $(
+                            `input[name="edit-${value}"][value="${element.status}"]`
+                        ).prop("checked", true);
                     }
                 }
             });
-
         },
         error: function (e) {
             // console.log(e);
@@ -512,6 +516,15 @@ $(".btn-delete-anggaran").on("click", function (e) {
                 success: function (response) {
                     location.reload();
                 },
+                error: function (e) {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Data tidak dapat dihapus",
+                        icon: "error",
+                        confirmButtonColor: "var(--primary)",
+                        timer: 2000,
+                    });
+                },
             });
         }
     });
@@ -607,7 +620,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         des = des.replace(/,/g, ".");
     }
 
-
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
         $("#error-januari").text("0 - 200 Jam Kerja");
@@ -660,11 +672,10 @@ $("#btn-submit-pelaksana").on("click", function (e) {
 
     $("#error-pelaksana").text("");
 
-    if(pelaksana == null || pelaksana == ""){
+    if (pelaksana == null || pelaksana == "") {
         $("#error-pelaksana").text("Pilih Pelaksana");
         return;
     }
-
 
     Swal.fire({
         title: "Menyimpan Data",
@@ -675,7 +686,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
         },
         allowOutsideClick: () => !Swal.isLoading(),
     });
-
 
     $.ajax({
         url: `/pelaksana-tugas`,
@@ -709,7 +719,6 @@ $("#btn-submit-pelaksana").on("click", function (e) {
                 icon: "error",
                 confirmButtonColor: "var(--primary)",
             });
-
         },
     });
 });
@@ -740,6 +749,15 @@ $(".btn-delete-pelaksana").on("click", function (e) {
                 },
                 success: function (response) {
                     location.reload();
+                },
+                error: function (e) {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Data tidak dapat dihapus",
+                        icon: "error",
+                        confirmButtonColor: "var(--primary)",
+                        timer: 2000,
+                    });
                 },
             });
         }
@@ -863,7 +881,6 @@ $("#btn-edit-pelaksana").on("click", function (e) {
         des = des.replace(/,/g, ".");
     }
 
-
     // if jan - des < 0 or > 200, return error
     if (jan < 0 || jan > 200) {
         $("#error-edit-januari").text("0 - 200 Jam Kerja");
@@ -970,9 +987,6 @@ $(".jam-kerja").on("keyup", function (e) {
     this.value = this.value.replace(/,+/g, ",");
     // just allow 0 or 5 after comma
     this.value = this.value.replace(/,[^0,5]/g, "");
-
-
-
 });
 
 // after document ready change . to , in jam-kerja class

@@ -136,12 +136,12 @@
                         <input type="number" class="form-control" name="ranking">
                         <small id="error-ranking" class="text-danger"></small>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label class="form-label" for="catatan">Catatan</label>
                         <div class="">
                             <textarea rows="5" class="form-control h-auto" id="catatan" name="catatan"></textarea>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">

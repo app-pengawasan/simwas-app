@@ -96,24 +96,17 @@
                                                 <td>{{ $rencana_jam }}</td>
                                                 <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
                                                 <td>
-                                                    @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
-                                                        <a class="btn btn-primary"
-                                                        href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                            <i class="fa fa-download"></i>
-                                                        </a>
-                                                    @else
-                                                        <a class="btn btn-primary"
-                                                        href="{{ $realisasi->hasil_kerja }}" target="_blank">
-                                                            <i class="fa fa-download"></i>
-                                                        </a>
-                                                    @endif    
+                                                    <a class="btn btn-primary btn-sm"
+                                                    href="{{ $realisasi->hasil_kerja }}" target="_blank">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a> 
                                                 </td>
                                                 <td>{{ $realisasi->catatan }}</td>
                                                 <td>{{ $realisasi->nilai }}</td>
                                                 <td>{{ $realisasi->catatan_penilai }}</td>
                                                 <td>
                                                     <div class="btn-group dropdown">
-                                                        <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
                                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right shadow-lg">

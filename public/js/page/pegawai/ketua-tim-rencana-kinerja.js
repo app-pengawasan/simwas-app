@@ -634,7 +634,7 @@ $("#btn-edit-tim").on("click", function () {
         allowOutsideClick: () => !Swal.isLoading(),
     });
     $.ajax({
-        url: `/admin/tim-kerja/${id_timkerja}`,
+        url: `/ketua-tim/tim-kerja/update/${id_timkerja}`,
         type: "PUT",
         cache: false,
         data: {
@@ -777,7 +777,7 @@ $("#btn-edit-proyek").on("click", function () {
 $("#create-hasil_kerja").on("change", function () {
     let dataId = $("#create-hasil_kerja option:selected").val();
     $.ajax({
-        url: `/admin/master-hasil-kerja/detail/${dataId}`,
+        url: `/ketua-tim/master-hasil-kerja/detail/${dataId}`,
         type: "GET",
         cache: false,
         success: function (response) {
@@ -797,7 +797,7 @@ $("#create-hasil_kerja").on("change", function () {
 $("#edit-hasil_kerja").on("change", function () {
     let dataId = $("#edit-hasil_kerja option:selected").val();
     $.ajax({
-        url: `/admin/master-hasil-kerja/detail/${dataId}`,
+        url: `/ketua-tim/master-hasil-kerja/detail/${dataId}`,
         type: "GET",
         cache: false,
         success: function (response) {

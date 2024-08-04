@@ -13,8 +13,8 @@
 @endpush
 
 @section('main')
-@include('components.admin-header')
-@include('components.admin-sidebar')
+@include('components.arsiparis-header')
+@include('components.arsiparis-sidebar')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -26,7 +26,7 @@
             <h1>Kinerja Tim Bulan {{ $months[$bulan] }}</h1>
             @endif
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="/arsiparis">Dashboard</a></div>
                 <div class="breadcrumb-item">Kinerja Tim</div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <div>
                                 <div class="col-md-4 mb-4 pl-0">
-                                    <a class="btn btn-primary" href="/admin/kinerja-tim">
+                                    <a class="btn btn-primary" href="{{ url()->previous() }}">
                                         <i class="fas fa-chevron-circle-left"></i> Kembali
                                     </a>
                                 </div>
