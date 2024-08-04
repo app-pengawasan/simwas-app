@@ -119,7 +119,7 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 Route::group(['middleware'=>'auth'], function(){
 
 
-    
+
     /**
      * ---------------------------------------------------------------------------
      * ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN
@@ -391,6 +391,9 @@ Route::group(['middleware'=>'auth'], function(){
             'store' => 'usulan-norma-hasil.store',
         ]);
         Route::get('objek-pengawasan/detail/{id}', [ObjekPengawasanController::class, 'detailObjekPengawasan']);
+        Route::put('tim-kerja/update/{id}', [TimKerjaController::class, 'updateDetailTimKerja']);
+        Route::get('master-hasil-kerja/detail/{id}',[MasterHasilKerjaController::class, 'showMasterHasilKerja']);
+
     });
 
 

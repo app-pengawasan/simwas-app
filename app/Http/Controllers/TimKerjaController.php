@@ -121,30 +121,59 @@ class TimKerjaController extends Controller
      */
     public function update(Request $request, TimKerja $timKerja)
     {
-            $rules = [
-                'uraian_tugas'  => 'required',
-                'rk_ketua'      => 'required',
-                'iki_ketua'     => 'required',
-            ];
+        $rules = [
+            'uraian_tugas'  => 'required',
+            'rk_ketua'      => 'required',
+            'iki_ketua'     => 'required',
+        ];
 
-            $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
 
-            $timKerja->update([
-                'uraian_tugas'  => $request->uraian_tugas,
-                'renca_kerja_ketua' => $request->rk_ketua,
-                'iki_ketua'     => $request->iki_ketua,
-            ]);
-            $request->session()->put('status', 'Berhasil mengubah Tim Kerja');
-            $request->session()->put('alert-type', 'success');
-            return response()->json([
-                'success' => true,
-                'message' => 'Berhasil mengubah Tim Kerja',
-            ]);
+        $timKerja->update([
+            'uraian_tugas'  => $request->uraian_tugas,
+            'renca_kerja_ketua' => $request->rk_ketua,
+            'iki_ketua'     => $request->iki_ketua,
+        ]);
+        $request->session()->put('status', 'Berhasil mengubah Tim Kerja');
+        $request->session()->put('alert-type', 'success');
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil mengubah Tim Kerja',
+        ]);
+    }
+
+    public function updateDetailTimKerja($id, Request $request){
+        $rules = [
+            'uraian_tugas'  => 'required',
+            'rk_ketua'      => 'required',
+            'iki_ketua'     => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $timKerja = TimKerja::where('id_timkerja', $id)->first();
+
+
+        $timKerja->update([
+            'uraian_tugas'  => $request->uraian_tugas,
+            'renca_kerja_ketua' => $request->rk_ketua,
+            'iki_ketua'     => $request->iki_ketua,
+        ]);
+        $request->session()->put('status', 'Berhasil mengubah Tim Kerja');
+        $request->session()->put('alert-type', 'success');
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil mengubah Tim Kerja',
+        ]);
     }
 
     /**
