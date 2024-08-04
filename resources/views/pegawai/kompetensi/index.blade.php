@@ -47,7 +47,7 @@
                                             <th>Jenis Pengembangan Kompetensi</th>
                                             <th>Pengembangan Kompetensi</th>
                                             <th>Sertifikat</th>
-                                            <th>Catatan</th>
+                                            {{-- <th>Catatan</th> --}}
                                             <th>Status</th>
                                             <th style="width: 15%">Aksi</th>
                                             <th class="never">Link Sertifikat</th>
@@ -82,7 +82,7 @@
                                                         </a>
                                                     @endif --}}
                                                 </td>
-                                                <td>{{ $k->catatan }}</td>
+                                                {{-- <td>{{ $k->catatan }}</td> --}}
                                                 @if ($k->status == 1)
                                                     <td>
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }} oleh {{ $k->analis->name }}</span>

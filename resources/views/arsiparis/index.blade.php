@@ -19,14 +19,12 @@
         <div class="section-header">
             <h1>Arsiparis Dashboard</h1>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Monitoring Kelengkapan Tugas Tim</h4>
-                    </div>
-                    <div class="card-body" style="padding-top: 5px;">
-                        <div class="">
+        
+        <div class="section-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
                             <form id="yearForm" action="" method="GET" class="px-0">
                                 @csrf
                                 <div class="form-group">
@@ -36,7 +34,7 @@
                                         $currentYear = date('Y');
                                         $lastThreeYears = range($currentYear, $currentYear - 3);
                                         @endphp
-                    
+
                                         @foreach ($lastThreeYears as $year)
                                         <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
                                         </option>
@@ -44,153 +42,45 @@
                                     </select>
                                 </div>
                             </form>
-                            <table class="table table-bordered table-striped display w-100"
-                                id="table-dashboard-arsiparis">
+                            <table class="table table-bordered display responsive" id="table-dashboard-arsiparis" style="background-color: #f6f7f8">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Tugas</th>
-                                        <th>Nomor Surat Tugas</th>
-                                        <th>File Surat Tugas</th>
-                                        <th>Nomor Norma Hasil</th>
-                                        <th>File Norma Hasil</th>
-                                        <th>Status Norma Hasil</th>
+                                        <th>Nama Tim</th>
+                                        <th>PJK</th>
+                                        <th>Bulan Pelaporan</th>
+                                        <th>Jumlah Tugas</th>
+                                        <th>Surat Tugas</th>
+                                        <th>Target Norma Hasil</th>
+                                        <th>Norma Hasil Masuk</th>
                                         <th>Kendali Mutu</th>
-                                        <th>Verifikasi Arsiparis</th>
-                                        <th>Nomor Surat Tugas</th>
-                                        <th>File Surat Tugas</th>
-                                        <th>Nomor Norma Hasil</th>
-                                        <th>File Norma Hasil</th>
-                                        <th>Status Norma Hasil</th>
-                                        <th>Kendali Mutu</th>
-                                        <th>Verifikasi Arsiparis</th>
+                                        <th>Detail</th>
                                     </tr>
                                 </thead>
-                                @php $i = 0; @endphp
                                 <tbody>
-                                    @foreach ($tugas as $t) 
-                                        @php $i++; @endphp
-                                        <tr>
-                                            <td>{{ $i }}</td>
-                                            <td>{{ $t->tugas }}</td> 
-                                            @if (isset($t->suratTugas) && $t->suratTugas->status == 'disetujui')
-                                                <td>
-                                                    <span class="badge badge-primary">
-                                                        {{ $t->suratTugas->nomor }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <a target="blank" href="{{ route('tim.surat-tugas.view', $t->suratTugas->nomor) }}"
-                                                        class="badge btn-primary"><i
-                                                            class="fa fa-download"></i></a>
-                                                </td>
-                                            @else <td></td><td></td>
-                                            @endif
-                                            
-                                            @if (isset($t->normaHasil[0]->normaHasilAccepted))
-                                                <td>
-                                                    <span class="badge badge-primary">
-                                                        R-{{ $t->normaHasil[0]->normaHasilAccepted->nomor_norma_hasil}}/{{ $t->normaHasil[0]->normaHasilAccepted->unit_kerja}}/{{ 
-                                                        $t->normaHasil[0]->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                            $kodeHasilPengawasan[$t->normaHasil[0]->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($t->normaHasil[0]->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                    </span>
-                                                </td>
-                                            @else <td></td>
-                                            @endif
-
-                                            @if (isset($t->normaHasil[0]->normaHasilAccepted->laporan_path))
-                                                <td>
-                                                    <a target="blank" href="{{ route('tim.norma-hasil.view-laporan', $t->normaHasil[0]->normaHasilAccepted->id) }}"
-                                                        class="badge btn-primary"><i
-                                                            class="fa fa-download"></i></a>
-                                                </td>
-                                            @else <td></td>
-                                            @endif
-
-                                            @if (isset($t->normaHasil[0]))
-                                                @if ($t->normaHasil[0]->status_norma_hasil != 'disetujui')
+                                    @foreach ($data_tim as $id => $tim)
+                                        @foreach ($tim['data_bulan'] as $bulan => $data)
+                                            @if ($data['jumlah_tugas'] != '-')
+                                                <tr class="table-bordered">
+                                                    <td></td>
+                                                    <td>{{ $tim['nama'] }}</td>
+                                                    <td>{{ $tim['pjk'] }}</td>
+                                                    <td>{{ $months[$bulan] }}</td>
+                                                    <td>{{ $data['jumlah_tugas'] }}</td>
+                                                    <td>{{ $data['jumlah_st'] }}</td>
+                                                    <td>{{ $data['target_nh'] }}</td>
+                                                    <td>{{ $data['jumlah_nh'] }}</td>
+                                                    <td>{{ $data['jumlah_km'] }}</td>
                                                     <td>
-                                                        <span class="badge
-                                                            {{ $t->normaHasil[0]->status_norma_hasil == 'diperiksa' ? 'badge-primary' : '' }}
-                                                            {{ $t->normaHasil[0]->status_norma_hasil == 'ditolak' ? 'badge-danger' : '' }}
-                                                            text-capitalize">{{ $t->normaHasil[0]->status_norma_hasil }} oleh Ketua Tim
-                                                        </span>
+                                                        <a class="btn btn-primary btn-sm"
+                                                            href="/arsiparis/kinerja-tim/{{ $id }}/{{ $bulan }}"
+                                                            style="width: 42px">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
                                                     </td>
-                                                @else
-                                                <td>
-                                                    <span class="badge
-                                                        {{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'diperiksa' ? 'badge-primary' : '' }}
-                                                        {{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'ditolak' ? 'badge-danger' : '' }}
-                                                        {{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui' ? 'badge-success' : '' }}
-                                                        {{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'belum unggah' ? 'badge-dark' : '' }}
-                                                        text-capitalize">{{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis }}
-                                                    </span>
-                                                </td>
-                                                @endif
-                                            @else <td></td>
+                                                </tr>
                                             @endif
-
-                                            @if (isset($t->kendaliMutu->path) && $t->kendaliMutu->status == 'disetujui')
-                                                <td>
-                                                    @if (file_exists($t->kendaliMutu->path))
-                                                        <a target="blank" href="{{ route('tim.kendali-mutu.download', $t->kendaliMutu->id) }}"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-download"></i></a> 
-                                                    @else
-                                                        <a target="blank" href="{{ $t->kendaliMutu->path }}"
-                                                            class="badge btn-primary"><i
-                                                                class="fa fa-download"></i></a> 
-                                                    @endif
-                                                </td>
-                                            @else <td></td>
-                                            @endif
-
-                                            @if (isset($t->suratTugas) && $t->suratTugas->status == 'disetujui' && 
-                                                 isset($t->kendaliMutu) && $t->kendaliMutu->status == 'disetujui' &&
-                                                 isset($t->normaHasil[0]->normaHasilAccepted) && $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui')
-                                                <td>
-                                                    <span class="badge badge-success">Berkas Lengkap</span>
-                                                </td>
-                                            @else   
-                                                <td>
-                                                    <span class="badge badge-danger">Belum Lengkap</span>
-                                                </td>
-                                            @endif
-
-                                            <td>{{ $t->suratTugas->nomor ?? '-' }}</td>
-                                            <td>{{ isset($t->suratTugas->path) ? url('/').'/'.$t->suratTugas->path : '-' }}</td>
-
-                                            @if (isset($t->normaHasil[0]->normaHasilAccepted))
-                                                <td>
-                                                    R-{{ $t->normaHasil[0]->normaHasilAccepted->nomor_norma_hasil}}/{{ $t->normaHasil[0]->normaHasilAccepted->unit_kerja}}/{{ 
-                                                    $t->normaHasil[0]->normaHasilAccepted->kode_klasifikasi_arsip}}/{{
-                                                    $kodeHasilPengawasan[$t->normaHasil[0]->normaHasilAccepted->kode_norma_hasil]}}/{{ date('Y', strtotime($t->normaHasil[0]->normaHasilAccepted->tanggal_norma_hasil)) }}
-                                                </td>
-                                            @else <td>-</td>
-                                            @endif
-
-                                            <td>{{ isset($t->normaHasil[0]->normaHasilAccepted->laporan_path) ? 
-                                                    url('/').'/'.$t->normaHasil[0]->normaHasilAccepted->laporan_path : '-' }}</td>
-                                            
-                                            @if (isset($t->normaHasil[0]))
-                                                @if ($t->normaHasil[0]->status_norma_hasil != 'disetujui')
-                                                    <td>{{ $t->normaHasil[0]->status_norma_hasil }} oleh Ketua Tim</td>
-                                                @else
-                                                <td>{{ $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis }}</td>
-                                                @endif
-                                            @else <td>-</td>
-                                            @endif
-
-                                            <td>{{ isset($t->kendaliMutu->path) ? url('/').'/'.$t->kendaliMutu->path : '-' }}</td>
-
-                                            @if (isset($t->suratTugas) && $t->suratTugas->status == 'disetujui' && 
-                                                 isset($t->kendaliMutu) && $t->kendaliMutu->status == 'disetujui' &&
-                                                 isset($t->normaHasil[0]->normaHasilAccepted) && $t->normaHasil[0]->normaHasilAccepted->status_verifikasi_arsiparis == 'disetujui')
-                                                <td>Berkas Lengkap</td>
-                                            @else   
-                                                <td>Belum Lengkap</td>
-                                            @endif
-                                        </tr>
+                                        @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
@@ -220,52 +110,38 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
 
 <script>
     let table = $("#table-dashboard-arsiparis")
         .dataTable({
             dom: "Bfrtip",
-            responsive: false,
-            scrollX: 'true',
+            responsive: true,
+            lengthChange: false,
+            autoWidth: false,
+            // scrollX: true,
+            rowsGroup: [1, 2],
             buttons: [
                 {
                     extend: "excel",
                     className: "btn-success",
                     text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 9, 10, 11, 12, 13, 14, 15],
-                    },
-                    messageTop: function () {
-                        return $(":selected", '#filterBulan').text() + ' ' + $(":selected", '#filterTahun').text();
-                    },
                 },
                 {
                     extend: "pdf",
-                    orientation: 'landscape',
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 9, 10, 11, 12, 13, 14, 15],
-                    },
-                    messageTop: function () {
-                        return $(":selected", '#filterBulan').text() + ' ' + $(":selected", '#filterTahun').text();
-                    },
                 },
             ],
+            columnDefs: [{
+                "targets": 0,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).text(row + 1);
+                }
+            }],
         }).api();
-    
-    table.columns([9,10,11,12,13,14,15]).visible(false);
-
-    //update ukuran tabel saat ukuran sidebar berubah
-    $('.nav-link').on("click", function () {
-        setTimeout( function () {
-            table.columns.adjust();
-        }, 500);
-    });
 
     $('#yearSelect').on('change', function() {
-        let year = $(this).val();
-        $('#yearForm').attr('action', `?year=${year}`);
         $('#yearForm').find('[name="_token"]').remove();
         $('#yearForm').submit();
     });

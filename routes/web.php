@@ -444,6 +444,7 @@ Route::group(['middleware'=>'auth'], function(){
     ->middleware('role:is_arsiparis')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'arsiparis'])->name('dashboard');
+        Route::get('kinerja-tim/{id}/{bulan}', [DashboardController::class, 'detailKinerjaTim']);
         Route::resource('norma-hasil', ArsiparisNormaHasilController::class);
         Route::get('norma-hasil/edit/{id}', [ArsiparisNormaHasilController::class, 'edit']);
         Route::put('norma-hasil/update-norma-hasil/{id}', [ArsiparisNormaHasilController::class, 'updateNormaHasil'])->name('norma-hasil.update-norma-hasil');

@@ -47,7 +47,7 @@ class PenilaianBerjenjangController extends Controller
         'mhk020' => 'Laporan Penjaminan Kualitas',
     ];
 
-    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
 
     protected $unitkerja = [
         '8000'    => 'Inspektorat Utama',
@@ -76,11 +76,12 @@ class PenilaianBerjenjangController extends Controller
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {
                 $join->on('pelaksana_tugas.id_rencanakerja', '=', 'penilai.id_rencanakerja');
             })
-            ->where('penilai.pt_jabatan', '<', 4) //penilai bukan anggota
+            ->whereNot('penilai.pt_jabatan', 4) //penilai bukan anggota
             ->whereRaw(
                     '(
                         CASE
-                            when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan between 2 and 3
+                            when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan = 2
+                            when penilai.pt_jabatan = 5 then pelaksana_tugas.pt_jabatan = 3
                             else pelaksana_tugas.pt_jabatan = 4
                         end
                     )'
@@ -227,12 +228,13 @@ class PenilaianBerjenjangController extends Controller
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {
                 $join->on('pelaksana_tugas.id_rencanakerja', '=', 'penilai.id_rencanakerja');
             })
-            ->where('penilai.pt_jabatan', '<', 4) //penilai bukan anggota
+            ->whereNot('penilai.pt_jabatan', 4) //penilai bukan anggota
             ->where('pelaksana_tugas.id_pegawai', $pegawai_dinilai)
             ->whereRaw(
                     '(
                         CASE
-                            when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan between 2 and 3
+                            when penilai.pt_jabatan = 1 then pelaksana_tugas.pt_jabatan = 2
+                            when penilai.pt_jabatan = 5 then pelaksana_tugas.pt_jabatan = 3
                             else pelaksana_tugas.pt_jabatan = 4
                         end
                     )'

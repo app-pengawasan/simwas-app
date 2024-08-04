@@ -10,7 +10,7 @@ let table = $("#table-kompetensi")
                 className: "btn-success",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 7, 4, 5],
+                    columns: [0, 1, 2, 6, 4, 5],
                 },
             },
             {
@@ -18,7 +18,7 @@ let table = $("#table-kompetensi")
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> Pdf',
                 exportOptions: {
-                    columns: [0, 1, 2, 7, 4, 5],
+                    columns: [0, 1, 2, 6, 4, 5],
                 },
             },
         ],
@@ -37,8 +37,8 @@ if ($('#role').val() == 'analis sdm') {
         function (setting, data, index) {
             var selectedUnit = $('select#filterUnitKerja option:selected').val();
             var selectedJenis = $('select#filterJenis option:selected').val();
-            if ((data[8] == selectedUnit || selectedUnit == 'all') &&
-                (data[9] == selectedJenis || selectedJenis == 'all')) return true;
+            if ((data[7] == selectedUnit || selectedUnit == 'all') &&
+                (data[8] == selectedJenis || selectedJenis == 'all')) return true;
             else return false;
         }
     );
@@ -432,14 +432,9 @@ $(".delete-btn").on("click", function () {
     });
 });
 
-$(".approval-btn").on("click", function () {
+$("#setuju-btn").on("click", function () {
     let dataId = $(this).attr("data-id");
-    let status = $(this).attr("status-id");
     let token = $("meta[name='csrf-token']").attr("content");
-    let btn;
-
-    if (status === "1") btn = "Setujui";
-    else btn = "Tolak";
 
     Swal.fire({
         title: "Apakah Anda Yakin?",
@@ -448,7 +443,7 @@ $(".approval-btn").on("click", function () {
         showCancelButton: true,
         confirmButtonColor: "var(--primary)",
         cancelButtonColor: "var(--danger)",
-        confirmButtonText: btn,
+        confirmButtonText: "Setujui",
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
@@ -458,8 +453,7 @@ $(".approval-btn").on("click", function () {
                 cache: false,
                 data: {
                     _token: token,
-                    approval: true,
-                    status: status
+                    terima: true
                 },
                 success: function (response) {
                     location.reload();
@@ -469,111 +463,37 @@ $(".approval-btn").on("click", function () {
     });
 });
 
-// $("#id_sasaran").on("change", function () {
-//     let idtujuan = $("#id_sasaran option:selected").data("idtujuan");
-//     $("#id_tujuan").val(idtujuan);
-// });
+$("#tolak-btn").on("click", function () {
+    let dataId = $(this).attr("data-id");
+    $('#data-id').val(dataId);
+});
 
-// $("#edit-id_sasaran").on("change", function () {
-//     let id_tujuan = $("#edit-id_sasaran option:selected").data("idtujuan");
-//     $("#edit-id_tujuan").val(id_tujuan);
-// });
+$('#tolak-submit').on("click", function () {
+    let dataId = $('#data-id').val();
+    let catatan = $('#catatan').val();
+    let token = $("meta[name='csrf-token']").attr("content");
 
-// $(".edit-btn").on("click", function () {
-//     let dataId = $(this).attr("data-id");
-//     $.ajax({
-//         url: `/admin/master-iku/${dataId}`,
-//         type: "GET",
-//         cache: false,
-//         success: function (response) {
-//             console.log(response);
-//             $("#edit-id_iku").val(response.data[0].id_iku);
-//             $("#edit-id_sasaran").val(response.data[0].id_sasaran);
-//             let idtujuan = $("#edit-id_sasaran option:selected").data(
-//                 "idtujuan"
-//             );
-//             $("#edit-id_tujuan").val(idtujuan);
-//             $("#edit-iku").val(response.data[0].iku);
-//         },
-//         error: function (e) {
-//             console.log(e);
-//         },
-//     });
-// });
+    $.ajax({
+        url: `/analis-sdm/kelola-kompetensi/${dataId}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            tolak: true,
+            catatan: catatan
+        },
+        success: function (response) {
+            location.reload();
+        },
+        error: function (error) {
+            let errorResponses = error.responseJSON;
+            let errors = Object.entries(errorResponses.errors);
 
-// $("#btn-edit-submit").on("click", function (e) {
-//     e.preventDefault();
-
-//     let token = $("meta[name='csrf-token']").attr("content");
-
-//     let id_tujuan = $("#edit-id_tujuan").val();
-//     let id_sasaran = $("#edit-id_sasaran").val();
-//     let id_iku = $("#edit-id_iku").val();
-//     // let tujuan      = $("#edit-id_tujuan option:selected").val();
-//     // let tahun_mulai = $("#edit-tahun_mulai").val();
-//     // let tahun_selesai = $("#edit-tahun_selesai").val();
-//     let iku = $("#edit-iku").val();
-
-//     $.ajax({
-//         url: `/admin/master-iku/${id_iku}`,
-//         type: "PUT",
-//         cache: false,
-//         data: {
-//             _token: token,
-//             id_iku: id_iku,
-//             id_sasaran: id_sasaran,
-//             iku: iku,
-//         },
-//         success: function (response) {
-//             Swal.fire({
-//                 type: "success",
-//                 icon: "success",
-//                 title: "Berhasil!",
-//                 text: `${response.message}`,
-//                 showConfirmButton: false,
-//                 timer: 3000,
-//             });
-
-//             $("#modal-edit-masteriku").modal("hide");
-//             setTimeout(location.reload(), 1000);
-//             console.log(response.data[0]);
-//         },
-//         error: function (error) {
-//             console.log(error.responseJSON);
-//         },
-//     });
-// });
-
-// // Delete Data
-// $(".delete-btn").on("click", function () {
-//     let dataId = $(this).attr("data-id");
-//     let token = $("meta[name='csrf-token']").attr("content");
-
-//     Swal.fire({
-//         title: "Apakah Anda Yakin?",
-//         text: "Data tidak dapat dipulihkan!",
-//         icon: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "var(--primary)",
-//         cancelButtonColor: "var(--danger)",
-//         confirmButtonText: "Hapus",
-//         cancelButtonText: "Batal",
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             $.ajax({
-//                 url: `/admin/tim-kerja/${dataId}`,
-//                 type: "DELETE",
-//                 cache: false,
-//                 data: {
-//                     _token: token,
-//                 },
-//                 success: function (response) {
-//                     location.reload();
-//                 },
-//                 error: function (e) {
-//                     console.log(e);
-//                 },
-//             });
-//         }
-//     });
-// });
+            errors.forEach(([key, value]) => {
+                // console.log(key);
+                let errorMessage = document.getElementById(`error-${key}`);
+                errorMessage.innerText = `${value}`;
+            });
+        },
+    });
+});
