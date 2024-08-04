@@ -119,13 +119,16 @@ use App\Http\Controllers\InspekturRealisasiJamKerjaController;
 Route::group(['middleware'=>'auth'], function(){
 
 
-
+    
     /**
      * ---------------------------------------------------------------------------
-     * ADMIN
+     * ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN - ADMIN
      * ---------------------------------------------------------------------------
      * */
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('role:is_admin')
+    ->group(function () {
         Route::get('/', [DashboardController::class, 'admin'])->name('dashboard');
 
         //Master Anggaran & Pagu Anggaran
@@ -204,14 +207,12 @@ Route::group(['middleware'=>'auth'], function(){
 
 
 
-
-
     /**
      * ---------------------------------------------------------------------------
-     * PIMPINAN
+     * PIMPINAN - PIMPINAN - PIMPINAN PIMPINAN - PIMPINAN - PIMPINAN
      * ---------------------------------------------------------------------------
      * */
-    //Rencana Kinerja
+    // sudah tidak dipakai
     Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
         Route::resource('rencana-kinerja', PimpinanRencanKerjaController::class);
         Route::put('rencana-kinerja/accept/{id}', [PimpinanRencanKerjaController::class, 'accept']);
@@ -220,15 +221,15 @@ Route::group(['middleware'=>'auth'], function(){
 
 
 
-
-
     /**
      * ---------------------------------------------------------------------------
-     * ANALIS SDM
+     * ANALIS SDM - ANALIS SDM - ANALIS SDM - ANALIS SDM - ANALIS SDM - ANALIS SDM
      * ---------------------------------------------------------------------------
      * */
-
-    Route::prefix('analis-sdm')->name('analis-sdm.')->group(function () {
+    Route::prefix('analis-sdm')
+    ->name('analis-sdm.')
+    ->middleware('role:is_analissdm')
+    ->group(function () {
         Route::get('/', [DashboardController::class, 'analis_sdm'])->name('dashboard');
         Route::get('pp-nonaktif', [PpController::class, 'ppNonaktif']);
         Route::resource('pp', PpController::class)->names([
@@ -251,10 +252,13 @@ Route::group(['middleware'=>'auth'], function(){
 
     /**
      * ---------------------------------------------------------------------------
-     * INSPEKTUR
+     * INSPEKTUR - INSPEKTUR - INSPEKTUR - INSPEKTUR - INSPEKTUR - INSPEKTUR
      * ---------------------------------------------------------------------------
      * */
-    Route::prefix('inspektur')->name('inspektur.')->group(function () {
+    Route::prefix('inspektur')
+    ->name('inspektur.')
+    ->middleware('role:is_aktif')
+    ->group(function () {
 
         Route::get('/', [DashboardController::class, 'inspektur'])->name('dashboard');
 
@@ -282,10 +286,9 @@ Route::group(['middleware'=>'auth'], function(){
 
     /**
      * ---------------------------------------------------------------------------
-     * PEGAWAI
+     * PEGAWAI - PEGAWAI - PEGAWAI -  PEGAWAI - PEGAWAI - PEGAWAI -  PEGAWAI
      * ---------------------------------------------------------------------------
      * */
-
     Route::prefix('pegawai')->name('pegawai.')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'pegawai'])->name('dashboard');
         Route::resource('rencana-kinerja', PegawaiRencanaKerjaController::class);
@@ -367,7 +370,11 @@ Route::group(['middleware'=>'auth'], function(){
 
 
 
-    // Ketua Tim
+    /**
+     * ---------------------------------------------------------------------------
+     * Ketua Tim - Ketua Tim - Ketua Tim - Ketua Tim - Ketua Tim - Ketua Tim
+     * ---------------------------------------------------------------------------
+     * */
     Route::prefix('ketua-tim')->name('ketua-tim.')->group(function () {
         Route::resource('rencana-kinerja', KetuaTimRencanaKerjaController::class);
         Route::put('rencana-kinerja/update/{id}', [KetuaTimRencanaKerjaController::class, 'update']);
@@ -386,35 +393,17 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('objek-pengawasan/detail/{id}', [ObjekPengawasanController::class, 'detailObjekPengawasan']);
     });
 
-    Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
-    Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
-    Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
-    Route::get('/objek-pengawasan/laporan/{id}', [LaporanObjekPengawasanController::class, 'getLaporanObjekPengawasan']);
 
-    Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
-    Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
-    Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
-    Route::get('/tugas-list', [TugasController::class, 'getRencanaKerjaList']);
-    // migrate norma hasil
-    Route::get('/norma-hasil/migrate', [TempNormaHasilController::class, 'migrateNormaHasil']);
-
-
-
-
-    // Templating dokumen
-    Route::get('word', function () {
-        return view('word');
-    });
-    Route::post('word', [WordController::class, 'index'])->name('word.index');
 
     /**
      * ---------------------------------------------------------------------------
-     * SEKRETARIS
+     * SEKRETARIS - SEKRETARIS - SEKRETARIS - SEKRETARIS - SEKRETARIS - SEKRETARIS
      * ---------------------------------------------------------------------------
      * */
-
-    //  Surat Srikandi
-    Route::prefix('sekretaris')->name('sekretaris.')->group(function () {
+    Route::prefix('sekretaris')
+    ->name('sekretaris.')
+    ->middleware('role:is_sekretaris')
+    ->group(function () {
         Route::get('/', [DashboardController::class, 'sekretaris'])->name('dashboard');
         Route::resource('surat-srikandi', SuratSrikandiController::class);
         Route::put('surat-srikandi/decline/{id}', [SuratSrikandiController::class, 'declineUsulanSurat'])->name('surat-srikandi.decline');
@@ -429,10 +418,13 @@ Route::group(['middleware'=>'auth'], function(){
 
     /**
      * ---------------------------------------------------------------------------
-     * PERENCANA
+     * PERENCANA - PERENCANA - PERENCANA - PERENCANA - PERENCANA - PERENCANA
      * ---------------------------------------------------------------------------
      * */
-    Route::prefix('perencana')->name('perencana.')->group(function () {
+    Route::prefix('perencana')
+    ->name('perencana.')
+    ->middleware('role:is_perencana')
+    ->group(function () {
         Route::get('/', [DashboardController::class, 'perencana'])->name('dashboard');
         Route::resource('target-iku-unit-kerja', TargetIkuUnitKerjaController::class);
         Route::resource('realisasi-iku-unit-kerja', RealisasiIkuUnitKerjaController::class);
@@ -440,12 +432,17 @@ Route::group(['middleware'=>'auth'], function(){
         Route::put('target-iku-unit-kerja/status/{id}', [TargetIkuUnitKerjaController::class, 'editStatus'])->name('target-iku-unit-kerja.status');
     });
 
+
+
     /**
      * ---------------------------------------------------------------------------
-     * ARSIPARIS
+     * ARSIPARIS - ARSIPARIS - ARSIPARIS - ARSIPARIS - ARSIPARIS - ARSIPARIS
      * ---------------------------------------------------------------------------
      * */
-    Route::prefix('arsiparis')->name('arsiparis.')->group(function () {
+    Route::prefix('arsiparis')
+    ->name('arsiparis.')
+    ->middleware('role:is_arsiparis')
+    ->group(function () {
         Route::get('/', [DashboardController::class, 'arsiparis'])->name('dashboard');
         Route::resource('norma-hasil', ArsiparisNormaHasilController::class);
         Route::get('norma-hasil/edit/{id}', [ArsiparisNormaHasilController::class, 'edit']);
@@ -453,6 +450,26 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('surat-tugas', ArsiparisSuratTugasController::class);
         Route::resource('kendali-mutu', ArsiparisKendaliMutuController::class);
     });
+
+
+
+    Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
+    Route::resource('/objek-pengawasan', ObjekPengawasanController::class);
+    Route::get('/objek-pengawasan-search/', [ObjekPengawasanController::class, 'getObjekPengawasan']);
+    Route::get('/objek-pengawasan/laporan/{id}', [LaporanObjekPengawasanController::class, 'getLaporanObjekPengawasan']);
+
+    Route::resource('/anggaran-rencana-kerja', AnggaranRencanaKerjaController::class);
+    Route::resource('/pelaksana-tugas', PelaksanaTugasController::class);
+    Route::get('/tugas', [TugasController::class, 'getRencanaKerja']);
+    Route::get('/tugas-list', [TugasController::class, 'getRencanaKerjaList']);
+    // migrate norma hasil
+    Route::get('/norma-hasil/migrate', [TempNormaHasilController::class, 'migrateNormaHasil']);
+    // Templating dokumen
+    Route::get('word', function () {
+        return view('word');
+    });
+    Route::post('word', [WordController::class, 'index'])->name('word.index');
+
 
 });
 

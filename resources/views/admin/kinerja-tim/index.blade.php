@@ -149,8 +149,6 @@
             $('#yearForm').submit();
         });
 
-        $("#detail").attr('href', function(_, el){
-            return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
-        });
+       
     </script>
 @endpush
