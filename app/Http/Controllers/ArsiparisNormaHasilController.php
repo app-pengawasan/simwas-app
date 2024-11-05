@@ -71,7 +71,7 @@ class ArsiparisNormaHasilController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('arsiparis');
+        // $this->authorize('arsiparis');
         $year = $request->year;
         $unit_kerja = $request->unit_kerja;
 
