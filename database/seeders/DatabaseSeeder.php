@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Models\MasterAnggaran;
 use App\Models\MasterPimpinan;
 use App\Models\User;
-use App\Models\Pp;
-use App\Models\NamaPp;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -96,8 +94,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            PpSeeder::class,
-            NamaPpSeeder::class,
             KkaSeeder::class,
             PembebananSeeder::class,
             // StKinerjaSeeder::class,

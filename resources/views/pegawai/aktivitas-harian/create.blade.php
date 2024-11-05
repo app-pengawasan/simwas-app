@@ -12,14 +12,21 @@
                 <div class="modal-body">
                     <input type="hidden" name="tgl" id="tgl">
                     <div class="form-group">
-                        <label class="form-label" for="id_pelaksana">Tugas</label>
-                        <select class="form-control select2" name="id_pelaksana" id="id_pelaksana" required>
+                        <label class="form-label" for="tugas">Tugas</label>
+                        <select class="form-control select2" name="tugas" id="tugas" required>
                             <option value="" selected disabled>Pilih Tugas</option>
                             @foreach ($tugasSaya as $ts)
-                                <option value="{{ $ts->id_pelaksana }}">{{ $ts->rencanaKerja->tugas }}</option>
+                                <option value="{{ $ts->id_rencanakerja }}">{{ $ts->rencanaKerja->tugas }}</option>
                             @endforeach
                         </select>
                         <small id="error-id_pelaksana" class="text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="laporan_opengawasan">Bulan Pelaporan</label>
+                        <select class="form-control select2" name="laporan_opengawasan" id="laporan_opengawasan" required disabled>
+                            <option value="" selected disabled>Pilih Bulan Pelaporan</option>
+                        </select>
+                        <small id="error-laporan_opengawasan" class="text-danger"></small>
                     </div>
                     <div class="row">
                         <div class="col">

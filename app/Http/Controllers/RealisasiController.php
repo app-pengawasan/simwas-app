@@ -125,9 +125,7 @@ class RealisasiController extends Controller
             ];
         }
 
-        $events = Event::whereRelation('pelaksana.user', function (Builder $query) use ($id_pegawai){
-                        $query->where('id', $id_pegawai);
-                    })->orderBy('start')->get();
+        $events = Event::where('id_pegawai', $id_pegawai)->orderBy('start')->get();
 
         return view('pegawai.realisasi.create',
             [

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Stp;
 use App\Models\User;
-use App\Models\Pp;
-use App\Models\NamaPp;
 use App\Models\Pembebanan;
 use App\Models\MasterPimpinan;
 use App\Http\Requests\StoreStpRequest;
@@ -108,21 +106,7 @@ class StpController extends Controller
      */
     public function create()
     {
-        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
-        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
-        $pps = Pp::all()->where('is_aktif', true);
-        $namaPps = NamaPp::all()->where('is_aktif', true);
-        $pembebanans = Pembebanan::all()->where('is_aktif', true);
-        $user = User::all();
-        return view('pegawai.st-pp.create', [
-            "user" => $user,
-            "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif,
-            "jabatan_pimpinan" => $this->jabatan_pimpinan,
-            "pps" => $pps,
-            "namaPps" => $namaPps,
-            "pembebanans" => $pembebanans
-        ]);
+        //
     }
 
     /**
@@ -187,22 +171,7 @@ class StpController extends Controller
      */
     public function edit(Stp $st_pp)
     {
-        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
-        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
-        $user = User::all();
-        $pps = Pp::all()->where('is_aktif', true);
-        $namaPps = NamaPp::all()->where('is_aktif', true);
-        $pembebanans = Pembebanan::all()->where('is_aktif', true);
-        return view('pegawai.st-pp.edit', [
-            "usulan" => $st_pp,
-            "user" => $user,
-            "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif,
-            "jabatan_pimpinan" => $this->jabatan_pimpinan,
-            "pps" => $pps,
-            "namaPps" => $namaPps,
-            "pembebanans" => $pembebanans
-        ]);
+        //
     }
 
     /**
@@ -284,13 +253,5 @@ class StpController extends Controller
     {
         //
     }
-
-    public function getNamaPp(Request $request)
-    {
-        $namaPp = NamaPp::where('pp_id', $request->pp_id)->get();
-        return response()->json(['namaPp' => $namaPp], 200);
-    }
-
-    
     // {{-- <input style="display: none;" type="text" class="form-control @error('nama_pp') is-invalid @enderror" id="nama_pp_text" name="nama_pp" value="{{ old('nama_pp') }}"> --}}
 }

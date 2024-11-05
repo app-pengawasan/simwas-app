@@ -59,21 +59,46 @@ class InspekturPenilaianKinerjaController extends Controller
     {
         $this->authorize('inspektur');
 
+        $events = Event::all();
+        foreach ($events as $event) {
+            $event->id_pelaksana = PelaksanaTugas::where('id_pegawai', $event->id_pegawai)
+                                    ->where('id_rencanakerja', $event->laporanOPengawasan->objekPengawasan->id_rencanakerja)
+                                    ->get()->first()->id_pelaksana;
+        }
+        
         //realisasi untuk dinilai
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
             $realisasiDinilai = RealisasiKinerja::where('status', 1)->get();
+
+            foreach ($realisasiDinilai as $realisasi) {
+                $realisasi->id_rencanakerja = $realisasi->pelaksana->id_rencanakerja;
+            } 
+
             $realisasiWithEvents = RealisasiKinerja::where('status', 1)
-                                   ->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
+                                   ->join('events', 'realisasi_kinerjas.pelaksana.id_rencanakerja', '=', 'events.laporanObjekPengawasan.objekPengawasan.id_rencanakerja')
                                    ->get();
         } else {
             $realisasiDinilai = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
                                     $query->where('unit_kerja', auth()->user()->unit_kerja);
                                 })->where('status', 1)->get();
-            $realisasiWithEvents = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
-                                    $query->where('unit_kerja', auth()->user()->unit_kerja);
-                                })->where('status', 1)
-                                  ->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                                  ->get();
+
+            foreach ($realisasiDinilai as $realisasi) {
+                $realisasi->id_rencanakerja = $realisasi->pelaksana->id_rencanakerja;
+            }
+
+            $realisasiWithEvents = []; //join realisasi dinilai dengan events
+
+            foreach ($realisasiDinilai as $realisasi) {
+                $realisasiWithEvents[$realisasi->id_pelaksana]['id_pegawai'] = $realisasi->pelaksana->id_pegawai;
+                $realisasiWithEvents[$realisasi->id_pelaksana]['id_pelaksana'] = $realisasi->id_pelaksana;
+                $realisasiWithEvents[$realisasi->id_pelaksana]['events'] = [];
+            } 
+            foreach ($events as $event) {
+                if (isset($realisasiWithEvents[$event->id_pelaksana]))
+                    array_push($realisasiWithEvents[$event->id_pelaksana]['events'], $event->toArray());
+            } 
+
+            $realisasiWithEvents = collect($realisasiWithEvents);
         }
 
         //realisasi berstatus selesai group by bulan dan tahun realisasi, diambil id_pelaksana nya
@@ -82,7 +107,7 @@ class InspekturPenilaianKinerjaController extends Controller
                                 return date("Y",strtotime($items->updated_at));
                             }, function ($items){
                                 return date("m",strtotime($items->updated_at));
-                            }])->map->map->map->map->map->map->map->id_pelaksana->toArray();
+                            }])->map->map->map->map->map->map->map->id_pelaksana->toArray(); 
 
         $realisasiCount = [];
 
@@ -91,18 +116,20 @@ class InspekturPenilaianKinerjaController extends Controller
                 foreach ($items as $id_pelaksana) {
                     $realisasi = $realisasiWithEvents->where('id_pelaksana', $id_pelaksana);
                     foreach ($realisasi as $item) {
-                        $id_pegawai = $item->pelaksana->id_pegawai;
-                        $start = $item->start;
-                        $end = $item->end;
-                        $realisasi_jam = (strtotime($end) - strtotime($start)) / 60 / 60;
-                        //jam realisasi pegawai per bulan
-                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan]) ?
-                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] += $realisasi_jam :
-                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] = $realisasi_jam;
-                        //jam realisasi pegawai per tahun
-                        isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all']) ?
-                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] += $realisasi_jam :
-                            $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] = $realisasi_jam;
+                        $id_pegawai = $item['id_pegawai'];
+                        foreach ($item['events'] as $event) {
+                            $start = $event['start'];
+                            $end = $event['end'];
+                            $realisasi_jam = (strtotime($end) - strtotime($start)) / 60 / 60;
+                            //jam realisasi pegawai per bulan
+                            isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan]) ?
+                                $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] += $realisasi_jam :
+                                $realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan] = $realisasi_jam;
+                            //jam realisasi pegawai per tahun
+                            isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all']) ?
+                                $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] += $realisasi_jam :
+                                $realisasiCount[$id_pegawai][$tahun]['realisasi_jam']['all'] = $realisasi_jam;   
+                        }
                     }
                 }
             }

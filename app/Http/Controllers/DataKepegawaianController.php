@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pp;
 use App\Models\User;
-use App\Models\NamaPp;
 use Illuminate\Http\Request;
 use App\Models\DataKepegawaian;
 use Illuminate\Support\Facades\File;
@@ -13,7 +11,6 @@ use App\Models\MasterDataKepegawaian;
 use App\Imports\DataKepegawaianImport;
 use Maatwebsite\Excel\HeadingRowImport;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class DataKepegawaianController extends Controller
@@ -66,40 +63,13 @@ class DataKepegawaianController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pp  $pp
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pp $pp)
-    {
-        $this->authorize('analis_sdm');
-        $namaPps = NamaPp::where('pp_id', $pp->id)->get();
-        return view('analis-sdm.master-pp.show', [
-            "pp" => $pp,
-            "namaPps" => $namaPps
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pp  $pp
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pp $pp)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Pp  $pp
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pp $pp)
+    public function update(Request $request)
     {
         $this->authorize('analis_sdm');
         if ($request->has('nonaktifkan')) {
@@ -115,17 +85,6 @@ class DataKepegawaianController extends Controller
             MasterDataKepegawaian::where('id', $request->input('id'))->update($validatedData);
             return redirect('analis-sdm/master-data-kepegawaian')->with('success', 'Berhasil mengaktifkan jenis data kepegawaian!');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pp  $pp
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pp $pp)
-    {
-        //
     }
 
     public function editNilai(Request $request, $id)

@@ -15,9 +15,9 @@ class Kompetensi extends Model
 
     public $incrementing = false;
 
-    public function pp()
+    public function teknis()
     {
-        return $this->belongsTo(Pp::class);
+        return $this->belongsTo(TeknisKompetensi::class, 'teknis_id', 'id');
     }
 
     public function pegawai()
@@ -28,11 +28,6 @@ class Kompetensi extends Model
     public function analis()
     {
         return $this->belongsTo(User::class, "approved_by", "id");
-    }
-
-    public function namaPp()
-    {
-        return $this->belongsTo(NamaPp::class);
     }
 
     public function penyelenggaraDiklat()

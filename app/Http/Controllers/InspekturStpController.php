@@ -6,8 +6,6 @@ use App\Models\Stp;
 use App\Models\Surat;
 use App\Models\User;
 use App\Models\MasterPimpinan;
-use App\Models\Pp;
-use App\Models\NamaPp;
 use App\Models\Pembebanan;
 use Illuminate\Http\Request;
 use Dompdf\Dompdf;
@@ -159,23 +157,7 @@ class InspekturStpController extends Controller
      */
     public function edit(Stp $st_pp)
     {
-        $this->authorize('inspektur');
-        $pimpinanAktif = MasterPimpinan::latest()->whereDate('selesai', '>=', date('Y-m-d'))->get();
-        $pimpinanNonaktif = MasterPimpinan::latest()->whereDate('selesai', '<', date('Y-m-d'))->get();
-        $user = User::all();
-        $pps = Pp::all()->where('is_aktif', true);
-        $namaPps = NamaPp::all()->where('is_aktif', true);
-        $pembebanans = Pembebanan::all()->where('is_aktif', true);
-        return view('inspektur.st-pp.edit', [
-            "usulan" => $st_pp,
-            "user" => $user,
-            "pimpinanAktif" => $pimpinanAktif,
-            "pimpinanNonaktif" => $pimpinanNonaktif,
-            "jabatan_pimpinan" => $this->jabatan_pimpinan,
-            "pps" => $pps,
-            "namaPps" => $namaPps,
-            "pembebanans" => $pembebanans
-        ]);
+        // 
     }
 
     /**

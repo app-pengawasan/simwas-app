@@ -151,7 +151,7 @@
                                                             $start = $event->start;
                                                             $end = $event->end;
                                                         @endphp
-                                                        <tr data-tugas="{{ $event->id_pelaksana }}" class="text-center">
+                                                        <tr data-bulan="{{ $event->laporan_opengawasan }}" class="text-center">
                                                             <td class="p-0">{{ date("j F Y",strtotime($start)) }}</td>
                                                             <td>{{ date("H:i",strtotime($start)) }} - {{ date("H:i",strtotime($end)) }}</td>
                                                             <td style="white-space: pre-line;">{{ $event->aktivitas }} </td>

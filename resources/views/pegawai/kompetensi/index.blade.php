@@ -44,13 +44,22 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Jenis Pengembangan Kompetensi</th>
-                                            <th>Pengembangan Kompetensi</th>
+                                            <th>Kategori</th>
+                                            <th>Jenis</th>
+                                            <th>Teknis</th>
+                                            <th>Nama Pelatihan</th>
                                             <th>Sertifikat</th>
                                             {{-- <th>Catatan</th> --}}
                                             <th>Status</th>
                                             <th style="width: 15%">Aksi</th>
-                                            <th class="never">Link Sertifikat</th>
+                                            <th class="d-none">tanggal mulai</th>
+                                            <th class="d-none">tanggal selesai</th>
+                                            <th class="d-none">durasi (jam)</th>
+                                            <th class="d-none">tanggal sertifikat</th>
+                                            <th class="d-none">Link Sertifikat</th>
+                                            <th class="d-none">penyelenggara</th>
+                                            <th class="d-none">jumlah peserta</th>
+                                            <th class="d-none">ranking</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -60,14 +69,10 @@
                                         @foreach ($kompetensi as $k)
                                             <tr>
                                                 <td>{{ ++$i }}</td>
-
-                                                @if ($k->pp->id == 999) <td>{{ $k->pp_lain }}</td>
-                                                @else <td>{{ $k->pp->jenis }}</td>
-                                                @endif
-
-                                                @if ($k->namaPp->id == 999) <td>{{ $k->nama_pp_lain }}</td>
-                                                @else <td>{{ $k->namaPp->nama }}</td>
-                                                @endif
+                                                <td>{{ $k->teknis->jenis->kategori->nama }}</td>
+                                                <td>{{ $k->teknis->jenis->nama }}</td>
+                                                <td>{{ $k->teknis->nama }}</td>
+                                                <td>{{ $k->nama_pelatihan }}</td>
                                                 
                                                 <td>
                                                     {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
@@ -93,20 +98,39 @@
                                                     </td>
                                                 @endif
                                                 <td>
-                                                    <a href="/pegawai/kompetensi/{{ $k->id }}" class="btn btn-sm btn-primary">
-                                                        <i class="fas fa-info-circle"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0)" class="btn btn-sm edit-btn btn-warning"
-                                                        data-id="{{ $k->id }}"
-                                                        data-toggle="modal" data-target="#modal-edit-kompetensi">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0)" class="btn btn-sm delete-btn btn-danger"
-                                                    data-id="{{ $k->id }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
+                                                    <div class="btn-group dropdown">
+                                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                        data-id="{{ $k->id }}">
+                                                            {{-- <i class="fas fa-stamp"></i> --}}...
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right shadow-lg">
+                                                            <a href="/pegawai/kompetensi/{{ $k->id }}" class="dropdown-item">
+                                                                <i class="fas fa-circle-info text-primary mr-2"></i>
+                                                                Detail
+                                                            </a>
+                                                            <a href="javascript:void(0)" class="dropdown-item edit-btn"
+                                                                data-id="{{ $k->id }}"
+                                                                data-toggle="modal" data-target="#modal-edit-kompetensi">
+                                                                <i class="fas fa-edit text-warning mr-2"></i>
+                                                                Edit
+                                                            </a>
+                                                            <a href="javascript:void(0)" class="dropdown-item delete-btn"
+                                                            data-id="{{ $k->id }}">
+                                                                <i class="fas fa-trash text-danger mr-2"></i>
+                                                                Hapus
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
+                                                <td class="d-none">{{ $k->tgl_mulai }}</td>
+                                                <td class="d-none">{{ $k->tgl_selesai }}</td>
+                                                <td class="d-none">{{ $k->durasi }}</td>
+                                                <td class="d-none">{{ $k->tgl_sertifikat }}</td>
+                                                <td class="d-none">{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
+                                                <td class="d-none">{{ $k->penyelenggaraDiklat->penyelenggara }}</td>
+                                                <td class="d-none">{{ $k->jumlah_peserta }}</td>
+                                                <td class="d-none">{{ $k->ranking }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Master Kompetensi Pegawai')
+@section('title', $kategori->nama)
 
 @push('style')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,17 +21,20 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Kompetensi Pegawai</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Nama Kompetensi Pegawai</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/analis-sdm/kategori" method="post">
+                    <form action="/analis-sdm/jenis" method="post">
                         <div class="modal-body">
                             @csrf  
                             <div class="form-group">
-                                <label for="nama">Jenis Kompetensi Pegawai</label>
-                                <input type="text" class="form-control @error('jenis') is-invalid @enderror" id="jenis" name="nama" value="{{ old('jenis') }}">
+                                <input type="hidden" id="kategori_id" name="kategori_id" value="{{ $kategori->id }}">
+                                <label for="kategori">Kategori Kompetensi Pegawai</label>
+                                <input type="text" class="form-control" disabled value="{{ $kategori->nama }}">
+                                <label for="nama" class="mt-3">Jenis Kompetensi Pegawai</label>
+                                <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama') }}">
                                 @error('nama')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -52,7 +55,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel">Edit Kategori Kompetensi Pegawai</h5>
+                        <h5 class="modal-title" id="editModalLabel">Edit Jenis Kompetensi Pegawai</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -61,8 +64,8 @@
                         <div class="modal-body">
                             <input type="hidden" name="is_aktif" value="1">
                             <div class="form-group">
-                                <input type="hidden" id="kategori_id" name="kategori_id">
-                                <label for="nama" class="mt-3">Kategori Kompetensi Pegawai</label>
+                                <input type="hidden" id="jenis_id" name="jenis_id">
+                                <label for="nama" class="mt-3">Jenis Kompetensi Pegawai</label>
                                 <input type="text" class="form-control @error('nama') is-invalid @enderror" id="namaEdit" name="namaEdit" required>
                                 @error('nama')
                                 <div class="invalid-feedback">
@@ -81,26 +84,25 @@
         </div>
         <section class="section">
             <div class="section-header">
-                <h1>Master Kategori Kompetensi Pegawai</h1>
+                <h1>{{ $kategori->nama }}</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
-                    <div class="breadcrumb-item">Kategori Kompetensi</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm/kategori">Kategori Kompetensi</a></div>
+                    <div class="breadcrumb-item">Jenis Kompetensi</div>
                 </div>
             </div>
-
-            @if (session()->has('success'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
             
             <div class="section-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="btn btn-primary disabled">Aktif</div>
-                                    <a href="/analis-sdm/pp-nonaktif" class="btn btn-primary">Nonaktif</a>
+                                @include('components.flash')
+                                {{ session()->forget(['alert-type', 'status']) }}
+                                <a class="btn btn-primary mr-2" href="/analis-sdm/kategori" id="btn-back2">
+                                    <i class="fa-solid fa-arrow-left mr-1"></i>
+                                    Kembali
+                                </a>
                                 <div class="pt-1 pb-1 m-4">
                                     <div class="btn btn-success btn-lg btn-round" data-toggle="modal"
                                     data-target="#staticBackdrop">
@@ -108,28 +110,28 @@
                                     </div>
                                 </div>
                                 <div class="">
-                                    <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
+                                    <table class="table table-bordered display responsive" style="background-color: #f6f7f8" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>Kategori Kompetensi</th>
+                                                <th>No.</th>
+                                                <th>Jenis Kompetensi</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($kategori as $k)
-                                                 <tr>
-                                                    <td></td>
-                                                    <td>
-                                                        <a href="/analis-sdm/kategori/{{ $k->id }}">{{ $k->nama }}</a>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-warning edit-btn" 
-                                                        data-toggle="modal" data-target="#editModal"
-                                                        data-id="{{ $k->id }}" data-nama="{{ $k->nama }}">
-                                                        <i class="fas fa-edit"></i> Edit</button>
-                                                    </td>
-                                                </tr>
+                                            @foreach ($jenisKomp as $jenis)
+                                            <tr class="table-bordered">
+                                                <td></td>
+                                                <td>
+                                                    <a href="/analis-sdm/jenis/{{ $jenis->id }}">{{ $jenis->nama }}</a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning edit-btn" 
+                                                    data-toggle="modal" data-target="#editModal"
+                                                    data-id="{{ $jenis->id }}" data-nama="{{ $jenis->nama }}">
+                                                    <i class="fas fa-edit"></i> Edit</button>
+                                                </td>
+                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -160,24 +162,41 @@
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
     
     <!-- Page Specific JS File -->
-    <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script>
+    {{-- <script src="{{ asset('js') }}/page/pegawai-pengelolaan-dokumen.js"></script> --}}
     <script>
+        let table = $("#table-pengelolaan-dokumen-pegawai");
+        table
+        .DataTable({
+            dom: "Bfrtip",
+            responsive: true,
+            lengthChange: false,
+            autoWidth: false,
+            buttons: [],
+            columnDefs: [{
+                "targets": 0,
+                "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).text(row + 1);
+                }
+            }]
+        });
+
         $(".edit-btn").on("click", function () {
             let dataId = $(this).attr("data-id");
             let nama = $(this).attr("data-nama");
-            $('#kategori_id').val(dataId);
+            $('#jenis_id').val(dataId);
             $('#namaEdit').val(nama);
         });
 
         $(".edit-submit").on("click", function (e) {
             e.preventDefault();
             
-            let id = $('#kategori_id').val();
+            let id = $('#jenis_id').val();
             let token = $("meta[name='csrf-token']").attr("content");
             $.ajax({
-                url: `/analis-sdm/kategori/${id}`,
+                url: `/analis-sdm/jenis/${id}`,
                 type: "POST",
                 cache: false,
                 data: {
@@ -191,6 +210,7 @@
             });
         });
     </script>
+
     @if ($errors->any())
         <script>
             $(document).ready(function() {

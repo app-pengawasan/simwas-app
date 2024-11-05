@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pp;
-use App\Models\User;
-use App\Models\NamaPp;
 use App\Models\Kompetensi;
 use Illuminate\Http\Request;
+use App\Models\JenisKompetensi;
+use App\Models\TeknisKompetensi;
+use App\Models\KategoriKompetensi;
 use App\Models\MasterPenyelenggara;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-// use Illuminate\Http\Request;
 
 class PegawaiKompetensiController extends Controller
 {
@@ -34,16 +33,14 @@ class PegawaiKompetensiController extends Controller
     public function index()
     {
         $kompetensi = Kompetensi::all()->where('pegawai_id', auth()->user()->id);
-        $pp = Pp::all()->whereNotIn('is_aktif', [0]);
-        $nama_pp = NamaPp::whereNot('id', '999')->get();
+        $kategori = KategoriKompetensi::all();
         $penyelenggara = MasterPenyelenggara::all();
 
         return view('pegawai.kompetensi.index',[
             'type_menu'     => 'kompetensi',
             'colorText'     => $this->colorText,
             'status'        => $this->status,
-            'pps'            => $pp,
-            'nama_pps'       => $nama_pp,
+            'kategori'      => $kategori,
             'penyelenggara' => $penyelenggara,
             'role'          => 'pegawai'
         ])->with('kompetensi', $kompetensi);
@@ -68,10 +65,8 @@ class PegawaiKompetensiController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'pp_id'            => 'required',
-            'pp_lain'       => 'required_if:pp_id,==,999',
-            'nama_pp_id'        => 'required',
-            'nama_pp_lain'   => 'required_if:nama_pp_id,==,999',
+            'teknis_id'            => 'required',
+            'nama_pelatihan'            => 'required',
             'create-sertifikat'    => 'required|mimes:pdf|max:500',
             'tgl_mulai'         => 'required|date|before_or_equal:tgl_selesai',
             'tgl_selesai'         => 'required|date|after_or_equal:tgl_mulai',
@@ -161,10 +156,8 @@ class PegawaiKompetensiController extends Controller
         $kompetensi = Kompetensi::find($id);
 
         $rules = [
-            'edit-pp'            => 'required',
-            'edit-pp_lain'       => 'required_if:edit-pp,==,999',
-            'edit-nama_pp'        => 'required|not_in:null',
-            'edit-nama_pp_lain'   => 'required_if:edit-nama_pp,==,999',
+            'edit-teknis_id'            => 'required',
+            'edit-nama_pelatihan'            => 'required',
             'edit-sertifikat'     => 'nullable|mimes:pdf|max:500',
             'edit-tgl_mulai'         => 'required|date|before_or_equal:edit-tgl_selesai',
             'edit-tgl_selesai'         => 'required|date|after_or_equal:edit-tgl_mulai',
@@ -195,8 +188,8 @@ class PegawaiKompetensiController extends Controller
         $validateData = $request->validate($rules);
 
         $data = [
-            'pp_id'     => $validateData['edit-pp'],
-            'nama_pp_id'   => $validateData['edit-nama_pp'],
+            'teknis_id'     => $validateData['edit-teknis_id'],
+            'nama_pelatihan'   => $validateData['edit-nama_pelatihan'],
             // 'catatan'      => $request['edit-catatan'],
             'tgl_mulai' => $validateData['edit-tgl_mulai'],
             'tgl_selesai' => $validateData['edit-tgl_selesai'],
@@ -206,11 +199,6 @@ class PegawaiKompetensiController extends Controller
             'jumlah_peserta' => $validateData['edit-jumlah_peserta'],
             'ranking' => $validateData['edit-ranking'],
         ];
-
-        if (isset($validateData['edit-pp_lain'])) 
-            $data['pp_lain'] = $validateData['edit-pp_lain'];
-        if (isset($validateData['edit-nama_pp_lain'])) 
-            $data['nama_pp_lain'] = $validateData['edit-nama_pp_lain'];
 
         if ($request['edit-sertifikat']) {
             $sertifikat = $request['edit-sertifikat'];
@@ -255,15 +243,35 @@ class PegawaiKompetensiController extends Controller
     public function getData($id)
     {
         $kompetensi = Kompetensi::where('id', $id)->get();
-        $peserta = $kompetensi->first()->namaPp->peserta;
+        $kategori = $kompetensi->first()->teknis->jenis->kategori->id;
         $penyelenggara = $kompetensi->first()->penyelenggaraDiklat->id;
 
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Kompetensi',
             'data'    => $kompetensi,
-            'peserta' => $peserta,
+            'kategori' => $kategori,
             'penyelenggara' => $penyelenggara
+        ]);
+    }
+    
+    public function getJenis($kat_id)
+    {
+        $data = JenisKompetensi::where('kategori_id', $kat_id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data
+        ]);
+    }
+    
+    public function getTeknis($jenis_id)
+    {
+        $data = TeknisKompetensi::where('jenis_id', $jenis_id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data
         ]);
     }
 }

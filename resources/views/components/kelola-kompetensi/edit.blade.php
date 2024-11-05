@@ -28,62 +28,40 @@
                             </div>
                         </div>
                     @endif
-                    <div class="form-group div_create_pp">
-                        <label class="form-label" for="edit-pp">Jenis Pengembangan Kompetensi<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-kat">Kategori<span class="text-danger">*</span></label>
                         <div class="">
-                            <select class="form-control pp_id" id="edit-pp" name="edit-pp" required>
-                                <option value="" disabled selected>Pilih Jenis Pengembangan</option>
-                                @foreach ($pps as $pp)
-                                <option value="{{ $pp->id }}">
-                                    {{ $pp->jenis }}</option>
+                            <select class="form-control select2 kategori" id="edit-kat" name="edit-kat" required>
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                @foreach ($kategori as $kat)
+                                    <option value="{{ $kat->id }}">{{ $kat->nama }}</option>
                                 @endforeach
-                                {{-- <option value="999">Lainnya</option> --}}
-                                <option value="" disabled></option>
                             </select>
-                            <small id="error-edit-pp" class="text-danger"></small>
+                            <small id="error-edit-kat" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group form-inline form-one-line form-other-pp mt-3">
-                        <label class="form-label" for="edit-pp_lain">Sebutkan<span class="text-danger">*</span>:</label>
-                        <input type="text" name="edit-pp_lain" id="edit-pp_lain" class="form-control ml-3 pp_lain" style="max-width: 50%">
-                        <small id="error-edit-pp_lain" class="text-danger pl-2"></small>
-                    </div>
-                    <div class="form-group div_create_peserta">
-                        <label class="form-label" for="edit-peserta">Peserta<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-jenis">Jenis<span class="text-danger">*</span></label>
                         <div class="">
-                            <select class="form-control peserta" id="edit-peserta" name="edit-peserta" required>
-                                <option value="" disabled selected>Pilih Peserta</option>
-                                <option value="100">Pengawasan (Auditor Pertama)</option>
-                                <option value="200">Pengawasan (Auditor Muda)</option>
-                                <option value="300">Pengawasan (Auditor Madya/Utama)</option>
-                                <option value="400">Pengawasan (semua jenjang)</option>
-                                <option value="500">Manajemen</option>
-                                <option value="600">Pengelolaan Keuangan dan Barang</option>
-                                <option value="700">Sumber Daya Manusia</option>
-                                <option value="800">Arsip dan Diseminasi Pengawasan</option>
-                                <option value="900">Teknologi Informasi dan Multimedia</option>
+                            <select class="form-control select2 jenis" id="edit-jenis" name="edit-jenis" required>
+                                <option value="" disabled selected>Pilih Jenis</option>
                             </select>
-                            <small id="error-edit-peserta" class="text-danger"></small>
+                            <small id="error-edit-jenis" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group div_create_namapp">
-                        <label class="form-label" for="edit-nama_pp">Nama Pengembangan Kompetensi<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-teknis">Teknis<span class="text-danger">*</span></label>
                         <div class="">
-                            <select class="form-control nama_pp_id" name="edit-nama_pp" id="edit-nama_pp" required disabled>
-                                <option value="" selected disabled class="disabled">Pilih Nama Pengembangan</option>
-                                @foreach ($nama_pps as $nama_pp)
-                                    <option value="{{ $nama_pp->id }}" data-pp="{{ $nama_pp->pp_id }}" data-peserta="{{ $nama_pp->peserta }}">{{ $nama_pp->nama }}</option>
-                                @endforeach
-                                <option value="999">Lainnya</option>
-                                <option value="" disabled></option>
+                            <select class="form-control select2 teknis" id="edit-teknis_id" name="edit-teknis_id" required>
+                                <option value="" disabled selected>Pilih Teknis</option>
                             </select>
-                            <small id="error-edit-nama_pp" class="text-danger"></small>
+                            <small id="error-edit-teknis" class="text-danger"></small>
                         </div>
                     </div>
-                    <div class="form-group form-inline form-one-line form-other-namepp mt-3">
-                        <label class="form-label" for="edit-nama_pp_lain">Sebutkan<span class="text-danger">*</span>:</label>
-                        <input type="text" name="edit-nama_pp_lain" id="edit-nama_pp_lain" class="form-control ml-3 nama_pp_lain" style="max-width: 50%">
-                        <small id="error-edit-nama_pp_lain" class="text-danger pl-2"></small>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-nama_pelatihan">Nama Pelatihan<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="edit-nama_pelatihan" id="edit-nama_pelatihan" required>
+                        <small id="error-edit-nama_pelatihan" class="text-danger"></small>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="edit-tgl_mulai">Tanggal Mulai<span class="text-danger">*</span></label>
@@ -116,13 +94,12 @@
                     <div class="form-group">
                         <label class="form-label" for="edit-penyelenggara">Penyelenggara<span class="text-danger">*</span></label>
                         <div class="">
-                            <select class="form-control" id="edit-penyelenggara" name="edit-penyelenggara" required>
+                            <select class="form-control select2" id="edit-penyelenggara" name="edit-penyelenggara" required>
                                 <option value="" disabled selected>Pilih Penyelenggara</option>
                                 @foreach ($penyelenggara as $p)
                                     <option value="{{ $p->id }}">
                                         {{ $p->penyelenggara }}</option>
                                 @endforeach
-                                <option value="" disabled></option>
                             </select>
                             <small id="error-edit-penyelenggara" class="text-danger"></small>
                         </div>

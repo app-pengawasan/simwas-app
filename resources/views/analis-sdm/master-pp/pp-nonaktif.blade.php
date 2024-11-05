@@ -36,7 +36,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="">
-                                    <a href="{{ route('analis-sdm.pp') }}" class="btn btn-primary">Aktif</a>
+                                    <a href="{{ route('analis-sdm.kategori') }}" class="btn btn-primary">Aktif</a>
                                     <div class="btn btn-primary disabled">Nonaktif</div>
                                     <table class="table table-bordered table-striped display responsive" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>

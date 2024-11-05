@@ -1,8 +1,12 @@
+let colnums;
+if ($('#role').val() == 'analis sdm') colnums = [0, 1, 2, 3, 4, 11, 12, 13, 14, 8, 15, 16, 17, 6];
+else colnums = [0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 6];
+
 let table = $("#table-kompetensi")
     .dataTable({
         dom: "Bfrtip",
-        responsive: true,
-        lengthChange: false,
+        responsive: false,
+        lengthChange: true,
         autoWidth: false,
         buttons: [
             {
@@ -10,7 +14,7 @@ let table = $("#table-kompetensi")
                 className: "btn-success",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 6, 4, 5],
+                    columns: colnums,
                 },
             },
             {
@@ -18,257 +22,218 @@ let table = $("#table-kompetensi")
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> Pdf',
                 exportOptions: {
-                    columns: [0, 1, 2, 6, 4, 5],
+                    columns: colnums,
                 },
             },
         ],
     }).api();
 
 if ($('#role').val() == 'analis sdm') {
+    document.forms['filterForm'].reset();
+
     $('#filterUnitKerja').on("change", function () {
         table.draw();
     });
 
-    $('#filterJenis').on("change", function () {
+    $('#filterKat').on("change", function () {
         table.draw();
     });
 
     $.fn.dataTableExt.afnFiltering.push(
         function (setting, data, index) {
             var selectedUnit = $('select#filterUnitKerja option:selected').val();
-            var selectedJenis = $('select#filterJenis option:selected').val();
-            if ((data[7] == selectedUnit || selectedUnit == 'all') &&
-                (data[8] == selectedJenis || selectedJenis == 'all')) return true;
+            var selectedKat = $('select#filterKat option:selected').val();
+            if ((data[9] == selectedUnit || selectedUnit == 'all') &&
+                (data[10] == selectedKat || selectedKat == 'all')) return true;
             else return false;
         }
     );
 }
 
-let tabled = $("#table-dashboard-analis").dataTable({
-    dom: "Bfrtip",
-    responsive: true,
-    lengthChange: false,
-    autoWidth: false,
-    buttons: [
-        {
-            extend: "excel",
-            className: "btn-success",
-            text: '<i class="fas fa-file-excel"></i> Excel',
-            exportOptions: {
-                columns: [0, 1, 4],
-            },
-            messageTop: function () {
-                return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
-            },
-        },
-        {
-            extend: "pdf",
-            className: "btn-danger",
-            text: '<i class="fas fa-file-pdf"></i> PDF',
-            exportOptions: {
-                columns: [0, 1, 4],
-            },
-            messageTop: function () {
-                return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
-            },
-        },
-    ],
-}).api()
+$('#table-kompetensi_wrapper').css('overflow', 'scroll');
 
-$('#filterPegawai').on("change", function () {
-    tabled.draw();
+// let tabled = $("#table-dashboard-analis").dataTable({
+//     dom: "Bfrtip",
+//     responsive: true,
+//     lengthChange: false,
+//     autoWidth: false,
+//     buttons: [
+//         {
+//             extend: "excel",
+//             className: "btn-success",
+//             text: '<i class="fas fa-file-excel"></i> Excel',
+//             exportOptions: {
+//                 columns: [0, 1, 4],
+//             },
+//             messageTop: function () {
+//                 return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
+//             },
+//         },
+//         {
+//             extend: "pdf",
+//             className: "btn-danger",
+//             text: '<i class="fas fa-file-pdf"></i> PDF',
+//             exportOptions: {
+//                 columns: [0, 1, 4],
+//             },
+//             messageTop: function () {
+//                 return 'Pegawai: ' + $(":selected", '#filterPegawai').text();
+//             },
+//         },
+//     ],
+// }).api()
 
-    $('#sertifikasi').html(0);
-    $('#jenjang').html(0);
-    $('#teknis').html(0);
+// $('#filterPegawai').on("change", function () {
+//     tabled.draw();
 
-    let countArr = count[$(this).val()];
+//     $('#sertifikasi').html(0);
+//     $('#jenjang').html(0);
+//     $('#teknis').html(0);
 
-    $('#sertifikasi').html(countArr['1']);
-    $('#jenjang').html(countArr['2']);
-    $('#teknis').html(countArr['3']);
-});
+//     let countArr = count[$(this).val()];
 
-$('#filterJenis').on("change", function () {
-    tabled.draw();
-});
+//     $('#sertifikasi').html(countArr['1']);
+//     $('#jenjang').html(countArr['2']);
+//     $('#teknis').html(countArr['3']);
+// });
 
-let allowFilter = ['table-dashboard-analis'];
+// $('#filterJenis').on("change", function () {
+//     tabled.draw();
+// });
 
-$.fn.dataTableExt.afnFiltering.push(
-    function (setting, data, index) {
-        // check if current table is part of the allow list
-        if ( $.inArray( setting.nTable.getAttribute('id'), allowFilter ) == -1 ) {
-            // if not table should be ignored
-            return true;
-        }
+// let allowFilter = ['table-dashboard-analis'];
 
-        var selected = $('select#filterPegawai option:selected').val();
-        var selectedJenis = $('select#filterJenis option:selected').val();
-        if (data[3] == selected && (data[5] == selectedJenis || selectedJenis == 'all')) {
-            return true;
-        }
-        else return false;
-    }
-);
+// $.fn.dataTableExt.afnFiltering.push(
+//     function (setting, data, index) {
+//         // check if current table is part of the allow list
+//         if ( $.inArray( setting.nTable.getAttribute('id'), allowFilter ) == -1 ) {
+//             // if not table should be ignored
+//             return true;
+//         }
 
-tabled.draw();
+//         var selected = $('select#filterPegawai option:selected').val();
+//         var selectedJenis = $('select#filterJenis option:selected').val();
+//         if (data[3] == selected && (data[5] == selectedJenis || selectedJenis == 'all')) {
+//             return true;
+//         }
+//         else return false;
+//     }
+// );
+
+// tabled.draw();
 
 const clearError = () => {
     $("#error-pegawai_id").text("");
-    $("#error-pp").text("");
-    $("#error-pp_id").text("");
-    $("#error-pp_lain").text("");
-    $("#error-nama_pp").text("");
-    $("#error-nama_pp_id").text("");
-    $("#error-nama_pp_lain").text("");
-    $("#error-edit-pp").text("");
-    $("#error-edit-pp_lain").text("");
-    $("#error-edit-nama_pp").text("");
-    $("#error-edit-nama_pp_lain").text("");
+    $("#error-teknis_id").text("");
+    $("#error-nama_pelatihan").text("");
+    $("#error-tgl_mulai").text("");
+    $("#error-tgl_selesai").text("");
+    $("#error-durasi").text("");
+    $("#error-tgl_sertifikat").text("");
     $("#error-create-sertifikat").text("");
+    $("#error-penyelenggara").text("");
+    $("#error-jumlah_peserta").text("");
+    $("#error-ranking").text("");
+
+    $("#error-edit-pegawai").text("");
+    $("#error-edit-teknis_id").text("");
+    $("#error-edit-nama_pelatihan").text("");
+    $("#error-edit-tgl_mulai").text("");
+    $("#error-edit-tgl_selesai").text("");
+    $("#error-edit-durasi").text("");
+    $("#error-edit-tgl_sertifikat").text("");
     $("#error-edit-sertifikat").text("");
-}
-
-const showOtherPp = () => {
-    $(".div_create_pp").addClass("mb-2");
-    $(".form-other-pp").addClass("mt-3 form-group");
-    $(".form-other-pp, .form-other-pp label, .form-other-pp input").show();
-    $('.pp_lain').prop("required", true);
-};
-
-const showPeserta = () => {
-    $(".div_create_peserta").addClass("mb-3");
-    $(".div_create_peserta").show();
-    $('.peserta').prop("required", true);
-};
-
-const hidePeserta = () => {
-    $(".div_create_peserta").removeClass("mb-3");
-    $(".div_create_peserta").hide();
-    $('.peserta').prop("required", false);
-};
-
-const showOtherNamapp= () => {
-    $(".div_create_namapp").addClass("mb-2");
-    $(".form-other-namepp").addClass("mt-3 form-group");
-    $(".form-other-namepp, .form-other-namepp label, .form-other-namepp input").show();
-    $('.nama_pp_lain').prop("required", true);
-};
-
-const hideOtherPp = () => {
-    $(".div_create_pp").removeClass("mb-2");
-    $(".form-other-pp").removeClass("mt-3 form-group");
-    $('.pp_lain').prop("required", false);
-    $(".form-other-pp, .form-other-pp label, .form-other-pp input").hide();
-};
-
-const hideOtherNamapp = () => {
-    $(".div_create_namapp").removeClass("mb-2");
-    $(".form-other-namepp").removeClass("mt-3 form-group");
-    $(".form-other-namepp, .form-other-namepp label, .form-other-namepp input").hide();
-    $('.nama_pp_lain').prop("required", false);
-};
-
-const hideOthers = () => {
-    $(".form-one-line").removeClass("mt-3 form-group");
-    $(".form-one-line, .form-one-line label, .form-one-line input").hide();
-    $('.form-one-line input').prop("required", false);
-    $(".div_create_namapp").removeClass("mb-2");
-    $(".div_create_pp").removeClass("mb-2");
-}
-
-const enableNamapp = (pp) => {
-    $(".nama_pp_id option").hide();
-    $('.disabled').show();
-    $('.disabled').prop("selected", true);
-    $(`.nama_pp_id option[data-pp="${pp}"]`).show();
-    $(".nama_pp_id").prop("disabled", false);
-}
-
-const enableNamapp3 = (peserta) => {
-    $(".nama_pp_id option").hide();
-    $('.disabled').show();
-    $('.disabled').prop("selected", true);
-    $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
-    $(".nama_pp_id").prop("disabled", false);
-}
-
-const disableNamapp = () => {
-    $(".nama_pp_id option").hide();
-    $(".nama_pp_id").val("999");
-    $(".nama_pp_id").prop("disabled", true);
+    $("#error-edit-penyelenggara").text("");
+    $("#error-edit-jumlah_peserta").text("");
+    $("#error-edit-ranking").text("");
 }
 
 document.forms['myform'].reset();
-$("#nama_pp_id").prop("disabled", true);
-hideOthers();
-hidePeserta();
 
 $("#create-btn").on("click", function () {
     document.forms['myform'].reset();
-    clearError();
-    hideOthers();
+    $(".jenis").prop("disabled", true);
+    $(".teknis").prop("disabled", true);
 });
 
-$(".pp_id").on("change", function () {
-    let pp = $(this).val();
-    clearError();
+const populateJenis = (kat_id) => {
+    $.ajax({
+        url: `/pegawai/kompetensi/search-jenis/${kat_id}`,
+        type: "GET",
+        async: false,
+        success: function (data) {
+            // if data not 0
+            if (data.data.length > 0) {
+                $(".jenis").prop("disabled", false);
+                // fill option with data.data
+                $(".jenis").empty();
+                $(".jenis").append(
+                    '<option value="" disabled selected>Pilih Jenis</option>'
+                );
+                $.each(data.data, function (key, value) {
+                    $(".jenis").append(
+                        '<option value="' +
+                            value.id +
+                            '">' +
+                            value.nama +
+                            "</option>"
+                    );
+                });
+            } else {
+                $(".jenis").prop("disabled", true);
+            }
+        },
+        error: function (data) {
+        },
+    });
+}
 
-    if (pp === "1" || pp === "2" || pp === "3") {
-        enableNamapp(pp);
-        hideOthers();
-    }
-    else {
-        if (pp === "999") {
-            showOtherPp();
-        } else {
-            hideOtherPp();
-        }
-        disableNamapp();
-        showOtherNamapp();
-    }
-
-    if (pp === "3") {
-        showPeserta();
-        disableNamapp();
-        $(".nama_pp_id option").hide();
-        $('.disabled').show();
-        $('.disabled').prop("selected", true);
-    }
-    else hidePeserta();
+$(".kategori").on("change", function () {
+    let kat_id = $(this).val();
+    populateJenis(kat_id);
 });
 
-$(".nama_pp_id").on("change", function () {
-    let nama_pp = $(this).val();
-    clearError();
+const populateTeknis = (jenis_id) => {
+    $.ajax({
+        url: `/pegawai/kompetensi/search-teknis/${jenis_id}`,
+        type: "GET",
+        async: false,
+        success: function (data) {
+            // if data not 0
+            if (data.data.length > 0) {
+                $(".teknis").prop("disabled", false);
+                // fill option with data.data
+                $(".teknis").empty();
+                $(".teknis").append(
+                    '<option value="" disabled selected>Pilih Teknis</option>'
+                );
+                $.each(data.data, function (key, value) {
+                    $(".teknis").append(
+                        '<option value="' +
+                            value.id +
+                            '">' +
+                            value.nama +
+                            "</option>"
+                    );
+                });
+            } else {
+                $(".teknis").prop("disabled", true);
+            }
+        },
+        error: function (data) {
+        },
+    });
+}
 
-    if (nama_pp === "999") {
-        showOtherNamapp();
-    } else {
-        hideOtherNamapp();
-    }
-});
-
-$(".peserta").on("change", function () {
-    let peserta = $(this).val();
-    enableNamapp($('#pp_id').val());
-    $('.nama_pp_id option').hide();
-    $('.nama_pp_id option[value="999"]').show();
-    $(`.nama_pp_id option[data-peserta="${peserta}"]`).show();
-    clearError();
-    hideOthers();
-    $('#nama_pp_other').hide();
+$(".jenis").on("change", function () {
+    let jenis_id = $(this).val();
+    populateTeknis(jenis_id);
 });
 
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
     let data = new FormData($('#myform')[0]);
     let token = $("meta[name='csrf-token']").attr("content");
-    if (!data.get("nama_pp_id")) data.append('nama_pp_id', $("#nama_pp_id").val());
-    if (data.get("nama_pp_id") == 'null') data.delete('nama_pp_id');
-    if (data.get("pp_lain") == '') data.delete('pp_lain');
-    if (data.get("nama_pp_lain") == '') data.delete('nama_pp_lain');
     data.append('_token', token);
 
     let url;
@@ -307,58 +272,48 @@ $(".edit-btn").on("click", function () {
     let url;
     if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/getData/${dataId}`;
     else url = `/pegawai/kompetensi/getData/${dataId}`;
+
+    Swal.fire({
+        title: "Mengambil Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: url,
         type: "GET",
         cache: false,
         success: function (response) {
             document.forms['myeditform'].reset();
-            hideOthers();
-            let pp_id = response.data[0].pp_id;
-            let nama_pp_id = response.data[0].nama_pp_id;
-            let nama_pp_lain = response.data[0].nama_pp_lain;
-
             $("#edit-id").val(response.data[0].id);
             $("#edit-pegawai").val(response.data[0].pegawai_id);
-            $("#edit-pp").val(pp_id);
+            $("#edit-kat").val(response.kategori).trigger('change');
+            populateJenis(response.kategori); 
+            $("#edit-jenis").val(response.data[0].teknis.jenis_id).trigger('change');
+            populateTeknis(response.data[0].teknis.jenis_id); 
+            $("#edit-teknis_id").val(response.data[0].teknis_id).trigger('change');
+            $("#edit-nama_pelatihan").val(response.data[0].nama_pelatihan);
             $("#edit-catatan").val(response.data[0].catatan);
             $("#edit-peserta").val(response.peserta);
             $("#edit-tgl_mulai").val(response.data[0].tgl_mulai);
             $("#edit-tgl_selesai").val(response.data[0].tgl_selesai);
             $("#edit-durasi").val(response.data[0].durasi);
             $("#edit-tgl_sertifikat").val(response.data[0].tgl_sertifikat);
-            $("#edit-penyelenggara").val(response.penyelenggara);
+            $("#edit-penyelenggara").val(response.penyelenggara).trigger('change');
             $("#edit-jumlah_peserta").val(response.data[0].jumlah_peserta);
             $("#edit-ranking").val(response.data[0].ranking);
-
-            if (pp_id == 999) {
-                showOtherPp();
-                $('.pp_lain').val(response.data[0].pp_lain);
-                disableNamapp();
-                showOtherNamapp();
-                $('.nama_pp_lain').val(nama_pp_lain);
-            } else if (pp_id == 1 | pp_id == 2 | pp_id == 3) {
-                if (pp_id == 3) {
-                    showPeserta();
-                    enableNamapp3(response.peserta);
-                } else enableNamapp(pp_id);
-                hideOthers();
-                $('.nama_pp_id').val(nama_pp_id);
-                if (nama_pp_id == 999) {
-                    showOtherNamapp();
-                    $('.nama_pp_lain').val(nama_pp_lain);
-                }
-            } else {
-                disableNamapp();
-                showOtherNamapp();
-                $('.nama_pp_lain').val(nama_pp_lain);
-            }
+            Swal.close();
         },
     });
 });
 
 $("#btn-edit-submit").on("click", function (e) {
     e.preventDefault();
+    clearError();
     let data = new FormData($('#myeditform')[0]);
     let token = $("meta[name='csrf-token']").attr("content");
     let id = $("#edit-id").val();

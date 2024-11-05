@@ -90,16 +90,20 @@
                                     </tr>
                                 @endif
                                 <tr>
-                                    <th>Jenis Pengembangan Kompetensi</th>
-                                    @if ($kompetensi->pp->id == 999) <td>{{ $kompetensi->pp_lain }}</td>
-                                    @else <td>{{ $kompetensi->pp->jenis }}</td>
-                                    @endif
+                                    <th>Kategori</th>
+                                    <td>{{ $kompetensi->teknis->jenis->kategori->nama }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Nama Pengembangan Kompetensi</th>
-                                    @if ($kompetensi->namaPp->id == 999) <td>{{ $kompetensi->nama_pp_lain }}</td>
-                                    @else <td>{{ $kompetensi->namaPp->nama }}</td>
-                                    @endif
+                                    <th>Jenis</th>
+                                    <td>{{ $kompetensi->teknis->jenis->nama }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Teknis</th>
+                                    <td>{{ $kompetensi->teknis->nama }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Pelatihan</th>
+                                    <td>{{ $kompetensi->nama_pelatihan }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tanggal Mulai</th>

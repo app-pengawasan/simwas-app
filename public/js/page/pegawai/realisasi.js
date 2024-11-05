@@ -34,13 +34,6 @@ $("#proyek").on("change", function () {
 
 $("#tugas").on("change", function () {
     $("#aktivitas tbody tr").hide();
-    $(`#aktivitas tr[data-tugas="${$(this).val()}"]`).show();
-
-    let i = 0;
-    $(`#aktivitas tr[data-tugas="${$(this).val()}"] .jam`).each(function() {
-        i = i + +$(this).text();
-    });
-    $('#jam').text(i + ' jam');
 
     let data = $(this).find(":selected");
     $("#hasil").text(data.attr('data-hasil-kerja'));
@@ -65,6 +58,16 @@ $("#objek").on("change", function () {
     $('.bulan-dis').prop("selected", true);
     $("#bulan").prop("disabled", false); //enable pilihan bulan
     $(`#bulan option[data-objek="${$(this).val()}"]`).show(); //show option bulan sesuai objek yang dipilih
+});
+
+$("#bulan").on("change", function () {
+    $(`#aktivitas tr[data-bulan="${$(this).val()}"]`).show();
+
+    let i = 0;
+    $(`#aktivitas tr[data-bulan="${$(this).val()}"] .jam`).each(function() {
+        i = i + +$(this).text();
+    });
+    $('#jam').text(i + ' jam');
 });
 
 $("#status").on("change", function () {
