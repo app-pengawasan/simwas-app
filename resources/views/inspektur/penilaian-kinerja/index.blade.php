@@ -32,7 +32,7 @@
                             <div class="d-flex mb-2 row" style="gap:10px">
                                 <div class="form-group col pr-0" style="margin-bottom: 0;">
                                     <label for="filterBulan" style="margin-bottom: 0;">Bulan Unggah</label>
-                                    <select class="form-control" id="filterBulan">
+                                    <select class="form-control select2" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
                                         <option value="02">Februari</option>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="form-group col pl-0" style="margin-bottom: 0;">
                                     <label for="filterTahun" style="margin-bottom: 0;">Tahun Unggah</label>
-                                    <select class="form-control" id="filterTahun" name="filterTahun">
+                                    <select class="form-control select2" id="filterTahun" name="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
                                             <option value="{{ $year + $i }}">
@@ -84,7 +84,7 @@
                                                         <td>{{ $values['nama'] }}</td>
                                                         <td>{{ $jumlah_tugas }}</td>
                                                         <td>{{ $values['rencana_jam'][$bulan] }}</td>
-                                                        <td>{{ $values['realisasi_jam'][$bulan] }}</td>
+                                                        <td>{{ isset($values['realisasi_jam'][$bulan]) ?? '-' }}</td>
                                                         <td>{{ isset($values['avg'][$bulan]) ? $values['avg'][$bulan] : '-' }}</td> 
                                                         <td>{{ isset($values['nilai_ins'][$bulan]) ? round($values['nilai_ins'][$bulan], 2) : '-' }}</td>
                                                         <td>{{ $bulan == 'all' ? '' : (isset($values['catatan']) ? $values['catatan'][$bulan] ?? '' : '') }}</td>

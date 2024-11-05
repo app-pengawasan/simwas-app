@@ -65,8 +65,15 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             eventDidMount: function(info) {
                 info.el.querySelector('.fc-list-event-title a').innerHTML
                     += ` <br><table class="table-borderless"><tbody>
-                        <tr><td class="pl-0"><strong>Aktivitas: </strong></td>
-                            <td class="pl-0" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
+                        <tr><td class="pl-0 pb-0"><strong>Bulan Pelaporan: </strong></td>
+                            <td class="pl-0 pb-0" style="white-space: pre-line;">${
+                                Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
+                                    info.event.extendedProps.laporan_o_pengawasan.month.toString()
+                                ))}
+                            </td>
+                        </tr>
+                        <tr><td class="pl-0 pt-2"><strong>Aktivitas: </strong></td>
+                            <td class="pl-0 pt-2" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
                         </tr></tbody></table>`;
             },
         }
@@ -91,8 +98,11 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             placement: 'right',
             html: true,
             content: '<h3>' + info.event.title + '</h3>' +
+                     '<h4>Bulan Pelaporan: ' + Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
+                                info.event.extendedProps.laporan_o_pengawasan.month.toString()
+                            )) + '</h4>' +
                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                    + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
+                    + '<br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
         });
         // }
     },
@@ -194,10 +204,44 @@ $("#modal-create-aktivitas .close, #modal-create-aktivitas .btn-danger") .on("cl
     document.forms['myform'].reset();
 });
 
+$("#laporan_opengawasan").prop("disabled", true);
+
+$("#tugas").on("change", function () {
+    let id_rencanakerja = $(this).val();
+    $.ajax({
+        url: `/pegawai/aktivitas-harian/search-bulan/${id_rencanakerja}`,
+        type: "GET",
+        success: function (data) {
+            // if data not 0
+            if (data.data.length > 0) {
+                $("#laporan_opengawasan").prop("disabled", false);
+                // fill option with data.data
+                $("#laporan_opengawasan").empty();
+                $("#laporan_opengawasan").append(
+                    '<option value="" disabled selected>Pilih Bulan Pelaporan</option>'
+                );
+                $.each(data.data, function (key, value) {
+                    $("#laporan_opengawasan").append(
+                        '<option value="' +
+                            value.id +
+                            '">' +
+                            Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(value.month.toString())) +
+                            "</option>"
+                    );
+                });
+            } else {
+                $("#laporan_opengawasan").prop("disabled", true);
+            }
+        },
+        error: function (data) {
+        },
+    });
+});
+
 $(".submit-btn").on("click", function (e) {
     e.preventDefault();
 
-    $('#error-id_pelaksana').text('');
+    $('#error-laporan_opengawasan').text('');
     $('#error-start').text('');
     $('#error-end').text('');
     $('#error-aktivitas').text('');
@@ -206,7 +250,7 @@ $(".submit-btn").on("click", function (e) {
     let tgl = $("#tgl").val();
     let start = $("#start").val();
     let end = $("#end").val();
-    let id_pelaksana = $("#id_pelaksana").val();
+    let laporan_opengawasan = $("#laporan_opengawasan").val();
     let aktivitas = $("#aktivitas").val();
 
     $.ajax({
@@ -218,7 +262,7 @@ $(".submit-btn").on("click", function (e) {
             tgl: tgl,
             start: start,
             end: end,
-            id_pelaksana: id_pelaksana,
+            laporan_opengawasan: laporan_opengawasan,
             aktivitas: aktivitas
         },
         success: function (response) {
@@ -244,6 +288,7 @@ $(document).on("click", ".popover .edit-btn" , function(e){
     $('#error-edit-end').text('');
     $('#error-edit-aktivitas').text('');
     $('#error-edit-tgl').text('');
+    $("#edit-laporan_opengawasan").empty();
 
     $.ajax({
         url: `/pegawai/aktivitas-harian/${dataId}`,
@@ -251,7 +296,17 @@ $(document).on("click", ".popover .edit-btn" , function(e){
         cache: false,
         success: function (response) {
             document.forms['myeditform'].reset();
-            $("#edit-tugas").val(response.data[0].id_pelaksana);
+            $("#edit-tugas").val(response.id_rencanakerja);
+            $("#edit-laporan_opengawasan").append(
+                '<option value="' +
+                    response.data[0].laporan_opengawasan +
+                    '">' +
+                    Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
+                        response.data[0].laporan_o_pengawasan.month.toString()
+                    )) +
+                    "</option>"
+            );
+            $("#edit-laporan_opengawasan").val(response.data[0].laporan_opengawasan);
             $("#edit-start").val(moment(response.data[0].start).format("HH:mm"));
             $("#edit-end").val(moment(response.data[0].end).format("HH:mm"));
             $("#edit-aktivitas").val(response.data[0].aktivitas);
@@ -273,7 +328,7 @@ $("#btn-edit-submit").on("click", function (e) {
     let tgl = $("#edit-tgl").val();
     let start = $("#edit-start").val();
     let end = $("#edit-end").val();
-    let id_pelaksana = $("#edit-tugas").val();
+    let laporan_opengawasan = $("#edit-laporan_opengawasan").val();
     let aktivitas = $("#edit-aktivitas").val();
     let dataId = $("#id").val();
 
@@ -286,7 +341,7 @@ $("#btn-edit-submit").on("click", function (e) {
             tgl: tgl,
             start: start,
             end: end,
-            id_pelaksana: id_pelaksana,
+            laporan_opengawasan: laporan_opengawasan,
             aktivitas: aktivitas,
         },
         success: function (response) {

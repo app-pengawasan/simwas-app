@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pp extends Model
+class KategoriKompetensi extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
@@ -15,8 +15,8 @@ class Pp extends Model
         return $this->hasMany(Stp::class);
     }
 
-    public function namaPp()
+    public function jenis()
     {
-        return $this->hasMany(NamaPp::class);
+        return $this->hasMany(JenisKompetensi::class);
     }
 }

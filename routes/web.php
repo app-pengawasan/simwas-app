@@ -3,7 +3,6 @@
 use App\Models\MasterLaporan;
 use App\Models\TempNormaHasil;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PpController;
 use App\Http\Controllers\WordController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
@@ -43,13 +42,16 @@ use App\Http\Controllers\AdminKinerjaTimController;
 use App\Http\Controllers\AdminRekapNilaiController;
 use App\Http\Controllers\AktivitasHarianController;
 use App\Http\Controllers\DataKepegawaianController;
+use App\Http\Controllers\JenisKompetensiController;
 use App\Http\Controllers\MasterUnitKerjaController;
 use App\Http\Controllers\ObjekPengawasanController;
 use App\Http\Controllers\AnalisKompetensiController;
 use App\Http\Controllers\MasterHasilKerjaController;
+use App\Http\Controllers\TeknisKompetensiController;
 use App\Http\Controllers\AdminRencanaKerjaController;
 use App\Http\Controllers\Auth\SingleSignOnController;
 use App\Http\Controllers\PegawaiKompetensiController;
+use App\Http\Controllers\KategoriKompetensiController;
 use App\Http\Controllers\NormaHasilAcceptedController;
 use App\Http\Controllers\SuratKorespondensiController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
@@ -230,13 +232,14 @@ Route::group(['middleware'=>'auth'], function(){
     ->name('analis-sdm.')
     ->middleware('role:is_analissdm')
     ->group(function () {
-        Route::get('/', [DashboardController::class, 'analis_sdm'])->name('dashboard');
-        Route::get('pp-nonaktif', [PpController::class, 'ppNonaktif']);
-        Route::resource('pp', PpController::class)->names([
-            'index' => 'pp',
+        Route::get('/', [AnalisKompetensiController::class, 'index'])->name('dashboard');
+        Route::get('pp-nonaktif', [KategoriKompetensiController::class, 'ppNonaktif']);
+        Route::resource('kategori', KategoriKompetensiController::class)->names([
+            'index' => 'kategori',
             'show' => 'st-kinerja.show',
         ]);
-        Route::resource('namaPp', NamaPpController::class);
+        Route::resource('jenis', JenisKompetensiController::class);
+        Route::resource('teknis', TeknisKompetensiController::class);
         Route::resource('kelola-kompetensi', AnalisKompetensiController::class);
         Route::get('kelola-kompetensi/getData/{id}', [AnalisKompetensiController::class, 'getData']);
         Route::resource('master-penyelenggara', MasterPenyelenggaraController::class);
@@ -306,9 +309,12 @@ Route::group(['middleware'=>'auth'], function(){
         ]);
         Route::resource('kompetensi', PegawaiKompetensiController::class);
         Route::get('kompetensi/getData/{id}', [PegawaiKompetensiController::class, 'getData']);
+        Route::get('kompetensi/search-jenis/{kat_id}', [PegawaiKompetensiController::class, 'getJenis']);
+        Route::get('kompetensi/search-teknis/{jenis_id}', [PegawaiKompetensiController::class, 'getTeknis']);
 
         //Aktivitas Harian
         Route::resource('aktivitas-harian', AktivitasHarianController::class);
+        Route::get('aktivitas-harian/search-bulan/{id_rencanakerja}', [AktivitasHarianController::class, 'getBulanPelaporan']);
         Route::get('aktivitas-harian/export/{bulan}/{tahun}', [AktivitasHarianController::class, 'export']);
 
         //Isi Realisasi

@@ -157,6 +157,12 @@
     font-size: 1.1rem;
 }
 
+.popover h4 {
+    color: var(--secondary);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
 .popover-header {
     /* content: "×"; */
     /* position: absolute; */
@@ -289,4 +295,8 @@
 .fc-excel-button {
     background-color: var(--success) !important;
     border-color: var(--success) !important;
+}
+
+.select2-container {
+    width: 100% !important;
 }

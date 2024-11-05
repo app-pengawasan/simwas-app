@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NamaPp extends Model
+class TeknisKompetensi extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function pp()
+    public function jenis()
     {
-        return $this->belongsTo(Pp::class);
+        return $this->belongsTo(JenisKompetensi::class, 'jenis_id', 'id');
     }
 }

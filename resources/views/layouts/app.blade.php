@@ -56,6 +56,13 @@
             <!-- Template JS File -->
             <script src="{{ asset('js/scripts.js') }}"></script>
             <script src="{{ asset('js/custom.js') }}"></script>
+
+            <!-- Script agar search box select2 bekerja dalam modal -->
+            <script>
+                $(document).ready(function () { 
+                    $.fn.modal.Constructor.prototype._enforceFocus = function() {}; 
+                });
+            </script>
     </body>
 
 </html>

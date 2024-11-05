@@ -62,33 +62,30 @@
                         <div class="card-body">
                             @include('components.flash')
                             {{ session()->forget(['alert-type', 'status']) }}
-                            <div class="d-flex mb-2 row" style="gap:10px">
-                                <div class="form-group col pr-0" style="margin-bottom: 0;">
-                                    <label for="filterUnitKerja" style="margin-bottom: 0;">Unit Kerja</label>
-                                    <select class="form-control select2" id="filterUnitKerja" autocomplete="off">
-                                        <option value="all">Semua</option>
-                                        <option value="8000">Inspektorat Utama</option>
-                                        <option value="8010">Bagian Umum Inspektorat Utama</option>
-                                        <option value="8100">Inspektorat Wilayah I</option>
-                                        <option value="8200">Inspektorat Wilayah II</option>
-                                        <option value="8300">Inspektorat Wilayah III</option>
-                                    </select>
+                            <form action="" name="filterForm" id="filterForm">
+                                <div class="d-flex mb-2 row" style="gap:10px">
+                                    <div class="form-group col pr-0" style="margin-bottom: 0;">
+                                        <label for="filterUnitKerja" style="margin-bottom: 0;">Unit Kerja</label>
+                                        <select class="form-control select2" id="filterUnitKerja" autocomplete="off">
+                                            <option value="all">Semua</option>
+                                            <option value="8000">Inspektorat Utama</option>
+                                            <option value="8010">Bagian Umum Inspektorat Utama</option>
+                                            <option value="8100">Inspektorat Wilayah I</option>
+                                            <option value="8200">Inspektorat Wilayah II</option>
+                                            <option value="8300">Inspektorat Wilayah III</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                        <label for="filterKat" style="margin-bottom: 0;">Kategori Kompetensi</label>
+                                        <select class="form-control select2" id="filterKat" name="filterKat">
+                                            <option value="all">Semua</option>
+                                            @foreach ($kategori as $k)
+                                                <option value="{{ $k->id }}">{{ $k->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-group col pl-0" style="margin-bottom: 0;">
-                                    <label for="filterTahun" style="margin-bottom: 0;">Jenis Kompetensi</label>
-                                    <select class="form-control select2" id="filterJenis" name="filterJenis">
-                                        <option value="all">Semua</option>
-                                        <option value="1">Sertifikasi</option>
-                                        <option value="2">Diklat Penjenjangan</option>
-                                        <option value="3">Diklat Subtantif</option>
-                                        <option value="4">Pelatihan</option>
-                                        <option value="5">Workshop</option>
-                                        <option value="6">Seminar</option>
-                                        <option value="7">Pelatihan di Kantor Sendiri</option>
-                                        <option value="999">Lainnya</option>
-                                    </select>
-                                </div>
-                            </div>
+                            </form>
                             <div class="d-flex">
                                 <div class="buttons ml-auto my-2">
                                     <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
@@ -105,15 +102,24 @@
                                         <tr>
                                             {{-- <th>No.</th> --}}
                                             <th>Pegawai</th>
-                                            <th>Jenis Pengembangan Kompetensi</th>
-                                            <th>Pengembangan Kompetensi</th>
+                                            <th>Kategori</th>
+                                            <th>Jenis</th>
+                                            <th>Teknis</th>
+                                            <th>Nama Pelatihan</th>
                                             <th>Sertifikat</th>
                                             {{-- <th>Catatan</th> --}}
                                             <th>Status</th>
                                             <th>Aksi</th>
-                                            <th class="never">sertifikat_link</th>
-                                            <th class="never">unit kerja</th>
-                                            <th class="never">kode jenis</th>
+                                            <th class="d-none">sertifikat_link</th>
+                                            <th class="d-none">unit kerja</th>
+                                            <th class="d-none">kode kategori</th>
+                                            <th class="d-none">tanggal mulai</th>
+                                            <th class="d-none">tanggal selesai</th>
+                                            <th class="d-none">durasi (jam)</th>
+                                            <th class="d-none">tanggal sertifikat</th>
+                                            <th class="d-none">penyelenggara</th>
+                                            <th class="d-none">jumlah peserta</th>
+                                            <th class="d-none">ranking</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -124,14 +130,10 @@
                                             <tr>
                                                 {{-- <td>{{ ++$i }}</td> --}}
                                                 <td>{{ $k->pegawai->name }}</td>
-
-                                                @if ($k->pp->id == 999) <td>{{ $k->pp_lain }}</td>
-                                                @else <td>{{ $k->pp->jenis }}</td>
-                                                @endif
-
-                                                @if ($k->namaPp->id == 999) <td>{{ $k->nama_pp_lain }}</td>
-                                                @else <td>{{ $k->namaPp->nama }}</td>
-                                                @endif
+                                                <td>{{ $k->teknis->jenis->kategori->nama }}</td>
+                                                <td>{{ $k->teknis->jenis->nama }}</td>
+                                                <td>{{ $k->teknis->nama }}</td>
+                                                <td>{{ $k->nama_pelatihan }}</td>
                                                 
                                                 <td>
                                                     <a class="btn btn-sm btn-primary"
@@ -149,6 +151,7 @@
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
                                                     </td>
                                                 @endif
+
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
@@ -188,9 +191,16 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
-                                                <td>{{ $k->pegawai->unit_kerja }}</td>
-                                                <td>{{ $k->pp->id }}</td>
+                                                <td class="d-none">{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
+                                                <td class="d-none">{{ $k->pegawai->unit_kerja }}</td>
+                                                <td class="d-none">{{ $k->teknis->jenis->kategori->id }}</td>
+                                                <td class="d-none">{{ $k->tgl_mulai }}</td>
+                                                <td class="d-none">{{ $k->tgl_selesai }}</td>
+                                                <td class="d-none">{{ $k->durasi }}</td>
+                                                <td class="d-none">{{ $k->tgl_sertifikat }}</td>
+                                                <td class="d-none">{{ $k->penyelenggaraDiklat->penyelenggara }}</td>
+                                                <td class="d-none">{{ $k->jumlah_peserta }}</td>
+                                                <td class="d-none">{{ $k->ranking }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
