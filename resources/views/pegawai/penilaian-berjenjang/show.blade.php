@@ -62,12 +62,14 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="mt-5">
+                            <div class="mt-5" style="margin-top: 6rem">
                                 <table id="table-nilai"
-                                    class="table table-bordered table-striped display responsive">
+                                    class="table table-bordered display responsive" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
                                             <th>Tugas</th>
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Peran</th>
                                             <th>Rencana Jam Kerja</th>
                                             <th>Realisasi Jam Kerja</th>
@@ -76,12 +78,14 @@
                                             <th>Nilai</th>
                                             <th>Catatan Penilai</th>
                                             <th>Aksi</th>
-                                            <th class="never">Link Bukti Dukung</th>
+                                            <th class="d-none">Link Bukti Dukung</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php 
                                             $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des']; 
+                                            $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
+                                                        'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                                         @endphp
                                         @foreach ($realisasiDinilai as $realisasi)
                                             @php 
@@ -90,11 +94,13 @@
                                                     $rencana_jam += $realisasi->pelaksana[$bulan];
                                                 }
                                             @endphp
-                                            <tr>
+                                            <tr style="border: 1px solid #dee2e6;">
                                                 <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
+                                                <td>{{ $realisasi->laporanObjekPengawasan->objekPengawasan->nama }}</td>
+                                                <td>{{ $months[$realisasi->laporanObjekPengawasan->month - 1] }}</td>
                                                 <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                 <td>{{ $rencana_jam }}</td>
-                                                <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
+                                                <td>{{ $jamRealisasi[$realisasi->id_laporan_objek] }}</td>
                                                 <td>
                                                     <a class="btn btn-primary btn-sm"
                                                     href="{{ $realisasi->hasil_kerja }}" target="_blank">
@@ -133,13 +139,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
-                                                        {{ url('/').'/document/realisasi/'.$realisasi->hasil_kerja }}
-                                                    @else
-                                                        {{ $realisasi->hasil_kerja }}
-                                                    @endif
-                                                </td>
+                                                <td class="d-none">{{ $realisasi->hasil_kerja }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -172,6 +172,7 @@
     <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="{{ asset('library') }}/fullcalendar-6.1.10/dist/index.global.min.js"></script>
     <script src="{{ asset('library') }}/moment/min/moment-with-locales.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
 
     <!-- Page Specific JS File -->
     <script>

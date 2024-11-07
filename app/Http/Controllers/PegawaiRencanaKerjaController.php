@@ -99,7 +99,7 @@ class PegawaiRencanaKerjaController extends Controller
         's004'      => 'PAKET'
     ];
 
-    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJ Kegiatan'];
 
     /**
      * Display a listing of the resource.

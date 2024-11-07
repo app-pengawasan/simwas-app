@@ -112,11 +112,7 @@
                                                     <td></td>
                                                 @endif
 
-                                                @if ($r->status == 1) 
-                                                    <td>{{ $r->catatan }}</td>
-                                                @else 
-                                                    <td>{{ $r->alasan }}</td>
-                                                @endif
+                                                <td>{{ $r->catatan }}</td>
 
                                                 <td>
                                                     <div class="btn-group dropdown">

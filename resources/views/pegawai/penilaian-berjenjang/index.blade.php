@@ -27,7 +27,7 @@
                             <div class="d-flex mb-2 row" style="gap:10px">
                                 <div class="form-group col pr-0" style="margin-bottom: 0;">
                                     <label for="filterUnitKerja" style="margin-bottom: 0;">Unit Kerja</label>
-                                    <select class="form-control" id="filterUnitKerja" autocomplete="off">
+                                    <select class="form-control select2" id="filterUnitKerja" autocomplete="off">
                                         <option value="all">Semua</option>
                                         <option value="8000">Inspektorat Utama</option>
                                         <option value="8010">Bagian Umum Inspektorat Utama</option>
@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-group col pl-0 pr-0" style="margin-bottom: 0;">
                                     <label for="filterBulan" style="margin-bottom: 0;">Bulan Unggah</label>
-                                    <select class="form-control" id="filterBulan">
+                                    <select class="form-control select2" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
                                         <option value="02">Februari</option>
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="form-group col pl-0" style="margin-bottom: 0;">
                                     <label for="filterTahun" style="margin-bottom: 0;">Tahun Unggah</label>
-                                    <select class="form-control" id="filterTahun">
+                                    <select class="form-control select2" id="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
                                             <option value="{{ $year + $i }}">{{ $year + $i }}</option>
@@ -71,8 +71,8 @@
                                         <tr>
                                             <th>Nama</th>
                                             <th>Unit Kerja</th>
-                                            <th>Jumlah Tugas</th>
-                                            <th>Rencana Jam Kerja</th>
+                                            <th>Jumlah Realisasi</th>
+                                            {{-- <th>Rencana Jam Kerja</th> --}}
                                             <th>Realisasi Jam Kerja</th>
                                             <th>Rata-Rata Hasil Penilaian</th>
                                             <th>Aksi</th>
@@ -89,13 +89,12 @@
                                                         <td>{{ $values['nama'] }}</td>
                                                         <td>{{ $unitkerja[$values['unit_kerja']] }}</td>
                                                         <td>{{ $jumlah_tugas }}</td>
-                                                        <td>{{ $values['rencana_jam'][$bulan] }}</td>
+                                                        {{-- <td>{{ $values['rencana_jam'][$bulan] }}</td> --}}
                                                         <td>{{ $values['realisasi_jam'][$bulan] }}</td>
-                                                        <td>{{ $values['avg'][$bulan] }}</td>
+                                                        <td>{{ round($values['avg'][$bulan], 2) }}</td>
                                                         <td>
-                                                            <a class="btn btn-primary"
-                                                                href="/pegawai/nilai-berjenjang/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}"
-                                                                style="width: 42px">
+                                                            <a class="btn btn-primary btn-sm"
+                                                                href="/pegawai/nilai-berjenjang/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                         </td>

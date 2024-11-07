@@ -62,8 +62,8 @@ $.fn.dataTableExt.afnFiltering.push(
         var selectedBulan = $('select#filterBulan option:selected').val();
         var selectedUnit = $('select#filterUnitKerja option:selected').val();
         var selectedTahun = $('select#filterTahun option:selected').val();
-        if (data[7] == selectedBulan && data[9] == selectedTahun &&
-            (data[8] == selectedUnit || selectedUnit == 'all')) return true;
+        if (data[6] == selectedBulan && data[8] == selectedTahun &&
+            (data[7] == selectedUnit || selectedUnit == 'all')) return true;
         else return false;
     }
 );
@@ -73,16 +73,17 @@ table.draw();
 $("#table-nilai")
     .dataTable({
         dom: "Bfrtip",
-        responsive: true,
-        lengthChange: false,
+        responsive: false,
+        lengthChange: true,
         autoWidth: false,
+        rowsGroup: [0, 4, 3, 1],
         buttons: [
             {
                 extend: "excel",
                 className: "btn-success unduh",
                 text: '<i class="fas fa-file-excel"></i> Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 9, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 11, 7, 8, 9],
                 },
                 messageTop: function () {
                     return $('.section-header').text();
@@ -93,7 +94,7 @@ $("#table-nilai")
                 className: "btn-danger unduh",
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 9, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5, 11, 7, 8, 9],
                 },
                 messageTop: function () {
                     return $('.section-header').text();
@@ -106,6 +107,7 @@ $("#table-nilai")
         ],
     });
 
+$('#table-nilai').wrapAll('<div style="overflow: scroll"></div>');
 $('#table-nilai_wrapper .dt-buttons').removeClass('btn-group').addClass('mb-4');
 $('.unduh').wrapAll('<div class="btn-group"></div>');
 $('.kalender-btn').wrapAll('<div style="float: right"></div>');
@@ -266,7 +268,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             eventTimeFormat: {
                 hour: '2-digit',
                 minute: '2-digit'
-            }
+            },
         },
         list: {
             eventTimeFormat: {
@@ -278,6 +280,19 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                 // alert(JSON)
                 info.el.querySelector('.fc-list-event-title a').innerHTML
                     += ` <br><table class="table-borderless"><tbody>
+                        <tr><td class="pl-0 pb-0"><strong>Objek Pengawasan: </strong></td>
+                            <td class="pl-0 pb-0" style="white-space: pre-line;">${
+                                info.event.extendedProps.laporan_o_pengawasan.objek_pengawasan.nama
+                            }
+                            </td>
+                        </tr>
+                        <tr><td class="pl-0 pb-0"><strong>Bulan Pelaporan: </strong></td>
+                            <td class="pl-0 pb-0" style="white-space: pre-line;">${
+                                Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
+                                    info.event.extendedProps.laporan_o_pengawasan.month.toString()
+                                ))}
+                            </td>
+                        </tr>
                         <tr><td class="pl-0"><strong>Aktivitas: </strong></td>
                             <td class="pl-0" style="white-space: pre-line;">${info.event.extendedProps.aktivitas}</td>
                         </tr></tbody></table>`;
@@ -291,14 +306,18 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         let enddate = moment(info.event.end);
         $(info.el).popover({
             sanitize: false,
-            title: '<i role="button" class="fas fa-edit edit-btn" data-toggle="modal" data-target="#modal-edit-aktivitas" data-id="' + info.event.id + '"></i>' +
-                '<i role="button" class="fas fa-trash delete-btn" data-id="' + info.event.id + '"></i> <button id="close" class="close ml-3">&times;</button>',
+            title: '<button id="close" class="close ml-3">&times;</button>',
             trigger: 'click',
             placement: 'right',
             html: true,
             content: '<h3>' + info.event.title + '</h3>' +
+                     '<h4>Objek Pengawasan: ' + 
+                                info.event.extendedProps.laporan_o_pengawasan.objek_pengawasan.nama + '</h4>' +
+                     '<h4>Bulan Pelaporan: ' + Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
+                                info.event.extendedProps.laporan_o_pengawasan.month.toString()
+                            )) + '</h4>' +
                     startdate.format('dddd, D MMMM YYYY • HH:mm - ') + enddate.format('HH:mm')
-                    + '<br><br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
+                    + '<br><strong>Aktivitas:</strong><br>' + info.event.extendedProps.aktivitas
         });
     },
     handleWindowResize: true

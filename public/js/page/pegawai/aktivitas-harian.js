@@ -65,6 +65,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             eventDidMount: function(info) {
                 info.el.querySelector('.fc-list-event-title a').innerHTML
                     += ` <br><table class="table-borderless"><tbody>
+                        <tr><td class="pl-0 pb-0"><strong>Objek Pengawasan: </strong></td>
+                            <td class="pl-0 pb-0" style="white-space: pre-line;">${
+                                info.event.extendedProps.laporan_o_pengawasan.objek_pengawasan.nama
+                            }
+                            </td>
+                        </tr>
                         <tr><td class="pl-0 pb-0"><strong>Bulan Pelaporan: </strong></td>
                             <td class="pl-0 pb-0" style="white-space: pre-line;">${
                                 Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
@@ -98,6 +104,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             placement: 'right',
             html: true,
             content: '<h3>' + info.event.title + '</h3>' +
+                     '<h4>Objek Pengawasan: ' + 
+                                info.event.extendedProps.laporan_o_pengawasan.objek_pengawasan.nama + '</h4>' +
                      '<h4>Bulan Pelaporan: ' + Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
                                 info.event.extendedProps.laporan_o_pengawasan.month.toString()
                             )) + '</h4>' +
@@ -204,12 +212,51 @@ $("#modal-create-aktivitas .close, #modal-create-aktivitas .btn-danger") .on("cl
     document.forms['myform'].reset();
 });
 
+$("#objek").prop("disabled", true);
 $("#laporan_opengawasan").prop("disabled", true);
 
 $("#tugas").on("change", function () {
     let id_rencanakerja = $(this).val();
     $.ajax({
-        url: `/pegawai/aktivitas-harian/search-bulan/${id_rencanakerja}`,
+        url: `/pegawai/aktivitas-harian/search-objek/${id_rencanakerja}`,
+        type: "GET",
+        success: function (data) {
+            // if data not 0
+            if (data.data.length > 0) {
+                $("#laporan_opengawasan").empty();
+                $("#laporan_opengawasan").append(
+                    '<option value="" disabled selected>Pilih Bulan Pelaporan</option>'
+                );
+                $("#laporan_opengawasan").prop("disabled", true);
+                $("#objek").prop("disabled", false);
+                // fill option with data.data
+                $("#objek").empty();
+                $("#objek").append(
+                    '<option value="" disabled selected>Pilih Objek Pengawasan</option>'
+                );
+                $.each(data.data, function (key, value) {
+                    $("#objek").append(
+                        '<option value="' +
+                            value.id_opengawasan +
+                            '">' +
+                            value.nama +
+                            "</option>"
+                    );
+                });
+            } else {
+                $("#objek").prop("disabled", true);
+                $("#laporan_opengawasan").prop("disabled", true);
+            }
+        },
+        error: function (data) {
+        },
+    });
+});
+
+$("#objek").on("change", function () {
+    let id_objek = $(this).val();
+    $.ajax({
+        url: `/pegawai/aktivitas-harian/search-bulan/${id_objek}`,
         type: "GET",
         success: function (data) {
             // if data not 0
@@ -297,6 +344,14 @@ $(document).on("click", ".popover .edit-btn" , function(e){
         success: function (response) {
             document.forms['myeditform'].reset();
             $("#edit-tugas").val(response.id_rencanakerja);
+            $("#edit-objek").append(
+                '<option value="' +
+                    response.data[0].laporan_o_pengawasan.id_objek_pengawasan +
+                    '">' +
+                    response.data[0].laporan_o_pengawasan.objek_pengawasan.nama +
+                    "</option>"
+            );
+            $("#edit-objek").val(response.data[0].laporan_o_pengawasan.id_objek_pengawasan);
             $("#edit-laporan_opengawasan").append(
                 '<option value="' +
                     response.data[0].laporan_opengawasan +

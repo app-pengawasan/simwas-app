@@ -65,8 +65,8 @@
                                     <thead>
                                         <tr>
                                             <th>Nama</th>
-                                            <th>Jumlah Tugas</th>
-                                            <th>Rencana Jam Kerja</th>
+                                            <th>Jumlah Realisasi</th>
+                                            {{-- <th>Rencana Jam Kerja</th> --}}
                                             <th>Realisasi Jam Kerja</th>
                                             <th>Rata-Rata Hasil Penilaian Berjenjang</th>
                                             <th>Hasil Penilaian</th>
@@ -83,20 +83,20 @@
                                                     <tr>
                                                         <td>{{ $values['nama'] }}</td>
                                                         <td>{{ $jumlah_tugas }}</td>
-                                                        <td>{{ $values['rencana_jam'][$bulan] }}</td>
-                                                        <td>{{ isset($values['realisasi_jam'][$bulan]) ?? '-' }}</td>
-                                                        <td>{{ isset($values['avg'][$bulan]) ? $values['avg'][$bulan] : '-' }}</td> 
+                                                        {{-- <td>{{ $values['rencana_jam'][$bulan] }}</td> --}}
+                                                        <td>{{ isset($values['realisasi_jam'][$bulan]) ? $values['realisasi_jam'][$bulan] : '-' }}</td>
+                                                        <td>{{ isset($values['avg'][$bulan]) ? round($values['avg'][$bulan], 2) : '-' }}</td> 
                                                         <td>{{ isset($values['nilai_ins'][$bulan]) ? round($values['nilai_ins'][$bulan], 2) : '-' }}</td>
                                                         <td>{{ $bulan == 'all' ? '' : (isset($values['catatan']) ? $values['catatan'][$bulan] ?? '' : '') }}</td>
                                                         <td>
                                                             @if ($bulan == 'all')
-                                                                <a class="btn btn-primary"
+                                                                <a class="btn btn-primary btn-sm"
                                                                 href="/inspektur/penilaian-kinerja/{{ $id_pegawai }}/{{ $bulan }}/{{ $tahun }}">
                                                                     <i class="fas fa-eye"></i>
                                                                 </a>
                                                             @else
                                                                 <div class="btn-group dropdown">
-                                                                    <button type="button" class="btn btn-primary dropdown-toggle no-arrow" 
+                                                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle no-arrow" 
                                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right shadow-lg">

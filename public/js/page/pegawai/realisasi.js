@@ -13,11 +13,16 @@ $("#aktivitas tbody tr").hide();
 // });
 
 $("#tim").on("change", function () {
+    $("#aktivitas tbody tr").hide();
     $("#tugas option").hide(); //hide option" tugas
     $("#tugas").prop("disabled", true); //disable pilihan tugas
     $("#proyek option").hide(); //hide option" proyek
     $('.proyek-dis').show(); //show pilihan "Pilih Proyek"
     $('.proyek-dis').prop("selected", true);
+    $('.bulan-dis').prop("selected", true);
+    $("#bulan").prop("disabled", true); //disable pilihan bulan
+    $('.objek-dis').prop("selected", true);
+    $("#objek").prop("disabled", true); //disable pilihan objek
     $("#kegiatan").val(''); //clear kegiatan
     $("#capaian").val(''); //clear capaian
     $("#proyek").prop("disabled", false); //enable pilihan proyek
@@ -25,11 +30,16 @@ $("#tim").on("change", function () {
 });
 
 $("#proyek").on("change", function () {
+    $("#aktivitas tbody tr").hide();
     $("#tugas option").hide(); //hide option" tugas
     $('.tugas-dis').show(); //show pilihan "Pilih Tugas"
     $('.tugas-dis').prop("selected", true);
     $("#tugas").prop("disabled", false); //enable pilihan tugas
     $(`#tugas option[data-proyek="${$(this).val()}"]`).show(); //show option proyek sesuai tim yang dipilih
+    $('.bulan-dis').prop("selected", true);
+    $("#bulan").prop("disabled", true); //disable pilihan bulan
+    $('.objek-dis').prop("selected", true);
+    $("#objek").prop("disabled", true); //disable pilihan objek
 });
 
 $("#tugas").on("change", function () {
@@ -41,8 +51,7 @@ $("#tugas").on("change", function () {
     $("#iki").val(data.attr('data-iki'));
     $("#kegiatan").val(data.attr('data-kegiatan'));
     $("#capaian").val(data.attr('data-capaian'));
-
-    let jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    let jabatanPelaksana = ['Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJ Kegiatan'];
     $('#peran').text(jabatanPelaksana[$(this).find(":selected").attr('data-peran') - 1]);
 
     $("#objek option").hide(); //hide option" objek
@@ -50,9 +59,13 @@ $("#tugas").on("change", function () {
     $('.objek-dis').prop("selected", true);
     $("#objek").prop("disabled", false); //enable pilihan objek
     $(`#objek option[data-rencana="${$(this).find(":selected").attr('data-rencana')}"]`).show(); //show option objek sesuai tugas yang dipilih
+
+    $('.bulan-dis').prop("selected", true);
+    $("#bulan").prop("disabled", true); //disable pilihan bulan
 });
 
 $("#objek").on("change", function () {
+    $("#aktivitas tbody tr").hide();
     $("#bulan option").hide(); //hide option" bulan
     $('.bulan-dis').show(); //show pilihan "Pilih Bulan"
     $('.bulan-dis').prop("selected", true);
@@ -61,6 +74,7 @@ $("#objek").on("change", function () {
 });
 
 $("#bulan").on("change", function () {
+    $("#aktivitas tbody tr").hide();
     $(`#aktivitas tr[data-bulan="${$(this).val()}"]`).show();
 
     let i = 0;

@@ -314,7 +314,8 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Aktivitas Harian
         Route::resource('aktivitas-harian', AktivitasHarianController::class);
-        Route::get('aktivitas-harian/search-bulan/{id_rencanakerja}', [AktivitasHarianController::class, 'getBulanPelaporan']);
+        Route::get('aktivitas-harian/search-objek/{id_rencanakerja}', [AktivitasHarianController::class, 'getObjek']);
+        Route::get('aktivitas-harian/search-bulan/{id_objek}', [AktivitasHarianController::class, 'getBulanPelaporan']);
         Route::get('aktivitas-harian/export/{bulan}/{tahun}', [AktivitasHarianController::class, 'export']);
 
         //Isi Realisasi

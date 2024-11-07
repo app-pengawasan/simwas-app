@@ -71,7 +71,7 @@
                                             <th>Nilai</th>
                                             <th>Penilai</th>
                                             <th>Catatan Penilai</th>
-                                            <th>Aksi</th>
+                                            <th>Detail</th>
                                             <th class="never">Link Bukti Dukung</th>
                                         </tr>
                                     </thead>
@@ -90,38 +90,24 @@
                                                 <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                                 <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                 <td>{{ $rencana_jam }}</td>
-                                                <td>{{ $jamRealisasi[$realisasi->id_pelaksana] }}</td>
+                                                <td>{{ $jamRealisasi[$realisasi->id_laporan_objek] }}</td>
                                                 <td>
-                                                    @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
-                                                        <a class="btn btn-primary"
-                                                        href="{{ asset('document/realisasi/'.$realisasi->hasil_kerja) }}" target="_blank">
-                                                            <i class="fa fa-download"></i>
-                                                        </a>
-                                                    @else
-                                                        <a class="btn btn-primary"
+                                                    <a class="btn btn-primary btn-sm"
                                                         href="{{ $realisasi->hasil_kerja }}" target="_blank">
-                                                            <i class="fa fa-download"></i>
-                                                        </a>
-                                                    @endif    
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>   
                                                 </td>
                                                 <td>{{ $realisasi->catatan }}</td>
                                                 <td>{{ $realisasi->nilai }}</td>
                                                 <td>{{ $realisasi->getPenilai->name ?? '' }}</td>
                                                 <td>{{ $realisasi->catatan_penilai }}</td>
                                                 <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/inspektur/penilaian-kinerja/detail/{{ $realisasi->id }}"
-                                                        style="width: 42px">
+                                                    <a class="btn btn-primary btn-sm"
+                                                        href="/inspektur/penilaian-kinerja/detail/{{ $realisasi->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
-                                                <td>
-                                                    @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
-                                                        {{ url('/').'/document/realisasi/'.$realisasi->hasil_kerja }}
-                                                    @else
-                                                        {{ $realisasi->hasil_kerja }}
-                                                    @endif
-                                                </td>
+                                                <td>{{ $realisasi->hasil_kerja }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

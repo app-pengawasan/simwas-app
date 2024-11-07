@@ -20,9 +20,14 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="edit-objek">Objek Pengawasan</label>
+                        <select class="form-control" name="edit-objek" id="edit-objek" required disabled>
+                        </select>
+                        <small id="error-objek" class="text-danger"></small>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="edit-laporan_opengawasan">Bulan Pelaporan</label>
                         <select class="form-control" name="edit-laporan_opengawasan" id="edit-laporan_opengawasan" required disabled>
-
                         </select>
                     </div>
                     <div class="form-group">

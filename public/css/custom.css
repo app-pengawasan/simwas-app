@@ -144,6 +144,10 @@
     cursor: pointer;
 }
 
+.fc-list-table .fc-event {
+    cursor: default;
+}
+
 .popover {
     z-index: 2000 !important;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;

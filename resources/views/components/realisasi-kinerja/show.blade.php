@@ -59,6 +59,18 @@
                                     <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                 </tr>
                                 <tr>
+                                    <th>Objek Pengawasan</th>
+                                    <td>{{ $realisasi->laporanObjekPengawasan->objekPengawasan->nama }}</td>
+                                </tr>
+                                @php
+                                    $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 
+                                                'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                                @endphp
+                                <tr>
+                                    <th>Bulan Pelaporan</th>
+                                    <td>{{ $months[$realisasi->laporanObjekPengawasan->month - 1] }}</td>
+                                </tr>
+                                <tr>
                                     <th>Peran</th>
                                     <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                 </tr>
@@ -70,23 +82,12 @@
                                 </tr>
                                 <tr>
                                     <th>Aktivitas</th>
-                                    {{-- @foreach ($events as $event)
-                                        @php
-                                            $start = $event->start;
-                                            $end = $event->end;
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $start }} - {{ $end }}</td>
-                                            <td>{{ $event->aktivitas }} </td>
-                                            <td class="jam d-none">{{ (strtotime($end) - strtotime($start)) / 60 / 60 }}</td>
-                                        </tr>
-                                    @endforeach --}}
                                     <td>    
                                         <table id="aktivitas" class="table table-striped responsive mt-3">
                                             <thead>
                                                 <tr class="text-center">
-                                                    <th style="width: 20%">Tanggal</th>
-                                                    <th style="width: 30%">Waktu</th>
+                                                    <th style="width: 25%">Tanggal</th>
+                                                    <th style="width: 25%">Waktu</th>
                                                     <th>Aktivitas</th>
                                                     <td class="d-none">jam</td>
                                                 </tr>
@@ -116,15 +117,23 @@
                                     <th>Status</th>
                                     <td><span class="badge badge-{{ $colorText[$realisasi->status] }}">{{ $status[$realisasi->status] }}</span></td>
                                 </tr>
+                                <tr>
+                                    <th>Rencana Kerja</th>
+                                    <td>{{ $realisasi->rencana_kerja }}</td>
+                                </tr>
+                                <tr>
+                                    <th>IKI</th>
+                                    <td>{{ $realisasi->iki }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Kegiatan</th>
+                                    <td>{{ $realisasi->kegiatan }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Capaian</th>
+                                    <td>{{ $realisasi->capaian }}</td>
+                                </tr>
                                 @if ($realisasi->status == 1)
-                                    <tr>
-                                        <th>Kegiatan</th>
-                                        <td>{{ $realisasi->kegiatan }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Capaian</th>
-                                        <td>{{ $realisasi->capaian }}</td>
-                                    </tr>
                                     <tr>
                                         <th>Bukti Dukung</th>
                                         <td>

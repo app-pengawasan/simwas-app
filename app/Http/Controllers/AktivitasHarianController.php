@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\LaporanObjekPengawasan;
+use App\Models\ObjekPengawasan;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
@@ -30,7 +31,7 @@ class AktivitasHarianController extends Controller
 
         $events = Event::whereRelation('laporanOPengawasan.objekPengawasan', function (Builder $query) use ($tugasSaya) {
                         $query->whereIn('id_rencanakerja', $tugasSaya->pluck('id_rencanakerja'));
-                  })->get();
+                  })->where('id_pegawai', auth()->user()->id)->get();
 
         foreach ($events as $event) {
             $realisasi = RealisasiKinerja::where('id_laporan_objek', $event->laporan_opengawasan)
@@ -285,14 +286,13 @@ class AktivitasHarianController extends Controller
         $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
                   'Oktober', 'November', 'Desember'];
         $events = Event::whereMonth('start', $bulan)->whereYear('start', $tahun)
-                    ->whereRelation('user', function (Builder $query){
-                        $query->where('id_pegawai', auth()->user()->id);
-                    })->orderBy('start')->get();
+                    ->where('id_pegawai', auth()->user()->id)
+                    ->orderBy('start')->get();
         
         $mySpreadsheet = new Spreadsheet();
         $sheet = $mySpreadsheet->getSheet(0);
         $sheet1Data = [
-            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", 'Bulan Pelaporan', "Aktivitas"]
+            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", 'Objek Pengawasan', 'Bulan Pelaporan', "Aktivitas"]
         ];
 
         foreach ($events as $key => $event) {
@@ -305,6 +305,7 @@ class AktivitasHarianController extends Controller
                                         date_format($start, 'd-m-Y'), 
                                         date_format($start, 'H:i').' - '.date_format($end, 'H:i'),
                                         $event->laporanOPengawasan->objekPengawasan->rencanakerja->tugas,
+                                        $event->laporanOPengawasan->objekPengawasan->nama,
                                         $months[$event->laporanOPengawasan->month - 1],
                                         preg_replace("/\r|\n/", "; ", $event->aktivitas)
                                     ]
@@ -327,11 +328,20 @@ class AktivitasHarianController extends Controller
         die;
     }
 
-    public function getBulanPelaporan($id_rencanakerja)
+    public function getObjek($id_rencanakerja)
     {
-        $data = LaporanObjekPengawasan::whereRelation('objekPengawasan', function (Builder $query) use ($id_rencanakerja) {
-                    $query->where('id_rencanakerja', $id_rencanakerja);
-                })->where('status', 1)->get();
+        $data = ObjekPengawasan::where('id_rencanakerja', $id_rencanakerja)->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data
+        ]);
+    }
+
+    public function getBulanPelaporan($id_objek)
+    {
+        $data = LaporanObjekPengawasan::where('id_objek_pengawasan', $id_objek)
+                ->where('status', 1)->get();
 
         return response()->json([
             'success' => true,

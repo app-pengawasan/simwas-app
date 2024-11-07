@@ -22,6 +22,13 @@
                         <small id="error-id_pelaksana" class="text-danger"></small>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="objek">Objek Pengawasan</label>
+                        <select class="form-control select2" name="objek" id="objek" required disabled>
+                            <option value="" selected disabled>Pilih Objek Pengawasan</option>
+                        </select>
+                        <small id="error-objek" class="text-danger"></small>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="laporan_opengawasan">Bulan Pelaporan</label>
                         <select class="form-control select2" name="laporan_opengawasan" id="laporan_opengawasan" required disabled>
                             <option value="" selected disabled>Pilih Bulan Pelaporan</option>

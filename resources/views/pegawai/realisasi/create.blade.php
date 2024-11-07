@@ -112,7 +112,7 @@
                                             <select class="form-control" name="bulan" id="bulan" required>
                                                 {{-- <option value="" selected disabled class="disabled tugas-dis">Pilih Tugas</option> --}}
                                                 <option value="" selected disabled class="disabled bulan-dis">Pilih Bulan Pelaporan</option>
-                                                @foreach ($bulanPengawasan as $bulan)
+                                                @foreach ($bulanPengawasan as $bulan) 
                                                     <option value="{{ $bulan->id }}" data-objek="{{ $bulan->id_objek_pengawasan }}">
                                                         {{ $months[$bulan->month - 1] }}
                                                     </option>

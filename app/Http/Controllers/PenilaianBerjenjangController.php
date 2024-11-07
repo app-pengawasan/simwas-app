@@ -66,6 +66,13 @@ class PenilaianBerjenjangController extends Controller
     {
         $id_pegawai = auth()->user()->id;
 
+        $events = Event::all();
+        foreach ($events as $event) {
+            $event->id_pelaksana = PelaksanaTugas::where('id_pegawai', $event->id_pegawai)
+                                    ->where('id_rencanakerja', $event->laporanOPengawasan->objekPengawasan->id_rencanakerja)
+                                    ->get()->first()->id_pelaksana;
+        }
+
         //tugas penilai
         $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
             ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
@@ -90,27 +97,27 @@ class PenilaianBerjenjangController extends Controller
 
         //realisasi untuk dinilai
         $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->where('status', 1)->get();
-        $realisasiWithEvents = RealisasiKinerja::whereIn('events.id_pelaksana', $tugasDinilai)->where('status', 1)
-                                ->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                                ->get();
+        foreach ($realisasiDinilai as $realisasi) { 
+            $realisasi->events = $events->where('id_pegawai', $realisasi->pelaksana->id_pegawai)
+                                        ->where('laporan_opengawasan', $realisasi->id_laporan_objek);
+        } 
 
-        //realisasi berstatus selesai group by bulan dan tahun realisasi, diambil id_pelaksana nya
-        $pelaksanaDinilai = $realisasiDinilai->groupBy([function ($items){
-            return date("Y",strtotime($items->updated_at));
-        }, function ($items){
-            return date("m",strtotime($items->updated_at));
-        }])->map->map->map->map->map->map->map->id_pelaksana->toArray();
+        //realisasi berstatus selesai group by bulan dan tahun realisasi
+        $realisasiDinilaiGroup = $realisasiDinilai->groupBy([function ($items){
+                                    return date("Y",strtotime($items->created_at));
+                                }, function ($items){
+                                    return date("m",strtotime($items->created_at));
+                                }]); 
 
-        $realisasiCount = [];
+        $realisasiCount = []; 
 
-        foreach ($pelaksanaDinilai as $tahun => $bulanitems) {
+        foreach ($realisasiDinilaiGroup as $tahun => $bulanitems) {
             foreach ($bulanitems as $bulan => $items) {
-                foreach ($items as $id_pelaksana) {
-                    $realisasi = $realisasiWithEvents->where('id_pelaksana', $id_pelaksana);
-                    foreach ($realisasi as $item) {
-                        $id_pegawai = $item->pelaksana->id_pegawai;
-                        $start = $item->start;
-                        $end = $item->end;
+                foreach ($items as $realisasi) { 
+                    $id_pegawai = $realisasi->pelaksana->id_pegawai;
+                    foreach ($realisasi['events'] as $event) {
+                        $start = $event['start'];
+                        $end = $event['end'];
                         $realisasi_jam = (strtotime($end) - strtotime($start)) / 60 / 60;
                         //jam realisasi pegawai per bulan
                         isset($realisasiCount[$id_pegawai][$tahun]['realisasi_jam'][$bulan]) ?
@@ -123,12 +130,12 @@ class PenilaianBerjenjangController extends Controller
                     }
                 }
             }
-        }
+        }  
 
         $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
         $tugasCount = $realisasiDinilai
                         ->groupBy(['pelaksana.id_pegawai', function ($items){
-                            return date("Y",strtotime($items->updated_at));
+                            return date("Y",strtotime($items->created_at));
                         }])
                         ->map->map(function ($items) use ($bulans) {
                             $rencana_jam = 0;
@@ -139,23 +146,23 @@ class PenilaianBerjenjangController extends Controller
                                 'nama' => $items[0]->pelaksana->user->name,
                                 'unit_kerja' => $items[0]->pelaksana->user->unit_kerja,
                                 'count' => $items->countBy(function ($realisasi) {
-                                                            return date("m",strtotime($realisasi->updated_at));
+                                                            return date("m",strtotime($realisasi->created_at));
                                                         })->toArray(), //jumlah tugas per bulan
                                 'count_all' => $items->count(),
                                 'avg' => $items->groupBy(function ($item) { //rata rata nilai per bulan
-                                                            return date("m",strtotime($item->updated_at));
+                                                            return date("m",strtotime($item->created_at));
                                                         })->map->avg->map->nilai->toArray(),
                                 'avg_all' => $items->avg->nilai,
-                                'rencana_jam' => $items->groupBy(function ($item) {
-                                                                return date("m",strtotime($item->updated_at));
-                                                            })->map(function ($item) use ($bulans) {
-                                                                    $rencana_jam = 0;
-                                                                    foreach ($bulans as $bulan) {
-                                                                        $rencana_jam += $item->sum('pelaksana.'.$bulan);
-                                                                }
-                                                                return $rencana_jam;
-                                                            })->toArray(), //rencana jam kerja per bulan
-                                'rencana_jam_all' => $rencana_jam,
+                                // 'rencana_jam' => $items->groupBy(function ($item) {
+                                //                                 return date("m",strtotime($item->updated_at));
+                                //                             })->map(function ($item) use ($bulans) {
+                                //                                     $rencana_jam = 0;
+                                //                                     foreach ($bulans as $bulan) {
+                                //                                         $rencana_jam += $item->sum('pelaksana.'.$bulan);
+                                //                                 }
+                                //                                 return $rencana_jam;
+                                //                             })->toArray(), //rencana jam kerja per bulan
+                                // 'rencana_jam_all' => $rencana_jam,
                             ];
                         })->toArray();
 
@@ -165,7 +172,7 @@ class PenilaianBerjenjangController extends Controller
                 foreach ($count as $tahun => $values) {
                     $count[$tahun]['count']['all'] = $count[$tahun]['count_all'];
                     $count[$tahun]['avg']['all'] = $count[$tahun]['avg_all'];
-                    $count[$tahun]['rencana_jam']['all'] = $count[$tahun]['rencana_jam_all'];
+                    // $count[$tahun]['rencana_jam']['all'] = $count[$tahun]['rencana_jam_all'];
                 }
             }
         }
@@ -238,20 +245,23 @@ class PenilaianBerjenjangController extends Controller
                             else pelaksana_tugas.pt_jabatan = 4
                         end
                     )'
-                )
-            ->select('id_pelaksana');
+                );
 
         //realisasi untuk dinilai
         if ($bulan == 'all') {
-            $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)
-                               ->where('status', 1)->whereYear('updated_at', $tahun)->get();
+            $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai->select('id_pelaksana'))
+                               ->where('status', 1)->whereYear('created_at', $tahun)->get();
         } else {
-            $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai)->where('status', 1)
-                                ->whereYear('updated_at', $tahun)->whereMonth('updated_at', $bulan)->get();
+            $realisasiDinilai = RealisasiKinerja::whereIn('id_pelaksana', $tugasDinilai->select('id_pelaksana'))
+                                ->where('status', 1)->whereYear('created_at', $tahun)
+                                ->whereMonth('created_at', $bulan)->get();
         }
-        $realisasiDinilaiAll = Event::whereIn('id_pelaksana', $tugasDinilai)->get();
+        $events = Event::where('id_pegawai', $pegawai_dinilai)
+                    ->whereRelation('laporanOPengawasan.objekPengawasan', function (Builder $query) use ($tugasDinilai) {
+                        $query->whereIn('id_rencanakerja', $tugasDinilai->select('pelaksana_tugas.id_rencanakerja'));
+                    })->get(); 
 
-        $jamRealisasi = $realisasiDinilaiAll->groupBy('id_pelaksana')
+        $jamRealisasi = $events->groupBy('laporan_opengawasan')
                             ->map(function ($items) {
                                     $realisasi_jam = 0;
                                     foreach ($items as $realisasi) {
@@ -262,29 +272,20 @@ class PenilaianBerjenjangController extends Controller
                                     return $realisasi_jam;
                             });
 
-        // $events = Event::whereIn('id_pelaksana', $realisasiDinilai->pluck('id_pelaksana'))->get();
-        // $events = Event::get();
-        $events = Event::whereIn('id_pelaksana', $tugasDinilai)->get();
-
         foreach ($events as $event) {
-            $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)->get();
+            $realisasi = RealisasiKinerja::where('id_laporan_objek', $event->laporan_opengawasan)
+                            ->whereRelation('pelaksana', function (Builder $query) use ($pegawai_dinilai) {
+                                $query->where('id_pegawai', $pegawai_dinilai);
+                            })->get();
+
             if ($realisasi->isEmpty()) $event->color = 'orange';
             else {
                 if ($realisasi->contains('status', 1)) $event->color = 'green';
                 elseif ($realisasi->contains('status', 2)) $event->color = 'red';
                 else $event->color = 'black';
             }
-            // $realisasi = RealisasiKinerja::where('id_pelaksana', $event->id_pelaksana)
-            //             ->where('tgl', date_format(date_create($event->start), 'Y-m-d'))
-            //             ->where('start', date_format(date_create($event->start), 'H:i:s'))
-            //             ->where('end', date_format(date_create($event->end), 'H:i:s'))->first();
-            // $event->tim = $event->pelaksana->rencanaKerja->proyek->timkerja->nama;
-            // $event->proyek = $event->pelaksana->rencanaKerja->proyek->nama_proyek;
-            // $event->status = $realisasi->status;
-            $event->title = $event->pelaksana->rencanaKerja->tugas;
-            if ($bulan != 'all')  $event->initialDate = $realisasiDinilai->first()->updated_at;
-            // $event->hasil_kerja = $realisasi->hasil_kerja;
-            // $event->catatan = $realisasi->catatan;
+            $event->title = $event->laporanOPengawasan->objekPengawasan->rencanaKerja->tugas;
+            if ($bulan != 'all')  $event->initialDate = $realisasiDinilai->first()->created_at;
         }
 
         return view('pegawai.penilaian-berjenjang.show', [
@@ -302,7 +303,8 @@ class PenilaianBerjenjangController extends Controller
     public function detail($id)
     {
         $realisasi = RealisasiKinerja::findOrfail($id);
-        $events = Event::where('id_pelaksana', $realisasi->id_pelaksana)->get();
+        $events = Event::where('laporan_opengawasan', $realisasi->id_laporan_objek)
+                        ->where('id_pegawai', $realisasi->pelaksana->id_pegawai)->get();
 
         return view('components.realisasi-kinerja.show', [
             'type_menu'     => 'realisasi-kinerja',
@@ -370,15 +372,15 @@ class PenilaianBerjenjangController extends Controller
     public function export($pegawai, $bulan, $tahun) 
     {
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
+                  'Oktober', 'November', 'Desember'];
         $events = Event::whereMonth('start', $bulan)->whereYear('start', $tahun)
-                    ->whereRelation('pelaksana', function (Builder $query) use ($pegawai) {
-                        $query->where('id_pegawai', $pegawai);
-                    })->orderBy('start')->get();
+                    ->where('id_pegawai', $pegawai)->orderBy('start')->get();
         
         $mySpreadsheet = new Spreadsheet();
         $sheet = $mySpreadsheet->getSheet(0);
         $sheet1Data = [
-            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", "Aktivitas"]
+            ["No.", "Hari", "Tanggal", "Waktu", "Tugas", 'Objek Pengawasan', 'Bulan Pelaporan', "Aktivitas"]
         ];
 
         foreach ($events as $key => $event) {
@@ -390,7 +392,9 @@ class PenilaianBerjenjangController extends Controller
                                         $hari[date_format($start, 'N') - 1],
                                         date_format($start, 'd-m-Y'), 
                                         date_format($start, 'H:i').' - '.date_format($end, 'H:i'),
-                                        $event->pelaksana->rencanakerja->tugas,
+                                        $event->laporanOPengawasan->objekPengawasan->rencanakerja->tugas,
+                                        $event->laporanOPengawasan->objekPengawasan->nama,
+                                        $months[$event->laporanOPengawasan->month - 1],
                                         preg_replace("/\r|\n/", "; ", $event->aktivitas)
                                     ]
             );
