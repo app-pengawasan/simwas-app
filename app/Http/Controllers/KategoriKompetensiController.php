@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisKompetensi;
-use App\Models\KategoriKompetensi;
 use Illuminate\Http\Request;
+use App\Models\JenisKompetensi;
+use App\Models\TeknisKompetensi;
+use App\Models\KategoriKompetensi;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class KategoriKompetensiController extends Controller
 {
@@ -103,7 +106,44 @@ class KategoriKompetensiController extends Controller
     {
         $this->authorize('analis_sdm');
         $kategori->delete();
-        return redirect('/analis-sdm/kategori')
-                ->with('success', 'Berhasil menghapus kategori kompetensi!');
+        return redirect('/analis-sdm/kategori') ->with('success', 'Berhasil menghapus kategori kompetensi!');
+    }
+
+    public function export()
+    {
+        $this->authorize('analis_sdm');
+        
+        $kategoris = KategoriKompetensi::with('jenis')->get();
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $data = [
+            ['Kategori', 'Jenis', 'Teknis']
+        ];
+
+        foreach ($kategoris as $kategori) {
+            if ($kategori->jenis->count() == 0) array_push($data, [$kategori->nama, null, null]);
+            else {
+                foreach ($kategori->jenis as $jenis) {
+                    if ($jenis->teknis->count() == 0) array_push($data, [$kategori->nama, $jenis->nama, null]);
+                    else {
+                        foreach ($jenis->teknis as $teknis) {
+                            array_push($data, [$kategori->nama, $jenis->nama, $teknis->nama]);
+                        }
+                    }
+                }
+            }
+        } 
+
+        $sheet->fromArray($data);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Master Kompetensi Pegawai.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
     }
 }

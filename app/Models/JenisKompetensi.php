@@ -17,6 +17,6 @@ class JenisKompetensi extends Model
 
     public function teknis() 
     {
-        return $this->hasMany(TeknisKompetensi::class);
+        return $this->hasMany(TeknisKompetensi::class, 'jenis_id', 'id');
     }
 }

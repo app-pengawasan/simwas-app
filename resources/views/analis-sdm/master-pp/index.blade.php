@@ -189,32 +189,18 @@
                 pageLength: 20,
                 buttons: [
                     {
-                        extend: "excel",
                         className: "btn-success unduh",
                         text: '<i class="fas fa-file-excel"></i> Excel',
-                        messageTop: function () {
-                            return 'Kategori Kompetensi';
-                        },
-                        exportOptions: {
-                            columns: [0, 1],
-                        },
-                    },
-                    {
-                        extend: "pdf",
-                        className: "btn-danger unduh",
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        messageTop: function () {
-                            return 'Kategori Kompetensi';
-                        },
-                        exportOptions: {
-                            columns: [0, 1],
-                        },
                     },
                 ],
             })
             .buttons()
             .container()
             .appendTo("#table-pengelolaan-dokumen-pegawai_wrapper .col-md-6:eq(0)");
+
+        $('.unduh').on('click', function() {
+            window.location.href = `/analis-sdm/kategori/export`;
+        })
 
         $(".edit-btn").on("click", function () {
             let dataId = $(this).attr("data-id");

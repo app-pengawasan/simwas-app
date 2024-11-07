@@ -17,6 +17,6 @@ class KategoriKompetensi extends Model
 
     public function jenis()
     {
-        return $this->hasMany(JenisKompetensi::class);
+        return $this->hasMany(JenisKompetensi::class, 'kategori_id', 'id');
     }
 }

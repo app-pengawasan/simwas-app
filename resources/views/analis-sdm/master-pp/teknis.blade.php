@@ -105,7 +105,7 @@
                                     Kembali
                                 </a>
                                 <div class="d-flex">
-                                    <div class="buttons ml-auto my-2">
+                                    <div class="buttons ml-auto my-2 mb-3">
                                         <button type="button" id="create-btn" class="btn btn-primary" data-toggle="modal"
                                             data-target="#staticBackdrop">
                                             <i class="fas fa-plus-circle"></i>
@@ -185,35 +185,11 @@
         let table = $("#table-pengelolaan-dokumen-pegawai");
         table
         .DataTable({
-            dom: "Bfrtip",
+            dom: "frtip",
             responsive: true,
             lengthChange: false,
             autoWidth: false,
-            pageLength: 20,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success unduh",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    messageTop: function () {
-                        return 'Teknis Kompetensi';
-                    },
-                    exportOptions: {
-                        columns: [0, 1],
-                    },
-                },
-                {
-                    extend: "pdf",
-                    className: "btn-danger unduh",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1],
-                    },
-                    messageTop: function () {
-                        return 'Teknis Kompetensi';
-                    },
-                },
-            ],
+            pageLength: 20
         });
 
         $(".edit-btn").on("click", function () {

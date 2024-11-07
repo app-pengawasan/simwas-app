@@ -234,6 +234,7 @@ Route::group(['middleware'=>'auth'], function(){
     ->group(function () {
         Route::get('/', [AnalisKompetensiController::class, 'index'])->name('dashboard');
         Route::get('pp-nonaktif', [KategoriKompetensiController::class, 'ppNonaktif']);
+        Route::get('kategori/export', [KategoriKompetensiController::class, 'export']);
         Route::resource('kategori', KategoriKompetensiController::class)->names([
             'index' => 'kategori',
             'show' => 'st-kinerja.show',
