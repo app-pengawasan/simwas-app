@@ -21,7 +21,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Nama Kompetensi Pegawai</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Tambah Jenis Kompetensi Pegawai</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -103,13 +103,19 @@
                                     <i class="fa-solid fa-arrow-left mr-1"></i>
                                     Kembali
                                 </a>
-                                <div class="pt-1 pb-1 m-4">
-                                    <div class="btn btn-success btn-lg btn-round" data-toggle="modal"
-                                    data-target="#staticBackdrop">
-                                        + Tambah
+                                <div class="d-flex">
+                                    <div class="buttons ml-auto">
+                                        <button type="button" id="create-btn" class="btn btn-primary m-0" data-toggle="modal"
+                                            data-target="#staticBackdrop">
+                                            <i class="fas fa-plus-circle"></i>
+                                            Tambah
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="">
+                                    @php
+                                        $i = 0;
+                                    @endphp
                                     <table class="table table-bordered display responsive" style="background-color: #f6f7f8" id="table-pengelolaan-dokumen-pegawai">
                                         <thead>
                                             <tr>
@@ -121,7 +127,7 @@
                                         <tbody>
                                             @foreach ($jenisKomp as $jenis)
                                             <tr class="table-bordered">
-                                                <td></td>
+                                                <td>{{ ++$i }}</td>
                                                 <td>
                                                     <a href="/analis-sdm/jenis/{{ $jenis->id }}">{{ $jenis->nama }}</a>
                                                 </td>
@@ -129,7 +135,17 @@
                                                     <button class="btn btn-sm btn-warning edit-btn" 
                                                     data-toggle="modal" data-target="#editModal"
                                                     data-id="{{ $jenis->id }}" data-nama="{{ $jenis->nama }}">
-                                                    <i class="fas fa-edit"></i> Edit</button>
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </button>
+
+                                                    <form action="/analis-sdm/jenis/{{ $jenis->id }}"
+                                                        method="post" class="d-inline delete-form">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button class="btn btn-danger btn-sm ml-1" type="submit">
+                                                            <i class="fa fa-trash"></i> Hapus
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -174,13 +190,31 @@
             responsive: true,
             lengthChange: false,
             autoWidth: false,
-            buttons: [],
-            columnDefs: [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
+            pageLength: 20,
+            buttons: [
+                {
+                    extend: "excel",
+                    className: "btn-success unduh",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    messageTop: function () {
+                        return 'Jenis Kompetensi';
+                    },
+                    exportOptions: {
+                        columns: [0, 1],
+                    },
+                },
+                {
+                    extend: "pdf",
+                    className: "btn-danger unduh",
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    messageTop: function () {
+                        return 'Jenis Kompetensi';
+                    },
+                    exportOptions: {
+                        columns: [0, 1],
+                    },
+                },
+            ],
         });
 
         $(".edit-btn").on("click", function () {
@@ -207,6 +241,24 @@
                 success: function (response) {
                     location.reload();
                 },
+            });
+        });
+
+        $('.delete-form').on('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: "var(--primary)",
+                cancelButtonColor: "var(--danger)",
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
             });
         });
     </script>

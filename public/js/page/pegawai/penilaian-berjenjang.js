@@ -343,9 +343,8 @@ $("html").on("mouseup", function (e) {
     }
 });
 
-//update ukuran kalender saat ukuran sidebar berubah
-$('.nav-link').on("click", function () {
-    setTimeout(() => {
-        calendar.updateSize();
-    }, 400);
-});
+$('.close').on('click', function(e) {
+    setTimeout( function () {
+        calendar.changeView('dayGridMonth');
+    }, 100);
+})

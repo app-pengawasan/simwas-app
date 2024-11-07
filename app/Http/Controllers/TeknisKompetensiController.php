@@ -46,7 +46,7 @@ class TeknisKompetensiController extends Controller
 
         TeknisKompetensi::create($validatedData);
 
-        return redirect('/analis-sdm/jenis/'.$request->input('jenis_id'))->with('success', 'Berhasil menambahkan nama pengembangan profesi!');
+        return redirect('/analis-sdm/jenis/'.$request->input('jenis_id'))->with('success', 'Berhasil menambahkan teknis kompetensi!');
     }
 
     /**
@@ -101,8 +101,11 @@ class TeknisKompetensiController extends Controller
      * @param  \App\Models\JenisKompetensi  $JenisKompetensi
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TeknisKompetensi $JenisKompetensi)
+    public function destroy(TeknisKompetensi $tekni)
     {
-        //
+        $this->authorize('analis_sdm');
+        $tekni->delete();
+        return redirect('/analis-sdm/jenis/'.$tekni->jenis_id)
+                ->with('success', 'Berhasil menghapus teknis kompetensi!');
     }
 }

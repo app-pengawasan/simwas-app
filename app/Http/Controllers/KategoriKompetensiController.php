@@ -63,7 +63,7 @@ class KategoriKompetensiController extends Controller
 
         KategoriKompetensi::create($validatedData);
 
-        return redirect('/analis-sdm/kategori')->with('success', 'Berhasil menambahkan jenis pengembangan profesi!');
+        return redirect('/analis-sdm/kategori')->with('success', 'Berhasil menambahkan kategori kompetensi!');
     }
 
     public function show(KategoriKompetensi $kategori)
@@ -99,8 +99,11 @@ class KategoriKompetensiController extends Controller
         ]);
     }
 
-    public function destroy(KategoriKompetensi $pp)
+    public function destroy(KategoriKompetensi $kategori)
     {
-        //
+        $this->authorize('analis_sdm');
+        $kategori->delete();
+        return redirect('/analis-sdm/kategori')
+                ->with('success', 'Berhasil menghapus kategori kompetensi!');
     }
 }

@@ -356,3 +356,9 @@ $("html").on("mouseup", function (e) {
         });
     }
 });
+
+$('.close').on('click', function(e) {
+    setTimeout( function () {
+        calendar.changeView('dayGridMonth');
+    }, 100);
+})
