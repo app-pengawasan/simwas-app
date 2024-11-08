@@ -1,6 +1,12 @@
-let colnums;
-if ($('#role').val() == 'analis sdm') colnums = [0, 1, 2, 3, 4, 11, 12, 13, 14, 8, 15, 16, 17, 6];
-else colnums = [0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 6];
+let colnums, createdcol;
+if ($('#role').val() == 'analis sdm') {
+    colnums = [0, 1, 2, 3, 4, 11, 12, 13, 14, 8, 15, 16, 17, 6]
+    createdcol = 18;
+}
+else {
+    colnums = [0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 6];
+    createdcol = 16;
+}
 
 let table = $("#table-kompetensi")
     .dataTable({
@@ -8,6 +14,7 @@ let table = $("#table-kompetensi")
         responsive: false,
         lengthChange: true,
         autoWidth: false,
+        order: [[createdcol, 'desc']],
         buttons: [
             {
                 extend: "excel",
@@ -266,12 +273,12 @@ $(".submit-btn").on("click", function (e) {
     });
 });
 
-$(".edit-btn").on("click", function () {
+$("#table-kompetensi").on("click", ".edit-btn", function () {
     clearError();
     let dataId = $(this).attr("data-id");
     let url;
     if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/getData/${dataId}`;
-    else url = `/pegawai/kompetensi/getData/${dataId}`;
+    else url = `/pegawai/kompetensi/getData/${dataId}`; 
 
     Swal.fire({
         title: "Mengambil Data",
@@ -353,7 +360,7 @@ $("#btn-edit-submit").on("click", function (e) {
     });
 });
 
-$(".delete-btn").on("click", function () {
+$("#table-kompetensi").on("click", '.delete-btn', function () {
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
     let url;
@@ -387,7 +394,7 @@ $(".delete-btn").on("click", function () {
     });
 });
 
-$("#setuju-btn").on("click", function () {
+$("#table-kompetensi").on("click", '.setuju-btn', function () {
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
@@ -418,7 +425,7 @@ $("#setuju-btn").on("click", function () {
     });
 });
 
-$("#tolak-btn").on("click", function () {
+$("#table-kompetensi").on("click", '.tolak-btn', function () {
     let dataId = $(this).attr("data-id");
     $('#data-id').val(dataId);
 });

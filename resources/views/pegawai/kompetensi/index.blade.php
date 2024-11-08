@@ -60,6 +60,7 @@
                                             <th class="d-none">penyelenggara</th>
                                             <th class="d-none">jumlah peserta</th>
                                             <th class="d-none">ranking</th>
+                                            <th class="d-none">created_at</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -131,6 +132,7 @@
                                                 <td class="d-none">{{ $k->penyelenggaraDiklat->penyelenggara }}</td>
                                                 <td class="d-none">{{ $k->jumlah_peserta }}</td>
                                                 <td class="d-none">{{ $k->ranking }}</td>
+                                                <td class="d-none">{{ $k->created_at }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

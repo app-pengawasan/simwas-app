@@ -120,6 +120,7 @@
                                             <th class="d-none">penyelenggara</th>
                                             <th class="d-none">jumlah peserta</th>
                                             <th class="d-none">ranking</th>
+                                            <th class="d-none">created_at</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -171,14 +172,14 @@
                                                                 Edit
                                                             </a>
                                                             @if ($k->status == 3)
-                                                                <a class="dropdown-item" href="javascript:void(0)"
-                                                                data-id="{{ $k->id }}" id="setuju-btn">
+                                                                <a class="dropdown-item setuju-btn" href="javascript:void(0)"
+                                                                data-id="{{ $k->id }}">
                                                                     <i class="far fa-check-circle text-success mr-2"></i>
                                                                     Setujui
                                                                 </a>
-                                                                <a class="dropdown-item" href="javascript:void(0)"
+                                                                <a class="dropdown-item tolak-btn" href="javascript:void(0)"
                                                                 data-id="{{ $k->id }}" data-toggle="modal"
-                                                                data-target="#staticBackdrop" id="tolak-btn">
+                                                                data-target="#staticBackdrop">
                                                                     <i class="far fa-circle-xmark text-danger mr-2"></i>
                                                                     Tolak
                                                                 </a>
@@ -201,6 +202,7 @@
                                                 <td class="d-none">{{ $k->penyelenggaraDiklat->penyelenggara }}</td>
                                                 <td class="d-none">{{ $k->jumlah_peserta }}</td>
                                                 <td class="d-none">{{ $k->ranking }}</td>
+                                                <td class="d-none">{{ $k->created_at }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
