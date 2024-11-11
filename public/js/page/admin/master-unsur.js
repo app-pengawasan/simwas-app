@@ -8,6 +8,7 @@ if ($("#master-unsur").length) {
             responsive: true,
             lengthChange: false,
             autoWidth: false,
+            pageLength: 25,
             buttons: [
                 {
                     extend: "excel",

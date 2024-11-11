@@ -7,6 +7,7 @@ $(function () {
                 responsive: true,
                 lengthChange: false,
                 autoWidth: false,
+                pageLength: 25,
                 buttons: [
                     {
                         extend: "excel",
@@ -82,9 +83,11 @@ $(function () {
 
         if (filterJabatan == "") {
             table.column(3).search(filterJabatan, true, false).draw();
-        }
-        else {
-            table.column(3).search("^" + filterJabatan + "$", true, false).draw();
+        } else {
+            table
+                .column(3)
+                .search("^" + filterJabatan + "$", true, false)
+                .draw();
         }
 
         // reset numbering in table first column

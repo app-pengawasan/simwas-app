@@ -38,6 +38,7 @@ $(function () {
                         sNext: "Selanjutnya",
                     },
                 },
+                pageLength: 25,
             })
             .api();
         $(".dataTables_filter").appendTo("#filter-search-wrapper");

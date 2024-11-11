@@ -1,47 +1,47 @@
 $(function () {
+    let table;
 
-let table;
-
-if ($("#master-unit-kerja").length) {
-    table = $("#master-unit-kerja")
-        .dataTable({
-            dom: "Bfrtip",
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            buttons: [
-                {
-                    extend: "excel",
-                    className: "btn-success",
-                    text: '<i class="fas fa-file-excel"></i> Excel',
-                    exportOptions: {
-                        columns: [0, 1 ,2],
+    if ($("#master-unit-kerja").length) {
+        table = $("#master-unit-kerja")
+            .dataTable({
+                dom: "Bfrtip",
+                responsive: true,
+                lengthChange: false,
+                autoWidth: false,
+                pageLength: 25,
+                buttons: [
+                    {
+                        extend: "excel",
+                        className: "btn-success",
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2],
+                        },
+                    },
+                    {
+                        extend: "pdf",
+                        className: "btn-danger",
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        exportOptions: {
+                            columns: [0, 1, 2],
+                        },
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "Cari:",
+                    sZeroRecords: "Data tidak ditemukan",
+                    sEmptyTable: "Data tidak ditemukan",
+                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                    sInfoFiltered: "(disaring dari _MAX_ data)",
+                    sLengthMenu: "Tampilkan _MENU_ data",
+                    oPaginate: {
+                        sPrevious: "Sebelumnya",
+                        sNext: "Selanjutnya",
                     },
                 },
-                {
-                    extend: "pdf",
-                    className: "btn-danger",
-                    text: '<i class="fas fa-file-pdf"></i> PDF',
-                    exportOptions: {
-                        columns: [0, 1, 2],
-                    },
-                },
-            ],
-            oLanguage: {
-                sSearch: "Cari:",
-                sZeroRecords: "Data tidak ditemukan",
-                sEmptyTable: "Data tidak ditemukan",
-                sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
-                sInfoFiltered: "(disaring dari _MAX_ data)",
-                sLengthMenu: "Tampilkan _MENU_ data",
-                oPaginate: {
-                    sPrevious: "Sebelumnya",
-                    sNext: "Selanjutnya",
-                },
-            },
-        })
-        .api();
+            })
+            .api();
 
         $(".dt-buttons").appendTo("#download-button");
         $(".dt-buttons").appendTo("#download-button");
@@ -65,8 +65,7 @@ if ($("#master-unit-kerja").length) {
         // add padding x 10px to .dataTables_filter input
         $(".dataTables_filter input").css("padding", "0 10px");
         $(".dt-buttons").appendTo("#download-button");
-}
-
+    }
 });
 
 $(".submit-btn").on("click", function (e) {

@@ -8,6 +8,7 @@ let table = $("#table-daftar-nilai")
         responsive: true,
         lengthChange: false,
         autoWidth: false,
+        pageLength: 25,
         buttons: [
             {
                 extend: "excel",
@@ -17,9 +18,14 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return $(":selected", '#filterBulan').text() + ' ' +
-                           $(":selected", '#filterTahun').text() + '; ' +
-                           'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return (
+                        $(":selected", "#filterBulan").text() +
+                        " " +
+                        $(":selected", "#filterTahun").text() +
+                        "; " +
+                        "Unit Kerja: " +
+                        $(":selected", "#filterUnitKerja").text()
+                    );
                 },
             },
             {
@@ -30,13 +36,19 @@ let table = $("#table-daftar-nilai")
                     columns: [0, 1, 2, 3, 4],
                 },
                 messageTop: function () {
-                    return $(":selected", '#filterBulan').text() + ' ' +
-                           $(":selected", '#filterTahun').text() + '; ' +
-                           'Unit Kerja: ' + $(":selected", '#filterUnitKerja').text();
+                    return (
+                        $(":selected", "#filterBulan").text() +
+                        " " +
+                        $(":selected", "#filterTahun").text() +
+                        "; " +
+                        "Unit Kerja: " +
+                        $(":selected", "#filterUnitKerja").text()
+                    );
                 },
             },
         ],
-    }).api();
+    })
+    .api();
 
 $('#filterBulan').on("change", function () {
     table.draw();
@@ -311,7 +323,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             placement: 'right',
             html: true,
             content: '<h3>' + info.event.title + '</h3>' +
-                     '<h4>Objek Pengawasan: ' + 
+                     '<h4>Objek Pengawasan: ' +
                                 info.event.extendedProps.laporan_o_pengawasan.objek_pengawasan.nama + '</h4>' +
                      '<h4>Bulan Pelaporan: ' + Intl.DateTimeFormat('id', { month: 'long' }).format(new Date(
                                 info.event.extendedProps.laporan_o_pengawasan.month.toString()

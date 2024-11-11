@@ -7,6 +7,7 @@ $(function () {
                 dom: "Bfrtip",
                 responsive: true,
                 lengthChange: false,
+                pageLength: 25,
                 autoWidth: false,
                 buttons: [
                     {

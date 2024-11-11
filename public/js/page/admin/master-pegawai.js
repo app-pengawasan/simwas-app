@@ -48,6 +48,7 @@ $(function () {
                         sNext: "Selanjutnya",
                     },
                 },
+                pageLength: 25,
             })
             .api();
 

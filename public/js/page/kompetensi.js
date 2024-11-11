@@ -14,7 +14,8 @@ let table = $("#table-kompetensi")
         responsive: false,
         lengthChange: true,
         autoWidth: false,
-        order: [[createdcol, 'desc']],
+        order: [[createdcol, "desc"]],
+        pageLength: 25,
         buttons: [
             {
                 extend: "excel",
@@ -33,7 +34,8 @@ let table = $("#table-kompetensi")
                 },
             },
         ],
-    }).api();
+    })
+    .api();
 
 if ($('#role').val() == 'analis sdm') {
     document.forms['filterForm'].reset();
@@ -278,7 +280,7 @@ $("#table-kompetensi").on("click", ".edit-btn", function () {
     let dataId = $(this).attr("data-id");
     let url;
     if ($('#role').val() == 'analis sdm') url = `/analis-sdm/kelola-kompetensi/getData/${dataId}`;
-    else url = `/pegawai/kompetensi/getData/${dataId}`; 
+    else url = `/pegawai/kompetensi/getData/${dataId}`;
 
     Swal.fire({
         title: "Mengambil Data",
@@ -299,9 +301,9 @@ $("#table-kompetensi").on("click", ".edit-btn", function () {
             $("#edit-id").val(response.data[0].id);
             $("#edit-pegawai").val(response.data[0].pegawai_id);
             $("#edit-kat").val(response.kategori).trigger('change');
-            populateJenis(response.kategori); 
+            populateJenis(response.kategori);
             $("#edit-jenis").val(response.data[0].teknis.jenis_id).trigger('change');
-            populateTeknis(response.data[0].teknis.jenis_id); 
+            populateTeknis(response.data[0].teknis.jenis_id);
             $("#edit-teknis_id").val(response.data[0].teknis_id).trigger('change');
             $("#edit-nama_pelatihan").val(response.data[0].nama_pelatihan);
             $("#edit-catatan").val(response.data[0].catatan);

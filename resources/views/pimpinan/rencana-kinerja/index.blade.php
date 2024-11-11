@@ -43,11 +43,15 @@
                                 <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
                                     <label for="filter-tahun" style="margin-bottom: 0;">
                                         Tahun</label>
+                                    @php
+                                    $currentYear = date('Y');
+                                    $selectedYear = request()->query('year', $currentYear);
+                                    @endphp
+
                                     <select name="year" id="yearSelect" class="form-control select2">
                                         @foreach ($year as $key => $value)
-                                        <option value="{{ $value->tahun }}"
-                                            {{ request()->query('year') == $value->tahun ? 'selected' : '' }}>
-                                            {{ $value->tahun }}
+                                        <option value="{{ $value->year }}" {{ $selectedYear == $value->year ? 'selected' : '' }}>
+                                            {{ $value->year }}
                                         </option>
                                         @endforeach
                                     </select>

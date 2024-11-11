@@ -6,6 +6,7 @@ $(function () {
             lengthChange: false,
             autoWidth: false,
             // filter: false,
+            pageLength: 25,
             buttons: [
                 {
                     extend: "excel",

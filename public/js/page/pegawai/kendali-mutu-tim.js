@@ -8,12 +8,15 @@ $(function () {
             lengthChange: false,
             autoWidth: false,
             buttons: [],
-            columnDefs: [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }]
+            pageLength: 25,
+            columnDefs: [
+                {
+                    targets: 0,
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        $(td).text(row + 1);
+                    },
+                },
+            ],
         })
         .buttons()
         .container()

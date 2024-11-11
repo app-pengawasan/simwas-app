@@ -1,36 +1,36 @@
-let table = $("#tim-kerja")
-    .DataTable({
-        dom: "Bfrtip",
-        responsive: true,
-        lengthChange: false,
-        autoWidth: false,
-        buttons: [
-            {
-                extend: "excel",
-                className: "btn-success unduh",
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
-                },
+let table = $("#tim-kerja").DataTable({
+    dom: "Bfrtip",
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    pageLength: 25,
+    buttons: [
+        {
+            extend: "excel",
+            className: "btn-success unduh",
+            text: '<i class="fas fa-file-excel"></i> Excel',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5],
             },
-            {
-                extend: "pdf",
-                className: "btn-danger unduh",
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
-                },
+        },
+        {
+            extend: "pdf",
+            className: "btn-danger unduh",
+            text: '<i class="fas fa-file-pdf"></i> PDF',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5],
             },
-            {
-                text: 'Jam Kerja',
-                className: 'btn btn-primary disabled jam-kerja toggle',
-            },
-            {
-                text: 'Hari Kerja',
-                className: 'btn btn-primary hari-kerja toggle',
-            }
-        ],
-    })
+        },
+        {
+            text: "Jam Kerja",
+            className: "btn btn-primary disabled jam-kerja toggle",
+        },
+        {
+            text: "Hari Kerja",
+            className: "btn btn-primary hari-kerja toggle",
+        },
+    ],
+});
 
 $('#tim-kerja_wrapper .dt-buttons').removeClass('btn-group').addClass('mb-4');
 

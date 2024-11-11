@@ -9,6 +9,7 @@ if ($("#table-proyek").length) {
             buttons: [],
             bPaginate: false,
             bInfo: false,
+            pageLength: 25,
             oLanguage: {
                 sSearch: "Cari:",
                 sZeroRecords: "Data tidak ditemukan",

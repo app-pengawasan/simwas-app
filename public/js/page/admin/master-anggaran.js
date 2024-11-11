@@ -32,11 +32,12 @@ $(function () {
                 sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
                 sInfoFiltered: "(disaring dari _MAX_ data)",
                 sLengthMenu: "Tampilkan _MENU_ data",
-                oPaginate: {
+                oPagi: {
                     sPrevious: "Sebelumnya",
                     sNext: "Selanjutnya",
                 },
             },
+            pageLength: 25,
         });
 
         $(".dataTables_filter").appendTo("#filter-search-wrapper");

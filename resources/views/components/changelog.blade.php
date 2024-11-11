@@ -1,9 +1,9 @@
-<div class="modal fade" id="modal-create-timkerja" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="modal-create-timkerja-label" aria-hidden="true">
+<div class="modal fade" id="modal-changelog" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-changelog-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" style="border-bottom: 1px solid #e9ecef; padding: 25px 30px;">
-                <h3 class="modal-title underline" id="modal-create-timkerja-label"><u>Changelogs Timeline</u></h3>
+                <h3 class="modal-title underline" id="modal-changelog-label"><u>Changelogs Timeline</u></h3>
                 <button type="button" class="text-danger close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

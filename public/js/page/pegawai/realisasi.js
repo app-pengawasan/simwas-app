@@ -322,6 +322,7 @@ let table = $("#table-realisasi")
         responsive: true,
         lengthChange: false,
         autoWidth: false,
+        pageLength: 25,
         buttons: [
             {
                 extend: "excel",
@@ -331,8 +332,12 @@ let table = $("#table-realisasi")
                     columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' +
-                            $(":selected", '#filterTahun').text();
+                    return (
+                        "Bulan: " +
+                        $(":selected", "#filterBulan").text() +
+                        "; Tahun: " +
+                        $(":selected", "#filterTahun").text()
+                    );
                 },
             },
             {
@@ -343,13 +348,18 @@ let table = $("#table-realisasi")
                     columns: [0, 1, 2, 3, 4, 5, 9, 7],
                 },
                 messageTop: function () {
-                    return 'Bulan: ' + $(":selected", '#filterBulan').text() + '; Tahun: ' +
-                            $(":selected", '#filterTahun').text();
+                    return (
+                        "Bulan: " +
+                        $(":selected", "#filterBulan").text() +
+                        "; Tahun: " +
+                        $(":selected", "#filterTahun").text()
+                    );
                 },
             },
         ],
-        order: [[10, 'desc']]
-    }).api();
+        order: [[10, "desc"]],
+    })
+    .api();
 
 let today = new Date();
 $('#filterTahun').val(today.getFullYear());
