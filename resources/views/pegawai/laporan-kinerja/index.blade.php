@@ -27,7 +27,7 @@
                             <div class="d-flex float-right col-6 p-0 pl-2">
                                 <div class="ml-auto my-2 col-12 p-0 form-group">
                                     <label for="filterTahun" class="mb-0">Tahun</label>
-                                    <select class="form-control" id="filterTahun">
+                                    <select class="form-control select2" id="filterTahun">
                                         <?php $year = date('Y'); ?>
                                         @for ($i = -5; $i < 8; $i++)
                                             <option value="{{ $year + $i }}">{{ $year + $i }}</option>
@@ -37,8 +37,8 @@
                             </div>
                             <div class="d-flex float-right col-6 p-0 pr-1 pl-1">
                                 <div class="ml-auto my-2 col-12 p-0 form-group">
-                                    <label for="filterBulan" class="mb-0">Bulan</label>
-                                    <select class="form-control" id="filterBulan">
+                                    <label for="filterBulan" class="mb-0">Bulan Unggah</label>
+                                    <select class="form-control select2" id="filterBulan">
                                         <option value="all">Semua Bulan</option>
                                         <option value="01">Januari</option>
                                         <option value="02">Februari</option>
@@ -60,17 +60,19 @@
                                     class="table table-bordered display responsive" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
-                                            <th class="bulan">Bulan</th>
+                                            <th class="bulan">Bulan Unggah</th>
                                             <th>Tugas</th>
                                             <th>Peran</th>
                                             <th>Rencana Jam Kerja</th>
+                                            <th>Objek Pengawasan</th>
+                                            <th>Bulan Pelaporan</th>
                                             <th>Realisasi Jam Kerja</th>
                                             <th>Bukti Dukung</th>
                                             <th>Penilaian Berjenjang</th>
                                             <th>Penilaian Pimpinan</th>
-                                            <th class="never">bulan</th>
-                                            <th class="never">tahun</th>
-                                            <th class="never">Link Bukti Dukung</th>
+                                            <th class="d-none">bulan</th>
+                                            <th class="d-none">tahun</th>
+                                            <th class="d-none">Link Bukti Dukung</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,7 +94,9 @@
                                                         <td>{{ $realisasi->pelaksana->rencanaKerja->tugas }}</td>
                                                         <td>{{ $jabatan[$realisasi->pelaksana->pt_jabatan] }}</td>
                                                         <td>{{ $rencana_jam }}</td>
-                                                        <td>{{ $jamRealisasi[$realisasi->id_pelaksana] ?? '' }}</td>
+                                                        <td>{{ $realisasi->laporanObjekPengawasan->objekPengawasan->nama }}</td>
+                                                        <td>{{ $months[$realisasi->laporanObjekPengawasan->month - 1] }}</td>
+                                                        <td>{{ $jamRealisasi[$realisasi->id_pelaksana][$realisasi->id_laporan_objek] ?? '' }}</td>
                                                         <td>
                                                             <a class="btn btn-primary btn-sm"
                                                             href="{{ $realisasi->hasil_kerja }}" target="_blank">
@@ -101,9 +105,9 @@
                                                         </td>
                                                         <td>{{ $realisasi->nilai }}</td>
                                                         <td>{{ $nilai_ins->where('bulan', $month)->where('tahun', $tahun)->first()->nilai ?? null }}</td>
-                                                        <td>{{ $month }}</td>
-                                                        <td>{{ $tahun }}</td>
-                                                        <td>
+                                                        <td class="d-none">{{ $month }}</td>
+                                                        <td class="d-none">{{ $tahun }}</td>
+                                                        <td class="d-none">
                                                             @if (file_exists(public_path().'/document/realisasi/'.$realisasi->hasil_kerja))
                                                                 {{ url('/').'/document/realisasi/'.$realisasi->hasil_kerja }}
                                                             @else
@@ -154,10 +158,11 @@
         let table = $("#table-nilai")
             .dataTable({
                 dom: "Bfrtip",
-                // responsive: true,
-                lengthChange: false,
-                autoWidth: false,
-                rowsGroup: [0, 7],
+                responsive: false,
+                // lengthChange: false,
+                // autoWidth: false,
+                scrollX: true,
+                rowsGroup: [0, 9, 1, 2, 3],
                 buttons: [
                     {
                         extend: "excel",
@@ -193,7 +198,9 @@
             });
 
             $('#filterTahun').on("change", function () {
+                if ($('#filterBulan').val() == 'all') $('.bulan').show();
                 table.draw();
+                if ($('#filterBulan').val() != 'all') $('.bulan').hide();
             });
 
 
@@ -202,12 +209,19 @@
                     var selectedBulan = $('select#filterBulan option:selected').val();
                     var selectedTahun = $('select#filterTahun option:selected').val();
                     // alert(data[7])
-                    if ((data[8] == selectedBulan || selectedBulan == 'all') && data[9] == selectedTahun) return true;
+                    if ((data[10] == selectedBulan || selectedBulan == 'all') && data[11] == selectedTahun) return true;
                     else return false;
                 }
                 );
 
             table.draw();
             $('.bulan').hide();
+
+            //update ukuran tabel saat ukuran sidebar berubah
+            $('.nav-link').on("click", function () {
+                setTimeout( function () {
+                    table.columns.adjust();
+                }, 500);
+            });
     </script>
 @endpush

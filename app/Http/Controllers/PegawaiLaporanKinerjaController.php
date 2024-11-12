@@ -46,7 +46,7 @@ class PegawaiLaporanKinerjaController extends Controller
         'mhk020' => 'Laporan Penjaminan Kualitas',
     ];
 
-    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim'];
+    protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJ Kegiatan'];
 
     /**
      * Display a listing of the resource.
@@ -58,28 +58,35 @@ class PegawaiLaporanKinerjaController extends Controller
         $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query){
                                 $query->where('id_pegawai', auth()->user()->id);
                             })->where('status', 1)->get()->groupBy(function ($realisasi) {
-                                return date("Y",strtotime($realisasi->updated_at));
+                                return date("Y",strtotime($realisasi->created_at));
                             });
+
+        $events = Event::where('id_pegawai', auth()->user()->id)->get();
 
         $realisasiAll = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query){
                             $query->where('id_pegawai', auth()->user()->id);
-                        })->join('events', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                        ->get();
+                        })->get();
+        foreach ($realisasiAll as $realisasi) { 
+            $realisasi->events = $events->where('id_pegawai', $realisasi->pelaksana->id_pegawai)
+                                        ->where('laporan_opengawasan', $realisasi->id_laporan_objek);
+        } 
 
-        $jamRealisasi = $realisasiAll->groupBy('id_pelaksana')
-                            ->map(function ($items) {
+        $jamRealisasi = $realisasiAll->groupBy(['id_pelaksana', 'id_laporan_objek'])
+                            ->map->map(function ($items) { 
                                     $realisasi_jam = 0;
                                     foreach ($items as $realisasi) {
-                                        $start = $realisasi->start;
-                                        $end = $realisasi->end;
-                                        $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                        foreach ($realisasi['events'] as $event) {
+                                            $start = $event->start;
+                                            $end = $event->end;
+                                            $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                        }
                                     }
                                     return $realisasi_jam;
-                            });
+                            });  
 
         $realisasiDone = $realisasiDone->map->groupBy(function ($realisasi) {
-                            return date("m",strtotime($realisasi->updated_at));
-                        });
+                            return date("m",strtotime($realisasi->created_at));
+                        }); 
 
         $nilai_ins = NilaiInspektur::where('id_pegawai', auth()->user()->id)->get(); 
         return view('pegawai.laporan-kinerja.index', [
