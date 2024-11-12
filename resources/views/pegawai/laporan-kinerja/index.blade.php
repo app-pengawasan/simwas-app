@@ -55,9 +55,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div style="margin-top: 6rem">
-                                <table id="table-nilai"
-                                    class="table table-bordered display responsive" style="background-color: #f6f7f8">
+                            <div style="margin-top: 6rem; overflow: scroll">
+                                <table id="table-nilai" style="width: 100%; background-color: #f6f7f8"
+                                    class="table table-bordered display responsive">
                                     <thead>
                                         <tr>
                                             <th class="bulan">Bulan Unggah</th>
@@ -161,7 +161,7 @@
                 responsive: false,
                 // lengthChange: false,
                 // autoWidth: false,
-                scrollX: true,
+                // scrollX: true,
                 rowsGroup: [0, 9, 1, 2, 3],
                 buttons: [
                     {
@@ -169,7 +169,7 @@
                         className: "btn-success",
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 10, 6, 7],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 12, 8, 9],
                         },
                         messageTop: function () {
                             return $(":selected", '#filterBulan').text() + ', '
@@ -181,7 +181,7 @@
                         className: "btn-danger",
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 10, 6, 7],
+                            columns: [0, 1, 2, 3, 4, 5, 6, 12, 8, 9],
                         },
                         messageTop: function () {
                             return $(":selected", '#filterBulan').text() + ', '
