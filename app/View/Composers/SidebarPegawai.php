@@ -48,6 +48,14 @@ class SidebarPegawai
             })
             ->where('tahun', $year)
             ->count();
+        $timKerjaAllTime = TimKerja::with('ketua', 'iku')
+            ->where(function($query) use ($id_pegawai) {
+                $query->where('id_ketua', $id_pegawai)
+                    ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
+                        $query->where('operator_id', $id_pegawai);
+                    });
+            })
+            ->count();
         // $timKerjaPenyusunanCountSidebar = TimKerja::with('ketua', 'iku')->where('id_ketua', $id_pegawai)->whereIn('status', [0,1,2,3])->where('tahun', '2024')->get()->count();
 
 
@@ -59,6 +67,7 @@ class SidebarPegawai
 
         $view->with(
             [
+                'timKerjaAllTime' => $timKerjaAllTime,
                 'timKerjaAll' => $timKerjaAll,
                 'usulanNormaHasilCountSidebar' => $usulanNormaHasilCountSidebar,
                 'timKerjaPenyusunanCountSidebar' => $timKerjaPenyusunanCountSidebar,
