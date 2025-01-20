@@ -173,11 +173,8 @@
             scrollX: true,
             buttons: [
                 {
-                    extend: "excel",
-                    className: "btn-success",
-                    messageTop: function () {
-                        return $('#title').text();
-                    },
+                    className: "btn-success unduh",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                 },
                 {
                     text: 'Jam Kerja',
@@ -202,7 +199,8 @@
                 datatable.columns.adjust();
             }, 500);
         });
-
+        
+        let mode = 'jam';
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
@@ -215,6 +213,7 @@
                 if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
             });
             $('#title').text('Rencana Hari Kerja');
+            mode = 'hari';
         })
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
@@ -226,6 +225,7 @@
                 if (cell.data() != '0') cell.data($(this).attr('value')).draw();
             });
             $('#title').text('Rencana Jam Kerja');
+            mode = 'jam';
         })
 
         $('#yearSelect').on('change', function() {
@@ -244,8 +244,18 @@
             $('#unitForm').submit();
         });
 
+        $('.unduh').on('click', function() {
+            window.location.href = `/admin/rencana-jam-kerja/export/${mode}/${$('#yearSelect').val()}/${$('#unitSelect').val()}`;
+        })
+
         $(".detail").attr('href', function(_, el){
             return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
+        });
+
+        $('#table-inspektur-kinerja').on('draw.dt', function() {
+            $(".detail").attr('href', function(_, el){
+                return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
+            });
         });
     </script>
 @endpush

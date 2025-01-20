@@ -143,15 +143,15 @@
                                                     </a>
                                                 </td>
                                                 {{-- <td>{{ $k->catatan }}</td> --}}
-                                                @if ($k->status == 1)
+                                                {{-- @if ($k->status == 1)
                                                     <td>
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }} oleh {{ $k->analis->name }}</span>
                                                     </td>
-                                                @else 
+                                                @else  --}}
                                                     <td>
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
                                                     </td>
-                                                @endif
+                                                {{-- @endif --}}
 
                                                 <td>
                                                     <div class="btn-group dropdown">

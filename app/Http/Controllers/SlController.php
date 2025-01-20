@@ -35,6 +35,7 @@ class SlController extends Controller
     ];
 
     protected $jabatan = [
+        '0'  => '-',
         '10' => 'Inspektur Utama',
         '11' => 'Inspektur Wilayah I',
         '12' => 'Inspektur wilayah II',

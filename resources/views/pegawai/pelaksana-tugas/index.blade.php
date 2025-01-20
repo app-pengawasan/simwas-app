@@ -185,13 +185,11 @@
                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                     <i class="fas fa-edit mr-1"></i>Edit
                                                     </button>
-                                                    @if ($i > 2)
                                                     <button class="btn btn-danger btn-delete-pelaksana btn-sm"
                                                         type="button"
                                                         data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                         <i class="fas fa-trash mr-1"></i>Hapus
                                                     </button>
-                                                    @endif
                                                     @endif
                                             </td>
                                             @endif
@@ -269,15 +267,12 @@
                                                                 <i class="fas fa-edit"></i>
                                                                 </button>
                                                                 @endif
-                                                                @if ($i >= 1)
-                                                                @if ($timKerja->status < 2) <button
+                                                                <button
                                                                     class="btn btn-danger btn-delete-pelaksana btn-sm"
                                                                     type="button"
                                                                     data-id="{{ $rencanaKerja->pelaksana[$i]->id_pelaksana }}">
                                                                     <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                    @endif
-                                                                    @endif
+                                                                </button>
                                                         </td>
                                                         @endif
                                                         </tr>

@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class AdminRencanaJamKerjaController extends Controller
+class PJKRencanaJamKerjaController extends Controller
 {
     protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
 
@@ -101,7 +101,7 @@ class AdminRencanaJamKerjaController extends Controller
 
     public function rekap(Request $request)
     {
-        $this->authorize('admin');
+        $this->authorize('pjk');
         $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
 
         $year = $request->year;
@@ -137,14 +137,14 @@ class AdminRencanaJamKerjaController extends Controller
 
         $jam_kerja = $pegawai->toBase()->merge($tugas)->groupBy('id');
 
-        return view('admin.rencana-jam-kerja.rekap',[
+        return view('pjk.rencana-jam-kerja.rekap',[
             'type_menu'     => 'rencana-jam-kerja'
         ])->with('jam_kerja', $jam_kerja);
     }
 
     public function pool(Request $request)
     {
-        $this->authorize('admin');
+        $this->authorize('pjk');
 
         $year = $request->year;
 
@@ -190,7 +190,7 @@ class AdminRencanaJamKerjaController extends Controller
 
         $countall = $pegawai->toBase()->merge($count)->groupBy('id');
 
-        return view('admin.rencana-jam-kerja.pool',[
+        return view('pjk.rencana-jam-kerja.pool',[
             'type_menu'     => 'rencana-jam-kerja'
         ])->with('countall', $countall);
     }
@@ -203,7 +203,7 @@ class AdminRencanaJamKerjaController extends Controller
      */
     public function show($id, $year)
     {
-        $this->authorize('admin');
+        $this->authorize('pjk');
 
         $tugas = PelaksanaTugas::where('id_pegawai', $id)
                 ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
@@ -213,7 +213,7 @@ class AdminRencanaJamKerjaController extends Controller
 
         $pegawai = User::findOrFail($id)->name;
 
-        return view('admin.rencana-jam-kerja.show',[
+        return view('pjk.rencana-jam-kerja.show',[
             'type_menu'     => 'rencana-jam-kerja',
             'jabatan'       => $this->jabatan,
             'pegawai'       => $pegawai
@@ -222,11 +222,11 @@ class AdminRencanaJamKerjaController extends Controller
 
     public function detailTugas($id)
     {
-        $this->authorize('admin');
+        $this->authorize('pjk');
 
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
 
-        return view('admin.rencana-jam-kerja.detail-tugas', [
+        return view('pjk.rencana-jam-kerja.detail-tugas', [
             'type_menu'     => 'rencana-jam-kerja',
             'unitKerja'     => $this->unitkerja,
             'hasilKerja'    => $this->hasilKerja,
@@ -366,5 +366,4 @@ class AdminRencanaJamKerjaController extends Controller
         $writer->save('php://output');
         die;
     }
-
 }

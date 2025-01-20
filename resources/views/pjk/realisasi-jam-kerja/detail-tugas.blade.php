@@ -12,8 +12,8 @@
 @endpush
 
 @section('main')
-@include('components.admin-header')
-@include('components.admin-sidebar')
+@include('components.pjk-header')
+@include('components.pjk-sidebar')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -27,7 +27,7 @@
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
                                 <a class="btn btn-primary"
-                                    href="/admin/realisasi-jam-kerja/pool/{{ $tugas->user->id }}/{{ $tugas->rencanaKerja->timKerja->tahun }}">
+                                    href="/pjk/realisasi-jam-kerja/pool/{{ $tugas->user->id }}/{{ $tugas->rencanaKerja->timKerja->tahun }}">
                                     <i class="fas fa-chevron-circle-left"></i> Kembali
                                 </a>
                             </div>

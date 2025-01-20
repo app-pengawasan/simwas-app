@@ -22,8 +22,8 @@
                     <i class="far fa-user"></i> Profile
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="/pegawai/dashboard" class="dropdown-item has-icon">
-                    <i class="fas fa-user-shield"></i> Login sebagai Pegawai
+                <a href="{{ route('dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-users"></i> Login sebagai Pegawai
                 </a>
                 @if (auth()->user()->is_admin)
                 <a href="{{ route('admin.dashboard') }}" class="dropdown-item has-icon">
@@ -45,20 +45,20 @@
                     <i class="fas fa-user-shield"></i> Login sebagai Analis SDM
                 </a>
                 @endif
+                @if (auth()->user()->is_perencana)
+                <a href="{{ route('perencana.dashboard') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai Perencana
+                </a>
+                @endif
                 @if (auth()->user()->is_arsiparis)
                 <a href="{{ route('arsiparis.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Arsiparis
                 </a>
                 @endif
-                @if (auth()->user()->is_pjk)
-                <a href="/pjk/rencana-jam-kerja/rekap" class="dropdown-item has-icon">
-                    <i class="fas fa-user-shield"></i> Login sebagai PJ Kegiatan
-                </a>
-                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">
-            <a class="has-icon text-white" href="#"
+            <a class="has-icon text-white " href="#"
                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>

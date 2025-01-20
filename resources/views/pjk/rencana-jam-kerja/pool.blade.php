@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Realisasi Jam Kerja')
+@section('title', 'Rencana Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.pjk-header')
+    @include('components.pjk-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rekap Realisasi Jam Kerja</h1>
+                <h1>Rencana Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rekap Realisasi Jam Kerja</div>
+                    <div class="breadcrumb-item active"><a href="">Dashboard</a></div>
+                    <div class="breadcrumb-item">Rencana Jam Kerja</div>
                 </div>
             </div>
 
@@ -68,68 +68,33 @@
                                     <table class="table table-bordered table-striped display responsive" id="table-inspektur-kinerja">
                                         <thead>
                                             <tr>
-                                                <th rowspan="2" class="align-middle">No.</th>
-                                                <th rowspan="2" class="align-middle">Pegawai</th>
-                                                <th rowspan="2" class="align-middle">Detail</th>
-                                                <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Jan</th>
-                                                <th>Feb</th>
-                                                <th>Mar</th>
-                                                <th>Apr</th>
-                                                <th>Mei</th>
-                                                <th>Jun</th>
-                                                <th>Jul</th>
-                                                <th>Agu</th>
-                                                <th>Sep</th>
-                                                <th>Okt</th>
-                                                <th>Nov</th>
-                                                <th>Des</th>
-                                                <th>Total</th>
+                                                <th>No.</th>
+                                                <th>Pegawai</th>
+                                                <th>Jumlah Tim</th>
+                                                <th>Jumlah Proyek</th>
+                                                <th>Jumlah Tugas</th>
+                                                <th>Jumlah Jam Kerja</th>
+                                                <th>Jumlah Hari Kerja</th>
+                                                <th>Detail</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($jam_kerja as $key => $jam)
+                                            @foreach ($countall as $key => $count)
                                             <tr>
                                                 <td></td>
-                                                <td>{{ $jam[0]->name }}</td>
+                                                <td>{{ $count[0]->name }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tim'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_proyek'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tugas'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
+                                                <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                 <td>
                                                     <a class="btn btn-primary detail"
-                                                        href="/admin/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                        href="/admin/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
-                                                @isset($jam[1]) 
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['03'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['04'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['05'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['06'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['07'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['08'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['09'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['10'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['11'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['12'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['total'] }}</td>
-                                                @else
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                @endisset
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -165,31 +130,19 @@
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>
-        $(".convert").each(function() {
-            $(this).attr('value', $(this).text());
-        });
-        
-        var datatable = $('#table-inspektur-kinerja').dataTable({
+        var datatable = $('#table-inspektur-kinerja').DataTable({
             dom: "Bfrtip",
-            responsive: false,
+            responsive: true,
             lengthChange: false,
             autoWidth: false,
-            scrollX: true,
+            // scrollX: true,
             buttons: [
                 {
                     extend: "excel",
                     className: "btn-success",
-                    messageTop: function () {
-                        return $('#title').text();
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5, 6],
                     },
-                },
-                {
-                    text: 'Jam Kerja',
-                    className: 'btn btn-primary disabled ml-2 jam-kerja toggle',
-                },
-                {
-                    text: 'Hari Kerja',
-                    className: 'btn btn-primary hari-kerja toggle',
                 }
             ],
             columnDefs: [{
@@ -197,41 +150,9 @@
                 "createdCell": function (td, cellData, rowData, row, col) {
                 $(td).text(row + 1);
                 }
-            }]
-        }).api();
-
-        //update ukuran tabel saat ukuran sidebar berubah
-        $('.nav-link').on("click", function () {
-            setTimeout( function () {
-                datatable.columns.adjust();
-            }, 500);
+            }],
         });
 
-        $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
-        $('.toggle').wrapAll('<div class="btn-group"></div>');
-        $('.hari-kerja').on('click', function() {
-            $(this).addClass('disabled');
-            $(this).attr('disabled', true);
-            $(".jam-kerja").removeClass('disabled');
-            $(".jam-kerja").attr('disabled', false);
-            $(".convert").each(function() {
-                let cell = datatable.cell(this);
-                if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
-            });
-            $('#title').text('Realisasi Hari Kerja');
-        })
-        $('.jam-kerja').on('click', function() {
-            $(this).addClass('disabled');
-            $(this).attr('disabled', true);
-            $(".hari-kerja").removeClass('disabled');
-            $(".hari-kerja").attr('disabled', false);
-            $(".convert").each(function() {
-                let cell = datatable.cell(this);
-                if (cell.data() != '0') cell.data($(this).attr('value')).draw();
-            });
-            $('#title').text('Realisasi Jam Kerja');
-        })
-        
         $('#yearSelect').on('change', function() {
             let year = $(this).val();
             let unit = $('#unitSelect').val();

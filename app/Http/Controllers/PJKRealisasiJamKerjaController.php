@@ -9,7 +9,7 @@ use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
 use Illuminate\Database\Eloquent\Builder;
 
-class InspekturRealisasiJamKerjaController extends Controller
+class PJKRealisasiJamKerjaController extends Controller
 {
     protected $jabatan = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'PJK'];
 
@@ -101,7 +101,7 @@ class InspekturRealisasiJamKerjaController extends Controller
     
     public function rekap(Request $request)
     {
-        $this->authorize('inspektur');
+        $this->authorize('pjk');
 
         $year = $request->year;
 
@@ -111,14 +111,16 @@ class InspekturRealisasiJamKerjaController extends Controller
             $year = $year;
         }
 
-        if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
+        $unit = $request->unit;
+
+        if ($unit == '8000' || $unit == null) {
             $pegawai = User::get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
                             ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
-                                $query->where('unit_kerja', auth()->user()->unit_kerja);
+            $pegawai = User::where('unit_kerja', $unit)->get();
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
+                                $query->where('unit_kerja', $unit);
                             })->where('status', 1)->whereYear('updated_at', $year)
                             ->select('id_laporan_objek');
         } 
@@ -148,18 +150,18 @@ class InspekturRealisasiJamKerjaController extends Controller
                                                                     }), //realisasi jam kerja per bulan
                                         'total' => $total_jam //realisasi jam kerja total
                                     ];
-                                });
+                                }); 
         
         $jam_kerja = $pegawai->toBase()->merge($jam_kerja)->groupBy('id'); 
 
-        return view('inspektur.realisasi-jam-kerja.rekap',[
+        return view('pjk.realisasi-jam-kerja.rekap',[
             'type_menu'     => 'realisasi-jam-kerja'
         ])->with('jam_kerja', $jam_kerja);
     }
 
     public function pool(Request $request)
     {
-        $this->authorize('inspektur');
+        $this->authorize('pjk');
 
         $year = $request->year;
 
@@ -169,14 +171,16 @@ class InspekturRealisasiJamKerjaController extends Controller
             $year = $year;
         }
 
-        if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
+        $unit = $request->unit;
+
+        if ($unit == null || $unit == '8000') {
             $pegawai = User::get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
                             ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
-            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
-                                $query->where('unit_kerja', auth()->user()->unit_kerja);
+            $pegawai = User::where('unit_kerja', $unit)->get();
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
+                                $query->where('unit_kerja', $unit);
                             })->where('status', 1)->whereYear('updated_at', $year)
                             ->select('id_laporan_objek');
         } 
@@ -208,7 +212,7 @@ class InspekturRealisasiJamKerjaController extends Controller
 
         $countall = $pegawai->toBase()->merge($count)->groupBy('id');
         
-        return view('inspektur.realisasi-jam-kerja.pool',[
+        return view('pjk.realisasi-jam-kerja.pool',[
             'type_menu'     => 'realisasi-jam-kerja'
         ])->with('countall', $countall);
     }
@@ -221,7 +225,7 @@ class InspekturRealisasiJamKerjaController extends Controller
      */
     public function show($id, $year)
     {
-        $this->authorize('inspektur');
+        $this->authorize('pjk');
 
         $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query) use ($id) {
                             $query->where('id_pegawai', $id);
@@ -264,7 +268,7 @@ class InspekturRealisasiJamKerjaController extends Controller
         
         $pegawai = User::findOrFail($id)->name; 
 
-        return view('inspektur.realisasi-jam-kerja.show',[
+        return view('pjk.realisasi-jam-kerja.show',[
             'type_menu'     => 'realisasi-jam-kerja',
             'jabatan'       => $this->jabatan,
             'pegawai'       => $pegawai
@@ -273,11 +277,11 @@ class InspekturRealisasiJamKerjaController extends Controller
     
     public function detailTugas($id)
     {
-        $this->authorize('inspektur');
+        $this->authorize('pjk');
         
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
 
-        return view('inspektur.realisasi-jam-kerja.detail-tugas', [
+        return view('pjk.realisasi-jam-kerja.detail-tugas', [
             'type_menu'     => 'realisasi-jam-kerja',
             'unitKerja'     => $this->unitkerja,
             'hasilKerja'    => $this->hasilKerja,

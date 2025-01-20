@@ -53,6 +53,7 @@ use App\Http\Controllers\Auth\SingleSignOnController;
 use App\Http\Controllers\PegawaiKompetensiController;
 use App\Http\Controllers\KategoriKompetensiController;
 use App\Http\Controllers\NormaHasilAcceptedController;
+use App\Http\Controllers\PJKRencanaJamKerjaController;
 use App\Http\Controllers\SuratKorespondensiController;
 use App\Http\Controllers\TargetIkuUnitKerjaController;
 use App\Http\Controllers\ArsiparisNormaHasilController;
@@ -68,6 +69,8 @@ use App\Http\Controllers\ArsiparisKendaliMutuController;
 use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\KodeKlasifikasiArsipController;
+use App\Http\Controllers\PJKRealisasiJamKerjaController;
+use App\Http\Controllers\InspekturRencanaKerjaController;
 use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -192,6 +195,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('rencana-jam-kerja/pool', [AdminRencanaJamKerjaController::class, 'pool']);
         Route::get('rencana-jam-kerja/pool/{id}/{year}', [AdminRencanaJamKerjaController::class, 'show']);
         Route::get('rencana-jam-kerja/detail/{id}', [AdminRencanaJamKerjaController::class, 'detailTugas']);
+        Route::get('rencana-jam-kerja/export/{mode}/{year}/{unit}', [AdminRencanaJamKerjaController::class, 'export']);
 
         //Realisasi Jam Kerja
         Route::get('realisasi-jam-kerja/rekap', [AdminRealisasiJamKerjaController::class, 'rekap']);
@@ -271,6 +275,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('rencana-jam-kerja/pool', [InspekturRencanaJamKerjaController::class, 'pool']);
         Route::get('rencana-jam-kerja/pool/{id}/{year}', [InspekturRencanaJamKerjaController::class, 'show']);
         Route::get('rencana-jam-kerja/detail/{id}', [InspekturRencanaJamKerjaController::class, 'detailTugas']);
+        Route::get('rencana-jam-kerja/export/{mode}/{year}', [InspekturRencanaJamKerjaController::class, 'export']);
 
         //Realisasi Jam Kerja
         Route::get('realisasi-jam-kerja/rekap', [InspekturRealisasiJamKerjaController::class, 'rekap']);
@@ -284,6 +289,9 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('penilaian-kinerja/{pegawai_dinilai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'show']);
         Route::get('penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
         Route::get('penilaian-kinerja/export/{pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'export']);
+
+        //Rencana Kinerja Inspektur
+        Route::resource('rencana-kinerja', InspekturRencanaKerjaController::class);
     });
 
 
@@ -464,6 +472,31 @@ Route::group(['middleware'=>'auth'], function(){
     });
 
 
+
+    /**
+     * ---------------------------------------------------------------------------
+     * PJK - PJK - PJK - PJK - PJK - PJK
+     * ---------------------------------------------------------------------------
+     * */
+    Route::prefix('pjk')
+    ->name('pjk.')
+    ->middleware('role:is_pjk')
+    ->group(function () {
+
+        //Rencana Jam Kerja
+        Route::get('rencana-jam-kerja/rekap', [PJKRencanaJamKerjaController::class, 'rekap']);
+        Route::get('rencana-jam-kerja/pool', [PJKRencanaJamKerjaController::class, 'pool']);
+        Route::get('rencana-jam-kerja/pool/{id}/{year}', [PJKRencanaJamKerjaController::class, 'show']);
+        Route::get('rencana-jam-kerja/detail/{id}', [PJKRencanaJamKerjaController::class, 'detailTugas']);
+        Route::get('rencana-jam-kerja/export/{mode}/{year}/{unit}', [PJKRencanaJamKerjaController::class, 'export']);
+
+        //Realisasi Jam Kerja
+        Route::get('realisasi-jam-kerja/rekap', [PJKRealisasiJamKerjaController::class, 'rekap']);
+        Route::get('realisasi-jam-kerja/pool', [PJKRealisasiJamKerjaController::class, 'pool']);
+        Route::get('realisasi-jam-kerja/pool/{id}/{year}', [PJKRealisasiJamKerjaController::class, 'show']);
+        Route::get('realisasi-jam-kerja/detail/{id}', [PJKRealisasiJamKerjaController::class, 'detailTugas']);
+
+    });
 
     Route::get('/objek-bykategori/{id}', [ObjekKegiatanController::class, 'objekByKategori']);
     Route::resource('/objek-pengawasan', ObjekPengawasanController::class);

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class InspekturRencanaJamKerjaController extends Controller
 {
@@ -236,161 +238,130 @@ class InspekturRencanaJamKerjaController extends Controller
         ]);
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
+    public function export($mode, $year)
+    {
+        $this->authorize('inspektur');
+        $bulans = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $start = $request->tgl.' '.$request->start;
-    //     $end = $request->tgl.' '.$request->end;
-    //     $duplicateStart = Event::where('start', '<=', $start)->where('end', '>', $start)->count();
-    //     $duplicateEnd = Event::where('start', '<=', $end)->where('end', '>', $end)->count();
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        }
 
-    //     $rules = [
-    //         'id_pelaksana'   => 'required',
-    //         'start'             => [
-    //                                     'required',
-    //                                     'date_format:H:i',
-    //                                     'before:end',
-    //                                     Rule::when($duplicateStart != 0 , ['boolean'])
-    //                                ],
-    //         'end'               => [
-    //                                     'required',
-    //                                     'date_format:H:i',
-    //                                     'after:start',
-    //                                     Rule::when($duplicateStart != 0 && $duplicateEnd != 0, ['boolean'])
-    //                                 ],
-    //         'aktivitas'         => 'required',
-    //     ];
+        $unit = auth()->user()->unit_kerja;
+        if ($unit == null || $unit == '8000') {
+            $pegawai = User::get();
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                        $query->whereIn('status', [1,2])->where('tahun', $year);
+                    })->groupBy('id_pegawai')->select('id_pegawai as id')
+                    ->selectRaw('sum('.implode('+', $bulans).') as total');
+        } else {
+            $pegawai = User::where('unit_kerja', $unit)->get();
+            $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                        $query->whereIn('status', [1,2])->where('tahun', $year);
+                    })->whereRelation('user', function (Builder $query) use ($unit) {
+                        $query->where('unit_kerja', $unit);
+                    })->groupBy('id_pegawai')->select('id_pegawai as id')
+                    ->selectRaw('sum('.implode('+', $bulans).') as total');  
+        } 
 
-    //     $customMessages = [
-    //         'boolean' => 'Sudah ada aktivitas pada jam ini',
-    //         'required' => ':attribute harus diisi',
-    //         'date_format' => 'Format jam harus JJ:MM',
-    //         'before' => 'Jam mulai harus sebelum jam selesai',
-    //         'after' => 'Jam selesai harus setelah jam mulai',
-    //     ];
+        foreach ($bulans as $bulan) {
+            $tugas = $tugas->selectRaw("SUM(".$bulan.") as ".$bulan);
+        }
+        $tugas = $tugas->get();
 
-    //     $validator = Validator::make($request->all(), $rules, $customMessages)
-    //                 ->setAttributeNames(
-    //                     [
-    //                         'id_pelaksana' => 'Tugas',
-    //                         'aktivitas' => 'Aktivitas',
-    //                     ], // Your field name and alias
-    //                 );
+        $jam_kerja = $pegawai->toBase()->merge($tugas)->groupBy('id');
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $sheet->setTitle('REKAP');
+        $data = [
+            ['No.', 'Pegawai', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu',
+             'Sep', 'Okt', 'Nov', 'Des', 'Total']
+        ];
 
-    //     $validateData = $request->validate($rules);
-    //     $validateData['start'] = $start;
-    //     $validateData['end'] = $end;
+        $i = 1;
+        foreach ($jam_kerja as $jam) {
+            if (isset($jam[1])) {
+                if ($mode == 'jam')
+                    array_push($data, [$i, $jam[0]->name, $jam[1]->jan, $jam[1]->feb, $jam[1]->mar,
+                                        $jam[1]->apr, $jam[1]->mei, $jam[1]->jun, $jam[1]->jul,
+                                        $jam[1]->agu, $jam[1]->sep, $jam[1]->okt, $jam[1]->nov,
+                                        $jam[1]->des, $jam[1]->total]);
+                else
+                    array_push($data, [$i, $jam[0]->name, round($jam[1]->jan / 7.5, 2), 
+                                        round($jam[1]->feb / 7.5, 2), round($jam[1]->mar / 7.5, 2),
+                                        round($jam[1]->apr / 7.5, 2), round($jam[1]->mei / 7.5, 2), 
+                                        round($jam[1]->jun / 7.5, 2), round($jam[1]->jul / 7.5, 2),
+                                        round($jam[1]->agu / 7.5, 2), round($jam[1]->sep / 7.5, 2), 
+                                        round($jam[1]->okt / 7.5, 2), round($jam[1]->nov / 7.5, 2),
+                                        round($jam[1]->des / 7.5, 2), round($jam[1]->total / 7.5, 2)]);
+            }
+            else 
+                array_push($data, [$i, $jam[0]->name, '0', '0', '0', '0', '0', '0', '0',
+                                    '0', '0', '0', '0', '0', '0']);
+            $i++;
+        } 
 
-    //     Event::create($validateData);
-    //     $request->session()->put('status', 'Berhasil menambahkan aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
+        $sheet->fromArray($data);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil menambah aktivitas.',
-    //     ]);
-    // }
+        $mySpreadsheet->createSheet();
+        $sheet2 = $mySpreadsheet->getSheet(1);
+        $sheet2->setTitle('DETAIL');
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     $event = Event::where('id', $id)->get();
+        $data2 = [
+            ['No.', 'Pegawai', 'Tim', 'Proyek', 'Tugas', 'Jan', 'Feb', 'Mar', 
+            'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Total']
+        ];
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Detail Data Event',
-    //         'data'    => $event
-    //     ]);
-    // }
+        $i = 1;
+        foreach ($pegawai as $user) {
+            $rencana_kerja = PelaksanaTugas::where('id_pegawai', $user->id)
+                                ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                                    $query->whereIn('status', [1,2])->where('tahun', $year);
+                                })->selectRaw('*, ('.implode('+', $bulans).') as total')->get();
+            
+            if ($rencana_kerja->isEmpty()) {
+                array_push($data2, [$i, $user->name, '', '', '', '', '', '', '', '', 
+                                    '', '', '', '', '', '', '', '']);
+                $i++;
+            }
+            else
+                foreach ($rencana_kerja as $tugas) {
+                    if ($mode == 'jam')
+                        array_push($data2, [$i, $user->name, $tugas->rencanaKerja->proyek->timkerja->nama,
+                                            $tugas->rencanaKerja->proyek->nama_proyek,
+                                            $tugas->rencanaKerja->tugas, $tugas->jan, $tugas->feb,
+                                            $tugas->mar, $tugas->apr, $tugas->mei, $tugas->jun, $tugas->jul,
+                                            $tugas->agu, $tugas->sep, $tugas->okt, $tugas->nov, $tugas->des, $tugas->total]);
+                    else
+                        array_push($data2, [$i, $user->name, $tugas->rencanaKerja->proyek->timkerja->nama,
+                                            $tugas->rencanaKerja->proyek->nama_proyek,
+                                            $tugas->rencanaKerja->tugas, round($tugas->jan / 7.5, 2), 
+                                            round($tugas->feb / 7.5, 2), round($tugas->mar / 7.5, 2), 
+                                            round($tugas->apr / 7.5, 2), round($tugas->mei / 7.5, 2), 
+                                            round($tugas->jun / 7.5, 2), round($tugas->jul / 7.5, 2),
+                                            round($tugas->agu / 7.5, 2), round($tugas->sep / 7.5, 2), 
+                                            round($tugas->okt / 7.5, 2), round($tugas->nov / 7.5, 2), 
+                                            round($tugas->des / 7.5, 2), round($tugas->total / 7.5, 2)]);
+                    $i++;
+                }
+        }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
+        $sheet2->fromArray($data2);
+        foreach ($sheet2->getColumnIterator() as $column) {
+            $sheet2->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     $rules = [
-    //         'start'             => 'required|date_format:H:i|before:end',
-    //         'end'               => 'required|date_format:H:i|after:start',
-    //         'aktivitas'         => 'required',
-    //         'tgl'               => 'required|date_format:Y-m-d',
-    //     ];
-
-    //     $validator = Validator::make($request->all(), $rules);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     $validateData = $request->validate($rules);
-    //     $validateData['start'] = $request->tgl.' '.$request->start;
-    //     $validateData['end'] = $request->tgl.' '.$request->end;
-
-    //     $eventEdit = Event::where('id', $id)->update(Arr::except($validateData, ['tgl']));
-
-    //     $request->session()->put('status', 'Berhasil memperbarui data aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
-
-    //     return response()->json([
-    //         'success'   => true,
-    //         'message'   => 'Data Berhasil Diperbarui',
-    //         'data'      => $eventEdit
-    //     ]);
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Request $request, $id)
-    // {
-    //     Event::destroy($id);
-    //     $request->session()->put('status', 'Berhasil menghapus data aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil menghapus data aktivitas',
-    //     ]);
-    // }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Rencana Jam Kerja Pegawai.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
+    }
 }

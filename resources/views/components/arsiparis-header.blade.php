@@ -50,6 +50,11 @@
                     <i class="fas fa-user-shield"></i> Login sebagai Perencana
                 </a>
                 @endif
+                @if (auth()->user()->is_pjk)
+                <a href="/pjk/rencana-jam-kerja/rekap" class="dropdown-item has-icon">
+                    <i class="fas fa-user-shield"></i> Login sebagai PJ Kegiatan
+                </a>
+                @endif
             </div>
         </li>
         <li class="dropdown mr-4 ml-2 d-flex justify-content-center align-items-center">

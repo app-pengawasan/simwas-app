@@ -65,6 +65,13 @@
                     </li>
                 </ul>
             </li>
+            <li
+                class="{{ Request::is('inspektur/rencana-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/rencana-kinerja">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Rencana Kinerja</span>
+                </a>
+            </li>
         </ul>
         @include('components.footer')
     </aside>

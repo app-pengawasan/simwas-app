@@ -27,7 +27,7 @@
                         <div class="row mb-4 pb-0">
                             <div class="col-md-4">
                                 <a class="btn btn-primary"
-                                    href="/inspektur/rencana-jam-kerja/pool/{{ $tugas->user->id }}/{{ $tugas->rencanaKerja->timkerja->tahun }}">
+                                    href="/admin/rencana-jam-kerja/pool/{{ $tugas->user->id }}/{{ $tugas->rencanaKerja->timkerja->tahun }}">
                                     <i class="fas fa-chevron-circle-left"></i> Kembali
                                 </a>
                             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Realisasi Jam Kerja')
+@section('title', 'Rencana Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.pjk-header')
+    @include('components.pjk-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rekap Realisasi Jam Kerja</h1>
+                <h1>Rekap Rencana Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rekap Realisasi Jam Kerja</div>
+                    <div class="breadcrumb-item active"><a href="">Dashboard</a></div>
+                    <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@
                                                 <th rowspan="2" class="align-middle">No.</th>
                                                 <th rowspan="2" class="align-middle">Pegawai</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
-                                                <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
+                                                <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
                                             </tr>
                                             <tr>
                                                 <th>Jan</th>
@@ -96,25 +96,25 @@
                                                 <td>{{ $jam[0]->name }}</td>
                                                 <td>
                                                     <a class="btn btn-primary detail"
-                                                        href="/admin/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                        href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                 </td>
-                                                @isset($jam[1]) 
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['03'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['04'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['05'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['06'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['07'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['08'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['09'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['10'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['11'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['12'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['total'] }}</td>
+                                                @isset($jam[1])
+                                                    <td class="convert" value="{{ $jam[1]->jan }}">{{ $jam[1]->jan }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->feb }}">{{ $jam[1]->feb }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->mar }}">{{ $jam[1]->mar }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->apr }}">{{ $jam[1]->apr }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->mei }}">{{ $jam[1]->mei }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->jun }}">{{ $jam[1]->jun }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->jul }}">{{ $jam[1]->jul }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->agu }}">{{ $jam[1]->agu }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->sep }}">{{ $jam[1]->sep }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->okt }}">{{ $jam[1]->okt }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->nov }}">{{ $jam[1]->nov }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->des }}">{{ $jam[1]->des }}</td>
+                                                    <td class="convert" value="{{ $jam[1]->total }}">{{ $jam[1]->total }}</td>
                                                 @else
                                                     <td>0</td>
                                                     <td>0</td>
@@ -165,10 +165,6 @@
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>
-        $(".convert").each(function() {
-            $(this).attr('value', $(this).text());
-        });
-        
         var datatable = $('#table-inspektur-kinerja').dataTable({
             dom: "Bfrtip",
             responsive: false,
@@ -177,11 +173,8 @@
             scrollX: true,
             buttons: [
                 {
-                    extend: "excel",
-                    className: "btn-success",
-                    messageTop: function () {
-                        return $('#title').text();
-                    },
+                    className: "btn-success unduh",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                 },
                 {
                     text: 'Jam Kerja',
@@ -207,6 +200,7 @@
             }, 500);
         });
 
+        let mode = 'jam';
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
@@ -218,7 +212,8 @@
                 let cell = datatable.cell(this);
                 if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
             });
-            $('#title').text('Realisasi Hari Kerja');
+            $('#title').text('Rencana Hari Kerja');
+            mode = 'hari';
         })
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
@@ -229,9 +224,10 @@
                 let cell = datatable.cell(this);
                 if (cell.data() != '0') cell.data($(this).attr('value')).draw();
             });
-            $('#title').text('Realisasi Jam Kerja');
+            $('#title').text('Rencana Jam Kerja');
+            mode = 'jam';
         })
-        
+
         $('#yearSelect').on('change', function() {
             let year = $(this).val();
             let unit = $('#unitSelect').val();
@@ -251,6 +247,10 @@
         $(".detail").attr('href', function(_, el){
             return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
+
+        $('.unduh').on('click', function() {
+            window.location.href = `/pjk/rencana-jam-kerja/export/${mode}/${$('#yearSelect').val()}/${$('#unitSelect').val()}`;
+        })
 
         $('#table-inspektur-kinerja').on('draw.dt', function() {
             $(".detail").attr('href', function(_, el){

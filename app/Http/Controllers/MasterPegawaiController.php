@@ -37,6 +37,7 @@ class MasterPegawaiController extends Controller
     ];
 
     protected $jabatan = [
+        '0'  => '-',
         '10' => 'Inspektur Utama',
         '11' => 'Inspektur Wilayah I',
         '12' => 'Inspektur wilayah II',
@@ -81,7 +82,8 @@ class MasterPegawaiController extends Controller
         'is_analissdm'  => 'Analis SDM',
         'is_arsiparis'  => 'Arsiparis',
         'is_aktif'      => 'Inspektur Utama',
-        'is_irwil'     =>  'Inspektur Wilayah',
+        'is_irwil'      =>  'Inspektur Wilayah',
+        'is_pjk'        =>  'PJ Kegiatan',
     ];
 
     /**
@@ -209,6 +211,7 @@ class MasterPegawaiController extends Controller
             'is_arsiparis'  => 'required',
             'is_aktif'      => 'required',
             'is_irwil'      => 'required',
+            'is_pjk'        => 'required',
         ]);
 
         $validateData["password"] = bcrypt($request->password);
@@ -287,6 +290,7 @@ class MasterPegawaiController extends Controller
             'is_arsiparis'  => 'required',
             'is_aktif'      => 'required',
             'is_irwil'      => 'required',
+            'is_pjk'        => 'required',
         ];
 
         // if($request->password != ""){

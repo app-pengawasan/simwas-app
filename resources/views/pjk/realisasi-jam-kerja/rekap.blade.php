@@ -13,14 +13,14 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.pjk-header')
+    @include('components.pjk-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Rekap Realisasi Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin">Dashboard</a></div>
+                    <div class="breadcrumb-item active"><a href="">Dashboard</a></div>
                     <div class="breadcrumb-item">Rekap Realisasi Jam Kerja</div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                                                 <td>{{ $jam[0]->name }}</td>
                                                 <td>
                                                     <a class="btn btn-primary detail"
-                                                        href="/admin/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                        href="/pjk/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>

@@ -89,15 +89,15 @@
                                                     @endif --}}
                                                 </td>
                                                 {{-- <td>{{ $k->catatan }}</td> --}}
-                                                @if ($k->status == 1)
+                                                {{-- @if ($k->status == 1)
                                                     <td>
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }} oleh {{ $k->analis->name }}</span>
                                                     </td>
-                                                @else 
+                                                @else  --}}
                                                     <td>
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
                                                     </td>
-                                                @endif
+                                                {{-- @endif --}}
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
@@ -110,17 +110,19 @@
                                                                 <i class="fas fa-circle-info text-primary mr-2"></i>
                                                                 Detail
                                                             </a>
-                                                            <a href="javascript:void(0)" class="dropdown-item edit-btn"
-                                                                data-id="{{ $k->id }}"
-                                                                data-toggle="modal" data-target="#modal-edit-kompetensi">
-                                                                <i class="fas fa-edit text-warning mr-2"></i>
-                                                                Edit
-                                                            </a>
-                                                            <a href="javascript:void(0)" class="dropdown-item delete-btn"
-                                                            data-id="{{ $k->id }}">
-                                                                <i class="fas fa-trash text-danger mr-2"></i>
-                                                                Hapus
-                                                            </a>
+                                                            @if (!($k->status == 1 && $role == 'pegawai'))
+                                                                <a href="javascript:void(0)" class="dropdown-item edit-btn"
+                                                                    data-id="{{ $k->id }}"
+                                                                    data-toggle="modal" data-target="#modal-edit-kompetensi">
+                                                                    <i class="fas fa-edit text-warning mr-2"></i>
+                                                                    Edit
+                                                                </a>
+                                                                <a href="javascript:void(0)" class="dropdown-item delete-btn"
+                                                                data-id="{{ $k->id }}">
+                                                                    <i class="fas fa-trash text-danger mr-2"></i>
+                                                                    Hapus
+                                                                </a>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

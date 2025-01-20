@@ -62,6 +62,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('arsiparis', function (User $user) {
             return $user->is_arsiparis == true;
         });
+        Gate::define('pjk', function (User $user) {
+            return $user->is_pjk == true;
+        });
 
         Facades\View::composer(
             'components.sekretaris-sidebar', SidebarSekretaris::class,

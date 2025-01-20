@@ -29,6 +29,8 @@ let table = $("#table-kompetensi")
                 extend: "pdf",
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> Pdf',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
                 exportOptions: {
                     columns: colnums,
                 },

@@ -172,5 +172,11 @@
         $(".detail").attr('href', function(_, el){
             return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
+
+        $('#table-inspektur-kinerja').on('draw.dt', function() {
+            $(".detail").attr('href', function(_, el){
+                return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
+            });
+        });
     </script>
 @endpush

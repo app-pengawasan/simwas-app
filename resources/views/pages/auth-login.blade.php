@@ -17,9 +17,7 @@
         </div>
         <div>
             <div class="form-group col-lg-12 mx-auto">
-                <a href={{
-                    config('app.env') == 'local' ? "/auth/google" :
-                    "/auth/sso-bps" }} class="gsi-material-button" style="width:620; display:block">
+                <a href="/auth/sso-bps" class="gsi-material-button" style="width:620; display:block">
                     <div class="gsi-material-button-state"></div>
                     <div class="gsi-material-button-content-wrapper">
                         <div class="gsi-material-button-icon">
@@ -27,7 +25,17 @@
                                 style="width: 24px; height: 24px; margin-right: 10px;">
                         </div>
                         <span class="gsi-material-button-contents">Sign in with SSO BPS</span>
-                        <span style="display: none;">Sign in with SSO BPS</span>
+                    </div>
+                </a>
+                <br>
+                <a href="/auth/google" class="gsi-material-button" style="width:620; display:block">
+                    <div class="gsi-material-button-state"></div>
+                    <div class="gsi-material-button-content-wrapper">
+                        <div class="gsi-material-button-icon">
+                            <img src="/img/google-logo.png"
+                                style="width: 24px; height: 24px; margin-right: 10px;">
+                        </div>
+                        <span class="gsi-material-button-contents">Sign in with Google</span>
                     </div>
                 </a>
             </div>

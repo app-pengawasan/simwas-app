@@ -91,3 +91,9 @@ test('authenticated user with arsiparis rights can access the arsiparis page', f
     actingAs($user)->get('/arsiparis')->assertStatus(200);
 });
 
+test('authenticated user with pjk rights can access the pjk page', function () {
+    $user = \App\Models\User::factory()->create();
+    $user->is_pjk = true;
+    actingAs($user)->get('/pjk')->assertStatus(200);
+});
+

@@ -116,18 +116,17 @@ class AdminRealisasiJamKerjaController extends Controller
         if ($unit == '8000' || $unit == null) {
             $pegawai = User::get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
-                            ->whereYear('updated_at', $year)->select('id_pelaksana');
+                            ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
             $pegawai = User::where('unit_kerja', $unit)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
                                 $query->where('unit_kerja', $unit);
                             })->where('status', 1)->whereYear('updated_at', $year)
-                            ->select('id_pelaksana');
+                            ->select('id_laporan_objek');
         } 
         
-        $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
-                     ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                     ->get()->groupBy('pelaksana.id_pegawai'); 
+        $realisasi = Event::whereIn('laporan_opengawasan', $realisasiDone)
+                     ->get()->groupBy('id_pegawai'); 
 
         $jam_kerja = $realisasi->map(function ($items) {
                                     $total_jam = 0;
@@ -137,7 +136,7 @@ class AdminRealisasiJamKerjaController extends Controller
                                         $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                                     }
                                     return [
-                                        'id' => $items[0]->pelaksana->id_pegawai,
+                                        'id' => $items[0]->id_pegawai,
                                         'realisasi_jam' => $items->groupBy(function ($item) {
                                                                         return date("m",strtotime($item->updated_at));
                                                                     })->map(function ($item) {
@@ -177,35 +176,39 @@ class AdminRealisasiJamKerjaController extends Controller
         if ($unit == null || $unit == '8000') {
             $pegawai = User::get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
-                            ->whereYear('updated_at', $year)->select('id_pelaksana');
+                            ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
             $pegawai = User::where('unit_kerja', $unit)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
                                 $query->where('unit_kerja', $unit);
                             })->where('status', 1)->whereYear('updated_at', $year)
-                            ->select('id_pelaksana');
+                            ->select('id_laporan_objek');
         } 
         
-        $realisasi = RealisasiKinerja::whereIn('id_pelaksana', $realisasiDone)
+        $realisasi = RealisasiKinerja::whereIn('id_laporan_objek', $realisasiDone)
                                         ->get()->groupBy('pelaksana.id_pegawai');
-        
+
         $count = $realisasi
-                ->map(function ($items) {
-                        $total_jam = 0;
-                        foreach ($items as $realisasi) {
-                            $start = $realisasi->start;
-                            $end = $realisasi->end;
+                ->map(function ($items) {  
+                    $total_jam = 0; 
+                    foreach ($items as $realisasi) { 
+                        $events = Event::where('laporan_opengawasan', $realisasi->id_laporan_objek)
+                                    ->where('id_pegawai', $realisasi->pelaksana->id_pegawai)->get();
+                        foreach ($events as $event) {
+                            $start = $event->start;
+                            $end = $event->end;
                             $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                         }
-                        return [
-                            'id' => $items[0]->pelaksana->id_pegawai,
-                            'jumlah_tim' => $items->unique('pelaksana.rencanaKerja.proyek.timkerja')->count(),
-                            'jumlah_proyek' => $items->unique('pelaksana.rencanaKerja.proyek')->count(),
-                            'jumlah_tugas' => $items->unique('pelaksana')->count(),
-                            'jam_kerja'   => $total_jam,
-                            'hari_kerja'  => round($total_jam / 7.5, 2)
-                        ];
-                  });
+                    } 
+                    return [
+                        'id' => $items[0]->pelaksana->id_pegawai,
+                        'jumlah_tim' => $items->unique('pelaksana.rencanaKerja.proyek.timkerja')->count(),
+                        'jumlah_proyek' => $items->unique('pelaksana.rencanaKerja.proyek')->count(),
+                        'jumlah_tugas' => $items->unique('pelaksana')->count(),
+                        'jam_kerja'   => $total_jam,
+                        'hari_kerja'  => round($total_jam / 7.5, 2)
+                    ];
+                });
 
         $countall = $pegawai->toBase()->merge($count)->groupBy('id');
         
@@ -226,11 +229,10 @@ class AdminRealisasiJamKerjaController extends Controller
 
         $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query) use ($id) {
                             $query->where('id_pegawai', $id);
-                        })->where('status', 1)->whereYear('updated_at', $year)->select('id_pelaksana');
+                        })->where('status', 1)->whereYear('updated_at', $year)->select('id_laporan_objek');
 
-        $realisasi = Event::whereIn('events.id_pelaksana', $realisasiDone)
-                    ->join('realisasi_kinerjas', 'realisasi_kinerjas.id_pelaksana', '=', 'events.id_pelaksana')
-                    ->get()->groupBy('id_pelaksana'); 
+        $realisasi = Event::whereIn('laporan_opengawasan', $realisasiDone)->where('id_pegawai', $id)
+                    ->get()->groupBy('laporanOPengawasan.objekPengawasan.rencanaKerja'); 
 
         $count = $realisasi
                 ->map(function ($items) {
@@ -240,13 +242,15 @@ class AdminRealisasiJamKerjaController extends Controller
                             $end = $realisasi->end;
                             $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
                         }
+                        $pelaksana = PelaksanaTugas::where('id_rencanakerja', $items[0]->laporanOPengawasan->objekPengawasan->id_rencanakerja)
+                                        ->where('id_pegawai', $items[0]->id_pegawai)->first();
                         return [
-                            'pegawai' => $items[0]->pelaksana->user->name,
-                            'tim' => $items[0]->pelaksana->rencanaKerja->proyek->timkerja->nama,
-                            'proyek' => $items[0]->pelaksana->rencanaKerja->proyek->nama_proyek,
-                            'tugas' => $items[0]->pelaksana->rencanaKerja->tugas,
-                            'id_pelaksana' => $items[0]->pelaksana->id_pelaksana,
-                            'jabatan' => $items[0]->pelaksana->pt_jabatan,
+                            'pegawai' => $pelaksana->user->name,
+                            'tim' => $pelaksana->rencanaKerja->proyek->timkerja->nama,
+                            'proyek' => $pelaksana->rencanaKerja->proyek->nama_proyek,
+                            'tugas' => $pelaksana->rencanaKerja->tugas,
+                            'id_pelaksana' => $pelaksana->id_pelaksana,
+                            'jabatan' => $pelaksana->pt_jabatan,
                             'realisasi_jam' => $items->groupBy(function ($item) {
                                                             return date("m",strtotime($item->updated_at));
                                                         })->map(function ($item) {
