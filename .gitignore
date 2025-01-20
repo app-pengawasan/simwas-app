@@ -18,3 +18,4 @@ yarn-error.log
 /.vscode
 /public/uploads/*
 /public/usulan-surat-srikandi/*
+/public/document/sertifikat
