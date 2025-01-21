@@ -296,32 +296,32 @@ class DashboardController extends Controller
 
                 //jumlah target norma hasil
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = $laporanobjek->count();
-
-                $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i, $year) {
+                                
+                $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i, $laporanobjek) {
                                     // $query->where('status_verifikasi_arsiparis', 'disetujui');
-                                    $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i, $year) {
+                                    $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i, $laporanobjek) {
                                                 $q->where('month', $i)->where('status', 1);
-                                                $q->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q2) use ($year) {
-                                                    $q2->where('tahun', $year);
+                                                $q->whereRelation('objekPengawasan', function (Builder $q2) use ($laporanobjek) {
+                                                    $q2->whereIn('id_rencanakerja', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'));
                                                 });
                                             });
-                                })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i, $year) {
+                                })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i, $laporanobjek) {
                                     // $query->where('status_verifikasi_arsiparis', 'disetujui');
-                                    $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i, $year) {
+                                    $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i, $laporanobjek) {
                                         $q->where('month', $i)->where('status', 1);
-                                        $q->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q2) use ($year) {
-                                            $q2->where('tahun', $year);
+                                        $q->whereRelation('objekPengawasan', function (Builder $q2) use ($laporanobjek) {
+                                            $q2->whereIn('id_rencanakerja', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'));
                                         });
                                     });
                                 })->get(); 
-                                
+
                 //jumlah norma hasil masuk
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = $norma_hasil->count();
 
-                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i, $year) {
+                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i, $laporanobjek) {
                                                     $query->where('month', $i)->where('status', 1);
-                                                    $query->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q) use ($year) {
-                                                        $q->where('tahun', $year);
+                                                    $query->whereRelation('objekPengawasan', function (Builder $q) use ($laporanobjek) {
+                                                        $q->whereIn('id_rencanakerja', $laporanobjek->pluck('objekPengawasan.id_rencanakerja'));
                                                     });
                                                 })
                                                 // ->where('status', 'disetujui')
