@@ -297,29 +297,39 @@ class DashboardController extends Controller
                 //jumlah target norma hasil
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['target_nh'] = $laporanobjek->count();
 
-                $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i) {
+                $norma_hasil = NormaHasilTim::whereRelation('normaHasilAccepted', function (Builder $query) use ($i, $year) {
                                     // $query->where('status_verifikasi_arsiparis', 'disetujui');
-                                    $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i) {
+                                    $query->whereRelation('normaHasil.laporanPengawasan', function (Builder $q) use ($i, $year) {
                                                 $q->where('month', $i)->where('status', 1);
+                                                $q->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q2) use ($year) {
+                                                    $q2->where('tahun', $year);
+                                                });
                                             });
-                                })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i) {
+                                })->orWhereRelation('normaHasilDokumen', function (Builder $query) use ($i, $year) {
                                     // $query->where('status_verifikasi_arsiparis', 'disetujui');
-                                    $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i) {
+                                    $query->whereRelation('laporanPengawasan', function (Builder $q) use ($i, $year) {
                                         $q->where('month', $i)->where('status', 1);
+                                        $q->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q2) use ($year) {
+                                            $q2->where('tahun', $year);
+                                        });
                                     });
-                                })->get();
+                                })->get(); 
+                                
                 //jumlah norma hasil masuk
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_nh'] = $norma_hasil->count();
 
-                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i) {
+                $kendali_mutu = KendaliMutuTim::whereRelation('laporanObjekPengawasan', function (Builder $query) use ($i, $year) {
                                                     $query->where('month', $i)->where('status', 1);
+                                                    $query->whereRelation('objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $q) use ($year) {
+                                                        $q->where('tahun', $year);
+                                                    });
                                                 })
                                                 // ->where('status', 'disetujui')
                                                 ->get();
                 //jumlah kendali mutu
                 $data_tim[$tim->id_timkerja]['data_bulan'][$i]['jumlah_km'] = $kendali_mutu->count();
             }
-        }
+        } 
 
         return view('arsiparis.index',[
             'type_menu'     => 'kinerja-tim',
@@ -352,6 +362,7 @@ class DashboardController extends Controller
                             $query->whereIn('laporan_pengawasan_id', $laporanObjek->pluck('id'));
                             // $query->where('status_verifikasi_arsiparis', 'disetujui');
                         })->get();
+        
         $norma_hasil_arr = [];
         foreach ($norma_hasil as $dokumen) {
             if ($dokumen->jenis == 1) {
