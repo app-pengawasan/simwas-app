@@ -202,6 +202,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('realisasi-jam-kerja/pool', [AdminRealisasiJamKerjaController::class, 'pool']);
         Route::get('realisasi-jam-kerja/pool/{id}/{year}', [AdminRealisasiJamKerjaController::class, 'show']);
         Route::get('realisasi-jam-kerja/detail/{id}', [AdminRealisasiJamKerjaController::class, 'detailTugas']);
+        Route::get('realisasi-jam-kerja/export/{mode}/{year}/{unit}', [AdminRealisasiJamKerjaController::class, 'export']);
 
         //Kinerja Tim
         Route::resource('kinerja-tim', AdminKinerjaTimController::class);
@@ -282,6 +283,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('realisasi-jam-kerja/pool', [InspekturRealisasiJamKerjaController::class, 'pool']);
         Route::get('realisasi-jam-kerja/pool/{id}/{year}', [InspekturRealisasiJamKerjaController::class, 'show']);
         Route::get('realisasi-jam-kerja/detail/{id}', [InspekturRealisasiJamKerjaController::class, 'detailTugas']);
+        Route::get('realisasi-jam-kerja/export/{mode}/{year}', [InspekturRealisasiJamKerjaController::class, 'export']);
 
         //Penilaian Kinerja Pegawai
         Route::resource('penilaian-kinerja', InspekturPenilaianKinerjaController::class);
@@ -495,6 +497,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('realisasi-jam-kerja/pool', [PJKRealisasiJamKerjaController::class, 'pool']);
         Route::get('realisasi-jam-kerja/pool/{id}/{year}', [PJKRealisasiJamKerjaController::class, 'show']);
         Route::get('realisasi-jam-kerja/detail/{id}', [PJKRealisasiJamKerjaController::class, 'detailTugas']);
+        Route::get('realisasi-jam-kerja/export/{mode}/{year}/{unit}', [PJKRealisasiJamKerjaController::class, 'export']);
 
     });
 

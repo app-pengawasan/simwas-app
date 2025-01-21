@@ -7,7 +7,9 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class InspekturRealisasiJamKerjaController extends Controller
 {
@@ -292,161 +294,197 @@ class InspekturRealisasiJamKerjaController extends Controller
         ]);
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
+    public function export($mode, $year)
+    {
+        $this->authorize('inspektur');
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $start = $request->tgl.' '.$request->start;
-    //     $end = $request->tgl.' '.$request->end;
-    //     $duplicateStart = Event::where('start', '<=', $start)->where('end', '>', $start)->count();
-    //     $duplicateEnd = Event::where('start', '<=', $end)->where('end', '>', $end)->count();
+        $unit = auth()->user()->unit_kerja;
+        if ($unit == '8000' || $unit == null) {
+            $pegawai = User::get();
+            $realisasiDone = RealisasiKinerja::where('status', 1)
+                            ->whereYear('updated_at', $year)->select('id_laporan_objek');
+        } else {
+            $pegawai = User::where('unit_kerja', $unit)->get();
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
+                                $query->where('unit_kerja', $unit);
+                            })->where('status', 1)->whereYear('updated_at', $year)
+                            ->select('id_laporan_objek');
+        } 
         
-    //     $rules = [
-    //         'id_pelaksana'   => 'required',
-    //         'start'             => [
-    //                                     'required',
-    //                                     'date_format:H:i',
-    //                                     'before:end',
-    //                                     Rule::when($duplicateStart != 0 , ['boolean'])
-    //                                ],
-    //         'end'               => [
-    //                                     'required',
-    //                                     'date_format:H:i',
-    //                                     'after:start',
-    //                                     Rule::when($duplicateStart != 0 && $duplicateEnd != 0, ['boolean'])
-    //                                 ],
-    //         'aktivitas'         => 'required',
-    //     ];
+        $realisasi = Event::whereIn('laporan_opengawasan', $realisasiDone)
+                     ->get()->groupBy('id_pegawai'); 
 
-    //     $customMessages = [
-    //         'boolean' => 'Sudah ada aktivitas pada jam ini',
-    //         'required' => ':attribute harus diisi',
-    //         'date_format' => 'Format jam harus JJ:MM',
-    //         'before' => 'Jam mulai harus sebelum jam selesai',
-    //         'after' => 'Jam selesai harus setelah jam mulai',
-    //     ];
+        $jam_kerja = $realisasi->map(function ($items) {
+                                        $total_jam = 0;
+                                        foreach ($items as $realisasi) {
+                                            $start = $realisasi->start;
+                                            $end = $realisasi->end;
+                                            $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                        }
+                                        return [
+                                            'id' => $items[0]->id_pegawai,
+                                            'realisasi_jam' => $items->groupBy(function ($item) {
+                                                                            return date("m",strtotime($item->updated_at));
+                                                                        })->map(function ($item) {
+                                                                            $realisasi_jam = 0;
+                                                                            foreach ($item as $realisasi) {
+                                                                                $start = $realisasi->start;
+                                                                                $end = $realisasi->end;
+                                                                                $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                                                            }
+                                                                            return $realisasi_jam;
+                                                                        }), //realisasi jam kerja per bulan
+                                            'total' => $total_jam //realisasi jam kerja total
+                                        ];
+                                    });
+        
+        $jam_kerja = $pegawai->toBase()->merge($jam_kerja)->groupBy('id')->toArray(); 
 
-    //     $validator = Validator::make($request->all(), $rules, $customMessages)
-    //                 ->setAttributeNames(
-    //                     [
-    //                         'id_pelaksana' => 'Tugas',
-    //                         'aktivitas' => 'Aktivitas',
-    //                     ], // Your field name and alias
-    //                 );
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $sheet->setTitle('REKAP');
+        $data = [
+            ['No.', 'Pegawai', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu',
+             'Sep', 'Okt', 'Nov', 'Des', 'Total']
+        ];
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
+        foreach ($jam_kerja as &$jam) {
+            if (isset($jam[1])) {
+                $jam[1]['realisasi_jam'] = $jam[1]['realisasi_jam']->toArray();
+                for ($i = 1; $i <= 12; $i++) {
+                    if (!isset($jam[1]['realisasi_jam'][$i])) $jam[1]['realisasi_jam'][$i] = 0;
+                }
+            }
+        } 
 
-    //     $validateData = $request->validate($rules);
-    //     $validateData['start'] = $start;
-    //     $validateData['end'] = $end;
+        $i = 1; 
+        foreach ($jam_kerja as &$jam) {
+            if (isset($jam[1])) {
+                if ($mode == 'jam') 
+                    array_push($data, [$i, $jam[0]['name'], $jam[1]['realisasi_jam'][1], 
+                                        $jam[1]['realisasi_jam'][2], $jam[1]['realisasi_jam'][3],
+                                        $jam[1]['realisasi_jam'][4], $jam[1]['realisasi_jam'][5], 
+                                        $jam[1]['realisasi_jam'][6], $jam[1]['realisasi_jam'][7],
+                                        $jam[1]['realisasi_jam'][8], $jam[1]['realisasi_jam'][9],
+                                        $jam[1]['realisasi_jam'][10], $jam[1]['realisasi_jam'][11],
+                                        $jam[1]['realisasi_jam'][12], $jam[1]['total']]);
+                else
+                    array_push($data, [$i, $jam[0]['name'], round($jam[1]['realisasi_jam'][1] / 7.5, 2), 
+                                        round($jam[1]['realisasi_jam'][2] / 7.5, 2), round($jam[1]['realisasi_jam'][3] / 7.5, 2),
+                                        round($jam[1]['realisasi_jam'][4] / 7.5, 2), round($jam[1]['realisasi_jam'][5] / 7.5, 2), 
+                                        round($jam[1]['realisasi_jam'][6] / 7.5, 2), round($jam[1]['realisasi_jam'][7] / 7.5, 2),
+                                        round($jam[1]['realisasi_jam'][8] / 7.5, 2), round($jam[1]['realisasi_jam'][9] / 7.5, 2), 
+                                        round($jam[1]['realisasi_jam'][10] / 7.5, 2), round($jam[1]['realisasi_jam'][11] / 7.5, 2),
+                                        round($jam[1]['realisasi_jam'][12] / 7.5, 2), round($jam[1]['total'] / 7.5, 2)]);
+            }
+            else 
+                array_push($data, [$i, $jam[0]['name'], '0', '0', '0', '0', '0', '0', '0',
+                                    '0', '0', '0', '0', '0', '0']);
+            $i++;
+        } 
 
-    //     Event::create($validateData);
-    //     $request->session()->put('status', 'Berhasil menambahkan aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
+        $sheet->fromArray($data, null, 'A1', true);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil menambah aktivitas.',
-    //     ]);
-    // }
+        $mySpreadsheet->createSheet();
+        $sheet2 = $mySpreadsheet->getSheet(1);
+        $sheet2->setTitle('DETAIL');
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     $event = Event::where('id', $id)->get();
+        $data2 = [
+            ['No.', 'Pegawai', 'Tim', 'Proyek', 'Tugas', 'Jan', 'Feb', 'Mar', 
+            'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Total']
+        ];
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Detail Data Event',
-    //         'data'    => $event
-    //     ]);
-    // }
+        $i = 1;
+        $count_data = [];
+        foreach ($pegawai as $user) {
+            $realisasiDone = RealisasiKinerja::whereRelation('pelaksana', function (Builder $query) use ($user) {
+                $query->where('id_pegawai', $user->id);
+            })->where('status', 1)->whereYear('updated_at', $year)->select('id_laporan_objek');
+    
+            $realisasi = Event::whereIn('laporan_opengawasan', $realisasiDone)->where('id_pegawai', $user->id)
+                        ->get()->groupBy('laporanOPengawasan.objekPengawasan.rencanaKerja'); 
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
+            $count = $realisasi
+                    ->map(function ($items) {
+                            $total_jam = 0;
+                            foreach ($items as $realisasi) {
+                                $start = $realisasi->start;
+                                $end = $realisasi->end;
+                                $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                            }
+                            $pelaksana = PelaksanaTugas::where('id_rencanakerja', $items[0]->laporanOPengawasan->objekPengawasan->id_rencanakerja)
+                                            ->where('id_pegawai', $items[0]->id_pegawai)->first();
+                            return [
+                                'pegawai' => $pelaksana->user->name,
+                                'tim' => $pelaksana->rencanaKerja->proyek->timkerja->nama,
+                                'proyek' => $pelaksana->rencanaKerja->proyek->nama_proyek,
+                                'tugas' => $pelaksana->rencanaKerja->tugas,
+                                'id_pelaksana' => $pelaksana->id_pelaksana,
+                                'jabatan' => $pelaksana->pt_jabatan,
+                                'realisasi_jam' => $items->groupBy(function ($item) {
+                                                                return date("m",strtotime($item->updated_at));
+                                                            })->map(function ($item) {
+                                                                $realisasi_jam = 0;
+                                                                foreach ($item as $realisasi) {
+                                                                    $start = $realisasi->start;
+                                                                    $end = $realisasi->end;
+                                                                    $realisasi_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                                                }
+                                                                return $realisasi_jam;
+                                                            }), //realisasi jam kerja per bulan
+                                'total' => $total_jam //realisasi jam kerja total
+                            ];
+                        })->toArray(); 
+            $count_data[$user->id] = array_values($count);
+        } 
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     $rules = [
-    //         'start'             => 'required|date_format:H:i|before:end',
-    //         'end'               => 'required|date_format:H:i|after:start',
-    //         'aktivitas'         => 'required',
-    //         'tgl'               => 'required|date_format:Y-m-d',
-    //     ];
+        foreach ($pegawai as $user) {
+            if (!$count_data[$user->id]) {
+                array_push($data2, [$i, $user->name, '', '', '', '', '', '', '', '', 
+                                    '', '', '', '', '', '', '', '']);
+                $i++;
+            } else {
+                foreach ($count_data[$user->id] as &$data_jam) {
+                    for ($j = 1; $j <= 12; $j++) {
+                        if (!isset($data_jam['realisasi_jam'][$j])) $data_jam['realisasi_jam'][$j] = 0;
+                    } 
+                    if ($mode == 'jam') {
+                        array_push($data2, [$i, $user->name, $data_jam['tim'], $data_jam['proyek'],
+                                            $data_jam['tugas'], $data_jam['realisasi_jam'][1],
+                                            $data_jam['realisasi_jam'][2], $data_jam['realisasi_jam'][3],
+                                            $data_jam['realisasi_jam'][4], $data_jam['realisasi_jam'][5],
+                                            $data_jam['realisasi_jam'][6], $data_jam['realisasi_jam'][7],
+                                            $data_jam['realisasi_jam'][8], $data_jam['realisasi_jam'][9],
+                                            $data_jam['realisasi_jam'][10], $data_jam['realisasi_jam'][11],
+                                            $data_jam['realisasi_jam'][12], $data_jam['total']]);
+                    }
+                    else 
+                        array_push($data2, [$i, $user->name, $data_jam['tim'], $data_jam['proyek'],
+                            $data_jam['tugas'], round($data_jam['realisasi_jam'][1] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][2] / 7.5, 2), round($data_jam['realisasi_jam'][3] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][4] / 7.5, 2), round($data_jam['realisasi_jam'][5] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][6] / 7.5, 2), round($data_jam['realisasi_jam'][7] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][8] / 7.5, 2), round($data_jam['realisasi_jam'][9] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][10] / 7.5, 2), round($data_jam['realisasi_jam'][11] / 7.5, 2),
+                            round($data_jam['realisasi_jam'][12] / 7.5, 2), round($data_jam['total'] / 7.5, 2)]);
+                    $i++;
+                }
+            }
+        }
 
-    //     $validator = Validator::make($request->all(), $rules);
+        $sheet2->fromArray($data2);
+        foreach ($sheet2->getColumnIterator() as $column) {
+            $sheet2->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
 
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     $validateData = $request->validate($rules);
-    //     $validateData['start'] = $request->tgl.' '.$request->start;
-    //     $validateData['end'] = $request->tgl.' '.$request->end;
-
-    //     $eventEdit = Event::where('id', $id)->update(Arr::except($validateData, ['tgl']));
-
-    //     $request->session()->put('status', 'Berhasil memperbarui data aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
-
-    //     return response()->json([
-    //         'success'   => true,
-    //         'message'   => 'Data Berhasil Diperbarui',
-    //         'data'      => $eventEdit
-    //     ]);
-    // }
-
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Request $request, $id)
-    // {
-    //     Event::destroy($id);
-    //     $request->session()->put('status', 'Berhasil menghapus data aktivitas.');
-    //     $request->session()->put('alert-type', 'success');
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil menghapus data aktivitas',
-    //     ]);
-    // }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Realisasi Jam Kerja Pegawai.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
+    }
 }

@@ -160,11 +160,8 @@
             scrollX: true,
             buttons: [
                 {
-                    extend: "excel",
-                    className: "btn-success",
-                    messageTop: function () {
-                        return $('#title').text();
-                    },
+                    className: "btn-success unduh",
+                    text: '<i class="fas fa-file-excel"></i> Excel',
                 },
                 {
                     text: 'Jam Kerja',
@@ -190,6 +187,7 @@
             }, 500);
         });
 
+        let mode = 'jam';
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
@@ -202,6 +200,7 @@
                 if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
             });
             $('#title').text('Realisasi Hari Kerja');
+            mode = 'hari';
         })
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
@@ -213,6 +212,7 @@
                 if (cell.data() != '0') cell.data($(this).attr('value')).draw();
             });
             $('#title').text('Realisasi Jam Kerja');
+            mode = 'jam';
         })
         
         $('#yearSelect').on('change', function() {
@@ -225,6 +225,10 @@
         $(".detail").attr('href', function(_, el){
             return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
+
+        $('.unduh').on('click', function() {
+            window.location.href = `/inspektur/realisasi-jam-kerja/export/${mode}/${$('#yearSelect').val()}`;
+        })
 
         $('#table-inspektur-kinerja').on('draw.dt', function() {
             $(".detail").attr('href', function(_, el){
