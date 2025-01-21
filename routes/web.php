@@ -19,6 +19,7 @@ use App\Http\Controllers\NormaHasilController;
 use App\Http\Controllers\MasterHasilController;
 use App\Http\Controllers\MasterUnsurController;
 use App\Http\Controllers\SatuanKerjaController;
+use App\Http\Controllers\InspekturMPHController;
 use App\Http\Controllers\MasterTujuanController;
 use App\Http\Controllers\PaguAnggaranController;
 use App\Http\Controllers\PegawaiTugasController;
@@ -292,8 +293,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
         Route::get('penilaian-kinerja/export/{pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'export']);
 
-        //Rencana Kinerja Inspektur
+        //View Rencana Kinerja
         Route::resource('rencana-kinerja', InspekturRencanaKerjaController::class);
+
+        //Matriks Peran Hasil
+        Route::resource('mph', InspekturMPHController::class);
     });
 
 

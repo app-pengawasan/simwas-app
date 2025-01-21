@@ -72,6 +72,13 @@
                     <span>Rencana Kinerja</span>
                 </a>
             </li>
+            <li
+                class="{{ Request::is('inspektur/mph*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/mph">
+                    <i class="fas fa-user-gear"></i>
+                    <span>Matriks Peran Hasil</span>
+                </a>
+            </li>
         </ul>
         @include('components.footer')
     </aside>

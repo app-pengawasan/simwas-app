@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rencana Kinerja')
+@section('title', 'Matriks Peran Hasil')
 
 @push('style')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,14 +21,14 @@
 
     <section class="section">
         <div class="section-header">
-            <h1>Rencana Kinerja</h1>
+            <h1>Matriks Peran Hasil</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/inspektur">Dashboard</a></div>
-                <div class="breadcrumb-item">Rencana Kerja</div>
+                <div class="breadcrumb-item">Matriks Peran Hasil</div>
             </div>
         </div>
         <div class="row">
-            <div class=" col-md-12">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex mb-2 row" style="gap:10px">
@@ -76,41 +76,43 @@
                             @endif
                         </div>
                         <div class="">
-                            <table id="tim-kerja" class="table table-bordered table-striped display responsive">
+                            <table id="tim-kerja" class="table table-bordered display responsive" style="background-color: #f6f7f8">
                                 <thead>
                                     <tr>
-                                        <th style="width: 15px;">No</th>
-                                        <th>Tahun</th>
-                                        <th>Unit Kerja</th>
-                                        <th>IKU</th>
-                                        <th>Kegiatan</th>
-                                        <th>PJ Kegiatan</th>
-                                        <th>Status</th>
-                                        <th style="min-width: 124px">Aksi</th>
+                                        <th>Tugas</th>
+                                        <th>Hasil Kerja Tim</th>
+                                        <th>Pelaksana</th>
+                                        <th>Jam Pengawasan</th>
+                                        <th class="never">Unit Kerja</th>
+                                        <th class="never">Tim PJK</th>
+                                        <th class="never">Proyek</th>
+                                        <th class="never">Peran</th>
+                                        <th class="never">Rencana Kinerja</th>
+                                        <th class="never">Indikator Kinerja Individu</th>
+                                        <th class="never">Kegiatan</th>
+                                        <th class="never">Hasil Kerja Pegawai</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($timKerja as $tim)
-                                    <tr id="index_{{ $tim->id_timkerja }}">
-                                        <td class="text-center">{{ $loop->iteration }}</td>
-                                        <td>{{ $tim->tahun }}</td>
-                                        <td>{{ $unitKerja[$tim->unitkerja] }}</td>
-                                        <td>{{ $tim->iku->iku }}</td>
-                                        <td>{{ $tim->nama }}</td>
-                                        <td>{{ $tim->ketua->name }}</td>
-                                        <td>
-                                            <span class="badge badge-{{ $colorText[$tim->status] }}">
-                                                {{ $statusTim[$tim->status] }}
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center" style="gap: 5px">
-                                                <a href="/inspektur/rencana-kinerja/{{ $tim->id_timkerja }}"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    @foreach ($pelaksanaTugas as $pelaksana)
+                                        @php
+                                            //ambil rk, iki, kegiatan, dan hasil kerja pegawai
+                                            $tugas = $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first();    
+                                        @endphp
+                                        <tr class="table-bordered">
+                                            <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
+                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
+                                            <td>{{ $pelaksana->user->name }}</td>
+                                            <td>{{ $pelaksana->jam_pengawasan }}</td>
+                                            <td>{{ $unitkerja[$pelaksana->rencanaKerja->proyek->timKerja->unitkerja] }}</td>
+                                            <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->nama }}</td>
+                                            <td>{{ $pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
+                                            <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
+                                            <td>{{ $tugas->rencana_kinerja }}</td>
+                                            <td>{{ $tugas->iki }}</td>
+                                            <td>{{ $tugas->kegiatan }}</td>
+                                            <td>{{ $tugas->hasil_kerja }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -139,38 +141,27 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="{{ asset('js') }}/plugins/datatables-rowsgroup/dataTables.rowsGroup.js"></script>
 
 <!-- Page Specific JS File -->
 <script>
-    table = $("#tim-kerja")
+    let table = $("#tim-kerja")
             .dataTable({
                 dom: "Bfrtip",
                 responsive: true,
                 lengthChange: false,
                 autoWidth: false,
+                rowsGroup: [0, 1],
                 buttons: [
                     {
                         extend: "excel",
                         className: "btn-success mb-2",
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6],
+                            columns: [4, 5, 6, 0, 1, 2, 7, 8, 9, 10, 11, 3],
                         },
-                    },
+                    }
                 ],
-                oLanguage: {
-                    sSearch: "Cari:",
-                    sZeroRecords: "Data tidak ditemukan",
-                    sEmptyTable: "Data tidak ditemukan",
-                    sInfo: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                    sInfoEmpty: "Menampilkan 0 - 0 dari 0 data",
-                    sInfoFiltered: "(disaring dari _MAX_ data)",
-                    sLengthMenu: "Tampilkan _MENU_ data",
-                    oPaginate: {
-                        sPrevious: "Sebelumnya",
-                        sNext: "Selanjutnya",
-                    },
-                },
                 pageLength: 25,
             })
             .api();

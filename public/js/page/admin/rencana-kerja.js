@@ -11,7 +11,7 @@ $(function () {
                 buttons: [
                     {
                         extend: "excel",
-                        className: "btn-success",
+                        className: "btn-success mb-2",
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5, 6],
@@ -19,7 +19,7 @@ $(function () {
                     },
                     {
                         extend: "pdf",
-                        className: "btn-danger",
+                        className: "btn-danger mb-2",
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5, 6],

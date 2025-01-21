@@ -88,11 +88,19 @@ class InspekturRencanaKerjaController extends Controller
         $this->authorize('inspektur');
         $year = $request->year;
 
+        $unit = $request->unit;
+        if ($unit == null) {
+            $unit = auth()->user()->unit_kerja;
+        } else {
+            $unit = $unit;
+        }
+
+        $year = $request->year;
         if ($year == null) {
             $year = date('Y');
         } else {
             $year = $year;
-        }
+        } 
 
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
@@ -100,7 +108,12 @@ class InspekturRencanaKerjaController extends Controller
         $pegawai = User::all();
         //
 
-        $timKerja = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get();
+        if ($unit == '8000')
+            $timKerja = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get();
+        else
+            $timKerja = TimKerja::with('ketua', 'iku')->where('tahun', $year)
+                                ->where('unitkerja', $unit)->get();
+                                
         $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
 
         $currentYear = date('Y');
@@ -114,6 +127,7 @@ class InspekturRencanaKerjaController extends Controller
         }
 
         $year = $year->sortByDesc('tahun');
+        $unit = auth()->user()->unit_kerja;
 
         // get tahun in timkerja distinct
         return view('inspektur.rencana-kinerja.index', [
@@ -128,6 +142,7 @@ class InspekturRencanaKerjaController extends Controller
             'colorText'  => $this->colorText,
             'unit_kerja' => $this->unitkerja,
             'year'     => $year,
+            'unit' => $unit
         ]);
     }
 
