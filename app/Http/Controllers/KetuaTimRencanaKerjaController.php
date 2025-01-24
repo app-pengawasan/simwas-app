@@ -32,14 +32,20 @@ class KetuaTimRencanaKerjaController extends Controller
         0   => 'Belum Disusun',
         // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
-        // Ketua Tim Kirim Rencana Kinerja ke Admin
+        // Disetujui
         2   => 'Dikunci Oleh Admin',
+        // Ketua Tim Kirim Rencana Kinerja ke Admin
+        3   => 'Menunggu Reviu',
+        // Ditolak Admin
+        4   => 'Perlu Perbaikan',
     ];
 
     protected $colorText = [
         0   => 'warning',
         1   => 'info',
         2   => 'success',
+        3   => 'primary',
+        4   => 'warning'
     ];
 
     protected $unsur = [
@@ -300,7 +306,7 @@ class KetuaTimRencanaKerjaController extends Controller
 
     public function sendToAnalis(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
-        ->update(['status' => 2]);
+        ->update(['status' => 3]);
 
         $request->session()->put('status', 'Berhasil mengirim Rencana Kinerja.');
         $request->session()->put('alert-type', 'success');

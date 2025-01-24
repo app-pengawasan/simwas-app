@@ -4,11 +4,11 @@
         <span class="title-prg">Rencana Kegiatan Berhasil Dibuat</span>
     </div>
 
-    @if ($timKerja->status == 0)
+    @if ($timKerja->status == 0 || $timKerja->status == 1)
     <span class="bar done"></span>
     <div class="circle active">
         <span class="label"><i class="fa-solid fa-hourglass-start"></i></span>
-        <span class="title-prg">Dalam Proses Penyusunan Oleh Ketua Tim</span>
+        <span class="title-prg">Dalam Proses Penyusunan Oleh PJ Kegiatan</span>
     </div>
     <span class="bar half"></span>
     <div class="circle">
@@ -16,7 +16,7 @@
         <span class="title-prg">Persetujuan Oleh Perencana</span>
     </div>
     @endif
-    @if ($timKerja->status == 1)
+    {{-- @if ($timKerja->status == 1)
     <span class="bar done"></span>
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
@@ -27,7 +27,7 @@
         <span class="label"><i class="fa-solid fa-hourglass-start"></i></span>
         <span class="title-prg">Menunggu Persetujuan Oleh Perencana</span>
     </div>
-    @endif
+    @endif --}}
 
 
     @if ($timKerja->status == 2)
@@ -42,6 +42,35 @@
         <span class="title-prg">Rencana Kinerja Disetujui Oleh Perencana</span>
     </div>
     @endif
+
+
+    @if ($timKerja->status == 3)
+    <span class="bar done"></span>
+    <div class="circle done">
+        <span class="label"><i class="fa-solid fa-check"></i></span>
+        <span class="title-prg">Ketua Tim Telah Selesai Menyusun Rencana Kegiatan</span>
+    </div>
+    <span class="bar done"></span>
+    <div class="circle active">
+        <span class="label"><i class="fa-solid fa-hourglass-start"></i></span>
+        <span class="title-prg">Menunggu Persetujuan Oleh Perencana</span>
+    </div>
+    @endif
+
+
+    @if ($timKerja->status == 4)
+    <span class="bar done"></span>
+    <div class="circle done">
+        <span class="label"><i class="fa-solid fa-check"></i></span>
+        <span class="title-prg">Ketua Tim Telah Selesai Menyusun Rencana Kegiatan</span>
+    </div>
+    <span class="bar done"></span>
+    <div class="circle danger">
+        <span class="label"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <span class="title-prg">Rencana Kinerja Ditolak, Silakan Perbaiki</span>
+    </div>
+    @endif
+
 
     {{--
     @elseif ($usulan->status_norma_hasil == 'disetujui' &&

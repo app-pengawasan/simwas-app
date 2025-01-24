@@ -56,6 +56,18 @@
                                     </button>
                                 </form>
                                 @endif
+                                @if (Request::is('admin/rencana-kinerja/*'))
+                                    @if ($timKerja->status == 3)
+                                    <button class="btn btn-danger mb-3" id="btn-admin-send-back">
+                                        <i class="fas fa-undo mr-1"></i>
+                                        Kembalikan
+                                    </button>
+                                    <button class="btn btn-success mb-3" id="btn-admin-submit-rk">
+                                        <i class="fa-solid fa-check mr-1"></i>
+                                        Setujui
+                                    </button>
+                                    @endif
+                                @endif
 
                             </div>
                         </div>
@@ -221,102 +233,106 @@
                                                     </h1>
                                                 </div>
                                                 <ol>
-                                                    @foreach ($proyek->rencanaKerja as $tugas)
-                                                    <li class="font-weight-bold mt-4 h5">
-                                                        <p class="font-weight-bold mt-4 h5">{{ $tugas->tugas }}</p>
-                                                    </li>
-                                                    <table class="">
-                                                        <tr>
-                                                            <th valign=top style="min-width: 64px">Hasil Kerja Tim</th>
-                                                            <td>:</td>
-                                                            <td>{{ $tugas->hasilKerja->nama_hasil_kerja }}</td>
-                                                        </tr>
-                                                    </table>
-                                                    <p class="font-weight-bold">
-                                                        Pelaksana
-                                                    </p>
-                                                    <table class="table table-striped">
-                                                        <tr>
-                                                            <th>No.</th>
-                                                            <th>Nama</th>
-                                                            <th>Jabatan</th>
-                                                            <th>Hasil Kerja</th>
-                                                        </tr>
-                                                        @if (count($tugas->pelaksana) > 0)
-                                                        @foreach ($tugas->pelaksana as $pelaksana)
-                                                        <tr>
-                                                            <td>{{ $loop->iteration }}.</td>
-                                                            <td>{{ $pelaksana->user->name }}</td>
-                                                            <?php
-                                                                $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'Penanggung Jawab Kegiatan'];
-                                                                ?>
-                                                            <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
-                                                            <td>
-                                                                {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )
-                                                                ->first()
-                                                                ->hasil_kerja : 'Belum Ditentukan' }}
-                                                            </td>
-                                                        </tr>
+                                                    @if ($proyek->rencanaKerja->count() > 0)
+                                                        @foreach ($proyek->rencanaKerja as $tugas)
+                                                            <li class="font-weight-bold mt-4 h5">
+                                                                <p class="font-weight-bold mt-4 h5">{{ $tugas->tugas }}</p>
+                                                            </li>
+                                                            <table class="">
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 64px">Hasil Kerja Tim</th>
+                                                                    <td>:</td>
+                                                                    <td>{{ $tugas->hasilKerja->nama_hasil_kerja }}</td>
+                                                                </tr>
+                                                            </table>
+                                                            <p class="font-weight-bold">
+                                                                Pelaksana
+                                                            </p>
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>No.</th>
+                                                                    <th>Nama</th>
+                                                                    <th>Jabatan</th>
+                                                                    <th>Hasil Kerja</th>
+                                                                </tr>
+                                                                @if (count($tugas->pelaksana) > 0)
+                                                                @foreach ($tugas->pelaksana as $pelaksana)
+                                                                <tr>
+                                                                    <td>{{ $loop->iteration }}.</td>
+                                                                    <td>{{ $pelaksana->user->name }}</td>
+                                                                    <?php
+                                                                        $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'Penanggung Jawab Kegiatan'];
+                                                                        ?>
+                                                                    <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
+                                                                    <td>
+                                                                        {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )
+                                                                        ->first()
+                                                                        ->hasil_kerja : 'Belum Ditentukan' }}
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                                @else
+                                                                <tr>
+                                                                    <td class="font-italic text-center" colspan="4">Tidak
+                                                                        terdapat
+                                                                        data
+                                                                    </td>
+                                                                </tr>
+                                                                @endif
+                                                            </table>
+                                                            <p class="font-weight-bold">Anggaran</p>
+                                                            @if (count($tugas->anggaran))
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>Uraian</th>
+                                                                    <th>Volume</th>
+                                                                    <th>Satuan</th>
+                                                                    <th>Harga</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                                <?php $totalAnggaran = 0; ?>
+                                                                @foreach ($tugas->anggaran as $anggaran)
+                                                                <tr>
+                                                                    <td>{{ $anggaran->uraian }}</td>
+                                                                    <td>{{ $anggaran->volume }}</td>
+                                                                    <td>{{ $satuan[$anggaran->satuan] }}</td>
+                                                                    <td class="rupiah">{{ $anggaran->harga }}</td>
+                                                                    <td class="rupiah">{{ $anggaran->total }}</td>
+                                                                </tr>
+                                                                <?php $totalAnggaran += $anggaran->total; ?>
+                                                                @endforeach
+                                                                <tr>
+                                                                    <th colspan="4">Total Anggaran</th>
+                                                                    <th class="rupiah">{{ $totalAnggaran }}</th>
+                                                                </tr>
+                                                            </table>
+                                                            @else
+                                                            <p class="font-italic">Tidak ada anggaran yang ditambahkan</p>
+                                                            @endif
+                                                            <hr>
+                                                            <p class="font-weight-bold">Laporan</p>
+                                                            @if(count($tugas->objekPengawasan) > 0)
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>Nama Objek</th>
+                                                                    <th>Nama Laporan</th>
+                                                                    <th>Jumlah Laporan</th>
+                                                                </tr>
+                                                                @foreach ($tugas->objekPengawasan as $op)
+                                                                <tr>
+                                                                    <td>{{ $op->nama }}</td>
+                                                                    <td>{{ $op->nama_laporan }}</td>
+                                                                    <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </table>
+                                                            @else
+                                                            <p class="font-italic">Tidak ada laporan yang ditambahkan</p>
+                                                            @endif
                                                         @endforeach
-                                                        @else
-                                                        <tr>
-                                                            <td class="font-italic text-center" colspan="4">Tidak
-                                                                terdapat
-                                                                data
-                                                            </td>
-                                                        </tr>
-                                                        @endif
-                                                    </table>
-                                                    <p class="font-weight-bold">Anggaran</p>
-                                                    @if (count($tugas->anggaran))
-                                                    <table class="table table-striped">
-                                                        <tr>
-                                                            <th>Uraian</th>
-                                                            <th>Volume</th>
-                                                            <th>Satuan</th>
-                                                            <th>Harga</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                        <?php $totalAnggaran = 0; ?>
-                                                        @foreach ($tugas->anggaran as $anggaran)
-                                                        <tr>
-                                                            <td>{{ $anggaran->uraian }}</td>
-                                                            <td>{{ $anggaran->volume }}</td>
-                                                            <td>{{ $satuan[$anggaran->satuan] }}</td>
-                                                            <td class="rupiah">{{ $anggaran->harga }}</td>
-                                                            <td class="rupiah">{{ $anggaran->total }}</td>
-                                                        </tr>
-                                                        <?php $totalAnggaran += $anggaran->total; ?>
-                                                        @endforeach
-                                                        <tr>
-                                                            <th colspan="4">Total Anggaran</th>
-                                                            <th class="rupiah">{{ $totalAnggaran }}</th>
-                                                        </tr>
-                                                    </table>
                                                     @else
-                                                    <p class="font-italic">Tidak ada anggaran yang ditambahkan</p>
-                                                    @endif
-                                                    <hr>
-                                                    @endforeach
-                                                    <p class="font-weight-bold">Laporan</p>
-                                                    @if(count($tugas->objekPengawasan) > 0)
-                                                    <table class="table table-striped">
-                                                        <tr>
-                                                            <th>Nama Objek</th>
-                                                            <th>Nama Laporan</th>
-                                                            <th>Jumlah Laporan</th>
-                                                        </tr>
-                                                        @foreach ($tugas->objekPengawasan as $op)
-                                                        <tr>
-                                                            <td>{{ $op->nama }}</td>
-                                                            <td>{{ $op->nama_laporan }}</td>
-                                                            <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}
-                                                            </td>
-                                                        </tr>
-                                                        @endforeach
-                                                    </table>
-                                                    @else
-                                                    <p class="font-italic">Tidak ada laporan yang ditambahkan</p>
+                                                        <p class="font-italic">Tidak terdapat data</p>
                                                     @endif
                                                 </ol>
                                             </div>

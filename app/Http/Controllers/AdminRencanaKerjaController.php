@@ -29,12 +29,18 @@ class AdminRencanaKerjaController extends Controller
         1   => 'Proses Penyusunan',
         // Ketua Tim Kirim Rencana Kinerja ke Admin
         2   => 'Dikunci',
+        // Ketua Tim Kirim Rencana Kinerja ke Admin
+        3   => 'Menunggu Reviu',
+        // Ditolak Admin
+        4   => 'Perlu Perbaikan',
     ];
 
     protected $colorText = [
         0   => 'warning',
         1   => 'info',
         2   => 'success',
+        3   => 'primary',
+        4   => 'warning'
     ];
 
     protected $unsur = [
@@ -228,7 +234,7 @@ class AdminRencanaKerjaController extends Controller
 
     public function acceptRencanaKerja(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
-        ->update(['status' => 4]);
+        ->update(['status' => 2]);
 
         $request->session()->put('status', 'Berhasil mengirim rencana kinerja ke Pimpinan.');
         $request->session()->put('alert-type', 'success');
@@ -241,7 +247,7 @@ class AdminRencanaKerjaController extends Controller
 
     public function sendBackToKetuaTim(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
-        ->update(['status' => 3]);
+        ->update(['status' => 4]);
 
         $request->session()->put('status', 'Berhasil mengembalikan rencana kinerja.');
         $request->session()->put('alert-type', 'success');

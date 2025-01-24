@@ -145,7 +145,7 @@
                                             <td>{{ $timKerja->iki_ketua ?? 'Belum Diisi' }}</td>
                                         </tr>
                                     </table>
-                                    @if ($timKerja->status < 2)
+                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
                                         <div class="text-right">
                                             <button class="btn btn-outline-primary" data-toggle="modal"
                                                 data-target="#modal-edit-timkerja">
@@ -167,154 +167,234 @@
                                     <h1 class="h5 text-dark mb-0">
                                         Daftar Proyek
                                     </h1>
-                                </div>
-                                <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
-                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
-                                        <div id="filter-search-wrapper">
+                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                        <div class="d-flex">
+                                            <button class="btn btn-outline-primary btn-sm ml-2" data-toggle="modal"
+                                                data-target="#modal-tambah-proyek">
+                                                <i class="fa-solid fa-plus mr-1"></i>
+                                                Tambah Proyek
+                                            </button>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
-                                <table id="table-proyek" class="table table-bordered table-striped display responsive">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center" style="width: 15px;">No</th>
-                                            <th>Nama Proyek</th>
-                                            <th style="width: 150px;">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($proyeks as $proyek)
-                                        <tr>
-                                            <td class="text-center" style="width: 15px;">{{ $loop->iteration }}</td>
-                                            <td>{{ $proyek->nama_proyek }}</td>
-                                            <td>
-                                                {{-- <a href="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
-                                                class="btn btn-primary btn-sm">
-                                                <i class="fa fa-eye"></i>
-                                                </a> --}}
-                                                {{-- delete form --}}
-                                                @if ($timKerja->status < 2 || $timKerja->status == 3)
-                                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                                        data-target="#modal-edit-proyek" data-id="{{ $proyek->id }}"
-                                                        data-nama="{{ $proyek->nama_proyek }}"
-                                                        data-iki="{{ $proyek->iki_anggota }}"
-                                                        data-rencana="{{ $proyek->rencana_kinerja_anggota }}">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <form action="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
-                                                        method="post" class="d-inline delete-form">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button class="btn btn-danger btn-sm" type="submit">
-                                                            <i class="fa fa-trash"></i>
+                                <div class="accordion" id="faq">
+                                    @foreach ($proyeks as $proyek)
+                                    <div class="card">
+                                        <div class="card-header" id="faqhead{{ $loop->iteration }}"
+                                            style="border-bottom: 1px solid #cccccc;">
+                                            <a href="#" class="btn btn-header-link collapsed align-middle" data-toggle="collapse"
+                                                data-target="#faq{{ $loop->iteration }}" aria-expanded="true"
+                                                aria-controls="faq{{ $loop->iteration }}" style="width: 100%; display: grid; grid-template-columns: 1fr max-content max-content;">
+                                                <span>{{ $proyek->nama_proyek }}</span>
+                                                @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                    <span class="mr-3">
+                                                        <button class="btn btn-warning btn-sm edit-btn-proyek mt-0" data-toggle="modal"
+                                                            data-target="#modal-edit-proyek" data-id="{{ $proyek->id }}"
+                                                            data-nama="{{ $proyek->nama_proyek }}"
+                                                            data-iki="{{ $proyek->iki_anggota }}"
+                                                            data-rencana="{{ $proyek->rencana_kinerja_anggota }}" style="padding: 0.1rem 0.4rem; border-radius: 0.2rem;">
+                                                            <i class="fa fa-edit"></i>
                                                         </button>
-                                                    </form>
+                                                        <form action="/ketua-tim/rencana-kinerja/proyek/{{ $proyek->id }}"
+                                                            method="post" class="d-inline delete-form">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button class="btn btn-danger btn-sm mt-0" type="submit" style="padding: 0.1rem 0.4rem; border-radius: 0.2rem;">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </span>
+                                                @endif
+                                            </a>
+                                        
+                                        </div>
+                                        <div id="faq{{ $loop->iteration }}" class="collapse"
+                                            aria-labelledby="faqhead{{ $loop->iteration }}" data-parent="#faq">
+
+                                            <div class="card-body"
+                                                style="border: 1px solid #cccccc;box-shadow:0 .125rem .25rem rgba(0,0,0,.075)!important">
+                                                <div class="h5 text-dark mb-4 d-flex align-items-center header-card">
+                                                    <div class="badge alert-success mr-2 d-flex justify-content-center align-items-center"
+                                                        style="width: 30px; height: 30px">
+                                                        <i class="fa-solid fa-bars-progress fa-xs"></i>
+                                                    </div>
+                                                    <h1 class="h5 text-dark mb-0">
+                                                        Informasi Proyek
+                                                    </h1>
+                                                </div>
+                                                <table class="mb-4 table table-striped responsive" id="table-show">
+                                                    <tr>
+                                                        <th>Nama Proyek</th>
+                                                        <td>{{ $proyek->nama_proyek }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Jumlah Tugas</th>
+                                                        <td>{{ $proyek->rencanaKerja->count() }}</td>
+                                                    </tr>
+                                                </table>
+                                                <div class="h5 text-dark mb-4 d-flex align-items-center header-card">
+                                                    <div class="badge alert-success mr-2 d-flex justify-content-center align-items-center"
+                                                        style="width: 30px; height: 30px">
+                                                        <i class="fa-solid fa-list-check fa-xs"></i>
+                                                    </div>
+                                                    <h1 class="h5 text-dark mb-0">
+                                                        Daftar Tugas
+                                                    </h1>
+                                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                        <span class="d-flex justify-content-end mt-1 ml-2">
+                                                            <button id="btn-modal-create-tugas"
+                                                                class="btn btn-outline-primary float-right btn-sm" type="button"
+                                                                data-toggle="modal" data-target="#modal-create-tugas">
+                                                                <i class="fa-solid fa-plus mr-1"></i>
+                                                                Tambah Tugas
+                                                            </button>
+                                                        </span>
                                                     @endif
-                                            </td>
-                                            @endforeach
-                                    </tbody>
-                                </table>
-                                @if ($timKerja->status < 2)
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button class="btn btn-outline-primary mt-2" data-toggle="modal"
-                                            data-target="#modal-tambah-proyek">
-                                            <i class="fa-solid fa-plus mr-1"></i>
-                                            Tambah Proyek
-                                        </button>
-                                    </div>
-                                    @endif
-                            </div>
-                            <div class="card-body shadow-sm border p-4 table-responsive mt-4">
-                                <div class="h5 text-dark mb-4 d-flex align-items-center header-card">
-                                    <div class="badge alert-primary mr-2 d-flex justify-content-center align-items-center" style="width: 30px; height: 30px">
-                                        <i class="fa-solid fa-list-check fa-xs"></i>
-                                    </div>
-                                    <h1 class="h5 text-dark mb-0">
-                                        Daftar Tugas
-                                    </h1>
-                                </div>
-                                <div class="d-flex justify-content-between flex-wrap my-2 mb-3" style="gap:10px">
-                                    <div class="form-group flex-grow-1" style="margin-bottom: 0;">
-                                        <div id="filter-search-wrapper-tugas">
+                                                </div> 
+                                                <ol>
+                                                    @if ($proyek->rencanaKerja->count() > 0)
+                                                        @foreach ($proyek->rencanaKerja as $tugas)
+                                                            <li class="font-weight-bold mt-4 h5">
+                                                                <span class="font-weight-bold mt-4 h5">{{ $tugas->tugas }}</span>
+                                                                @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                                    <a href="/ketua-tim/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
+                                                                        class="btn btn-primary btn-sm">
+                                                                        <i class="fas fa-eye" style="font-size: 11.8px;"></i>
+                                                                    </a>
+                                                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                        data-proyek="{{ $tugas->id_proyek }}"
+                                                                        data-target="#modal-edit-tugas"
+                                                                        data-id="{{ $tugas->id_rencanakerja }}"
+                                                                        data-tugas="{{ $tugas->tugas }}"
+                                                                        data-melaksanakan="{{ $tugas->melaksanakan }}"
+                                                                        data-capaian="{{ $tugas->capaian }}"
+                                                                        data-hasil="{{ $tugas->hasilKerja->id }}"
+                                                                        data-subunsur="{{ $tugas->hasilKerja->masterSubUnsur->nama_sub_unsur }}"
+                                                                        data-unsur="{{ $tugas->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}"
+                                                                        data-pelaksana="{{ $tugas->kategori_pelaksanatugas }}">
+                                                                        <i class="fa fa-edit
+                                                                            "></i>
+                                                                    </button>
+                                                                    <a href="javascript(0)" class="btn btn-danger btn-sm delete-btn"
+                                                                        data-id="{{ $tugas->id_rencanakerja }}">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </li>
+                                                            <table class="">
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 64px">Hasil Kerja Tim</th>
+                                                                    <td>:</td>
+                                                                    <td>{{ $tugas->hasilKerja->nama_hasil_kerja }}</td>
+                                                                </tr>
+                                                            </table>
+                                                            <p class="font-weight-bold">
+                                                                Pelaksana
+                                                            </p>
+                                                            <table class="table table-striped">
+                                                                <tr>
+                                                                    <th>No.</th>
+                                                                    <th>Nama</th>
+                                                                    <th>Jabatan</th>
+                                                                    <th>Hasil Kerja</th>
+                                                                </tr> 
+                                                                @if (count($tugas->pelaksana) > 0)
+                                                                @foreach ($tugas->pelaksana as $pelaksana)
+                                                                    <tr>
+                                                                        <td>{{ $loop->iteration }}.</td>
+                                                                        <td>{{ $pelaksana->user->name }}</td>
+                                                                        <?php
+                                                                            $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim', 'Penanggung Jawab Kegiatan'];
+                                                                            ?>
+                                                                        <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
+                                                                        <td>
+                                                                            {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )
+                                                                            ->first()
+                                                                            ->hasil_kerja : 'Belum Ditentukan' }}
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                @else
+                                                                    <tr>
+                                                                        <td class="font-italic text-center" colspan="4">Tidak
+                                                                            terdapat
+                                                                            data
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            </table>
+                                                            <p class="font-weight-bold">Anggaran</p>
+                                                            @if (count($tugas->anggaran))
+                                                                <table class="table table-striped">
+                                                                    <tr>
+                                                                        <th>Uraian</th>
+                                                                        <th>Volume</th>
+                                                                        <th>Satuan</th>
+                                                                        <th>Harga</th>
+                                                                        <th>Total</th>
+                                                                    </tr>
+                                                                    <?php $totalAnggaran = 0; ?>
+                                                                    @foreach ($tugas->anggaran as $anggaran)
+                                                                    <tr>
+                                                                        <td>{{ $anggaran->uraian }}</td>
+                                                                        <td>{{ $anggaran->volume }}</td>
+                                                                        <td>{{ $satuan[$anggaran->satuan] }}</td>
+                                                                        <td class="rupiah">{{ $anggaran->harga }}</td>
+                                                                        <td class="rupiah">{{ $anggaran->total }}</td>
+                                                                    </tr>
+                                                                    <?php $totalAnggaran += $anggaran->total; ?>
+                                                                    @endforeach
+                                                                    <tr>
+                                                                        <th colspan="4">Total Anggaran</th>
+                                                                        <th class="rupiah">{{ $totalAnggaran }}</th>
+                                                                    </tr>
+                                                                </table>
+                                                            @else
+                                                                <p class="font-italic">Tidak ada anggaran yang ditambahkan</p>
+                                                            @endif
+                                                            <hr>
+                                                            <p class="font-weight-bold">Laporan</p>
+                                                            @if(count($tugas->objekPengawasan) > 0)
+                                                                <table class="table table-striped">
+                                                                    <tr>
+                                                                        <th>Nama Objek</th>
+                                                                        <th>Nama Laporan</th>
+                                                                        <th>Jumlah Laporan</th>
+                                                                    </tr>
+                                                                    @foreach ($tugas->objekPengawasan as $op)
+                                                                    <tr>
+                                                                        <td>{{ $op->nama }}</td>
+                                                                        <td>{{ $op->nama_laporan }}</td>
+                                                                        <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endforeach
+                                                                </table>
+                                                            @else
+                                                                <p class="font-italic">Tidak ada laporan yang ditambahkan</p>
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <p class="font-italic">Tidak terdapat data</p>
+                                                    @endif
+                                                </ol>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group" style="margin-bottom: 0; max-width: 200px;">
-                                        <label for="filter-unit-kerja" style="margin-bottom: 0;">
-                                            Proyek</label>
-                                        <select name="proyek" id="filter-proyek" class="form-control select2">
-                                            <option value="">Semua</option>
-                                            @foreach ($proyeks as $key => $value)
-                                            <option value="{{ $value->nama_proyek }}">
-                                                {{ $value->nama_proyek }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    @endforeach
                                 </div>
-                                <table class="table table-bordered table-striped display responsive mt-3"
-                                    id="table-tugas">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center" style="width: 15px;">No</th>
-                                            <th>Nama Proyek</th>
-                                            <th>Nama Tugas</th>
-                                            <th>Hasil Kerja</th>
-                                            <th style="width: 150px;">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($rencanaKerjas as $tugas)
-                                        <tr>
-                                            <td class="text-center" style="width: 15px;">{{ $loop->iteration }}</td>
-                                            <td>{{ $tugas->proyek->nama_proyek }}</td>
-                                            <td>
-                                                {{
-                                                        $tugas->tugas
-                                                    }}
-                                            </td>
-                                            <td>{{ $tugas->hasilKerja->nama_hasil_kerja }}</td>
-                                            <td>
-                                                <a href="/ketua-tim/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
-                                                    class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                @if ($timKerja->status < 2)
-                                                    <button class="btn btn-warning btn-sm" data-toggle="modal"
-                                                        data-proyek="{{ $tugas->id_proyek }}"
-                                                        data-target="#modal-edit-tugas"
-                                                        data-id="{{ $tugas->id_rencanakerja }}"
-                                                        data-tugas="{{ $tugas->tugas }}"
-                                                        data-melaksanakan="{{ $tugas->melaksanakan }}"
-                                                        data-capaian="{{ $tugas->capaian }}"
-                                                        data-hasil="{{ $tugas->hasilKerja->id }}"
-                                                        data-subunsur="{{ $tugas->hasilKerja->masterSubUnsur->nama_sub_unsur }}"
-                                                        data-unsur="{{ $tugas->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}"
-                                                        data-pelaksana="{{ $tugas->kategori_pelaksanatugas }}">
-                                                        <i class="fa fa-edit
-                                                            "></i>
-                                                    </button>
-                                                    <a href="javascript(0)" class="btn btn-danger btn-sm delete-btn"
-                                                        data-id="{{ $tugas->id_rencanakerja }}">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                    @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @if ($timKerja->status < 2)
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button id="btn-modal-create-tugas"
-                                            class="btn btn-outline-primary float-right mt-2" type="button"
-                                            data-toggle="modal" data-target="#modal-create-tugas">
-                                            <i class="fa-solid fa-plus mr-1"></i>
-                                            Tambah Tugas
-                                        </button>
-                                    </div>
-                                    @endif
                             </div>
                         </div>
+                        {{-- <div class="row mb-4 pb0">
+                            <div class="col-md-12">
+                                @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                    <button class="btn btn-success float-right btn-xl mt-4 text-bold"
+                                        id="btn-send-rencana-kerja">
+                                        <i class="fa-regular fa-paper-plane mr-1"></i> Kirim
+                                    </button>
+                                @endif
+                            </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -341,25 +421,4 @@
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="{{ asset('js/page/format-rupiah.js') }}"></script>
 <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('.delete-form').on('submit', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data yang dihapus tidak dapat dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: "var(--primary)",
-                cancelButtonColor: "var(--danger)",
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            });
-        });
-    });
-</script>
 @endpush

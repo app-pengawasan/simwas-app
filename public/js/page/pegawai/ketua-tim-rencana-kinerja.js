@@ -509,7 +509,7 @@ $("#btn-send-rencana-kerja").on("click", function (e) {
 
     Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
+        // text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "var(--primary)",
@@ -859,16 +859,58 @@ $("#yearSelect").on("change", function () {
     $("#yearForm").submit();
 });
 
-$("#modal-edit-proyek").on("show.bs.modal", function (e) {
-    let id_proyek = $(e.relatedTarget).data("id");
-    let nama_proyek = $(e.relatedTarget).data("nama");
-    let rk_anggota = $(e.relatedTarget).data("rencana");
-    let iki_anggota = $(e.relatedTarget).data("iki");
+// $("#modal-edit-proyek").on("show.bs.modal", function (e) {
+//     alert($(e.relatedTarget).data("id"))
+//     e.stopPropagation();
+//     let id_proyek = $(e.relatedTarget).data("id");
+//     let nama_proyek = $(e.relatedTarget).data("nama");
+//     let rk_anggota = $(e.relatedTarget).data("rencana");
+//     let iki_anggota = $(e.relatedTarget).data("iki");
+
+//     $("#edit-id_proyek").val(id_proyek);
+//     $("#edit-nama_proyek").val(nama_proyek);
+//     $("#edit-rk_anggota").val(rk_anggota);
+//     $("#edit-iki_anggota").val(iki_anggota);
+// });
+
+$(".edit-btn-proyek").on('click', function(e) {
+    e.stopPropagation(); //mencegah accordion terbuka
+    e.preventDefault();
+    
+    var thisModal = $(this).attr('data-target');
+    $(thisModal).modal('show');
+
+    let id_proyek = $(this).data("id");
+    let nama_proyek = $(this).data("nama");
+    let rk_anggota = $(this).data("rencana");
+    let iki_anggota = $(this).data("iki");
 
     $("#edit-id_proyek").val(id_proyek);
     $("#edit-nama_proyek").val(nama_proyek);
     $("#edit-rk_anggota").val(rk_anggota);
     $("#edit-iki_anggota").val(iki_anggota);
+});
+
+$('.delete-form').on('click', function (event) {
+    event.stopPropagation(); //mencegah accordion terbuka
+});
+
+$('.delete-form').on('submit', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data yang dihapus tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            this.submit();
+        }
+    });
 });
 
 $("#modal-edit-tugas").on("show.bs.modal", function (e) {
