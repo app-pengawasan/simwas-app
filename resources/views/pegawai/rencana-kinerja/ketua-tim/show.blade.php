@@ -242,9 +242,9 @@
                                                     </h1>
                                                     @if ($timKerja->status < 2 || $timKerja->status == 4)
                                                         <span class="d-flex justify-content-end mt-1 ml-2">
-                                                            <button id="btn-modal-create-tugas"
-                                                                class="btn btn-outline-primary float-right btn-sm" type="button"
-                                                                data-toggle="modal" data-target="#modal-create-tugas">
+                                                            <button
+                                                                class="btn btn-outline-primary float-right btn-sm btn-modal-create-tugas" type="button"
+                                                                data-toggle="modal" data-target="#modal-create-tugas" data-proyek="{{ $proyek->id }}">
                                                                 <i class="fa-solid fa-plus mr-1"></i>
                                                                 Tambah Tugas
                                                             </button>

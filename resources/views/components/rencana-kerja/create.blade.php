@@ -17,8 +17,8 @@
                     <input type="hidden" name="id_proyek" id="id_proyek">
                     <div class="form-group">
                         <label class="form-label" for="create-tugas">Proyek</label>
-                        <select class="form-control select2" name="create-proyek" id="create-proyek" required>
-                            <option value="" selected disabled>Pilih Proyek</option>
+                        <select class="form-control select2" name="create-proyek" id="create-proyek" required disabled>
+                            {{-- <option value="" selected disabled>Pilih Proyek</option> --}}
                             @foreach ($proyeks as $proyek)
                             <option value="{{ $proyek->id }}">{{ $proyek->nama_proyek }}</option>
                             @endforeach

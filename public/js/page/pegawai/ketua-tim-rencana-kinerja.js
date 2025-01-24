@@ -147,11 +147,12 @@ if ($("#tim-kerja").length) {
 }
 
 // Show rencana kinerja
-$("#btn-modal-create-tugas").on("click", function () {
+$(".btn-modal-create-tugas").on("click", function () {
     $("#error-tugas").text("");
     $("#error-mulai").text("");
     $("#error-selesai").text("");
     $("#error-hasilkerja").text("");
+    $('#create-proyek').val($(this).data('proyek')).trigger('change');;
 });
 
 $("#create-hasilkerja").on("change", function () {
