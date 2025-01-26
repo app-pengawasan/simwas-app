@@ -22,9 +22,9 @@
         </div>
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
+                <div class="card">
                     <div class="card-body p-0">
-                        <select class="form-control" id="filterPegawai" autocomplete="off">
+                        <select class="form-control select2" id="filterPegawai" autocomplete="off">
                             <option value="" selected>Pilih Pegawai</option>
                             @foreach ($pegawai as $p)
                                 <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -35,48 +35,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-primary">
-                        <i class="fas fa-certificate"></i>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Jumlah Pelatihan Teknis</h4>
                     </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Sertifikasi</h4>
-                        </div>
-                        <div class="card-body" id="sertifikasi">
-                            0
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-danger">
-                        <i class="fas fa-ranking-star"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Diklat Penjenjangan</h4>
-                        </div>
-                        <div class="card-body" id="jenjang">
-                            0
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-warning">
-                        <i class="fas fa-gears"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Diklat Teknis Subtantif</h4>
-                        </div>
-                        <div class="card-body" id="teknis">
-                            0
-                        </div>
+                    <div class="card-body" style="padding-top: 5px;">
+                        <canvas id="diklatChart" height="80"></canvas>
                     </div>
                 </div>
             </div>
@@ -85,70 +50,13 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Daftar Kompetensi</h4>
+                        <h4>Total Durasi Pelatihan Teknis (Jam)</h4>
                     </div>
                     <div class="card-body" style="padding-top: 5px;">
-                        <div class="d-flex mb-3 row" style="gap:10px">
-                            <div class="form-group col-4" style="margin-bottom: 0;">
-                                <label for="filterTahun" style="margin-bottom: 0;">Jenis Kompetensi</label>
-                                <select class="form-control" id="filterJenis" name="filterJenis">
-                                    <option value="all">Semua</option>
-                                    <option value="1">Sertifikasi</option>
-                                    <option value="2">Diklat Penjenjangan</option>
-                                    <option value="3">Diklat Subtantif</option>
-                                    <option value="4">Pelatihan</option>
-                                    <option value="5">Workshop</option>
-                                    <option value="6">Seminar</option>
-                                    <option value="7">Pelatihan di Kantor Sendiri</option>
-                                    <option value="999">Lainnya</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped display responsive"
-                                id="table-dashboard-analis">
-                                <thead>
-                                    <tr>
-                                        <th>Jenis Pengembangan Kompetensi</th>
-                                        <th>Nama Pengembangan Kompetensi</th>
-                                        <th>Sertifikat</th>
-                                        <th class="never">pegawai</th>
-                                        <th class="never">sertifikat_link</th>
-                                        <th class="never">kode jenis</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($kompetensi as $k)
-                                        <tr>
-                                            @if ($k->pp->id == 999) <td>{{ $k->pp_lain }}</td>
-                                            @else <td>{{ $k->pp->jenis }}</td>
-                                            @endif
-
-                                            @if ($k->namaPp->id == 999) <td>{{ $k->nama_pp_lain }}</td>
-                                            @else <td>{{ $k->namaPp->nama }}</td>
-                                            @endif
-
-                                            <td>
-                                                <a class="btn btn-primary"
-                                                href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                            </td>
-
-                                            <td>{{ $k->pegawai_id }}</td>
-
-                                            <td>{{ url('/').'/document/sertifikat/'.$k->sertifikat }}</td>
-                                            <td>{{ $k->pp->id }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                        <canvas id="JPChart" height="80"></canvas>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
         </div>
     </section>
 </div>
@@ -171,10 +79,14 @@
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{ asset('js') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="{{ asset('library') }}/sweetalert2/dist/sweetalert2.min.js"></script>
+<script src="{{ asset('library/chart.js/dist/Chart.min.js') }}"></script>
 
 <!-- Page Specific JS File -->
 <script>
-    var count = @json($count);
+    var years = @json($years);
+    var diklat_count = @json($diklat_count);
+    var jp_count = @json($jp_count);
 </script>
+<script src="{{ asset('js') }}/page/kompetensi-chart.js"></script>
 <script src="{{ asset('js') }}/page/kompetensi.js"></script>
 @endpush

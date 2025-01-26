@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KendaliMutuTim;
 use App\Models\Sl;
 use App\Models\Stp;
 use App\Models\Stpd;
@@ -14,13 +13,14 @@ use App\Models\Kompetensi;
 use App\Models\NormaHasil;
 use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
+use App\Models\NormaHasilTim;
+use App\Models\KendaliMutuTim;
 use App\Models\PelaksanaTugas;
 use App\Models\MasterUnitKerja;
 use App\Models\ObjekPengawasan;
 use App\Models\TargetIkuUnitKerja;
 use App\Models\UsulanSuratSrikandi;
 use App\Models\LaporanObjekPengawasan;
-use App\Models\NormaHasilTim;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -185,12 +185,24 @@ class DashboardController extends Controller
         $this->authorize('analis_sdm');
         $pegawai = User::all();
         $kompetensi = Kompetensi::where('status', 1)->get();
-        $count = $kompetensi->groupBy('pegawai_id')->map->countBy('pp_id');
-
+        $min_year = date('Y', strtotime($kompetensi->min('tgl_sertifikat')));
+        $max_year = date('Y', strtotime($kompetensi->max('tgl_sertifikat')));
+        $years = range($min_year, $max_year);
+        $diklat_count = $kompetensi->groupBy('pegawai_id')
+                                    ->map->countBy(function ($item) {
+                                                return date("Y",strtotime($item->tgl_sertifikat));
+                                            });
+        $jp_count = $kompetensi->groupBy('pegawai_id')
+                                ->map->groupBy(function ($item) {
+                                            return date("Y",strtotime($item->tgl_sertifikat));
+                                        })
+                                ->map->map->map->sum('durasi');
         return view('analis-sdm.index', [
             'pegawai' => $pegawai,
             'kompetensi' => $kompetensi,
-            'count' => $count
+            'diklat_count' => $diklat_count,
+            'jp_count' => $jp_count,
+            'years' => $years
         ]);
     }
 

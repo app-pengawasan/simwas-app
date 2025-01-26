@@ -238,7 +238,7 @@ Route::group(['middleware'=>'auth'], function(){
     ->name('analis-sdm.')
     ->middleware('role:is_analissdm')
     ->group(function () {
-        Route::get('/', [AnalisKompetensiController::class, 'index'])->name('dashboard');
+        Route::get('/', [DashboardController::class, 'analis_sdm'])->name('dashboard');
         Route::get('pp-nonaktif', [KategoriKompetensiController::class, 'ppNonaktif']);
         Route::get('kategori/export', [KategoriKompetensiController::class, 'export']);
         Route::resource('kategori', KategoriKompetensiController::class)->names([

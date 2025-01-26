@@ -15,12 +15,12 @@
             </a>
         </div>
         <ul class="sidebar-menu">
-            {{-- <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
+            <li class="{{ Request::is('analis-sdm') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('analis-sdm.dashboard') }}">
                     <i class="fab fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
-            </li> --}}
+            </li>
             <li class="nav-item dropdown {{ $type_menu === 'kompetensi' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-award"></i>
@@ -38,7 +38,7 @@
                         </a>
                     </li>
                     <li
-                        class="{{ Request::is('analis-sdm/kelola-kompetensi') || Request::is('analis-sdm/kelola-kompetensi/*') || Request::is('analis-sdm') ? 'active' : '' }}">
+                        class="{{ Request::is('analis-sdm/kelola-kompetensi') || Request::is('analis-sdm/kelola-kompetensi/*') ? 'active' : '' }}">
                         <a class="nav-link" href="/analis-sdm/kelola-kompetensi">
                             <span>Kelola Kompetensi</span>
                         </a>
