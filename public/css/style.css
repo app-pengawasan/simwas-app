@@ -4363,12 +4363,10 @@ footer {
 }
 
 .prg {
-    margin: 20px auto;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 100px;
 }
 /* if mobile view hide prg */
 @media (max-width: 600px) {
@@ -4378,7 +4376,7 @@ footer {
 }
 
 .prg .circle,
-.prg .bar {
+.prg .bar, .prg .vertbar {
     display: inline-block;
     background: #fff;
     width: 40px;
@@ -4389,13 +4387,25 @@ footer {
 
 .prg .bar {
     position: relative;
-    width: 150px;
+    width: 100px;
     height: 5px;
     /* top: -2px; */
     /* margin-left: -5px; */
     /* margin-right: -5px; */
     border-left: none;
     border-right: none;
+    border-radius: 0;
+}
+
+.prg .vertbar {
+    position: relative;
+    width: 5px;
+    height: 100px;
+    /* top: -2px; */
+    /* margin-left: -5px; */
+    /* margin-right: -5px; */
+    border-top: none;
+    border-bottom: none;
     border-radius: 0;
 }
 
@@ -4412,7 +4422,8 @@ footer {
 
 /* Done / Active */
 .prg .bar.done,
-.prg .circle.done {
+.prg .circle.done,
+.prg .vertbar.done {
     background: #eee;
     border-color: #5cb85c;
     /* font-weight: bold; */
@@ -4429,11 +4440,15 @@ footer {
     color: #fff;
 }
 
-.prg .bar.done {
+.prg .bar.done, .prg .vertbar.done {
     background: #5cb85c;
 }
 
-.prg .bar.active {
+.prg .bar.half, .prg .vertbar.half {
+    background: #b3b3b3;
+}
+
+.prg .bar.active, .prg .vertbar.active {
     background: linear-gradient(to right, #eee 40%, #fff 60%);
 }
 

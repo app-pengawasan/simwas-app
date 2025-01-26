@@ -32,20 +32,35 @@ class KetuaTimRencanaKerjaController extends Controller
         0   => 'Belum Disusun',
         // Ketua Tim Isi Rencana Kinerja
         1   => 'Proses Penyusunan',
-        // Disetujui
-        2   => 'Dikunci Oleh Admin',
         // Ketua Tim Kirim Rencana Kinerja ke Admin
-        3   => 'Menunggu Reviu',
-        // Ditolak Admin
-        4   => 'Perlu Perbaikan',
+        2   => 'Proses Verifikasi Rencana Kinerja',
+        // Disetujui Admin, diteruskan ke inspektur
+        3   => 'Menunggu Persetujuan Inspektur',
+        // Disetujui Inspektur
+        4   => 'Penetapan PKPT Awal Tahun',
+        // Mulai PKPT
+        5   => 'Pelaksanaan PKPT',
+        // Kirim selesai PKPT
+        6   => 'Proses Verifikasi Realisasi Kinerja',
+        // Admin setujui selesai PKPT
+        7   => 'Menunggu Persetujuan Inspektur',
+        // Inspektur setujui selesai PKPT
+        8   => 'Penetapan PKPT Akhir Tahun',
+        // Selesai PKPT
+        9   => 'Selesai'
     ];
 
     protected $colorText = [
-        0   => 'warning',
-        1   => 'info',
-        2   => 'success',
+        0   => 'dark',
+        1   => 'warning',
+        2   => 'primary',
         3   => 'primary',
-        4   => 'warning'
+        4   => 'danger',
+        5   => 'info',
+        6   => 'primary',
+        7   => 'primary',
+        8   => 'danger',
+        9   => 'success',
     ];
 
     protected $unsur = [
@@ -306,7 +321,7 @@ class KetuaTimRencanaKerjaController extends Controller
 
     public function sendToAnalis(Request $request, $id){
         TimKerja::where('id_timkerja', $id)
-        ->update(['status' => 3]);
+        ->update(['status' => 2]);
 
         $request->session()->put('status', 'Berhasil mengirim Rencana Kinerja.');
         $request->session()->put('alert-type', 'success');

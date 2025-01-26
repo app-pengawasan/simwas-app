@@ -510,7 +510,7 @@ $("#btn-send-rencana-kerja").on("click", function (e) {
 
     Swal.fire({
         title: "Apakah Anda Yakin?",
-        // text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
+        text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "var(--primary)",
@@ -583,13 +583,251 @@ $("#btn-admin-send-back").on("click", function (e) {
         showCancelButton: true,
         confirmButtonColor: "var(--primary)",
         cancelButtonColor: "var(--danger)",
-        confirmButtonText: "Kirim",
+        confirmButtonText: "Kembalikan",
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: `/admin/rencana-kinerja/return/${id_timkerja}`,
                 type: "PUT",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-admin-return-pkpt").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Rencana Kerja akan dikembalikan ke Inspektur!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kembalikan",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/3`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-admin-start-pkpt").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Pelaksanaan PKPT akan dimulai!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kirim",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/5`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-send-selesai-pkpt").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        // text: "Pelaksanaan PKPT akan dimulai!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kirim",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/ketua-tim/tim-kerja/update-status/${id_timkerja}/6`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-realisasi-send-back").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        // text: "Pelaksanaan PKPT akan dimulai!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kembalikan",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/5`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-realisasi-submit").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        // text: "Pelaksanaan PKPT akan dimulai!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kembalikan",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/7`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-end-pkpt").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Pelaksanaan PKPT akan diselesaikan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kirim",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/9`,
+                type: "POST",
+                cache: false,
+                data: {
+                    _token: token,
+                    id_timkerja: id_timkerja,
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (e) {
+                },
+            });
+        }
+    });
+});
+
+$("#btn-pkpt-send-back").on("click", function (e) {
+    e.preventDefault(); 
+    let id_timkerja = $("#id_timkerja").val(); 
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        // text: "Pelaksanaan PKPT akan diselesaikan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "var(--primary)",
+        cancelButtonColor: "var(--danger)",
+        confirmButtonText: "Kirim",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/admin/tim-kerja/update-status/${id_timkerja}/7`,
+                type: "POST",
                 cache: false,
                 data: {
                     _token: token,

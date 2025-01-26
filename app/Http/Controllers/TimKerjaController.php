@@ -262,26 +262,26 @@ class TimKerjaController extends Controller
             ], 500);
         }
     }
-    public function lockTimKerja(Request $request, $id){
+    public function updateStatus(Request $request, $id, $status){
         try {
             $timKerja = TimKerja::where('id_timkerja', $id)->first();
             $timKerja->update([
-                'status' => 2,
+                'status' => $status,
             ]);
-            return back()->with('status', 'Berhasil mengunci tim kerja.');
+            return back()->with('status', 'Berhasil mengembalikan rencana kerja ke Inspektur.');
         } catch (\Throwable $th) {
             return back()->with('status', $th->getMessage());
         }
     }
-    public function unlockTimKerja(Request $request, $id){
-        try {
-            $timKerja = TimKerja::where('id_timkerja', $id)->first();
-            $timKerja->update([
-                'status' => 1,
-            ]);
-            return back()->with('status', 'Berhasil membuka kunci tim kerja.');
-        } catch (\Throwable $th) {
-            return back()->with('status', $th->getMessage());
-        }
-    }
+    // public function mulaiPKPT(Request $request, $id){
+    //     try {
+    //         $timKerja = TimKerja::where('id_timkerja', $id)->first();
+    //         $timKerja->update([
+    //             'status' => 5,
+    //         ]);
+    //         return back()->with('status', 'Berhasil memulai PKPT.');
+    //     } catch (\Throwable $th) {
+    //         return back()->with('status', $th->getMessage());
+    //     }
+    // }
 }

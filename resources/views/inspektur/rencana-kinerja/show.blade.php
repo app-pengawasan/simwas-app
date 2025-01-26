@@ -34,6 +34,31 @@
                         @include('components.flash')
                         {{ session()->forget(['alert-type', 'status']) }}
                         @include('components.rencana-kerja.timeline-steps')
+                        <div class="row pb0">
+                            <div class="col-md-12">
+                                @if (Request::is('inspektur/rencana-kinerja/*'))
+                                    @if ($timKerja->status == 3)
+                                        <button class="btn btn-danger mb-3" id="btn-inspektur-send-back">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-inspektur-submit-rk">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Setujui
+                                        </button>
+                                    @elseif ($timKerja->status == 7)
+                                        <button class="btn btn-danger mb-3" id="btn-inspektur-return-realisasi">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-inspektur-approve-realisasi">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Setujui
+                                        </button>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
                         <div class="d-flex flex-row flex-wrap justify-content-between">
                             <div class="card col-md-6 p-0 pr-2">
                                 <div class="card-body shadow-sm border p-4">
@@ -315,4 +340,141 @@
 {{-- <script src="{{ asset('js/page/admin/tim-rencana-kinerja.js') }}"></script> --}}
 <script src="{{ asset('js/page/admin/rencana-kerja.js') }}"></script>
 <script src="{{ asset('js/page/pegawai/ketua-tim-rencana-kinerja.js') }}"></script>
+<script>
+    $("#btn-inspektur-submit-rk").on("click", function (e) {
+        e.preventDefault();
+        let id_timkerja = $("#id_timkerja").val();
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        Swal.fire({
+            title: "Apakah Anda Yakin?",
+            text: "Rencana Kerja yang telah dikirim tidak dapat diubah kembali!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "var(--primary)",
+            cancelButtonColor: "var(--danger)",
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/inspektur/rencana-kinerja/accept/${id_timkerja}`,
+                    type: "PUT",
+                    cache: false,
+                    data: {
+                        _token: token,
+                        id_timkerja: id_timkerja,
+                    },
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (e) {
+                    },
+                });
+            }
+        });
+    });
+
+    $("#btn-inspektur-send-back").on("click", function (e) {
+        e.preventDefault();
+        let id_timkerja = $("#id_timkerja").val();
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        Swal.fire({
+            title: "Apakah Anda Yakin?",
+            text: "Rencana Kerja akan dikembalikan untuk direvisi!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "var(--primary)",
+            cancelButtonColor: "var(--danger)",
+            confirmButtonText: "Kembalikan",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/inspektur/rencana-kinerja/return/${id_timkerja}`,
+                    type: "PUT",
+                    cache: false,
+                    data: {
+                        _token: token,
+                        id_timkerja: id_timkerja,
+                    },
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (e) {
+                    },
+                });
+            }
+        });
+    });
+
+    $("#btn-inspektur-return-realisasi").on("click", function (e) {
+        e.preventDefault();
+        let id_timkerja = $("#id_timkerja").val();
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        Swal.fire({
+            title: "Apakah Anda Yakin?",
+            // text: "Rencana Kerja akan dikembalikan untuk direvisi!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "var(--primary)",
+            cancelButtonColor: "var(--danger)",
+            confirmButtonText: "Kembalikan",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/inspektur/tim-kerja/update-status/${id_timkerja}/6`,
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        _token: token,
+                        id_timkerja: id_timkerja,
+                    },
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (e) {
+                    },
+                });
+            }
+        });
+    });
+
+    $("#btn-inspektur-approve-realisasi").on("click", function (e) {
+        e.preventDefault();
+        let id_timkerja = $("#id_timkerja").val();
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        Swal.fire({
+            title: "Apakah Anda Yakin?",
+            // text: "Rencana Kerja akan dikembalikan untuk direvisi!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "var(--primary)",
+            cancelButtonColor: "var(--danger)",
+            confirmButtonText: "Kirim",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/inspektur/tim-kerja/update-status/${id_timkerja}/8`,
+                    type: "POST",
+                    cache: false,
+                    data: {
+                        _token: token,
+                        id_timkerja: id_timkerja,
+                    },
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (e) {
+                    },
+                });
+            }
+        });
+    });
+</script>
 @endpush

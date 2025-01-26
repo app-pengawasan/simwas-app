@@ -37,38 +37,45 @@
                         @include('components.rencana-kerja.timeline-steps')
                         <div class="row pb0">
                             <div class="col-md-12">
-                                @if ($timKerja->status == 1)
-                                <form class="mb-4" action="/admin/tim-kerja/lock/{{ $timKerja->id_timkerja }}"
-                                    method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary" id="btn-lock-timkerja">
-                                        <i class="fas fa-lock mr-1"></i>
-                                        Kunci Tim Kerja
-                                    </button>
-                                </form>
-                                @elseif ($timKerja->status == 2)
-                                <form class="mb-4" action="/admin/tim-kerja/unlock/{{ $timKerja->id_timkerja }}"
-                                    method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary" id="btn-unlock-timkerja">
-                                        <i class="fas fa-lock-open mr-1"></i>
-                                        Buka Kunci Tim Kerja
-                                    </button>
-                                </form>
-                                @endif
                                 @if (Request::is('admin/rencana-kinerja/*'))
-                                    @if ($timKerja->status == 3)
-                                    <button class="btn btn-danger mb-3" id="btn-admin-send-back">
-                                        <i class="fas fa-undo mr-1"></i>
-                                        Kembalikan
-                                    </button>
-                                    <button class="btn btn-success mb-3" id="btn-admin-submit-rk">
-                                        <i class="fa-solid fa-check mr-1"></i>
-                                        Setujui
-                                    </button>
+                                    @if ($timKerja->status == 2)
+                                        <button class="btn btn-danger mb-3" id="btn-admin-send-back">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-admin-submit-rk">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Setujui
+                                        </button>
+                                    @elseif ($timKerja->status == 4)
+                                        <button class="btn btn-danger mb-3" id="btn-admin-return-pkpt">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-admin-start-pkpt">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Mulai PKPT
+                                        </button>
+                                    @elseif ($timKerja->status == 6)
+                                        <button class="btn btn-danger mb-3" id="btn-realisasi-send-back">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-realisasi-submit">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Setujui
+                                        </button>
+                                    @elseif ($timKerja->status == 8)
+                                        <button class="btn btn-danger mb-3" id="btn-pkpt-send-back">
+                                            <i class="fas fa-undo mr-1"></i>
+                                            Kembalikan
+                                        </button>
+                                        <button class="btn btn-success mb-3" id="btn-end-pkpt">
+                                            <i class="fa-solid fa-check mr-1"></i>
+                                            Selesai PKPT
+                                        </button>
                                     @endif
                                 @endif
-
                             </div>
                         </div>
                         <div class="d-flex flex-row flex-wrap justify-content-between">
@@ -126,7 +133,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    @if ($timKerja->status != 2)
+                                    @if ($timKerja->status < 2 || $timKerja->status == 5)
                                     <div class="text-right">
                                         <button class="btn btn-outline-primary btn-edit-timkerja"
                                             data-id="{{ $timKerja->id_timkerja }}" data-toggle="modal"

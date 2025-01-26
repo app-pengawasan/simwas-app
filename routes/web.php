@@ -188,8 +188,8 @@ Route::group(['middleware'=>'auth'], function(){
         Route::resource('tim-kerja', TimKerjaController::class);
         Route::get('tim-kerja/detail/{id}', [TimKerjaController::class, 'detail']);
         Route::put('tim-kerja/update/{id}', [TimKerjaController::class, 'updateTimKerja']);
-        Route::post('tim-kerja/lock/{id}', [TimKerjaController::class, 'lockTimKerja']);
-        Route::post('tim-kerja/unlock/{id}', [TimKerjaController::class, 'unlockTimKerja']);
+        Route::post('tim-kerja/update-status/{id}/{status}', [TimKerjaController::class, 'updateStatus']);
+        // Route::post('tim-kerja/mulaipkpt/{id}', [TimKerjaController::class, 'mulaiPKPT']);
 
         //Rencana Jam Kerja
         Route::get('rencana-jam-kerja/rekap', [AdminRencanaJamKerjaController::class, 'rekap']);
@@ -293,8 +293,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('penilaian-kinerja/nilai/{id_pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'getNilai']);
         Route::get('penilaian-kinerja/export/{pegawai}/{bulan}/{tahun}', [InspekturPenilaianKinerjaController::class, 'export']);
 
-        //View Rencana Kinerja
+        //Rencana Kinerja
         Route::resource('rencana-kinerja', InspekturRencanaKerjaController::class);
+        Route::put('rencana-kinerja/accept/{id}', [InspekturRencanaKerjaController::class, 'acceptRencanaKerja']);
+        Route::put('rencana-kinerja/return/{id}', [InspekturRencanaKerjaController::class, 'sendBackToKetuaTim']);
+        Route::post('tim-kerja/update-status/{id}/{status}', [TimKerjaController::class, 'updateStatus']);
 
         //Matriks Peran Hasil
         Route::resource('mph', InspekturMPHController::class);
@@ -402,6 +405,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::put('rencana-kinerja/update/{id}', [KetuaTimRencanaKerjaController::class, 'update']);
         Route::put('rencana-kinerja/disable/{id}', [KetuaTimRencanaKerjaController::class, 'disableRencanaKerja']);
         Route::put('rencana-kinerja/send/{id}', [KetuaTimRencanaKerjaController::class, 'sendToAnalis']);
+        Route::post('tim-kerja/update-status/{id}/{status}', [TimKerjaController::class, 'updateStatus']);
         Route::resource('tim-pelaksana', PegawaiTugasController::class);
         Route::resource('rencana-kinerja/proyek', ProyekController::class);
         Route::put('rencana-kinerja/proyek/update/{id}', [ProyekController::class, 'update']);

@@ -47,6 +47,21 @@
                         {{ session()->forget(['alert-type', 'status']) }}
                         <input type="hidden" name="id_timkerja" id="id_timkerja" value="{{ $timKerja->id_timkerja }}">
                         @include('components.rencana-kerja.timeline-steps')
+                        <div class="row pb0">
+                            <div class="col-md-12">
+                                @if ($timKerja->status < 2)
+                                    <button class="btn btn-success mb-3"
+                                        id="btn-send-rencana-kerja">
+                                        <i class="fa-regular fa-paper-plane mr-1"></i> Kirim
+                                    </button>
+                                @elseif ($timKerja->status == 5)
+                                    <button class="btn btn-success mb-3"
+                                        id="btn-send-selesai-pkpt">
+                                        <i class="fa-regular fa-paper-plane mr-1"></i> Kirim Selesai PKPT
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
                         <div class="d-flex flex-row flex-wrap justify-content-between">
                             <div class="card col-md-6 p-0 pr-2">
                                 <div class="card-body shadow-sm border p-4">
@@ -145,7 +160,7 @@
                                             <td>{{ $timKerja->iki_ketua ?? 'Belum Diisi' }}</td>
                                         </tr>
                                     </table>
-                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                    @if ($timKerja->status < 2 || $timKerja->status == 5)
                                         <div class="text-right">
                                             <button class="btn btn-outline-primary" data-toggle="modal"
                                                 data-target="#modal-edit-timkerja">
@@ -167,7 +182,7 @@
                                     <h1 class="h5 text-dark mb-0">
                                         Daftar Proyek
                                     </h1>
-                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                    @if ($timKerja->status < 2 || $timKerja->status == 5)
                                         <div class="d-flex">
                                             <button class="btn btn-outline-primary btn-sm ml-2" data-toggle="modal"
                                                 data-target="#modal-tambah-proyek">
@@ -186,7 +201,7 @@
                                                 data-target="#faq{{ $loop->iteration }}" aria-expanded="true"
                                                 aria-controls="faq{{ $loop->iteration }}" style="width: 100%; display: grid; grid-template-columns: 1fr max-content max-content;">
                                                 <span>{{ $proyek->nama_proyek }}</span>
-                                                @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                @if ($timKerja->status < 2 || $timKerja->status == 5)
                                                     <span class="mr-3">
                                                         <button class="btn btn-warning btn-sm edit-btn-proyek mt-0" data-toggle="modal"
                                                             data-target="#modal-edit-proyek" data-id="{{ $proyek->id }}"
@@ -240,9 +255,10 @@
                                                     <h1 class="h5 text-dark mb-0">
                                                         Daftar Tugas
                                                     </h1>
-                                                    @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                    @if ($timKerja->status < 2 || $timKerja->status == 5)
                                                         <span class="d-flex justify-content-end mt-1 ml-2">
                                                             <button
+
                                                                 class="btn btn-outline-primary float-right btn-sm btn-modal-create-tugas" type="button"
                                                                 data-toggle="modal" data-target="#modal-create-tugas" data-proyek="{{ $proyek->id }}">
                                                                 <i class="fa-solid fa-plus mr-1"></i>
@@ -256,7 +272,7 @@
                                                         @foreach ($proyek->rencanaKerja as $tugas)
                                                             <li class="font-weight-bold mt-4 h5">
                                                                 <span class="font-weight-bold mt-4 h5">{{ $tugas->tugas }}</span>
-                                                                @if ($timKerja->status < 2 || $timKerja->status == 4)
+                                                                @if ($timKerja->status < 2 || $timKerja->status == 5)
                                                                     <a href="/ketua-tim/tim-pelaksana/{{ $tugas->id_rencanakerja }}"
                                                                         class="btn btn-primary btn-sm">
                                                                         <i class="fas fa-eye" style="font-size: 11.8px;"></i>
@@ -387,12 +403,6 @@
                         </div>
                         {{-- <div class="row mb-4 pb0">
                             <div class="col-md-12">
-                                @if ($timKerja->status < 2 || $timKerja->status == 4)
-                                    <button class="btn btn-success float-right btn-xl mt-4 text-bold"
-                                        id="btn-send-rencana-kerja">
-                                        <i class="fa-regular fa-paper-plane mr-1"></i> Kirim
-                                    </button>
-                                @endif
                             </div>
                         </div> --}}
                     </div>
