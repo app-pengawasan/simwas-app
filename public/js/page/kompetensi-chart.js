@@ -85,37 +85,31 @@ var myChart2 = new Chart(jp_chart, {
 });
 
 $('#filterPegawai').on("change", function () {
+    //jumlah diklat
     diklat = diklat_count[$(this).val()];
-    diklat_arr = [];
-    max = 0;
-    if (diklat) {
-        years.forEach((tahun) => {
-                if (diklat[tahun]) {
-                    diklat_arr.push(diklat[tahun]);
-                    if (diklat[tahun] > max) max = diklat[tahun];
-                } else diklat_arr.push(0);
-            }
-        )
-        max++;
+    let max = 0;
+    if (diklat) { //jika data pegawai ada
+        myChart.data.labels = Object.keys(diklat);
+        myChart.data.datasets[0].data = Object.values(diklat);
+        max = Math.max(...Object.values(diklat)) + 1;
+    } else {
+        myChart.data.labels = years;
+        myChart.data.datasets[0].data = [];
     }
-    myChart.data.datasets[0].data = diklat_arr;
     myChart.options.scales.yAxes[0].ticks.max = max;
     myChart.update();
 
+    //total jp
     jp = jp_count[$(this).val()];
-    jp_arr = [];
     max = 0;
-    if (jp) {
-        years.forEach((tahun) => {
-                if (jp[tahun]) {
-                    jp_arr.push(jp[tahun]);
-                    if (jp[tahun] > max) max = jp[tahun];
-                } else jp_arr.push(0);
-            }
-        )
-        max = max + 30;
+    if (jp) { //jika data pegawai ada
+        myChart2.data.labels = Object.keys(jp);
+        myChart2.data.datasets[0].data = Object.values(jp);
+        max = Math.max(...Object.values(jp)) + 30;
+    } else {
+        myChart2.data.labels = years;
+        myChart2.data.datasets[0].data = [];
     }
-    myChart2.data.datasets[0].data = jp_arr;
     myChart2.options.scales.yAxes[0].ticks.max = max;
     myChart2.update();
 });
