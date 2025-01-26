@@ -87,25 +87,35 @@ var myChart2 = new Chart(jp_chart, {
 $('#filterPegawai').on("change", function () {
     diklat = diklat_count[$(this).val()];
     diklat_arr = [];
+    max = 0;
     if (diklat) {
         years.forEach((tahun) => {
-                if (diklat[tahun]) diklat_arr.push(diklat[tahun]);
-                else diklat_arr.push(0);
+                if (diklat[tahun]) {
+                    diklat_arr.push(diklat[tahun]);
+                    if (diklat[tahun] > max) max = diklat[tahun];
+                } else diklat_arr.push(0);
             }
         )
+        max++;
     }
     myChart.data.datasets[0].data = diklat_arr;
+    myChart.options.scales.yAxes[0].ticks.max = max;
     myChart.update();
 
     jp = jp_count[$(this).val()];
     jp_arr = [];
+    max = 0;
     if (jp) {
         years.forEach((tahun) => {
-                if (jp[tahun]) jp_arr.push(jp[tahun]);
-                else jp_arr.push(0);
+                if (jp[tahun]) {
+                    jp_arr.push(jp[tahun]);
+                    if (jp[tahun] > max) max = jp[tahun];
+                } else jp_arr.push(0);
             }
         )
+        max = max + 30;
     }
     myChart2.data.datasets[0].data = jp_arr;
+    myChart2.options.scales.yAxes[0].ticks.max = max;
     myChart2.update();
 });
