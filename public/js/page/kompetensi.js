@@ -32,10 +32,13 @@ let table = $("#table-kompetensi")
                 className: "btn-danger",
                 text: '<i class="fas fa-file-pdf"></i> Pdf',
                 orientation: 'landscape',
-                pageSize: 'LEGAL',
+                pageSize: 'TABLOID',
                 exportOptions: {
                     columns: colnums,
                 },
+                customize: function(doc) {
+                    doc.pageMargins = [ 10, 20, 10, 20 ];
+                }
             },
         ],
     })
