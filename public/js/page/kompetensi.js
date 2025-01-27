@@ -1,11 +1,13 @@
-let colnums, createdcol;
+localStorage.setItem("mini-sidebar", "true");
+
+let colnums, tgl_mulai;
 if ($('#role').val() == 'analis sdm') {
-    colnums = [0, 1, 2, 3, 4, 12, 13, 14, 15, 9, 20, 16, 17, 18, 6, 7]
-    createdcol = 19;
+    colnums = [0, 1, 2, 3, 4, 13, 14, 15, 16, 10, 20, 17, 18, 19, 7, 8];
+    tgl_mulai = 5;
 }
 else {
-    colnums = [0, 1, 2, 3, 8, 9, 10, 11, 12, 17, 13, 14, 15, 5, 6];
-    createdcol = 16;
+    colnums = [0, 1, 2, 3, 9, 10, 11, 12, 13, 17, 14, 15, 16, 6, 7];
+    tgl_mulai = 4;
 }
 
 let table = $("#table-kompetensi")
@@ -14,7 +16,7 @@ let table = $("#table-kompetensi")
         responsive: false,
         lengthChange: true,
         autoWidth: false,
-        order: [[createdcol, "desc"]],
+        order: [[tgl_mulai, "desc"]],
         pageLength: 25,
         buttons: [
             {
