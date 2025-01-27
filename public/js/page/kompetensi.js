@@ -59,8 +59,8 @@ if ($('#role').val() == 'analis sdm') {
         function (setting, data, index) {
             var selectedUnit = $('select#filterUnitKerja option:selected').val();
             var selectedKat = $('select#filterKat option:selected').val();
-            if ((data[9] == selectedUnit || selectedUnit == 'all') &&
-                (data[10] == selectedKat || selectedKat == 'all')) return true;
+            if ((data[11] == selectedUnit || selectedUnit == 'all') &&
+                (data[12] == selectedKat || selectedKat == 'all')) return true;
             else return false;
         }
     );
