@@ -88,5 +88,5 @@
     var jp_count = @json($jp_count);
 </script>
 <script src="{{ asset('js') }}/page/kompetensi-chart.js"></script>
-<script src="{{ asset('js') }}/page/kompetensi.js"></script>
+{{-- <script src="{{ asset('js') }}/page/kompetensi.js"></script> --}}
 @endpush
