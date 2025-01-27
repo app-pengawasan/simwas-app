@@ -101,6 +101,7 @@ class PegawaiKompetensiController extends Controller
 
         $validateData['status'] = 3;
         $validateData['pegawai_id'] = auth()->user()->id;
+        $validateData['tgl_upload'] = now();
         // $validateData['catatan'] = $request->catatan;
 
         // $validateData = $request->validate($rules);
@@ -205,6 +206,7 @@ class PegawaiKompetensiController extends Controller
             File::delete(public_path()."/document/sertifikat/".$kompetensi->sertifikat);
             $data['sertifikat'] = time().'.'.$sertifikat->getClientOriginalExtension();
             $sertifikat->move(public_path()."/document/sertifikat/", $data['sertifikat']);
+            $data['tgl_upload'] = now();
         }
 
         $kompetensiEdit = Kompetensi::where('id', $id)->update($data);

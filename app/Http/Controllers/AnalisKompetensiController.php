@@ -169,7 +169,8 @@ class AnalisKompetensiController extends Controller
         if ($request->terima) {
             $kompetensiEdit = Kompetensi::where('id', $id)->update([
                 'status' => 1,
-                'approved_by' => auth()->user()->id
+                'approved_by' => auth()->user()->id,
+                'tgl_approve' => now()
             ]);
 
             $request->session()->put('status', 'Berhasil menyetujui data kompetensi.');
@@ -253,6 +254,7 @@ class AnalisKompetensiController extends Controller
             File::delete(public_path()."/document/sertifikat/".$kompetensi->sertifikat);
             $data['sertifikat'] = time().'.'.$sertifikat->getClientOriginalExtension();
             $sertifikat->move(public_path()."/document/sertifikat/", $data['sertifikat']);
+            $data['tgl_upload'] = now();
         }
 
         $kompetensiEdit = Kompetensi::where('id', $id)->update($data);

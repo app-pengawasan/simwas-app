@@ -1,10 +1,10 @@
 let colnums, createdcol;
 if ($('#role').val() == 'analis sdm') {
-    colnums = [0, 1, 2, 3, 4, 11, 12, 13, 14, 8, 15, 16, 17, 6]
-    createdcol = 18;
+    colnums = [0, 1, 2, 3, 4, 12, 13, 14, 15, 9, 20, 16, 17, 18, 6, 7]
+    createdcol = 19;
 }
 else {
-    colnums = [0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 13, 14, 15, 6];
+    colnums = [0, 1, 2, 3, 8, 9, 10, 11, 12, 17, 13, 14, 15, 5, 6];
     createdcol = 16;
 }
 

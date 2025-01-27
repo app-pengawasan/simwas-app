@@ -43,14 +43,14 @@
                                     class="table table-bordered table-striped display responsive">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
                                             <th>Kategori</th>
                                             <th>Jenis</th>
                                             <th>Teknis</th>
                                             <th>Nama Pelatihan</th>
-                                            <th>Sertifikat</th>
+                                            <th class="text-center" style="width: 100px">Sertifikat</th>
                                             {{-- <th>Catatan</th> --}}
                                             <th>Status</th>
+                                            <th>Tanggal Disetujui</th>
                                             <th style="width: 15%">Aksi</th>
                                             <th class="d-none">tanggal mulai</th>
                                             <th class="d-none">tanggal selesai</th>
@@ -61,26 +61,43 @@
                                             <th class="d-none">jumlah peserta</th>
                                             <th class="d-none">ranking</th>
                                             <th class="d-none">created_at</th>
+                                            <th class="d-none">tgl upload</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
-                                            $i = 0;
+                                            function changeLocale($date_string) { 
+                                                return strtr(
+                                                    $date_string, array(
+                                                        'January'=>'Januari',
+                                                        'February'=>'Februari',
+                                                        'March'=>'Maret',
+                                                        'April'=>'April',
+                                                        'May'=>'Mei',
+                                                        'June'=>'Juni',
+                                                        'July'=>'Juli',
+                                                        'August'=>'Agustus',
+                                                        'September'=>'September',
+                                                        'October'=>'Oktober',
+                                                        'November'=>'November',
+                                                        'December'=>'Desember'
+                                                    )
+                                                );          
+                                            }
                                         @endphp
                                         @foreach ($kompetensi as $k)
                                             <tr>
-                                                <td>{{ ++$i }}</td>
                                                 <td>{{ $k->teknis->jenis->kategori->nama }}</td>
                                                 <td>{{ $k->teknis->jenis->nama }}</td>
                                                 <td>{{ $k->teknis->nama }}</td>
                                                 <td>{{ $k->nama_pelatihan }}</td>
-                                                
-                                                <td>
+                                                <td class="text-center">
                                                     {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
                                                     <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
                                                         <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    </a><br><br>
+                                                    Diunggah pada <br> {{ changeLocale(date('j F Y', strtotime($k->tgl_upload))) }}
                                                     {{-- @else
                                                         <a class="btn btn-primary"
                                                         href="{{ $k->sertifikat }}" target="_blank">
@@ -98,6 +115,7 @@
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
                                                     </td>
                                                 {{-- @endif --}}
+                                                <td>{{ changeLocale(date('j F Y', strtotime($k->tgl_approve))) }}</td>
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
@@ -135,6 +153,7 @@
                                                 <td class="d-none">{{ $k->jumlah_peserta }}</td>
                                                 <td class="d-none">{{ $k->ranking }}</td>
                                                 <td class="d-none">{{ $k->created_at }}</td>
+                                                <td class="d-none">{{ $k->tgl_upload }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
