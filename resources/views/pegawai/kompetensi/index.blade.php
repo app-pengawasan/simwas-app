@@ -71,14 +71,15 @@
                                                 <td>{{ $k->teknis->jenis->nama }}</td>
                                                 <td>{{ $k->teknis->nama }}</td>
                                                 <td>{{ $k->nama_pelatihan }}</td>
-                                                <td>{{ date('d-m-Y', strtotime($k->tgl_mulai)) }}</td>
+                                                <td data-sort={{ strtotime($k->tgl_mulai) }}>{{ date('d-m-Y', strtotime($k->tgl_mulai)) }}</td>
                                                 <td class="text-center">
                                                     {{-- @if (file_exists(public_path().'/document/sertifikat/'.$k->sertifikat)) --}}
                                                     <a class="btn btn-sm btn-primary"
                                                     href="{{ asset('document/sertifikat/'.$k->sertifikat) }}" target="_blank">
                                                         <i class="fas fa-eye"></i>
-                                                    </a><br><br>
-                                                    Diunggah pada <br> {{ date('d-m-Y', strtotime($k->tgl_upload)) }}
+                                                    </a>
+                                                    @if ($k->tgl_upload) <br><br> Diunggah pada <br> {{ date('d-m-Y', strtotime($k->tgl_upload)) }}
+                                                    @endif
                                                     {{-- @else
                                                         <a class="btn btn-primary"
                                                         href="{{ $k->sertifikat }}" target="_blank">
@@ -96,7 +97,7 @@
                                                         <span class="badge badge-{{ $colorText[$k->status] }}">{{ $status[$k->status] }}</span>
                                                     </td>
                                                 {{-- @endif --}}
-                                                <td>{{ date('d-m-Y', strtotime($k->tgl_approve)) }}</td>
+                                                <td>{{ $k->tgl_approve ? date('d-m-Y', strtotime($k->tgl_approve)) : '' }}</td>
                                                 <td>
                                                     <div class="btn-group dropdown">
                                                         <button type="button" class="btn btn-primary btn-sm dropdown-toggle no-arrow" 
@@ -133,7 +134,7 @@
                                                 <td class="d-none">{{ $k->penyelenggaraDiklat->penyelenggara }}</td>
                                                 <td class="d-none">{{ $k->jumlah_peserta }}</td>
                                                 <td class="d-none">{{ $k->ranking }}</td>
-                                                <td class="d-none">{{ date('d-m-Y', strtotime($k->tgl_upload)) }}</td>
+                                                <td class="d-none">{{ $k->tgl_upload ? date('d-m-Y', strtotime($k->tgl_upload)) : '' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
