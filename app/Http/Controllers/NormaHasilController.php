@@ -108,7 +108,7 @@ class NormaHasilController extends Controller
     public function create()
     {
         $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->whereIn('status', [1, 2]);
+                            $query->whereNot('status', 0);
                         })->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id);
                         })->get();

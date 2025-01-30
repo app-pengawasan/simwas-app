@@ -1,4 +1,4 @@
-<div class="prg">
+<div class="prg" style="margin-bottom: 100px">
     <div class="circle done">
         <span class="label"><i class="fa-solid fa-check"></i></span>
         <span class="title-prg">Norma Hasil Diajukan</span>

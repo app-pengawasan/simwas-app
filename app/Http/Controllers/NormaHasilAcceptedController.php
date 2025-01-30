@@ -133,7 +133,11 @@ private $hasilPengawasan = [
         $tanggal = date('Y-m-d');
         $norma_hasil = NormaHasil::find($request->norma_hasil);
 
-        $nomor_norma_hasil = NormaHasilAccepted::where('kode_norma_hasil', $norma_hasil->jenis_norma_hasil_id)->whereYear('tanggal_norma_hasil', date('Y'))->orderBy('nomor_norma_hasil', 'desc')->first();
+        $nomor_norma_hasil = NormaHasilAccepted::where('kode_norma_hasil', $norma_hasil->jenis_norma_hasil_id)
+                                                ->whereYear('tanggal_norma_hasil', date('Y'))
+                                                ->where('unit_kerja', $norma_hasil->unit_kerja)
+                                                ->orderBy('nomor_norma_hasil', 'desc')
+                                                ->first();
         if ($nomor_norma_hasil) {
             if (date('Y', strtotime($nomor_norma_hasil->tanggal_norma_hasil)) != date('Y')) {
                 $nomor_norma_hasil = 1;
