@@ -22,7 +22,7 @@
                 </a>
                 @if (auth()->user()->is_admin || auth()->user()->is_sekma || auth()->user()->is_sekwil ||
                 auth()->user()->is_aktif || auth()->user()->is_analissdm || auth()->user()->is_perencana ||
-                auth()->user()->is_arsiparis)
+                auth()->user()->is_arsiparis || auth()->user()->is_irwil || auth()->user()->is_pjk)
                 <div class="dropdown-divider"></div>
                 @endif
                 @if (auth()->user()->is_admin)
@@ -35,7 +35,7 @@
                     <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
                 </a>
                 @endif
-                @if (auth()->user()->is_aktif)
+                @if (auth()->user()->is_aktif || auth()->user()->is_irwil)
                 <a href="{{ route('inspektur.dashboard') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-shield"></i> Login sebagai Inspektur
                 </a>

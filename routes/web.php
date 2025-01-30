@@ -267,7 +267,7 @@ Route::group(['middleware'=>'auth'], function(){
      * */
     Route::prefix('inspektur')
     ->name('inspektur.')
-    ->middleware('role:is_aktif')
+    // ->middleware('role:is_aktif,is_irwil')
     ->group(function () {
 
         Route::get('/', [DashboardController::class, 'inspektur'])->name('dashboard');

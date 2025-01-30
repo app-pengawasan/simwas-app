@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('inspektur', function (User $user) {
-            return $user->is_aktif == true;
+            return $user->is_aktif == true || $user->is_irwil == true;
         });
 
         Gate::define('analis_sdm', function (User $user) {

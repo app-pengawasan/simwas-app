@@ -36,9 +36,14 @@ test('authenticated user without perencana rights cannot access the perencana pa
     actingAs($user)->get('/perencana')->assertStatus(302);
 });
 
-test('authenticated user without arsiparis rights cannot access the admin page', function () {
+test('authenticated user without arsiparis rights cannot access the arsiparis page', function () {
     $user = \App\Models\User::factory()->create();
     actingAs($user)->get('/arsiparis')->assertStatus(302);
+});
+
+test('authenticated user without pjk rights cannot access the pjk page', function () {
+    $user = \App\Models\User::factory()->create();
+    actingAs($user)->get('/pjk')->assertStatus(302);
 });
 
 
@@ -70,6 +75,12 @@ test('authenticated user with sekretaris utama rights can access the sekretaris 
 test('authenticated user with inspektur rights can access the inspektur page', function () {
     $user = \App\Models\User::factory()->create();
     $user->is_aktif = true;
+    actingAs($user)->get('/inspektur')->assertStatus(200);
+});
+
+test('authenticated user with inspektur rights can access the inspektur page', function () {
+    $user = \App\Models\User::factory()->create();
+    $user->is_irwil = true;
     actingAs($user)->get('/inspektur')->assertStatus(200);
 });
 

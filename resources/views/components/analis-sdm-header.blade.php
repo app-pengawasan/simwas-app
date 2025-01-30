@@ -34,7 +34,7 @@
                         <i class="fas fa-user-shield"></i> Login sebagai Sekretaris
                     </a>
                 @endif
-                @if (auth()->user()->is_aktif)
+                @if (auth()->user()->is_aktif || auth()->user()->is_irwil)
                     <a href="{{ route('inspektur.dashboard') }}" class="dropdown-item has-icon">
                         <i class="fas fa-user-shield"></i> Login sebagai Inspektur
                     </a>
