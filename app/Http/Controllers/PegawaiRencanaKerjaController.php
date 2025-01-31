@@ -117,10 +117,7 @@ class PegawaiRencanaKerjaController extends Controller
         $id_pegawai = auth()->user()->id;
         $timKerja = TimKerja::where('id_ketua', $id_pegawai)->get();
 
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->whereIn('status', [1,2]);
-            })->selectRaw('*, '.implode('+', $bulans).' as total')->get();
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->selectRaw('*, '.implode('+', $bulans).' as total')->get();
 
         // return [$tugasSaya, $id_pegawai];
         return view('pegawai.rencana-kinerja.saya.index', [
@@ -277,7 +274,7 @@ class PegawaiRencanaKerjaController extends Controller
 
         $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
                 ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                    $query->whereIn('status', [1,2])->where('tahun', $year);
+                    $query->where('tahun', $year);
                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as total')
                   ->get();
 

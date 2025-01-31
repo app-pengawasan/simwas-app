@@ -615,7 +615,6 @@ class DashboardController extends Controller
 
         $tugas = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
                     ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                        $query->whereIn('status', [1,2]);
                         $query->where('tahun', $year);
                     })->get();
 

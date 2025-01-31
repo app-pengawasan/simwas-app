@@ -74,10 +74,7 @@ class PenilaianBerjenjangController extends Controller
         }
 
         //tugas penilai
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->whereIn('status', [1,2]);
-            })->select('id_rencanakerja', 'pt_jabatan');
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->select('id_rencanakerja', 'pt_jabatan');
 
         //tugas jenjang di bawahnya
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {
@@ -226,10 +223,7 @@ class PenilaianBerjenjangController extends Controller
         $id_pegawai = auth()->user()->id;
 
         //tugas penilai
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-            ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                $query->whereIn('status', [1,2]);
-            })->select('id_rencanakerja', 'pt_jabatan');
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->select('id_rencanakerja', 'pt_jabatan');
 
         //tugas yang akan dinilai
         $tugasDinilai = PelaksanaTugas::joinSub($tugasSaya, 'penilai', function (JoinClause $join) {

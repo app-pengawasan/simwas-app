@@ -84,10 +84,7 @@ class RealisasiController extends Controller
     {
         $id_pegawai = auth()->user()->id;
 
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->whereIn('status', [1,2]);
-                    })->get();
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->get()->sortBy('rencanaKerja.tugas');
         
         $oPengawasan = ObjekPengawasan::whereRelation('rencanaKerja.pelaksana.user', function (Builder $query) use ($id_pegawai){
             $query->where('id', $id_pegawai);
@@ -127,7 +124,8 @@ class RealisasiController extends Controller
                 'nama_proyek' => $ts->rencanaKerja->proyek->nama_proyek,
                 'tim'    => $ts->rencanaKerja->proyek->timkerja->id_timkerja
             ];
-        }
+        } 
+        asort($tim);
 
         $events = Event::where('id_pegawai', $id_pegawai)->orderBy('start')->get(); 
 

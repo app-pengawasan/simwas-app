@@ -82,10 +82,7 @@ class TimKendaliMutuController extends Controller
             12 => 'Desember'
         ];
 
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) {
-                        $query->whereIn('status', [1,2]);
-                    })->get();
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->get();
 
         // $dokumen = KendaliMutuTim::whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))->get();
         $dokumen = KendaliMutuTim::whereRelation('laporanObjekPengawasan.objekPengawasan', function (Builder $query) use ($tugasSaya) {

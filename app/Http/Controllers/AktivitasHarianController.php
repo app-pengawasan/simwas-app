@@ -24,10 +24,7 @@ class AktivitasHarianController extends Controller
      */
     public function index()
     {
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)
-                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->whereIn('status', [1,2]);
-                    })->get();
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', auth()->user()->id)->get();
 
         $events = Event::whereRelation('laporanOPengawasan.objekPengawasan', function (Builder $query) use ($tugasSaya) {
                         $query->whereIn('id_rencanakerja', $tugasSaya->pluck('id_rencanakerja'));
