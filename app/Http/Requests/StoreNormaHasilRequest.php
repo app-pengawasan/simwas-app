@@ -28,7 +28,7 @@ class StoreNormaHasilRequest extends FormRequest
             'objek_kegiatan' => ['required', 'string', 'max:100'],
             'bulan_pelaporan' => ['required', 'string', 'max:100'],
             'jenis_norma_hasil' => ['required', 'string', 'max:100'],
-            'nama_dokumen' => ['required', 'string', 'max:100'],
+            'nama_dokumen' => ['required', 'string', 'max:500'],
             'url_norma_hasil' => ['required', 'url', 'max:100'],
         ];
     }
