@@ -241,7 +241,7 @@
                                                 </div>
                                                 <ol>
                                                     @if ($proyek->rencanaKerja->count() > 0)
-                                                        @foreach ($proyek->rencanaKerja as $tugas)
+                                                        @foreach ($proyek->rencanaKerja->sortBy('tugas') as $tugas)
                                                             <li class="font-weight-bold mt-4 h5">
                                                                 <p class="font-weight-bold mt-4 h5">{{ $tugas->tugas }}</p>
                                                             </li>

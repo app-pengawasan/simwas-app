@@ -182,7 +182,7 @@ class AdminRencanaKerjaController extends Controller
     public function show($id)
     {
         $timKerja = TimKerja::where('id_timkerja', $id)->get();
-        $proyek = $timKerja[0]->proyek;
+        $proyek = $timKerja[0]->proyek->sortBy('nama_proyek');
         $pegawai = User::all();
 
         $masterTujuan = MasterTujuan::all();
