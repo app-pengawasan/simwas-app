@@ -300,6 +300,7 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('tim-kerja/update-status/{id}/{status}', [TimKerjaController::class, 'updateStatus']);
 
         //Matriks Peran Hasil
+        Route::get('mph/hari-kerja', [InspekturMPHController::class, 'indexHari']);
         Route::resource('mph', InspekturMPHController::class);
         Route::get('mph/export/{unit}/{year}', [InspekturMPHController::class, 'export']);
     });

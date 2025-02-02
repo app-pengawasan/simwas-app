@@ -83,7 +83,7 @@
                                         <th rowspan="2" class="text-center">Tugas</th>
                                         <th rowspan="2" class="text-center">Nama Pelaksana</th>
                                         <th rowspan="2" class="text-center">Peran</th>
-                                        <th colspan="13" class="text-center">Jam Pengawasan (Jam)</th>
+                                        <th colspan="13" class="text-center" id="title">Jam Pengawasan (Hari)</th>
                                     </tr>
                                     <tr>
                                         <th>Jan</th>
@@ -108,19 +108,19 @@
                                             <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
                                             <td>{{ $pelaksana->user->name }}</td>
                                             <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
-                                            <td>{{ $pelaksana->jan }}</td>
-                                            <td>{{ $pelaksana->feb }}</td>
-                                            <td>{{ $pelaksana->mar }}</td>
-                                            <td>{{ $pelaksana->apr }}</td>
-                                            <td>{{ $pelaksana->mei }}</td>
-                                            <td>{{ $pelaksana->jun }}</td>
-                                            <td>{{ $pelaksana->jul }}</td>
-                                            <td>{{ $pelaksana->agu }}</td>
-                                            <td>{{ $pelaksana->sep }}</td>
-                                            <td>{{ $pelaksana->okt }}</td>
-                                            <td>{{ $pelaksana->nov }}</td>
-                                            <td>{{ $pelaksana->des }}</td>
-                                            <td>{{ $pelaksana->jam_pengawasan }}</td>
+                                            <td>{{ round($pelaksana->jan / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->feb / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->mar / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->apr / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->mei / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->jun / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->jul / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->agu / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->sep / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->okt / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->nov / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->des / 7.5, 2) }}</td>
+                                            <td>{{ round($pelaksana->jam_pengawasan / 7.5, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -169,11 +169,11 @@
                     },
                     {
                         text: 'Jam Kerja',
-                        className: 'btn btn-primary disabled ml-2 jam-kerja toggle',
+                        className: 'btn btn-primary ml-2 jam-kerja toggle',
                     },
                     {
                         text: 'Hari Kerja',
-                        className: 'btn btn-primary hari-kerja toggle',
+                        className: 'btn btn-primary disabled hari-kerja toggle',
                     }
                 ],
                 pageLength: 25,
@@ -204,8 +204,8 @@
 
     $('#tim-kerja_wrapper .dt-buttons').removeClass('btn-group');
     $('.toggle').wrapAll('<div class="btn-group"></div>');
-    $('.hari-kerja').on('click', function() {
-        window.location.href = `/inspektur/mph/hari-kerja?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`;
+    $('.jam-kerja').on('click', function() {
+        window.location.href = `/inspektur/mph?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`;
     })
 </script>
 @endpush

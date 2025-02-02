@@ -88,6 +88,61 @@ class InspekturMPHController extends Controller
         ]);
     }
 
+    public function indexHari(Request $request)
+    {
+        $this->authorize('inspektur');
+
+        $unit = $request->unit;
+        if ($unit == null) {
+            $unit = auth()->user()->unit_kerja;
+        } else {
+            $unit = $unit;
+        }
+
+        $year = $request->year;
+        if ($year == null) {
+            $year = date('Y');
+        } else {
+            $year = $year;
+        } 
+
+        if ($unit == '8000') {
+            $pelaksanaTugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($unit, $year) {
+                                    $query->where('tahun', $year);
+                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')
+                                  ->get();
+        } else {
+            $pelaksanaTugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($unit, $year) {
+                                    $query->where('unitkerja', $unit);
+                                    $query->where('tahun', $year);
+                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')
+                                  ->get();
+        }
+
+        $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
+
+        $currentYear = date('Y');
+
+        $yearValues = $year->pluck('tahun')->toArray();
+
+        if (!in_array($currentYear, $yearValues)) {
+            // If the current year is not in the array, add it
+            $year->push((object)['tahun' => $currentYear]);
+            $yearValues[] = $currentYear; // Update the year values array
+        }
+
+        $year = $year->sortByDesc('tahun');
+        $unit = auth()->user()->unit_kerja;
+
+        return view('inspektur.matriks-peran-hasil.hari', [
+            'pelaksanaTugas' => $pelaksanaTugas,
+            'year' => $year,
+            'unitkerja' => $this->unitkerja,
+            'jabatanPelaksana' => $this->jabatanPelaksana,
+            'unit' => $unit
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
