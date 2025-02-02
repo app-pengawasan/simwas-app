@@ -208,7 +208,7 @@
             $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
             $(".jam-kerja").attr('disabled', false);
-            $(".convert").each(function() {
+            $('#table-inspektur-kinerja').find("td.convert").each(function() {
                 let cell = datatable.cell(this);
                 if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
             });
@@ -220,7 +220,7 @@
             $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
             $(".hari-kerja").attr('disabled', false);
-            $(".convert").each(function() {
+            $('#table-inspektur-kinerja').find("td.convert").each(function() {
                 let cell = datatable.cell(this);
                 if (cell.data() != '0') cell.data($(this).attr('value')).draw();
             });
