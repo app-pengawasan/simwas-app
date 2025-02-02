@@ -38,7 +38,7 @@ class InspekturMPHController extends Controller
         $this->authorize('inspektur');
 
         $unit = $request->unit;
-        if ($unit == null) {
+        if ($unit == null || $unit == "undefined") {
             $unit = auth()->user()->unit_kerja;
         } else {
             $unit = $unit;
@@ -93,7 +93,7 @@ class InspekturMPHController extends Controller
         $this->authorize('inspektur');
 
         $unit = $request->unit;
-        if ($unit == null) {
+        if ($unit == null || $unit == "undefined") {
             $unit = auth()->user()->unit_kerja;
         } else {
             $unit = $unit;
