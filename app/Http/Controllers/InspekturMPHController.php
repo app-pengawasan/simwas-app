@@ -10,9 +10,11 @@ use App\Models\MasterTujuan;
 use App\Models\RencanaKerja;
 use Illuminate\Http\Request;
 use App\Models\MasterSasaran;
-use App\Models\OperatorRencanaKinerja;
 use App\Models\PelaksanaTugas;
+use App\Models\OperatorRencanaKinerja;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class InspekturMPHController extends Controller
 {
@@ -116,6 +118,104 @@ class InspekturMPHController extends Controller
     public function show($id)
     {
         
+    }
+
+    public function export($unit, $year)
+    {
+        $this->authorize('inspektur');
+        
+        if ($unit == 'undefined') $unit = auth()->user()->unit_kerja;
+
+        if ($unit == '8000') {
+            $pelaksanaTugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($unit, $year) {
+                                    $query->where('tahun', $year);
+                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')
+                                  ->get();
+        } else {
+            $pelaksanaTugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($unit, $year) {
+                                    $query->where('unitkerja', $unit);
+                                    $query->where('tahun', $year);
+                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')
+                                  ->get();
+        }
+
+        $mySpreadsheet = new Spreadsheet();
+        $sheet = $mySpreadsheet->getSheet(0);
+        $sheet->setTitle('MPH (Jam)');
+        $data = [
+            ['Unit Kerja', 'Tim PJK', 'Proyek', 'Tugas', 'Hasil Kerja Tim', 'Nama Pelaksana', 'Peran',
+             'Rencana Kinerja', 'Indikator Kinerja Individu', 'Kegiatan', 'Hasil Kerja Pegawai',
+             'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 
+             'Jam Pengawasan (Jam)', 'Target Laporan/Dokumen']
+        ];
+
+        $mySpreadsheet->createSheet();
+        $sheet2 = $mySpreadsheet->getSheet(1);
+        $sheet2->setTitle('MPH (Hari)');
+        $data2 = [
+            ['Unit Kerja', 'Tim PJK', 'Proyek', 'Tugas', 'Hasil Kerja Tim', 'Nama Pelaksana', 'Peran',
+             'Rencana Kinerja', 'Indikator Kinerja Individu', 'Kegiatan', 'Hasil Kerja Pegawai',
+             'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 
+             'Jam Pengawasan (Hari)', 'Target Laporan/Dokumen']
+        ];
+
+        foreach ($pelaksanaTugas as $pelaksana) {
+            //ambil rk, iki, kegiatan, dan hasil kerja pegawai
+            $tugas = $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first(); 
+
+            //hitung jumlah laporan/dokumen norma hasil
+            $jml_laporan = 0;
+            foreach ($pelaksana->rencanaKerja->objekPengawasan as $op) {
+                $jml_laporan += $op->laporanObjekPengawasan->where('status', 1)->count();
+            }
+
+            //push data ke sheet 1
+            array_push($data, [
+                                $this->unitkerja[$pelaksana->rencanaKerja->proyek->timKerja->unitkerja],
+                                $pelaksana->rencanaKerja->proyek->timKerja->nama,
+                                $pelaksana->rencanaKerja->proyek->nama_proyek,
+                                $pelaksana->rencanaKerja->tugas,
+                                $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja,
+                                $pelaksana->user->name,
+                                $this->jabatanPelaksana[$pelaksana->pt_jabatan],
+                                $tugas->rencana_kinerja, $tugas->iki, $tugas->kegiatan, $tugas->hasil_kerja,
+                                $pelaksana->jan, $pelaksana->feb, $pelaksana->mar, $pelaksana->apr, $pelaksana->mei,
+                                $pelaksana->jun, $pelaksana->jul, $pelaksana->agu, $pelaksana->sep, $pelaksana->okt,
+                                $pelaksana->nov, $pelaksana->des, $pelaksana->jam_pengawasan, $jml_laporan
+                              ]);
+
+            //push data ke sheet 2
+            array_push($data2, [
+                                $this->unitkerja[$pelaksana->rencanaKerja->proyek->timKerja->unitkerja],
+                                $pelaksana->rencanaKerja->proyek->timKerja->nama,
+                                $pelaksana->rencanaKerja->proyek->nama_proyek,
+                                $pelaksana->rencanaKerja->tugas,
+                                $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja,
+                                $pelaksana->user->name,
+                                $this->jabatanPelaksana[$pelaksana->pt_jabatan],
+                                $tugas->rencana_kinerja, $tugas->iki, $tugas->kegiatan, $tugas->hasil_kerja,
+                                round($pelaksana->jan / 7.5, 2), round($pelaksana->feb / 7.5, 2), round($pelaksana->mar / 7.5, 2), round($pelaksana->apr / 7.5, 2), round($pelaksana->mei / 7.5, 2),
+                                round($pelaksana->jun / 7.5, 2), round($pelaksana->jul / 7.5, 2), round($pelaksana->agu / 7.5, 2), round($pelaksana->sep / 7.5, 2), round($pelaksana->okt / 7.5, 2),
+                                round($pelaksana->nov / 7.5, 2), round($pelaksana->des / 7.5, 2), round($pelaksana->jam_pengawasan / 7.5, 2), $jml_laporan
+                              ]);
+        }
+
+        $sheet->fromArray($data);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
+
+        $sheet2->fromArray($data2);
+        foreach ($sheet2->getColumnIterator() as $column) {
+            $sheet2->getColumnDimension($column->getColumnIndex())->setAutoSize(true); //resize kolom
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Matriks Peran Hasil.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($mySpreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        die;
     }
 
 }

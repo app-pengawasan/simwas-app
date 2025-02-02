@@ -79,39 +79,48 @@
                             <table id="tim-kerja" class="table table-bordered display responsive" style="background-color: #f6f7f8">
                                 <thead>
                                     <tr>
-                                        <th>Tugas</th>
-                                        <th>Hasil Kerja Tim</th>
-                                        <th>Pelaksana</th>
-                                        <th>Jam Pengawasan</th>
-                                        <th class="never">Unit Kerja</th>
-                                        <th class="never">Tim PJK</th>
-                                        <th class="never">Proyek</th>
-                                        <th class="never">Peran</th>
-                                        <th class="never">Rencana Kinerja</th>
-                                        <th class="never">Indikator Kinerja Individu</th>
-                                        <th class="never">Kegiatan</th>
-                                        <th class="never">Hasil Kerja Pegawai</th>
+                                        <th rowspan="2" class="text-center">Tim PJK</th>
+                                        <th rowspan="2" class="text-center">Tugas</th>
+                                        <th rowspan="2" class="text-center">Nama Pelaksana</th>
+                                        <th rowspan="2" class="text-center">Peran</th>
+                                        <th colspan="13" class="text-center" id="title">Jam Pengawasan (Jam)</th>
                                     </tr>
-                                </thead>
+                                    <tr>
+                                        <th>Jan</th>
+                                        <th>Feb</th>
+                                        <th>Mar</th>
+                                        <th>Apr</th>
+                                        <th>Mei</th>
+                                        <th>Jun</th>
+                                        <th>Jul</th>
+                                        <th>Agu</th>
+                                        <th>Sep</th>
+                                        <th>Okt</th>
+                                        <th>Nov</th>
+                                        <th>Des</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead> 
                                 <tbody>
                                     @foreach ($pelaksanaTugas as $pelaksana)
-                                        @php
-                                            //ambil rk, iki, kegiatan, dan hasil kerja pegawai
-                                            $tugas = $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first();    
-                                        @endphp
                                         <tr class="table-bordered">
-                                            <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
-                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
-                                            <td>{{ $pelaksana->user->name }}</td>
-                                            <td>{{ $pelaksana->jam_pengawasan }}</td>
-                                            <td>{{ $unitkerja[$pelaksana->rencanaKerja->proyek->timKerja->unitkerja] }}</td>
                                             <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->nama }}</td>
-                                            <td>{{ $pelaksana->rencanaKerja->proyek->nama_proyek }}</td>
+                                            <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
+                                            <td>{{ $pelaksana->user->name }}</td>
                                             <td>{{ $jabatanPelaksana[$pelaksana->pt_jabatan] }}</td>
-                                            <td>{{ $tugas->rencana_kinerja }}</td>
-                                            <td>{{ $tugas->iki }}</td>
-                                            <td>{{ $tugas->kegiatan }}</td>
-                                            <td>{{ $tugas->hasil_kerja }}</td>
+                                            <td class="convert" value="{{ $pelaksana->jan }}">{{ $pelaksana->jan }}</td>
+                                            <td class="convert" value="{{ $pelaksana->feb }}">{{ $pelaksana->feb }}</td>
+                                            <td class="convert" value="{{ $pelaksana->mar }}">{{ $pelaksana->mar }}</td>
+                                            <td class="convert" value="{{ $pelaksana->apr }}">{{ $pelaksana->apr }}</td>
+                                            <td class="convert" value="{{ $pelaksana->mei }}">{{ $pelaksana->mei }}</td>
+                                            <td class="convert" value="{{ $pelaksana->jun }}">{{ $pelaksana->jun }}</td>
+                                            <td class="convert" value="{{ $pelaksana->jul }}">{{ $pelaksana->jul }}</td>
+                                            <td class="convert" value="{{ $pelaksana->agu }}">{{ $pelaksana->agu }}</td>
+                                            <td class="convert" value="{{ $pelaksana->sep }}">{{ $pelaksana->sep }}</td>
+                                            <td class="convert" value="{{ $pelaksana->okt }}">{{ $pelaksana->okt }}</td>
+                                            <td class="convert" value="{{ $pelaksana->nov }}">{{ $pelaksana->nov }}</td>
+                                            <td class="convert" value="{{ $pelaksana->des }}">{{ $pelaksana->des }}</td>
+                                            <td class="convert" value="{{ $pelaksana->jam_pengawasan }}">{{ $pelaksana->jam_pengawasan }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -148,18 +157,23 @@
     let table = $("#tim-kerja")
             .dataTable({
                 dom: "Bfrtip",
-                responsive: true,
+                responsive: false,
                 lengthChange: false,
                 autoWidth: false,
+                scrollX: true,
                 rowsGroup: [0, 1],
                 buttons: [
                     {
-                        extend: "excel",
-                        className: "btn-success mb-2",
+                        className: "btn-success unduh",
                         text: '<i class="fas fa-file-excel"></i> Excel',
-                        exportOptions: {
-                            columns: [4, 5, 6, 0, 1, 2, 7, 8, 9, 10, 11, 3],
-                        },
+                    },
+                    {
+                        text: 'Jam Kerja',
+                        className: 'btn btn-primary disabled ml-2 jam-kerja toggle',
+                    },
+                    {
+                        text: 'Hari Kerja',
+                        className: 'btn btn-primary hari-kerja toggle',
                     }
                 ],
                 pageLength: 25,
@@ -183,5 +197,34 @@
         $('#unitForm').find('[name="_token"]').remove();
         $('#unitForm').submit();
     });
+
+    $('.unduh').on('click', function() {
+        window.location.href = `/inspektur/mph/export/${$('#unitSelect').val()}/${$('#yearSelect').val()}`;
+    })
+
+    $('#tim-kerja_wrapper .dt-buttons').removeClass('btn-group');
+    $('.toggle').wrapAll('<div class="btn-group"></div>');
+    $('.hari-kerja').on('click', function() {
+        $(this).addClass('disabled');
+        $(this).attr('disabled', true);
+        $(".jam-kerja").removeClass('disabled');
+        $(".jam-kerja").attr('disabled', false);
+        $(".convert").each(function() {
+            let cell = table.cell(this);
+            if (cell.data() != '0') cell.data((Number(cell.data()) / 7.5).toFixed(2)).draw();
+        });
+        $('#title').text('Jam Pengawasan (Hari)');
+    })
+    $('.jam-kerja').on('click', function() {
+        $(this).addClass('disabled');
+        $(this).attr('disabled', true);
+        $(".hari-kerja").removeClass('disabled');
+        $(".hari-kerja").attr('disabled', false);
+        $(".convert").each(function() {
+            let cell = table.cell(this);
+            if (cell.data() != '0') cell.data($(this).attr('value')).draw();
+        });
+        $('#title').text('Jam Pengawasan (Jam)');
+    })
 </script>
 @endpush

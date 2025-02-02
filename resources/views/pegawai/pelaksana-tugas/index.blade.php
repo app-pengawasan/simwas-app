@@ -143,7 +143,7 @@
                                                 @if ($i > 0 && !isset($rencanaKerja->pelaksana[$i - 1]))
                                                 <i>Belum tersedia</i>
                                                 @elseif($i == 0 || isset($rencanaKerja->pelaksana[$i - 1]))
-                                                @if ($timKerja->status < 2 ) <button
+                                                @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                                     class="btn btn-primary btn-sm btn-create-pelaksana" type="button"
                                                     data-toggle="modal" data-disable=true
                                                     data-target="#modal-create-pelaksana"
@@ -178,7 +178,7 @@
                                                 }}
                                             </td>
                                             <td>
-                                                @if ($timKerja->status < 2) <button
+                                                @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                                     class="btn btn-warning btn-edit-pelaksana btn-sm" type="button"
                                                     data-toggle="modal" data-disable=true
                                                     data-target="#modal-edit-pelaksana"
@@ -224,7 +224,7 @@
                                                     @endif
                                                     <td class="font-italic"> Belum ditentukan </td>
                                                     <td>
-                                                        @if ($timKerja->status < 2) <button
+                                                        @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                                             class="btn btn-sm btn-primary btn-create-pelaksana"
                                                             type="button" data-toggle="modal" data-disable=false
                                                             data-target="#modal-create-pelaksana" data-hasilkerja=1
@@ -259,7 +259,7 @@
                                                         }}
                                                         </td>
                                                         <td>
-                                                            @if ($timKerja->status < 2) <button
+                                                            @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                                                 class="btn btn-warning btn-edit-pelaksana btn-sm"
                                                                 type="button" data-toggle="modal" data-disable=false
                                                                 data-target="#modal-edit-pelaksana"
@@ -286,7 +286,7 @@
                                     ($rencanaKerja->kategori_pelaksanatugas == 'ngt' && count($rencanaKerja->pelaksana)
                                     >
                                     0))
-                                    @if ($timKerja->status < 2) <div class="d-flex justify-content-end mt-4">
+                                    @if ($timKerja->status < 2 || $timKerja->status == 5) <div class="d-flex justify-content-end mt-4">
                                         <button class="btn btn-outline-primary btn-create-pelaksana" type="button"
                                             data-toggle="modal" data-target="#modal-create-pelaksana" data-hasilkerja=2
                                             data-jabatan=4
@@ -332,7 +332,7 @@
                                         <td class="rupiah">{{ $anggaran->harga }}</td>
                                         <td class="rupiah">{{ $anggaran->total }}</td>
                                         <td>
-                                            @if ($timKerja->status < 2) <button
+                                            @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                                 class="btn btn-warning btn-edit-anggaran btn-sm" type="button"
                                                 data-toggle="modal" data-target="#modal-edit-anggaran"
                                                 data-id="{{ $anggaran->id_rkanggaran }}">
@@ -361,7 +361,7 @@
                                 ||
                                 ($rencanaKerja->kategori_pelaksanatugas == 'ngt' && count($rencanaKerja->pelaksana) >
                                 0))
-                                @if ($timKerja->status < 2) @endif @endif @if ($timKerja->status < 2 ) <div
+                                @if ($timKerja->status < 2 || $timKerja->status == 5) @endif @endif @if ($timKerja->status < 2 || $timKerja->status == 5 ) <div
                                         class="d-flex justify-content-end mt-4">
                                         <button class="btn btn-outline-primary" data-toggle="modal"
                                             data-target="#modal-create-anggaran">
@@ -399,7 +399,7 @@
                                     <td>{{ $objek->nama_laporan }}</td>
                                     <td>{{ $objek->laporanObjekPengawasan->where('status', 1)->count() }}</td>
                                     <td>
-                                        @if ($timKerja->status < 2) <button
+                                        @if ($timKerja->status < 2 || $timKerja->status == 5) <button
                                             class="btn btn-warning btn-edit-objek btn-sm" type="button"
                                             data-toggle="modal" data-target="#modal-edit-objek"
                                             data-id="{{ $objek->id_opengawasan }}">
@@ -420,7 +420,7 @@
                             ||
                             ($rencanaKerja->kategori_pelaksanatugas == 'ngt' && count($rencanaKerja->pelaksana) >
                             0))
-                            @if ($timKerja->status < 2) @endif @endif @if ($timKerja->status < 2 ) <div
+                            @if ($timKerja->status < 2 || $timKerja->status == 5) @endif @endif @if ($timKerja->status < 2 || $timKerja->status == 5 ) <div
                                     class="d-flex justify-content-end mt-4">
                                     <button id="btn-create-objek" class="btn btn-outline-primary" data-toggle="modal"
                                         data-target="#modal-create-objek">

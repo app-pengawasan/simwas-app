@@ -301,6 +301,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Matriks Peran Hasil
         Route::resource('mph', InspekturMPHController::class);
+        Route::get('mph/export/{unit}/{year}', [InspekturMPHController::class, 'export']);
     });
 
 
