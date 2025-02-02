@@ -90,7 +90,7 @@
                                                 <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                 <td>
                                                     <a class="btn btn-primary detail"
-                                                        href="/admin/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                        href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                         style="width: 42px">
                                                         <i class="fas fa-eye"></i>
                                                     </a>

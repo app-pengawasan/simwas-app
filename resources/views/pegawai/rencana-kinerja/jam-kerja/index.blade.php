@@ -72,41 +72,70 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php $total = 0; @endphp
+                                            @php 
+                                                $jan = $feb = $mar = $apr = $mei = $jun = $jul = $agu =
+                                                $sep = $okt = $nov = $des = $total = 0;
+                                            @endphp
                                             @foreach ($tugas as $t)
-                                            @php $total += $t->total @endphp
-                                            <tr>
-                                                <td></td>
-                                                <td>{{ $t->rencanaKerja->proyek->timkerja->nama }}</td>
-                                                <td>{{ $t->rencanaKerja->proyek->nama_proyek }}</td>
-                                                <td>{{ $t->rencanaKerja->tugas }}</td>
-                                                <td>{{ $jabatan[$t->pt_jabatan] }}</td>
-                                                <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/pegawai/rencana-kinerja/{{ $t->rencanaKerja->id_rencanakerja }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                                <td class="convert" value={{ $t->jan }}>{{ $t->jan }}</td>
-                                                <td class="convert" value={{ $t->feb }}>{{ $t->feb }}</td>
-                                                <td class="convert" value={{ $t->mar }}>{{ $t->mar }}</td>
-                                                <td class="convert" value={{ $t->apr }}>{{ $t->apr }}</td>
-                                                <td class="convert" value={{ $t->mei }}>{{ $t->mei }}</td>
-                                                <td class="convert" value={{ $t->jun }}>{{ $t->jun }}</td>
-                                                <td class="convert" value={{ $t->jul }}>{{ $t->jul }}</td>
-                                                <td class="convert" value={{ $t->agu }}>{{ $t->agu }}</td>
-                                                <td class="convert" value={{ $t->sep }}>{{ $t->sep }}</td>
-                                                <td class="convert" value={{ $t->okt }}>{{ $t->okt }}</td>
-                                                <td class="convert" value={{ $t->nov }}>{{ $t->nov }}</td>
-                                                <td class="convert" value={{ $t->des }}>{{ $t->des }}</td>
-                                                <td class="convert" value={{ $t->total }}>{{ $t->total }}</td>
-                                            </tr>
+                                                @php
+                                                    $jan += $t->jan;
+                                                    $feb += $t->feb;
+                                                    $mar += $t->mar;
+                                                    $apr += $t->apr;
+                                                    $mei += $t->mei;
+                                                    $jun += $t->jun;
+                                                    $jul += $t->jul;
+                                                    $agu += $t->agu;
+                                                    $sep += $t->sep;
+                                                    $okt += $t->okt;
+                                                    $nov += $t->nov;
+                                                    $des += $t->des;
+                                                    $total += $t->total;
+                                                @endphp
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{ $t->rencanaKerja->proyek->timkerja->nama }}</td>
+                                                    <td>{{ $t->rencanaKerja->proyek->nama_proyek }}</td>
+                                                    <td>{{ $t->rencanaKerja->tugas }}</td>
+                                                    <td>{{ $jabatan[$t->pt_jabatan] }}</td>
+                                                    <td>
+                                                        <a class="btn btn-primary"
+                                                            href="/pegawai/rencana-kinerja/{{ $t->rencanaKerja->id_rencanakerja }}"
+                                                            style="width: 42px">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="convert" value={{ $t->jan }}>{{ $t->jan }}</td>
+                                                    <td class="convert" value={{ $t->feb }}>{{ $t->feb }}</td>
+                                                    <td class="convert" value={{ $t->mar }}>{{ $t->mar }}</td>
+                                                    <td class="convert" value={{ $t->apr }}>{{ $t->apr }}</td>
+                                                    <td class="convert" value={{ $t->mei }}>{{ $t->mei }}</td>
+                                                    <td class="convert" value={{ $t->jun }}>{{ $t->jun }}</td>
+                                                    <td class="convert" value={{ $t->jul }}>{{ $t->jul }}</td>
+                                                    <td class="convert" value={{ $t->agu }}>{{ $t->agu }}</td>
+                                                    <td class="convert" value={{ $t->sep }}>{{ $t->sep }}</td>
+                                                    <td class="convert" value={{ $t->okt }}>{{ $t->okt }}</td>
+                                                    <td class="convert" value={{ $t->nov }}>{{ $t->nov }}</td>
+                                                    <td class="convert" value={{ $t->des }}>{{ $t->des }}</td>
+                                                    <td class="convert" value={{ $t->total }}>{{ $t->total }}</td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot class="font-weight-bold">
                                             <tr>
-                                                <td colspan="18" class="text-center">Total</td>
+                                                <td colspan="6" class="text-center">Total</td>
+                                                <td class="total" value="{{ $jan }}">{{ $jan }}</td>
+                                                <td class="total" value="{{ $feb }}">{{ $feb }}</td>
+                                                <td class="total" value="{{ $mar }}">{{ $mar }}</td>
+                                                <td class="total" value="{{ $apr }}">{{ $apr }}</td>
+                                                <td class="total" value="{{ $mei }}">{{ $mei }}</td>
+                                                <td class="total" value="{{ $jun }}">{{ $jun }}</td>
+                                                <td class="total" value="{{ $jul }}">{{ $jul }}</td>
+                                                <td class="total" value="{{ $agu }}">{{ $agu }}</td>
+                                                <td class="total" value="{{ $sep }}">{{ $sep }}</td>
+                                                <td class="total" value="{{ $okt }}">{{ $okt }}</td>
+                                                <td class="total" value="{{ $nov }}">{{ $nov }}</td>
+                                                <td class="total" value="{{ $des }}">{{ $des }}</td>
                                                 <td class="total" value="{{ $total }}">{{ $total }}</td>
                                             </tr>
                                         </tfoot>
@@ -180,7 +209,10 @@
             $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
             $(".jam-kerja").attr('disabled', false);
-            $('#table-pegawai-kinerja').find("td.convert, .dataTables_scrollFoot .total").each(function() {
+            $('#table-pegawai-kinerja').find("td.convert").each(function() {
+                $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+            });
+            $(".dataTables_scrollFoot .total").each(function() {
                 $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
             $('#title').text('Rencana Hari Kerja');
@@ -191,7 +223,10 @@
             $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
             $(".hari-kerja").attr('disabled', false);
-            $('#table-pegawai-kinerja').find("td.convert, .dataTables_scrollFoot .total").each(function() {
+            $('#table-pegawai-kinerja').find("td.convert").each(function() {
+                $(this).text($(this).attr('value'));
+            });
+            $(".dataTables_scrollFoot .total").each(function() {
                 $(this).text($(this).attr('value'));
             });
             $('#title').text('Rencana Jam Kerja');

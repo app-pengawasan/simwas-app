@@ -67,41 +67,70 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php $total = 0; @endphp
+                                            @php 
+                                                $jan = $feb = $mar = $apr = $mei = $jun = $jul = $agu =
+                                                $sep = $okt = $nov = $des = $total = 0;
+                                            @endphp
                                             @foreach ($count as $key => $c)
-                                            @php $total += $c['total'] @endphp
-                                            <tr>
-                                                <td></td>
-                                                <td>{{ $c['tim'] }}</td>
-                                                <td>{{ $c['proyek'] }}</td>
-                                                <td>{{ $c['tugas'] }}</td>
-                                                <td>{{ $jabatan[$c['jabatan']] }}</td>
-                                                <td>
-                                                    <a class="btn btn-primary"
-                                                        href="/pjk/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                                <td class="convert">{{ $c['realisasi_jam']['01'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['02'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['03'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['04'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['05'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['06'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['07'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['08'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['09'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['10'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['11'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['realisasi_jam']['12'] ?? 0 }}</td>
-                                                <td class="convert">{{ $c['total'] }}</td>
-                                            </tr>
+                                                @php 
+                                                    $jan += $c['realisasi_jam']['01'] ?? 0;
+                                                    $feb += $c['realisasi_jam']['02'] ?? 0;
+                                                    $mar += $c['realisasi_jam']['03'] ?? 0;
+                                                    $apr += $c['realisasi_jam']['04'] ?? 0;
+                                                    $mei += $c['realisasi_jam']['05'] ?? 0;
+                                                    $jun += $c['realisasi_jam']['06'] ?? 0;
+                                                    $jul += $c['realisasi_jam']['07'] ?? 0;
+                                                    $agu += $c['realisasi_jam']['08'] ?? 0;
+                                                    $sep += $c['realisasi_jam']['09'] ?? 0;
+                                                    $okt += $c['realisasi_jam']['10'] ?? 0;
+                                                    $nov += $c['realisasi_jam']['11'] ?? 0;
+                                                    $des += $c['realisasi_jam']['12'] ?? 0;
+                                                    $total += $c['total'];
+                                                @endphp
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{ $c['tim'] }}</td>
+                                                    <td>{{ $c['proyek'] }}</td>
+                                                    <td>{{ $c['tugas'] }}</td>
+                                                    <td>{{ $jabatan[$c['jabatan']] }}</td>
+                                                    <td>
+                                                        <a class="btn btn-primary"
+                                                            href="/pjk/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
+                                                            style="width: 42px">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['01'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['02'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['03'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['04'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['05'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['06'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['07'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['08'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['09'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['10'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['11'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['realisasi_jam']['12'] ?? 0 }}</td>
+                                                    <td class="convert">{{ $c['total'] }}</td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot class="font-weight-bold">
                                             <tr>
-                                                <td colspan="18" class="text-center">Total</td>
+                                                <td colspan="6" class="text-center">Total</td>
+                                                <td class="total" value="{{ $jan }}">{{ $jan }}</td>
+                                                <td class="total" value="{{ $feb }}">{{ $feb }}</td>
+                                                <td class="total" value="{{ $mar }}">{{ $mar }}</td>
+                                                <td class="total" value="{{ $apr }}">{{ $apr }}</td>
+                                                <td class="total" value="{{ $mei }}">{{ $mei }}</td>
+                                                <td class="total" value="{{ $jun }}">{{ $jun }}</td>
+                                                <td class="total" value="{{ $jul }}">{{ $jul }}</td>
+                                                <td class="total" value="{{ $agu }}">{{ $agu }}</td>
+                                                <td class="total" value="{{ $sep }}">{{ $sep }}</td>
+                                                <td class="total" value="{{ $okt }}">{{ $okt }}</td>
+                                                <td class="total" value="{{ $nov }}">{{ $nov }}</td>
+                                                <td class="total" value="{{ $des }}">{{ $des }}</td>
                                                 <td class="total" value="{{ $total }}">{{ $total }}</td>
                                             </tr>
                                         </tfoot>
@@ -181,7 +210,10 @@
             $(this).attr('disabled', true);
             $(".jam-kerja").removeClass('disabled');
             $(".jam-kerja").attr('disabled', false);
-            $('#table-inspektur-kinerja').find("td.convert, .dataTables_scrollFoot .total").each(function() {
+            $('#table-inspektur-kinerja').find("td.convert").each(function() {
+                if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+            });
+            $(".dataTables_scrollFoot .total").each(function() {
                 if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
             $('#title').text('Realisasi Hari Kerja');
@@ -191,7 +223,10 @@
             $(this).attr('disabled', true);
             $(".hari-kerja").removeClass('disabled');
             $(".hari-kerja").attr('disabled', false);
-            $('#table-inspektur-kinerja').find("td.convert, .dataTables_scrollFoot .total").each(function() {
+            $('#table-inspektur-kinerja').find("td.convert").each(function() {
+                if ($(this).text() != '0') $(this).text($(this).attr('value'));
+            });
+            $(".dataTables_scrollFoot .total").each(function() {
                 if ($(this).text() != '0') $(this).text($(this).attr('value'));
             });
             $('#title').text('Realisasi Jam Kerja');
