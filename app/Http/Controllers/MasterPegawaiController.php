@@ -131,7 +131,7 @@ class MasterPegawaiController extends Controller
         $json_token = json_decode($response_token, true);
         $access_token = $json_token['access_token'];
 
-        $kodeOrganisasi = ['000000080100','000000081000',  '000000082000', '000000083000'];
+        $kodeOrganisasi = ['000000080100', '000000081000', '000000082000', '000000083000', '000000080000'];
 
         $allPegawai = [];
 
