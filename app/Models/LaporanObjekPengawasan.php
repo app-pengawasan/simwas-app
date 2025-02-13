@@ -23,6 +23,6 @@ class LaporanObjekPengawasan extends Model
     }
     public function normaHasilDokumen()
     {
-        return $this->hasMany(normaHasilDokumen::class, 'laporan_pengawasan_id', 'id');
+        return $this->hasMany(NormaHasilDokumen::class, 'laporan_pengawasan_id', 'id');
     }
 }

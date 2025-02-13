@@ -206,7 +206,6 @@ class InspekturRencanaKerjaController extends Controller
 
         $rencanaKerja = RencanaKerja::where('id_timkerja',$timKerja[0]->id_timkerja)->get();
         $operator = OperatorRencanaKinerja::where('tim_kerja_id', $timKerja[0]->id_timkerja)->get();
-        $pegawai = User::all();
 
 
         return view('inspektur.rencana-kinerja.show', [
@@ -225,8 +224,7 @@ class InspekturRencanaKerjaController extends Controller
             'rencanaKerja'  => $rencanaKerja,
             'proyeks'        => $proyek,
             'pegawai'       => $pegawai,
-            'operator'      => $operator,
-            'pegawai'      => $pegawai,
+            'operator'      => $operator
         ]);
     }
 
