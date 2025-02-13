@@ -366,13 +366,22 @@
                                                                     <th>Nama Objek</th>
                                                                     <th>Nama Laporan</th>
                                                                     <th>Jumlah Laporan</th>
+                                                                    <th>Laporan/Dokumen Masuk</th>
+                                                                    <th>Persentase Laporan/Dokumen Masuk</th>
                                                                 </tr>
                                                                 @foreach ($tugas->objekPengawasan as $op)
                                                                 <tr>
                                                                     <td>{{ $op->nama }}</td>
                                                                     <td>{{ $op->nama_laporan }}</td>
-                                                                    <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}
-                                                                    </td>
+                                                                    <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}</td>
+                                                                    @php 
+                                                                        $laporan_masuk = 0;
+                                                                        foreach ($op->laporanObjekPengawasan->where('status', 1) as $laporanop) {
+                                                                            $laporan_masuk += $laporanop->normaHasil->count() + $laporanop->normaHasilDokumen->count();
+                                                                        }
+                                                                    @endphp
+                                                                    <td>{{ $laporan_masuk }}</td>
+                                                                    <td>{{ round($laporan_masuk / $op->laporanObjekPengawasan->where('status', 1)->count(), 2) * 100 }}%</td>
                                                                 </tr>
                                                                 @endforeach
                                                             </table>
