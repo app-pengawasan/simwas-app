@@ -1182,3 +1182,31 @@ $("#modal-edit-tugas").on("show.bs.modal", function (e) {
     $("#edit-proyek").val(id_proyek);
     $("#edit-proyek").trigger("change");
 });
+
+$(".btn-edit-pelaksana").on("click", function (e) {
+    e.preventDefault();
+    $("#edit-pt-jabatan").val($(this).data('jabatan'));
+    $("#edit-pelaksana").select2("trigger", "select", {
+        data: {
+            id: $(this).data('id_peg'),
+            text: $(this).data('nama_peg')
+        },
+    });
+    // $("#edit-id_pelaksana").val(response.data.id_pelaksana);
+    $("#edit-januari").val($(this).data('jan').replace(".", ","));
+    $("#edit-februari").val($(this).data('feb').replace(".", ","));
+    $("#edit-maret").val($(this).data('mar').replace(".", ","));
+    $("#edit-april").val($(this).data('apr').replace(".", ","));
+    $("#edit-mei").val($(this).data('mei').replace(".", ","));
+    $("#edit-juni").val($(this).data('jun').replace(".", ","));
+    $("#edit-juli").val($(this).data('jul').replace(".", ","));
+    $("#edit-agustus").val($(this).data('agu').replace(".", ","));
+    $("#edit-september").val($(this).data('sep').replace(".", ","));
+    $("#edit-oktober").val($(this).data('okt').replace(".", ","));
+    $("#edit-november").val($(this).data('nov').replace(".", ","));
+    $("#edit-desember").val($(this).data('des').replace(".", ","));
+    $("#modal-edit-pelaksana input, #modal-edit-pelaksana select").prop("disabled", true);
+    $('#btn-edit-pelaksana').hide();
+    $('#btn-batal').hide();
+    $('#modal-edit-pelaksana-label').text('Detail Pelaksana Tugas');
+});

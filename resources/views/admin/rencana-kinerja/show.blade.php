@@ -14,7 +14,8 @@
 @section('main')
 @include('components.admin-header')
 @include('components.admin-sidebar')
-@include('components.tim-kerja.edit');
+@include('components.tim-kerja.edit')
+@include('components.pelaksana-tugas.bukan-gugus-tugas.edit')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -251,6 +252,56 @@
                                                                     <td>:</td>
                                                                     <td>{{ $tugas->hasilKerja->nama_hasil_kerja }}</td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 70px">Jumlah Anggota</th>
+                                                                    <td>:&nbsp;</td>
+                                                                    <td>{{ count($tugas->pelaksana) }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 70px">Jumlah Jam Kerja</th>
+                                                                    <td>:&nbsp;</td>
+                                                                    <td>
+                                                                        {{ 
+                                                                            $tugas->pelaksana->sum('jan') + $tugas->pelaksana->sum('feb') + 
+                                                                            $tugas->pelaksana->sum('mar') + $tugas->pelaksana->sum('apr') + 
+                                                                            $tugas->pelaksana->sum('mei') + $tugas->pelaksana->sum('jun') + 
+                                                                            $tugas->pelaksana->sum('jul') + $tugas->pelaksana->sum('agu') + 
+                                                                            $tugas->pelaksana->sum('sep') + $tugas->pelaksana->sum('okt') + 
+                                                                            $tugas->pelaksana->sum('nov') + $tugas->pelaksana->sum('des')
+                                                                        }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 70px">Jumlah Laporan/Dokumen</th>
+                                                                    <td>:&nbsp;</td>
+                                                                    @php 
+                                                                        $laporan = 0;
+                                                                        foreach ($tugas->objekPengawasan as $op) {
+                                                                            $laporan += $op->laporanObjekPengawasan->where('status', 1)->count();
+                                                                        }
+                                                                    @endphp
+                                                                    <td>{{ $laporan }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 70px">Jumlah Laporan/Dokumen Masuk</th>
+                                                                    <td>:&nbsp;</td>
+                                                                    @php 
+                                                                        $laporan_masuk = 0;
+                                                                        foreach ($tugas->objekPengawasan as $op) {
+                                                                            foreach ($op->laporanObjekPengawasan->where('status', 1) as $laporanop) {
+                                                                                $laporan_masuk += $laporanop->normaHasil->count() + $laporanop->normaHasilDokumen->count();
+                                                                            }
+                                                                        }
+                                                                    @endphp
+                                                                    <td>{{ $laporan_masuk }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th valign=top style="min-width: 70px">Persentase Laporan/Dokumen Masuk</th>
+                                                                    <td>:&nbsp;</td>
+                                                                    @if ($laporan > 0) <td>{{ round(($laporan_masuk / $laporan) * 100, 2) }}%</td>
+                                                                    @else <td>0%</td>
+                                                                    @endif
+                                                                </tr>
                                                             </table>
                                                             <p class="font-weight-bold">
                                                                 Pelaksana
@@ -261,6 +312,7 @@
                                                                     <th>Nama</th>
                                                                     <th>Jabatan</th>
                                                                     <th>Hasil Kerja</th>
+                                                                    <th>Jam Kerja</th>
                                                                 </tr>
                                                                 @if (count($tugas->pelaksana) > 0)
                                                                 @foreach ($tugas->pelaksana as $pelaksana)
@@ -275,6 +327,25 @@
                                                                         {{ count($tugas->hasilKerja->masterKinerja) != 0 ? $tugas->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )
                                                                         ->first()
                                                                         ->hasil_kerja : 'Belum Ditentukan' }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ 
+                                                                            $pelaksana->jan + $pelaksana->feb + $pelaksana->mar + $pelaksana->apr +
+                                                                            $pelaksana->mei + $pelaksana->jun + $pelaksana->jul + $pelaksana->agu +
+                                                                            $pelaksana->sep + $pelaksana->okt + $pelaksana->nov + $pelaksana->des
+                                                                        }}
+                                                                        <button class="btn btn-primary btn-sm btn-edit-pelaksana" 
+                                                                            data-toggle="modal" data-target="#modal-edit-pelaksana"
+                                                                            data-id_peg="{{ $pelaksana->id_pegawai }}" data-nama_peg="{{ $pelaksana->user->name }}"
+                                                                            data-jan="{{ $pelaksana->jan }}" data-feb="{{ $pelaksana->feb }}"
+                                                                            data-mar="{{ $pelaksana->mar }}" data-apr="{{ $pelaksana->apr }}"
+                                                                            data-mei="{{ $pelaksana->mei }}" data-jun="{{ $pelaksana->jun }}"
+                                                                            data-jul="{{ $pelaksana->jul }}" data-agu="{{ $pelaksana->agu }}"
+                                                                            data-sep="{{ $pelaksana->sep }}" data-okt="{{ $pelaksana->okt }}"
+                                                                            data-nov="{{ $pelaksana->nov }}" data-des="{{ $pelaksana->des }}"
+                                                                            data-jabatan="{{ $pelaksana->pt_jabatan }}">
+                                                                                <i class="fas fa-eye" style="font-size: 11.8px;"></i>
+                                                                        </button>
                                                                     </td>
                                                                 </tr>
                                                                 @endforeach

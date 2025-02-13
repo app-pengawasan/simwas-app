@@ -82,10 +82,7 @@ class TimNormaHasilController extends Controller
             12 => 'Desember'
         ];
 
-        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)
-                    ->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query){
-                        $query->whereIn('status', [0,1,2]);
-                    })->get();
+        $tugasSaya = PelaksanaTugas::where('id_pegawai', $id_pegawai)->get();
 
         $draf = NormaHasil::with('masterLaporan')->latest()->whereIn('tugas_id', $tugasSaya->pluck('id_rencanakerja'))
                 ->where('status_norma_hasil', 'disetujui')

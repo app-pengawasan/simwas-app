@@ -138,7 +138,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal">
+                <button type="button" class="btn btn-icon icon-left btn-danger" data-dismiss="modal" id="btn-batal">
                     <i class="fas fa-exclamation-triangle"></i>Batal
                 </button>
                 <button type="submit" class="btn btn-icon icon-left btn-primary" id="btn-edit-pelaksana">

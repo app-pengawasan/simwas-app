@@ -248,9 +248,7 @@ class UsulanSuratSrikandiController extends Controller
      */
     public function create()
     {
-        $rencanaKerja = RencanaKerja::latest()->whereHas('timkerja', function ($query) {
-                            $query->whereIn('status', [0,1,2]);
-                        })->whereHas('pelaksana', function ($query) {
+        $rencanaKerja = RencanaKerja::latest()->whereHas('pelaksana', function ($query) {
                             $query->where('id_pegawai', auth()->user()->id);
                         })->get();
         $kodeKlasifikasiArsip = KodeKlasifikasiArsip::where('is_aktif', 1)->get();

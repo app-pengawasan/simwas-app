@@ -767,6 +767,13 @@ $(".btn-delete-pelaksana").on("click", function (e) {
 // Edit Pelaksana
 $(".btn-edit-pelaksana").on("click", function (e) {
     e.preventDefault();
+
+    $("#modal-edit-pelaksana input, #modal-edit-pelaksana select").prop("disabled", false);
+    $("#edit-pt-jabatan").prop("disabled", true);
+    $('#btn-edit-pelaksana').show();
+    $('#btn-batal').show();
+    $('#modal-edit-pelaksana-label').text('Form Edit Pelaksana Tugas');
+
     let isDisable = $(this).data("disable");
     let id = $(this).data("id");
     let hasilkerja = $("#edit-pt-hasil");
