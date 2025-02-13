@@ -260,7 +260,12 @@
                                                                         $laporan_masuk = 0;
                                                                         foreach ($tugas->objekPengawasan as $op) {
                                                                             foreach ($op->laporanObjekPengawasan->where('status', 1) as $laporanop) {
-                                                                                $laporan_masuk += $laporanop->normaHasil->count() + $laporanop->normaHasilDokumen->count();
+                                                                                if ($laporanop->normaHasil->count() > 0) {
+                                                                                    foreach ($laporanop->normaHasil->where('status_norma_hasil', 'disetujui') as $nh) {
+                                                                                        if ($nh->normaHasilAccepted) $laporan_masuk += 1;
+                                                                                    }
+                                                                                }
+                                                                                $laporan_masuk +=  $laporanop->normaHasilDokumen->count();
                                                                             }
                                                                         }
                                                                     @endphp
@@ -377,7 +382,12 @@
                                                                     @php 
                                                                         $laporan_masuk = 0;
                                                                         foreach ($op->laporanObjekPengawasan->where('status', 1) as $laporanop) {
-                                                                            $laporan_masuk += $laporanop->normaHasil->count() + $laporanop->normaHasilDokumen->count();
+                                                                            if ($laporanop->normaHasil->count() > 0) {
+                                                                                    foreach ($laporanop->normaHasil->where('status_norma_hasil', 'disetujui') as $nh) {
+                                                                                        if ($nh->normaHasilAccepted) $laporan_masuk += 1;
+                                                                                    }
+                                                                                }
+                                                                            $laporan_masuk +=  $laporanop->normaHasilDokumen->count();
                                                                         }
                                                                     @endphp
                                                                     <td>{{ $laporan_masuk }}</td>
