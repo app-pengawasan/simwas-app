@@ -78,7 +78,7 @@
                         @endphp
 
                         @include('components.timeline.timeline-nh')
-                        <h1 class="h4 text-dark mb-4 header-card">Informasi Laporan Norma Hasil</h1>
+                        <h1 class="h4 text-dark mb-4 header-card" style="margin-top: 100px">Informasi Laporan Norma Hasil</h1>
                         <table class="mb-4 table table-striped responsive" id="table-show">
                             <tr>
                                 <th>Tugas</th>
