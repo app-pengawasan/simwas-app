@@ -281,12 +281,6 @@
                 },
             }
         ],
-        columnDefs: [{
-            "targets": 0,
-            "createdCell": function (td, cellData, rowData, row, col) {
-            $(td).text(row + 1);
-            }
-        }],
     });
 
     localStorage.setItem("mini-sidebar", "false");
