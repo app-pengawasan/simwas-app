@@ -52,7 +52,6 @@
                                     id="table-pengelolaan-dokumen-pegawai" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px; text-align:center" rowspan="2">No</th>
                                             <th style="text-align:center" rowspan="2">Tugas</th>
                                             <th style="text-align:center" rowspan="2">Objek Pengawasan</th>
                                             <th style="text-align:center" rowspan="2">Bulan Pelaporan</th>
@@ -75,12 +74,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $i = 0;
-                                        @endphp
                                         @foreach ($laporanObjek as $bulan)
                                         <tr class="table-bordered">
-                                            <td>{{ ++$i }}</td>
                                             <td>{{ $bulan->objekPengawasan->rencanaKerja->tugas }}</td>
                                             <td>{{ $bulan->objekPengawasan->nama }}</td>
                                             <td>{{ $months[$bulan->month] }}</td>
@@ -286,7 +281,7 @@
         lengthChange: false,
         autoWidth: false,
         scrollX: true,
-        rowsGroup: [1, 4, 5, 6, 2],
+        rowsGroup: [0, 3, 4, 5, 1],
         buttons: [
             {
                 extend: "excel",
@@ -295,7 +290,7 @@
                     return $('.section-header h1').text();
                 },
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 12, 6, 7, 13, 9, 14, 11],
+                    columns: [0, 1, 2, 3, 11, 5, 6, 12, 8, 13, 10],
                 },
             }
         ],

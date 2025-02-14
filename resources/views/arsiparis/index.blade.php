@@ -45,7 +45,6 @@
                             <table class="table table-bordered display responsive" id="table-dashboard-arsiparis" style="background-color: #f6f7f8">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
                                         <th>Nama Tim</th>
                                         <th>PJK</th>
                                         <th>Bulan Pelaporan</th>
@@ -62,7 +61,6 @@
                                         @foreach ($tim['data_bulan'] as $bulan => $data)
                                             @if ($data['jumlah_tugas'] != '-')
                                                 <tr class="table-bordered">
-                                                    <td></td>
                                                     <td>{{ $tim['nama'] }}</td>
                                                     <td>{{ $tim['pjk'] }}</td>
                                                     <td>{{ $months[$bulan] }}</td>
@@ -120,7 +118,7 @@
             lengthChange: false,
             autoWidth: false,
             // scrollX: true,
-            rowsGroup: [1, 2],
+            rowsGroup: [0, 1],
             buttons: [
                 {
                     extend: "excel",
@@ -133,12 +131,6 @@
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                 },
             ],
-            columnDefs: [{
-                "targets": 0,
-                "createdCell": function (td, cellData, rowData, row, col) {
-                $(td).text(row + 1);
-                }
-            }],
         }).api();
 
     $('#yearSelect').on('change', function() {

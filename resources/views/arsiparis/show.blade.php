@@ -45,7 +45,6 @@
                                 <table class="table table-bordered display responsive text-center" id="table-inspektur-kinerja" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px; text-align:center" rowspan="2">No</th>
                                             <th style="text-align:center" rowspan="2">Tugas</th>
                                             <th style="text-align:center" rowspan="2">Objek Pengawasan</th>
                                             <th style="text-align:center" colspan="3">Surat Tugas</th>
@@ -69,7 +68,6 @@
                                     <tbody>
                                         @foreach ($laporanObjek as $bulan)
                                         <tr class="table-bordered">
-                                            <td></td>
                                             <td>{{ $bulan->objekPengawasan->rencanaKerja->tugas }}</td>
                                             <td>{{ $bulan->objekPengawasan->nama }}</td>
                                             @if (isset($surat_tugas[$bulan->objekPengawasan->id_rencanakerja]))
@@ -273,22 +271,16 @@
         lengthChange: false,
         autoWidth: false,
         scrollX: true,
-        rowsGroup: [1, 3, 4, 2],
+        rowsGroup: [0, 2, 3, 1],
         buttons: [
             {
                 extend: "excel",
                 className: "btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 11, 5, 6, 12, 8, 13, 10],
+                    columns: [0, 1, 2, 10, 4, 5, 11, 7, 12, 9],
                 },
             }
         ],
-        columnDefs: [{
-            "targets": 0,
-            "createdCell": function (td, cellData, rowData, row, col) {
-            $(td).text(row + 1);
-            }
-        }],
     });
 
     localStorage.setItem("mini-sidebar", "false");
