@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rencana Jam Kerja')
+@section('title', 'Realisasi Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rekap Rencana Jam Kerja</h1>
+                <h1>Rekap Realisasi Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Rekap Realisasi Jam Kerja</div>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                                     <form id="yearForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="yearSelect">Pilih Tahun</label>
+                                            <label for="yearSelect">Tahun</label>
                                             <select name="year" id="yearSelect" class="form-control select2">
                                                 @php
                                                 $currentYear = date('Y');
@@ -52,13 +52,13 @@
                                     <form id="unitForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="unitSelect">Pilih Unit Kerja</label>
-                                            <select name="unit" id="unitSelect" class="form-control select2">
-                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
+                                            <label for="unitSelect">Unit Kerja</label>
+                                            <select name="unit" id="unitSelect" class="form-control select2" {{ $unituser != '8000' && $unituser != '8010' ? 'disabled' : '' }}>
+                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Semua</option>
                                                 <option value="8010" {{ request()->query('unit') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                                <option value="8100" {{ request()->query('unit') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                                <option value="8200" {{ request()->query('unit') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                                <option value="8300" {{ request()->query('unit') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                                <option value="8100" {{ request()->query('unit') == '8100' || $unituser == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                                <option value="8200" {{ request()->query('unit') == '8200' || $unituser == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                                <option value="8300" {{ request()->query('unit') == '8300' || $unituser == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
                                             </select>
                                             <input type="hidden" name="year" id="yearUnit">
                                         </div>
@@ -71,7 +71,7 @@
                                                 <th rowspan="2" class="align-middle">No.</th>
                                                 <th rowspan="2" class="align-middle">Pegawai</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
-                                                <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
+                                                <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
                                             </tr>
                                             <tr>
                                                 <th>Jan</th>
@@ -90,32 +90,32 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($jam_kerja as $key => $jam)
+                                            @foreach ($jam_kerja as $key => $jam) 
                                                 @isset($jam[0]->name)
                                                     <tr>
                                                         <td></td>
                                                         <td>{{ $jam[0]->name }}</td>
                                                         <td>
                                                             <a class="btn btn-primary detail"
-                                                                href="/admin/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                                href="/analis-sdm/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                                 style="width: 42px">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                         </td>
-                                                        @isset($jam[1])
-                                                            <td class="convert" value="{{ $jam[1]->jan }}">{{ $jam[1]->jan }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->feb }}">{{ $jam[1]->feb }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->mar }}">{{ $jam[1]->mar }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->apr }}">{{ $jam[1]->apr }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->mei }}">{{ $jam[1]->mei }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->jun }}">{{ $jam[1]->jun }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->jul }}">{{ $jam[1]->jul }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->agu }}">{{ $jam[1]->agu }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->sep }}">{{ $jam[1]->sep }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->okt }}">{{ $jam[1]->okt }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->nov }}">{{ $jam[1]->nov }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->des }}">{{ $jam[1]->des }}</td>
-                                                            <td class="convert" value="{{ $jam[1]->total }}">{{ $jam[1]->total }}</td>
+                                                        @isset($jam[1]) 
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['03'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['04'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['05'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['06'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['07'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['08'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['09'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['10'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['11'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['12'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['total'] }}</td>
                                                         @else
                                                             <td>0</td>
                                                             <td>0</td>
@@ -167,6 +167,10 @@
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>
+        $('#table-inspektur-kinerja').find("td.convert").each(function() {
+            $(this).attr('value', $(this).text());
+        });
+        
         var datatable = $('#table-inspektur-kinerja').dataTable({
             dom: "Bfrtip",
             responsive: false,
@@ -201,7 +205,7 @@
                 datatable.columns.adjust();
             }, 500);
         });
-        
+
         let mode = 'jam';
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
@@ -213,7 +217,7 @@
             datatable.cells('.convert').every(function () {
                 if (this.data() != '0') this.data(($(this.node()).attr('value') / 7.5).toFixed(2))
             });
-            $('#title').text('Rencana Hari Kerja');
+            $('#title').text('Realisasi Hari Kerja');
             mode = 'hari';
         })
         $('.jam-kerja').on('click', function() {
@@ -224,10 +228,10 @@
             datatable.cells('.convert').every(function () {
                 if (this.data() != '0') this.data($(this.node()).attr('value'))
             });
-            $('#title').text('Rencana Jam Kerja');
+            $('#title').text('Realisasi Jam Kerja');
             mode = 'jam';
         })
-
+        
         $('#yearSelect').on('change', function() {
             let year = $(this).val();
             let unit = $('#unitSelect').val();
@@ -244,13 +248,13 @@
             $('#unitForm').submit();
         });
 
-        $('.unduh').on('click', function() {
-            window.location.href = `/admin/rencana-jam-kerja/export/${mode}/${$('#yearSelect').val()}/${$('#unitSelect').val()}`;
-        })
-
         $(".detail").attr('href', function(_, el){
             return el.replace(/\/[^\/]*$/, '/' + $('#yearSelect').val());
         });
+
+        $('.unduh').on('click', function() {
+            window.location.href = `/analis-sdm/realisasi-jam-kerja/export/${mode}/${$('#yearSelect').val()}/${$('#unitSelect').val()}`;
+        })
 
         $('#table-inspektur-kinerja').on('draw.dt', function() {
             $(".detail").attr('href', function(_, el){

@@ -80,22 +80,24 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($countall as $key => $count)
-                                            <tr>
-                                                <td></td>
-                                                <td>{{ $count[0]->name }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tim'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_proyek'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jumlah_tugas'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
-                                                <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
-                                                <td>
-                                                    <a class="btn btn-primary detail"
-                                                        href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                                @isset($count[0]->name)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $count[0]->name }}</td>
+                                                        <td>{{ isset($count[1]) ? $count[1]['jumlah_tim'] : 0 }}</td>
+                                                        <td>{{ isset($count[1]) ? $count[1]['jumlah_proyek'] : 0 }}</td>
+                                                        <td>{{ isset($count[1]) ? $count[1]['jumlah_tugas'] : 0 }}</td>
+                                                        <td>{{ isset($count[1]) ? $count[1]['jam_kerja'] : 0 }}</td>
+                                                        <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary detail"
+                                                                href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                                style="width: 42px">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endisset
                                             @endforeach
                                         </tbody>
                                     </table>

@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
                 <h1>Realisasi Jam Kerja {{ $pegawai }}</h1> 
                 <input type="hidden" name="pegawai" id="pegawai" value="{{ $pegawai }}">
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin/dashboard">Dashboard</a></div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
                     <div class="breadcrumb-item">Realisasi Jam Kerja</div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                                                     <td>{{ $jabatan[$c['jabatan']] }}</td>
                                                     <td>
                                                         <a class="btn btn-primary"
-                                                            href="/admin/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
+                                                            href="/analis-sdm/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
                                                             style="width: 42px">
                                                             <i class="fas fa-eye"></i>
                                                         </a>

@@ -91,46 +91,48 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($jam_kerja as $key => $jam)
-                                            <tr>
-                                                <td></td>
-                                                <td>{{ $jam[0]->name }}</td>
-                                                <td>
-                                                    <a class="btn btn-primary detail"
-                                                        href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                                @isset($jam[1])
-                                                    <td class="convert" value="{{ $jam[1]->jan }}">{{ $jam[1]->jan }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->feb }}">{{ $jam[1]->feb }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->mar }}">{{ $jam[1]->mar }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->apr }}">{{ $jam[1]->apr }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->mei }}">{{ $jam[1]->mei }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->jun }}">{{ $jam[1]->jun }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->jul }}">{{ $jam[1]->jul }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->agu }}">{{ $jam[1]->agu }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->sep }}">{{ $jam[1]->sep }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->okt }}">{{ $jam[1]->okt }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->nov }}">{{ $jam[1]->nov }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->des }}">{{ $jam[1]->des }}</td>
-                                                    <td class="convert" value="{{ $jam[1]->total }}">{{ $jam[1]->total }}</td>
-                                                @else
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
+                                                @isset($jam[0]->name)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $jam[0]->name }}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary detail"
+                                                                href="/pjk/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                                style="width: 42px">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                        @isset($jam[1])
+                                                            <td class="convert" value="{{ $jam[1]->jan }}">{{ $jam[1]->jan }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->feb }}">{{ $jam[1]->feb }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->mar }}">{{ $jam[1]->mar }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->apr }}">{{ $jam[1]->apr }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->mei }}">{{ $jam[1]->mei }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->jun }}">{{ $jam[1]->jun }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->jul }}">{{ $jam[1]->jul }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->agu }}">{{ $jam[1]->agu }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->sep }}">{{ $jam[1]->sep }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->okt }}">{{ $jam[1]->okt }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->nov }}">{{ $jam[1]->nov }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->des }}">{{ $jam[1]->des }}</td>
+                                                            <td class="convert" value="{{ $jam[1]->total }}">{{ $jam[1]->total }}</td>
+                                                        @else
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                        @endisset
+                                                    </tr>
                                                 @endisset
-                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>

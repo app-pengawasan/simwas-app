@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rencana Jam Kerja')
+@section('title', 'Realisasi Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,15 +13,15 @@
 @endpush
 
 @section('main')
-    @include('components.admin-header')
-    @include('components.admin-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Rencana Jam Kerja</h1>
+                <h1>Realisasi Jam Kerja</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/admin/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Rencana Jam Kerja</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Realisasi Jam Kerja</div>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                                     <form id="yearForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="yearSelect">Pilih Tahun</label>
+                                            <label for="yearSelect">Tahun</label>
                                             <select name="year" id="yearSelect" class="form-control select2">
                                                 @php
                                                 $currentYear = date('Y');
@@ -52,13 +52,13 @@
                                     <form id="unitForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="unitSelect">Pilih Unit Kerja</label>
-                                            <select name="unit" id="unitSelect" class="form-control select2">
-                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
+                                            <label for="unitSelect">Unit Kerja</label>
+                                            <select name="unit" id="unitSelect" class="form-control select2" {{ $unituser != '8000' && $unituser != '8010' ? 'disabled' : '' }}>
+                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Semua</option>
                                                 <option value="8010" {{ request()->query('unit') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                                <option value="8100" {{ request()->query('unit') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                                <option value="8200" {{ request()->query('unit') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                                <option value="8300" {{ request()->query('unit') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                                <option value="8100" {{ request()->query('unit') == '8100' || $unituser == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                                <option value="8200" {{ request()->query('unit') == '8200' || $unituser == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                                <option value="8300" {{ request()->query('unit') == '8300' || $unituser == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
                                             </select>
                                             <input type="hidden" name="year" id="yearUnit">
                                         </div>
@@ -91,7 +91,7 @@
                                                         <td>{{ isset($count[1]) ? $count[1]['hari_kerja'] : 0 }}</td>
                                                         <td>
                                                             <a class="btn btn-primary detail"
-                                                                href="/admin/rencana-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                                href="/analis-sdm/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
                                                                 style="width: 42px">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>

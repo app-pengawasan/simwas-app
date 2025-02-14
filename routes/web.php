@@ -78,6 +78,7 @@ use App\Http\Controllers\RealisasiIkuUnitKerjaController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\AdminRealisasiJamKerjaController;
 use App\Http\Controllers\LaporanObjekPengawasanController;
+use App\Http\Controllers\AnalisRealisasiJamKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
@@ -263,6 +264,12 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('rencana-jam-kerja/pool/{id}/{year}', [AnalisRencanaJamKerjaController::class, 'show']);
         Route::get('rencana-jam-kerja/detail/{id}', [AnalisRencanaJamKerjaController::class, 'detailTugas']);
         Route::get('rencana-jam-kerja/export/{mode}/{year}/{unit}', [AnalisRencanaJamKerjaController::class, 'export']);
+        //Realisasi Jam Kerja
+        Route::get('realisasi-jam-kerja/rekap', [AnalisRealisasiJamKerjaController::class, 'rekap']);
+        Route::get('realisasi-jam-kerja/pool', [AnalisRealisasiJamKerjaController::class, 'pool']);
+        Route::get('realisasi-jam-kerja/pool/{id}/{year}', [AnalisRealisasiJamKerjaController::class, 'show']);
+        Route::get('realisasi-jam-kerja/detail/{id}', [AnalisRealisasiJamKerjaController::class, 'detailTugas']);
+        Route::get('realisasi-jam-kerja/export/{mode}/{year}/{unit}', [AnalisRealisasiJamKerjaController::class, 'export']);
     });
 
 

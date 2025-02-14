@@ -91,46 +91,48 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($jam_kerja as $key => $jam)
-                                            <tr>
-                                                <td></td>
-                                                <td>{{ $jam[0]->name }}</td>
-                                                <td>
-                                                    <a class="btn btn-primary detail"
-                                                        href="/pjk/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
-                                                        style="width: 42px">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                                @isset($jam[1]) 
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['03'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['04'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['05'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['06'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['07'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['08'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['09'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['10'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['11'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['realisasi_jam']['12'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $jam[1]['total'] }}</td>
-                                                @else
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
-                                                    <td>0</td>
+                                                @isset($jam[0]->name)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $jam[0]->name }}</td>
+                                                        <td>
+                                                            <a class="btn btn-primary detail"
+                                                                href="/pjk/realisasi-jam-kerja/pool/{{ $key }}/{{ date('Y') }}"
+                                                                style="width: 42px">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                        @isset($jam[1]) 
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['01'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['02'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['03'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['04'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['05'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['06'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['07'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['08'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['09'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['10'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['11'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['realisasi_jam']['12'] ?? 0 }}</td>
+                                                            <td class="convert">{{ $jam[1]['total'] }}</td>
+                                                        @else
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                        @endisset
+                                                    </tr>
                                                 @endisset
-                                            </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
