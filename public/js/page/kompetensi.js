@@ -259,6 +259,16 @@ $(".submit-btn").on("click", function (e) {
     // Reset invalid message while modal open
     clearError();
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: url,
         contentType: false,
@@ -277,7 +287,8 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
-            // console.log(errors);
+
+            Swal.close();
         },
     });
 });
@@ -345,6 +356,16 @@ $("#btn-edit-submit").on("click", function (e) {
     data.append('_token', token);
     data.append('_method', "PUT");
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: url,
         headers: { 'X-CSRF-Token': token },
@@ -365,6 +386,8 @@ $("#btn-edit-submit").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+
+            Swal.close();
         },
     });
 });

@@ -46,6 +46,16 @@ $(".submit-btn").on("click", function (e) {
     let token = $("meta[name='csrf-token']").attr("content");
     data.append('_token', token);
 
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/pegawai/tim/norma-hasil`,
         contentType: false,
@@ -64,6 +74,8 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+            
+            Swal.close();
         },
     });
 });

@@ -41,8 +41,20 @@ $('#edit-submit').on("click", function (e) {
     $("#error-edit-file").text("");
     $("#error-edit-link").text("");
 
-    if ($('#edit-file').val() != '' && $('#edit-file')[0].files[0].size / 1024 > 5120)
+    if ($('#edit-file').val() != '' && $('#edit-file')[0].files[0].size / 1024 > 5120) {
         $('#error-edit-file').text('Ukuran file maksimal 5MB');
+        return false;
+    }
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: `/pegawai/tim/kendali-mutu/${id}`,
@@ -63,6 +75,8 @@ $('#edit-submit').on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = value.join('\n');
             });
+
+            Swal.close();
         },
     });
 });
@@ -113,8 +127,20 @@ $(".submit-btn").on("click", function (e) {
     $("#error-bulan").text("");
     $("#error-catatan").text("");
 
-    if ($('#file').val() != '' && $('#file')[0].files[0].size / 1024 > 5120)
+    if ($('#file').val() != '' && $('#file')[0].files[0].size / 1024 > 5120) {
         $('#error-file').text('Ukuran file maksimal 5MB');
+        return false;
+    }
+
+    Swal.fire({
+        title: "Menyimpan Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
 
     $.ajax({
         url: '/pegawai/tim/kendali-mutu',
@@ -134,6 +160,8 @@ $(".submit-btn").on("click", function (e) {
                 let errorMessage = document.getElementById(`error-${key}`);
                 errorMessage.innerText = `${value}`;
             });
+
+            Swal.close();
         },
     });
 });

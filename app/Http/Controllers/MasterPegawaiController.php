@@ -163,8 +163,7 @@ class MasterPegawaiController extends Controller
     public function create()
     {
         $allPegawai = $this->getAllPegawai();
-        return view(
-            'admin.master-pegawai.create',
+        return view('admin.master-pegawai.create',
             [
                 'type_menu'     => 'master-pegawai',
                 'pangkat'       => $this->pangkat,
