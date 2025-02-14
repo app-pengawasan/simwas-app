@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Realisasi Jam Kerja')
+@section('title', 'Rencana Jam Kerja')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -13,16 +13,16 @@
 @endpush
 
 @section('main')
-    @include('components.inspektur-header')
-    @include('components.inspektur-sidebar')
+    @include('components.analis-sdm-header')
+    @include('components.analis-sdm-sidebar')
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Realisasi Jam Kerja {{ $pegawai }}</h1> 
+                <h1>Rencana Jam Kerja {{ $pegawai }}</h1>
                 <input type="hidden" name="pegawai" id="pegawai" value="{{ $pegawai }}">
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="/inspektur/dashboard">Dashboard</a></div>
-                    <div class="breadcrumb-item">Realisasi Jam Kerja</div>
+                    <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
+                    <div class="breadcrumb-item">Rekap Rencana Hari Kerja</div>
                 </div>
             </div>
 
@@ -46,9 +46,9 @@
                                                 <th rowspan="2" class="align-middle">Tim</th>
                                                 <th rowspan="2" class="align-middle">Proyek</th>
                                                 <th rowspan="2" class="align-middle">Tugas</th>
-                                                <th rowspan="2" class="align-middle">Jabatan</th>
+                                                <th rowspan="2" class="align-middle">Peran</th>
                                                 <th rowspan="2" class="align-middle">Detail</th>
-                                                <th colspan="13" class="text-center" id="title">Realisasi Jam Kerja</th>
+                                                <th colspan="13" class="text-center" id="title">Rencana Jam Kerja</th>
                                             </tr>
                                             <tr>
                                                 <th>Jan</th>
@@ -71,48 +71,48 @@
                                                 $jan = $feb = $mar = $apr = $mei = $jun = $jul = $agu =
                                                 $sep = $okt = $nov = $des = $total = 0;
                                             @endphp
-                                            @foreach ($count as $key => $c)
-                                                @php 
-                                                    $jan += $c['realisasi_jam']['01'] ?? 0;
-                                                    $feb += $c['realisasi_jam']['02'] ?? 0;
-                                                    $mar += $c['realisasi_jam']['03'] ?? 0;
-                                                    $apr += $c['realisasi_jam']['04'] ?? 0;
-                                                    $mei += $c['realisasi_jam']['05'] ?? 0;
-                                                    $jun += $c['realisasi_jam']['06'] ?? 0;
-                                                    $jul += $c['realisasi_jam']['07'] ?? 0;
-                                                    $agu += $c['realisasi_jam']['08'] ?? 0;
-                                                    $sep += $c['realisasi_jam']['09'] ?? 0;
-                                                    $okt += $c['realisasi_jam']['10'] ?? 0;
-                                                    $nov += $c['realisasi_jam']['11'] ?? 0;
-                                                    $des += $c['realisasi_jam']['12'] ?? 0;
-                                                    $total += $c['total'];
+                                            @foreach ($tugas as $t)
+                                                @php
+                                                    $jan += $t->jan;
+                                                    $feb += $t->feb;
+                                                    $mar += $t->mar;
+                                                    $apr += $t->apr;
+                                                    $mei += $t->mei;
+                                                    $jun += $t->jun;
+                                                    $jul += $t->jul;
+                                                    $agu += $t->agu;
+                                                    $sep += $t->sep;
+                                                    $okt += $t->okt;
+                                                    $nov += $t->nov;
+                                                    $des += $t->des;
+                                                    $total += $t->total;
                                                 @endphp
                                                 <tr>
                                                     <td></td>
-                                                    <td>{{ $c['tim'] }}</td>
-                                                    <td>{{ $c['proyek'] }}</td>
-                                                    <td>{{ $c['tugas'] }}</td>
-                                                    <td>{{ $jabatan[$c['jabatan']] }}</td>
+                                                    <td>{{ $t->rencanaKerja->proyek->timkerja->nama }}</td>
+                                                    <td>{{ $t->rencanaKerja->proyek->nama_proyek }}</td>
+                                                    <td>{{ $t->rencanaKerja->tugas }}</td>
+                                                    <td>{{ $jabatan[$t->pt_jabatan] }}</td>
                                                     <td>
                                                         <a class="btn btn-primary"
-                                                            href="/inspektur/realisasi-jam-kerja/detail/{{ $c['id_pelaksana'] }}"
+                                                            href="/analis-sdm/rencana-jam-kerja/detail/{{ $t->id_pelaksana }}"
                                                             style="width: 42px">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['01'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['02'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['03'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['04'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['05'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['06'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['07'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['08'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['09'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['10'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['11'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['realisasi_jam']['12'] ?? 0 }}</td>
-                                                    <td class="convert">{{ $c['total'] }}</td>
+                                                    <td class="convert" value={{ $t->jan }}>{{ $t->jan }}</td>
+                                                    <td class="convert" value={{ $t->feb }}>{{ $t->feb }}</td>
+                                                    <td class="convert" value={{ $t->mar }}>{{ $t->mar }}</td>
+                                                    <td class="convert" value={{ $t->apr }}>{{ $t->apr }}</td>
+                                                    <td class="convert" value={{ $t->mei }}>{{ $t->mei }}</td>
+                                                    <td class="convert" value={{ $t->jun }}>{{ $t->jun }}</td>
+                                                    <td class="convert" value={{ $t->jul }}>{{ $t->jul }}</td>
+                                                    <td class="convert" value={{ $t->agu }}>{{ $t->agu }}</td>
+                                                    <td class="convert" value={{ $t->sep }}>{{ $t->sep }}</td>
+                                                    <td class="convert" value={{ $t->okt }}>{{ $t->okt }}</td>
+                                                    <td class="convert" value={{ $t->nov }}>{{ $t->nov }}</td>
+                                                    <td class="convert" value={{ $t->des }}>{{ $t->des }}</td>
+                                                    <td class="convert" value={{ $t->total }}>{{ $t->total }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -131,7 +131,7 @@
                                                 <td class="total" value="{{ $okt }}">{{ $okt }}</td>
                                                 <td class="total" value="{{ $nov }}">{{ $nov }}</td>
                                                 <td class="total" value="{{ $des }}">{{ $des }}</td>
-                                                <td class="total" value="{{ $total }}">{{ $total }}</td>
+                                                <td class="total" id="total" value="{{ $total }}">{{ $total }}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -148,8 +148,9 @@
 @push('scripts')
     <!-- JS Libraies -->
     {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> --}}
-    <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script>
+    {{-- <script src="https://cdn.datatables.net/v/dt/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/datatables.min.js"></script> --}}
     <script src="{{ asset('js') }}/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('js') }}/plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="{{ asset('js') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
@@ -166,12 +167,11 @@
     <!-- Page Specific JS File -->
     {{-- <script src="{{ asset('js') }}/page/inspektur-st-kinerja.js"></script> --}}
     <script>
-        $('#table-inspektur-kinerja').find("td.convert").each(function() {
-            $(this).attr('value', $(this).text());
-        });
-
-        var datatable = $('#table-inspektur-kinerja').DataTable({
+        var datatable = $('#table-inspektur-kinerja').dataTable({
             dom: "Bfrtip",
+            // fixedColumns: {
+            //     leftColumns: 4
+            // },
             responsive: false,
             lengthChange: false,
             autoWidth: false,
@@ -202,7 +202,7 @@
                 $(td).text(row + 1);
                 }
             }],
-        });
+        }).api();
         $('#table-inspektur-kinerja_wrapper .dt-buttons').removeClass('btn-group');
         $('.toggle').wrapAll('<div class="btn-group"></div>');
         $('.hari-kerja').on('click', function() {
@@ -214,10 +214,11 @@
                 if (this.data() != '0') this.data(($(this.node()).attr('value') / 7.5).toFixed(2))
             });
             $(".dataTables_scrollFoot .total").each(function() {
-                if ($(this).text() != '0') $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+                $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
             });
-            $('#title').text('Realisasi Hari Kerja');
-        })
+            $('#title').text('Rencana Hari Kerja');
+        });
+
         $('.jam-kerja').on('click', function() {
             $(this).addClass('disabled');
             $(this).attr('disabled', true);
@@ -227,9 +228,9 @@
                 if (this.data() != '0') this.data($(this.node()).attr('value'))
             });
             $(".dataTables_scrollFoot .total").each(function() {
-                if ($(this).text() != '0') $(this).text($(this).attr('value'));
+                $(this).text($(this).attr('value'));
             });
-            $('#title').text('Realisasi Jam Kerja');
-        })
+            $('#title').text('Rencana Jam Kerja');
+        });
     </script>
 @endpush

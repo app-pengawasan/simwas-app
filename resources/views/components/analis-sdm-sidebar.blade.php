@@ -64,6 +64,25 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Rencana Jam Kerja</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('analis-sdm/rencana-jam-kerja/rekap')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/rencana-jam-kerja/rekap">
+                            <span>Rekap Jam Kerja</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('analis-sdm/rencana-jam-kerja/pool*') || Request::is('analis-sdm/rencana-jam-kerja/detail*')  ? 'active' : '' }}">
+                        <a class="nav-link" href="/analis-sdm/rencana-jam-kerja/pool">
+                            <span>Pool Jam Kerja</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         @include('components.footer')
     </aside>

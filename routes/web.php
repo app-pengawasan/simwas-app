@@ -71,6 +71,7 @@ use App\Http\Controllers\EvaluasiIkuUnitKerjaController;
 use App\Http\Controllers\KetuaTimRencanaKerjaController;
 use App\Http\Controllers\KodeKlasifikasiArsipController;
 use App\Http\Controllers\PJKRealisasiJamKerjaController;
+use App\Http\Controllers\AnalisRencanaJamKerjaController;
 use App\Http\Controllers\InspekturRencanaKerjaController;
 use App\Http\Controllers\PegawaiLaporanKinerjaController;
 use App\Http\Controllers\RealisasiIkuUnitKerjaController;
@@ -256,6 +257,12 @@ Route::group(['middleware'=>'auth'], function(){
         Route::post('data-kepegawaian/import', [DataKepegawaianController::class, 'import']);
         Route::get('data-kepegawaian/export', [DataKepegawaianController::class, 'export']);
         Route::put('data-kepegawaian/editNilai/{id}', [DataKepegawaianController::class, 'editNilai']);
+        //Rencana Jam Kerja
+        Route::get('rencana-jam-kerja/rekap', [AnalisRencanaJamKerjaController::class, 'rekap']);
+        Route::get('rencana-jam-kerja/pool', [AnalisRencanaJamKerjaController::class, 'pool']);
+        Route::get('rencana-jam-kerja/pool/{id}/{year}', [AnalisRencanaJamKerjaController::class, 'show']);
+        Route::get('rencana-jam-kerja/detail/{id}', [AnalisRencanaJamKerjaController::class, 'detailTugas']);
+        Route::get('rencana-jam-kerja/export/{mode}/{year}/{unit}', [AnalisRencanaJamKerjaController::class, 'export']);
     });
 
 

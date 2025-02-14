@@ -42,8 +42,8 @@ $('.hari-kerja').on('click', function() {
     $(this).attr('disabled', true);
     $(".jam-kerja").removeClass('disabled');
     $(".jam-kerja").attr('disabled', false);
-    $('#tim-kerja').find("td.convert").each(function() {
-        $(this).text( (Number($(this).text()) / 7.5).toFixed(2) );
+    table.cells('.convert').every(function () {
+        if (this.data() != '0') this.data(($(this.node()).attr('value') / 7.5).toFixed(2))
     });
     $('#title').text('Rencana Hari Kerja');
 });
@@ -53,8 +53,8 @@ $('.jam-kerja').on('click', function() {
     $(this).attr('disabled', true);
     $(".hari-kerja").removeClass('disabled');
     $(".hari-kerja").attr('disabled', false);
-    $('#tim-kerja').find("td.convert").each(function() {
-        $(this).text($(this).attr('value'));
+    table.cells('.convert').every(function () {
+        if (this.data() != '0') this.data($(this.node()).attr('value'))
     });
     $('#title').text('Rencana Jam Kerja');
 });
