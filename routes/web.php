@@ -7,6 +7,7 @@ use App\Http\Controllers\WordController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\NamaPpController;
+use App\Http\Controllers\PJKMPHController;
 use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SuratKorespondensi;
@@ -527,6 +528,11 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('realisasi-jam-kerja/pool/{id}/{year}', [PJKRealisasiJamKerjaController::class, 'show']);
         Route::get('realisasi-jam-kerja/detail/{id}', [PJKRealisasiJamKerjaController::class, 'detailTugas']);
         Route::get('realisasi-jam-kerja/export/{mode}/{year}/{unit}', [PJKRealisasiJamKerjaController::class, 'export']);
+
+        //Matriks Peran Hasil
+        Route::get('mph/hari-kerja', [PJKMPHController::class, 'indexHari']);
+        Route::resource('mph', PJKMPHController::class);
+        Route::get('mph/export/{unit}/{year}', [PJKMPHController::class, 'export']);
 
     });
 

@@ -34,7 +34,7 @@
                                     <form id="yearForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="yearSelect">Pilih Tahun</label>
+                                            <label for="yearSelect">Tahun</label>
                                             <select name="year" id="yearSelect" class="form-control select2">
                                                 @php
                                                 $currentYear = date('Y');
@@ -52,13 +52,13 @@
                                     <form id="unitForm" action="" method="GET" class="col-4">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="unitSelect">Pilih Unit Kerja</label>
-                                            <select name="unit" id="unitSelect" class="form-control select2">
-                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Inspektorat Utama</option>
+                                            <label for="unitSelect">Unit Kerja</label>
+                                            <select name="unit" id="unitSelect" class="form-control select2" {{ $unituser != '8000' && $unituser != '8010' ? 'disabled' : '' }}>
+                                                <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Semua</option>
                                                 <option value="8010" {{ request()->query('unit') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
-                                                <option value="8100" {{ request()->query('unit') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
-                                                <option value="8200" {{ request()->query('unit') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
-                                                <option value="8300" {{ request()->query('unit') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                                <option value="8100" {{ request()->query('unit') == '8100' || $unituser == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                                <option value="8200" {{ request()->query('unit') == '8200' || $unituser == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                                <option value="8300" {{ request()->query('unit') == '8300' || $unituser == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
                                             </select>
                                             <input type="hidden" name="year" id="yearUnit">
                                         </div>

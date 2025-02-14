@@ -112,7 +112,9 @@ class PJKRencanaJamKerjaController extends Controller
             $year = $year;
         }
 
-        $unit = $request->unit;
+        $unit = auth()->user()->unit_kerja;
+        if ($unit == '8000' || $unit == '8010') $unit = $request->unit;
+        else if ($request->unit != null && $request->unit != $unit) return redirect()->to('/');
 
         if ($unit == null || $unit == '8000') {
             $pegawai = User::get();
@@ -137,9 +139,12 @@ class PJKRencanaJamKerjaController extends Controller
 
         $jam_kerja = $pegawai->toBase()->merge($tugas)->groupBy('id');
 
+        $unituser = auth()->user()->unit_kerja;
+
         return view('pjk.rencana-jam-kerja.rekap',[
-            'type_menu'     => 'rencana-jam-kerja'
-        ])->with('jam_kerja', $jam_kerja);
+            'type_menu'     => 'rencana-jam-kerja',
+            'unituser'      => $unituser
+            ])->with('jam_kerja', $jam_kerja);
     }
 
     public function pool(Request $request)
@@ -154,7 +159,9 @@ class PJKRencanaJamKerjaController extends Controller
             $year = $year;
         }
 
-        $unit = $request->unit;
+        $unit = auth()->user()->unit_kerja;
+        if ($unit == '8000' || $unit == '8010') $unit = $request->unit;
+        else if ($request->unit != null && $request->unit != $unit) return redirect()->to('/');
 
         if ($unit == null || $unit == '8000') {
             $pegawai = User::get();
@@ -190,8 +197,11 @@ class PJKRencanaJamKerjaController extends Controller
 
         $countall = $pegawai->toBase()->merge($count)->groupBy('id');
 
+        $unituser = auth()->user()->unit_kerja;
+
         return view('pjk.rencana-jam-kerja.pool',[
-            'type_menu'     => 'rencana-jam-kerja'
+            'type_menu'     => 'rencana-jam-kerja',
+            'unituser'      => $unituser
         ])->with('countall', $countall);
     }
 

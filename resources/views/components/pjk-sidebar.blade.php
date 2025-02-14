@@ -1,3 +1,6 @@
+@if (!isset($type_menu))
+<?php $type_menu = ''; ?>
+@endif
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
@@ -49,6 +52,13 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li
+                class="{{ Request::is('pjk/mph*') ? 'active' : '' }}">
+                <a class="nav-link" href="/pjk/mph">
+                    <i class="fas fa-user-gear"></i>
+                    <span>Matriks Peran Hasil</span>
+                </a>
             </li>
         </ul>
         @include('components.footer')
