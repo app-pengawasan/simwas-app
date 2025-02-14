@@ -125,7 +125,7 @@
             <li class="{{ Request::is('pegawai/norma-hasil*') ? 'active' : '' }}">
                 <a class="nav-link" href="/pegawai/norma-hasil">
                     <i class="fas fa-check"></i>
-                    <span>Norma Hasil</span>
+                    <span>Permintaan Nomor Laporan</span>
                 </a>
             </li>
             <li class="nav-item dropdown {{ $type_menu === 'tugas-tim' ? 'active active-dropdown' : '' }}">

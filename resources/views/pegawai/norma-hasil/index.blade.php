@@ -18,10 +18,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Norma Hasil</h1>
+            <h1>Permintaan Nomor Laporan</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="/pegawai/dashboard">Dashboard</a></div>
-                <div class="breadcrumb-item">Norma Hasil</div>
+                <div class="breadcrumb-item">Permintaan Nomor Laporan</div>
             </div>
         </div>
 
@@ -118,10 +118,13 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px; text-align:center">No</th>
-                                        <th style="width: 200px;">Jenis Norma Hasil</th>
-                                        <th style="width: 180px;">Nomor Surat</th>
-                                        <th style="width: 100px;">Tanggal Usulan</th>
-                                        <th style="width: 180px;">Status</th>
+                                        <th>Kode</th>
+                                        <th>Nomor Laporan</th>
+                                        <th>Tanggal Usulan</th>
+                                        <th>Tanggal Laporan</th>
+                                        <th>Hasil Kerja</th>
+                                        <th>Objek Pengawasan</th>
+                                        <th>Status</th>
                                         <th style="width: 50px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -131,7 +134,7 @@
                                         <td class="text-center" style="width: 10px; text-align:center" scope="row">
                                             {{ $loop->iteration }}
                                         </td>
-                                        <td>{{ $un->masterLaporan->nama ?? "" }}</td>
+                                        <td>{{ $un->masterLaporan->kode ?? "" }}</td>
                                         <td>
                                             @if ($un->status_norma_hasil == 'disetujui')
                                             <span class="badge badge-primary">
@@ -140,6 +143,9 @@
                                             @endif
                                         </td>
                                         <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
+                                        <td>{{ date('d M Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}</td>
+                                        <td>{{ $un->nama_dokumen }}</td>
+                                        <td>{{ $un->laporanPengawasan->objekPengawasan->nama }}</td>
                                         @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil !=
                                         'ditolak')
                                         <td>

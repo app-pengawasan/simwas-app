@@ -59,7 +59,7 @@ if ($("#table-norma-hasil").length) {
 
     $(".dataTables_filter input").attr(
         "placeholder",
-        "Cari berdasarkan nomor surat"
+        "Cari berdasarkan nomor laporan"
     );
     // add padding x 10px to .dataTables_filter input
     $(".dataTables_filter input").css("padding", "0 10px");

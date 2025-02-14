@@ -4,9 +4,10 @@ if ($("#table-norma-hasil").length) {
     table = $("#table-norma-hasil")
         .dataTable({
             dom: "Bfrtip",
-            responsive: true,
+            responsive: false,
             lengthChange: false,
             autoWidth: false,
+            scrollX: true,
             pageLength: 25,
             buttons: [
                 {
@@ -41,6 +42,18 @@ if ($("#table-norma-hasil").length) {
             },
         })
         .api();
+
+    localStorage.setItem("mini-sidebar", "true");
+    setTimeout( function () {
+        table.columns.adjust();
+    }, 500);
+
+    //update ukuran tabel saat ukuran sidebar berubah
+    $('.nav-link').on("click", function () {
+        setTimeout( function () {
+            table.columns.adjust();
+        }, 500);
+    });
 
     // move datatable button to inside download button
     $(".dt-buttons").appendTo("#download-button");
