@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class InspekturMPHController extends Controller
+class AnalisMPHController extends Controller
 {
     protected $unitkerja = [
         '8000'    => 'Inspektorat Utama',
@@ -35,7 +35,7 @@ class InspekturMPHController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('inspektur');
+        $this->authorize('analis_sdm');
 
         $unit = $request->unit;
         if ($unit == null || $unit == "undefined") {
@@ -79,7 +79,7 @@ class InspekturMPHController extends Controller
         $year = $year->sortByDesc('tahun');
         $unit = auth()->user()->unit_kerja;
 
-        return view('inspektur.matriks-peran-hasil.index', [
+        return view('analis-sdm.matriks-peran-hasil.index', [
             'pelaksanaTugas' => $pelaksanaTugas,
             'year' => $year,
             'unitkerja' => $this->unitkerja,
@@ -90,7 +90,7 @@ class InspekturMPHController extends Controller
 
     public function indexHari(Request $request)
     {
-        $this->authorize('inspektur');
+        $this->authorize('analis_sdm');
 
         $unit = $request->unit;
         if ($unit == null || $unit == "undefined") {
@@ -134,7 +134,7 @@ class InspekturMPHController extends Controller
         $year = $year->sortByDesc('tahun');
         $unit = auth()->user()->unit_kerja;
 
-        return view('inspektur.matriks-peran-hasil.hari', [
+        return view('analis-sdm.matriks-peran-hasil.hari', [
             'pelaksanaTugas' => $pelaksanaTugas,
             'year' => $year,
             'unitkerja' => $this->unitkerja,
@@ -177,7 +177,7 @@ class InspekturMPHController extends Controller
 
     public function export($unit, $year)
     {
-        $this->authorize('inspektur');
+        $this->authorize('analis_sdm');
         
         if ($unit == 'undefined') $unit = auth()->user()->unit_kerja;
 

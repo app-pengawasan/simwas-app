@@ -50,13 +50,13 @@
                                             </option>
                                             @endforeach
                                         </select>
-                                        @if ($unit == '8000')
+                                        @if ($unit == '8000' || $unit == '8010')
                                             <input type="hidden" name="unit" id="unitYear">
                                         @endif
                                     </div>
                                 </form>
                             </div>
-                            @if ($unit == '8000')
+                            @if ($unit == '8000' || $unit == '8010')
                                 <div class="form-group col pl-0" style="margin-bottom: 0;">
                                     <form id="unitForm" action="" method="GET">
                                         @csrf

@@ -14,8 +14,8 @@
 @endpush
 
 @section('main')
-@include('components.inspektur-header')
-@include('components.inspektur-sidebar')
+@include('components.analis-sdm-header')
+@include('components.analis-sdm-sidebar')
 
 <div class="main-content">
 
@@ -23,7 +23,7 @@
         <div class="section-header">
             <h1>Matriks Peran Hasil</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="/inspektur">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="/analis-sdm">Dashboard</a></div>
                 <div class="breadcrumb-item">Matriks Peran Hasil</div>
             </div>
         </div>
@@ -199,13 +199,13 @@
     });
 
     $('.unduh').on('click', function() {
-        window.location.href = `/inspektur/mph/export/${$('#unitSelect').val()}/${$('#yearSelect').val()}`;
+        window.location.href = `/analis-sdm/mph/export/${$('#unitSelect').val()}/${$('#yearSelect').val()}`;
     })
 
     $('#tim-kerja_wrapper .dt-buttons').removeClass('btn-group');
     $('.toggle').wrapAll('<div class="btn-group"></div>');
     $('.jam-kerja').on('click', function() {
-        window.location.href = `/inspektur/mph?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`;
+        window.location.href = `/analis-sdm/mph?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`;
     })
 </script>
 @endpush

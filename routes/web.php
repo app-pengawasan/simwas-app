@@ -11,6 +11,7 @@ use App\Http\Controllers\ProyekController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SuratKorespondensi;
 use App\Http\Controllers\TimKerjaController;
+use App\Http\Controllers\AnalisMPHController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterIKUController;
 use App\Http\Controllers\RealisasiController;
@@ -270,6 +271,10 @@ Route::group(['middleware'=>'auth'], function(){
         Route::get('realisasi-jam-kerja/pool/{id}/{year}', [AnalisRealisasiJamKerjaController::class, 'show']);
         Route::get('realisasi-jam-kerja/detail/{id}', [AnalisRealisasiJamKerjaController::class, 'detailTugas']);
         Route::get('realisasi-jam-kerja/export/{mode}/{year}/{unit}', [AnalisRealisasiJamKerjaController::class, 'export']);
+        //Matriks Peran Hasil
+        Route::get('mph/hari-kerja', [AnalisMPHController::class, 'indexHari']);
+        Route::resource('mph', AnalisMPHController::class);
+        Route::get('mph/export/{unit}/{year}', [AnalisMPHController::class, 'export']);
     });
 
 

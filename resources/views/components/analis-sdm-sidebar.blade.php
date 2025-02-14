@@ -102,6 +102,13 @@
                     </li>
                 </ul>
             </li>
+            <li
+                class="{{ Request::is('analis-sdm/mph*') ? 'active' : '' }}">
+                <a class="nav-link" href="/analis-sdm/mph">
+                    <i class="fas fa-user-gear"></i>
+                    <span>Matriks Peran Hasil</span>
+                </a>
+            </li>
         </ul>
         @include('components.footer')
     </aside>
