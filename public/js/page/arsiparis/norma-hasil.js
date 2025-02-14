@@ -42,11 +42,6 @@ if ($("#table-norma-hasil").length) {
             },
         })
         .api();
-    
-    localStorage.setItem("mini-sidebar", "true");
-    setTimeout( function () {
-        table.columns.adjust();
-    }, 800);
 
     //update ukuran tabel saat ukuran sidebar berubah
     $('.nav-link').on("click", function () {
