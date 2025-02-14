@@ -15,7 +15,7 @@ if ($("#table-norma-hasil").length) {
                     className: "btn-success",
                     text: '<i class="fas fa-file-excel"></i> Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     },
                 },
                 {
@@ -23,7 +23,7 @@ if ($("#table-norma-hasil").length) {
                     className: "btn-danger",
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     },
                 },
             ],
@@ -46,7 +46,7 @@ if ($("#table-norma-hasil").length) {
     localStorage.setItem("mini-sidebar", "true");
     setTimeout( function () {
         table.columns.adjust();
-    }, 500);
+    }, 800);
 
     //update ukuran tabel saat ukuran sidebar berubah
     $('.nav-link').on("click", function () {

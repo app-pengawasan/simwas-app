@@ -132,13 +132,15 @@
                                         <tr>
                                             <th style="width: 10px; text-align:center">No</th>
                                             <th>Tugas</th>
-                                            <th>Nomor Dokumen</th>
-                                            <th>Jenis</th>
+                                            <th>Nomor Laporan</th>
+                                            <th>Kode</th>
                                             <th>Objek Pengawasan</th>
+                                            <th>Tanggal Pengajuan</th>
+                                            <th>Tanggal Laporan</th>
                                             <th>Bulan Pelaporan</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
-                                            <th class="never">tahun</th>
+                                            <th class="d-none">tahun</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -159,10 +161,13 @@
                                                 </span>
                                                 @endif
                                             </td>
-                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->nama ?? $lnm->normaHasilAccepted->kode_norma_hasil ?? "" }}
-                                            </td>
+                                            <td>{{ $lnm->normaHasilAccepted->normaHasil->masterLaporan->kode ?? "" }}</td>
                                             <td>{{ $lnm->normaHasilAccepted->normaHasil->laporanPengawasan->objekPengawasan->nama ??
                                                     $lnm->normaHasilDokumen->laporanPengawasan->objekPengawasan->nama ?? "" }}
+                                            <td>
+                                                {{ isset($lnm->normaHasilAccepted->normaHasil->tanggal) ? date('d M Y', strtotime($lnm->normaHasilAccepted->normaHasil->tanggal)) : "" }}
+                                            </td>
+                                            <td>{{ isset($lnm->normaHasilAccepted->tanggal_norma_hasil) ? date('d M Y', strtotime($lnm->normaHasilAccepted->tanggal_norma_hasil)) : "" }}</td>
                                             </td>
                                             <td>{{ $months[$lnm->normaHasilAccepted->normaHasil->laporanPengawasan->month ?? $lnm->normaHasilDokumen->laporanPengawasan->month ?? 0] }}
                                             </td>
@@ -189,7 +194,7 @@
                                                     "></i>
                                                 </a>
                                             </td>
-                                            <td>{{ substr($lnm->tanggal_norma_hasil, 0, 4) }}</td>
+                                            <td class="d-none">{{ substr($lnm->tanggal_norma_hasil, 0, 4) }}</td>
                                         </tr>
                                         @endforeach
                                         @foreach ($normaHasilBelumUpload as $normaHasil)
@@ -203,10 +208,12 @@
                                                     R-{{ $normaHasil->nomor_norma_hasil}}/{{ $normaHasil->unit_kerja}}/{{ $normaHasil->kode_klasifikasi_arsip}}/{{ $normaHasil->normaHasil->masterLaporan->kode ?? "" }}/{{ date('Y', strtotime($normaHasil->tanggal_norma_hasil)) }}
                                                 </span>
                                             </td>
-                                            <td>{{ $normaHasil->normaHasil->masterLaporan->nama ?? "" }}</td>
+                                            <td>{{ $normaHasil->normaHasil->masterLaporan->kode ?? "" }}</td>
                                             <td>
                                                 {{ $normaHasil->normaHasil->laporanPengawasan->objekPengawasan->nama ?? "" }}
                                             </td>
+                                            <td>{{ date('d M Y', strtotime($normaHasil->normaHasil->tanggal)) }}</td>
+                                            <td>{{ date('d M Y', strtotime($normaHasil->tanggal_norma_hasil)) }}</td>
                                             <td>
                                                 {{ $months[$normaHasil->normaHasil->laporanPengawasan->month?? 0] }}
                                             </td>
@@ -216,7 +223,7 @@
                                             <td>
 
                                             </td>
-                                            <td>
+                                            <td class="d-none">
 
                                             </td>
                                         </tr>
