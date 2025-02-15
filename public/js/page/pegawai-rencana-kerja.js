@@ -283,6 +283,73 @@ $("#btn-admin-send-back").on("click", function (e) {
     });
 });
 
+$(".btn-edit-pelaksana").on("click", function (e) {
+    e.preventDefault();
+    $("#edit-pt-jabatan").val($(this).data('jabatan'));
+    $("#edit-pelaksana").select2("trigger", "select", {
+        data: {
+            id: $(this).data('id_peg'),
+            text: $(this).data('nama_peg')
+        },
+    });
+    // $("#edit-id_pelaksana").val(response.data.id_pelaksana);
+    $("#edit-januari").val($(this).data('jan').toString().replace(".", ","));
+    $("#edit-februari").val($(this).data('feb').toString().replace(".", ","));
+    $("#edit-maret").val($(this).data('mar').toString().replace(".", ","));
+    $("#edit-april").val($(this).data('apr').toString().replace(".", ","));
+    $("#edit-mei").val($(this).data('mei').toString().replace(".", ","));
+    $("#edit-juni").val($(this).data('jun').toString().replace(".", ","));
+    $("#edit-juli").val($(this).data('jul').toString().replace(".", ","));
+    $("#edit-agustus").val($(this).data('agu').toString().replace(".", ","));
+    $("#edit-september").val($(this).data('sep').toString().replace(".", ","));
+    $("#edit-oktober").val($(this).data('okt').toString().replace(".", ","));
+    $("#edit-november").val($(this).data('nov').toString().replace(".", ","));
+    $("#edit-desember").val($(this).data('des').toString().replace(".", ","));
+    $("#modal-edit-pelaksana input, #modal-edit-pelaksana select").prop("disabled", true);
+    $('#btn-edit-pelaksana').hide();
+    $('#btn-batal').hide();
+    $('#modal-edit-pelaksana-label').text('Detail Pelaksana Tugas');
+});
+
+$(".btn-show-bulan").on("click", function (e) {
+    let id = $(this).data("id");
+    $("#edit-id").val(id);
+
+    $.ajax({
+        url: `/ketua-tim/objek-pengawasan/detail/${id}`,
+        type: "GET",
+        success: function (response) {
+            var bulan = {
+                1: "Januari",
+                2: "Februari",
+                3: "Maret",
+                4: "April",
+                5: "Mei",
+                6: "Juni",
+                7: "Juli",
+                8: "Agustus",
+                9: "September",
+                10: "Oktober",
+                11: "November",
+                12: "Desember",
+            };
+            response.data.laporan_objek_pengawasan.forEach((element) => {
+                // iterate bulan
+                for (const [key, value] of Object.entries(bulan)) {
+                    if (element.month == key) {
+                        $(
+                            `input[name="bulan-${value}"][value="${element.status}"]`
+                        ).prop("checked", true);
+                    }
+                }
+            });
+        },
+        error: function (e) {
+            // console.log(e);
+        },
+    });
+});
+
 /* Fungsi formatRupiah */
 function formatRupiah(angka, prefix) {
     let number_string = angka.replace(/[^,\d]/g, "").toString(),

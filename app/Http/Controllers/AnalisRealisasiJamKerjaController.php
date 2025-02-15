@@ -292,6 +292,7 @@ class AnalisRealisasiJamKerjaController extends Controller
         $this->authorize('analis_sdm');
         
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User ::all();
 
         return view('analis-sdm.realisasi-jam-kerja.detail-tugas', [
             'type_menu'     => 'realisasi-jam-kerja',
@@ -304,7 +305,8 @@ class AnalisRealisasiJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

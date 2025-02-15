@@ -42,7 +42,7 @@
                         <?php
                             $jabatanPelaksana = ['', 'Pengendali Teknis', 'Ketua Tim', 'PIC', 'Anggota Tim','Penanggung Jawab Kegiatan'];
                             $hasilKerja2 = ['', 'Lembar Reviu', 'Kertas Kerja'];
-                            ?>
+                        ?>
                         <table id="tim-kerja" class="table table-bordered table-striped display responsive">
                             <thead>
                                 <tr>

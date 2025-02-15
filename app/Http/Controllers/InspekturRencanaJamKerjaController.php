@@ -222,6 +222,7 @@ class InspekturRencanaJamKerjaController extends Controller
         $this->authorize('inspektur');
 
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User:: all();
 
         return view('inspektur.rencana-jam-kerja.detail-tugas', [
             'type_menu'     => 'rencana-jam-kerja',
@@ -234,7 +235,8 @@ class InspekturRencanaJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

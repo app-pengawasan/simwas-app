@@ -27,6 +27,13 @@
                     <span>Penilaian Kinerja Pegawai</span>
                 </a>
             </li>
+            <li
+                class="{{ Request::is('inspektur/rencana-kinerja*') ? 'active' : '' }}">
+                <a class="nav-link" href="/inspektur/rencana-kinerja">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Rencana Kinerja</span>
+                </a>
+            </li>
             <li class="nav-item dropdown {{ $type_menu === 'rencana-jam-kerja' ? 'active active-dropdown' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-hourglass-half"></i>
@@ -64,13 +71,6 @@
                         </a>
                     </li>
                 </ul>
-            </li>
-            <li
-                class="{{ Request::is('inspektur/rencana-kinerja*') ? 'active' : '' }}">
-                <a class="nav-link" href="/inspektur/rencana-kinerja">
-                    <i class="fas fa-clipboard"></i>
-                    <span>Rencana Kinerja</span>
-                </a>
             </li>
             <li
                 class="{{ Request::is('inspektur/mph*') ? 'active' : '' }}">

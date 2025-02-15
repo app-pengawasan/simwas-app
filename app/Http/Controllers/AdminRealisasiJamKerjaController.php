@@ -282,6 +282,7 @@ class AdminRealisasiJamKerjaController extends Controller
         $this->authorize('admin');
         
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User::all();
 
         return view('admin.realisasi-jam-kerja.detail-tugas', [
             'type_menu'     => 'realisasi-jam-kerja',
@@ -294,7 +295,8 @@ class AdminRealisasiJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

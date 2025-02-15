@@ -225,6 +225,7 @@ class AdminRencanaJamKerjaController extends Controller
         $this->authorize('admin');
 
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User::all();
 
         return view('admin.rencana-jam-kerja.detail-tugas', [
             'type_menu'     => 'rencana-jam-kerja',
@@ -237,7 +238,8 @@ class AdminRencanaJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

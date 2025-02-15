@@ -1056,13 +1056,6 @@ $("#edit-hasil_kerja").on("change", function () {
     });
 });
 
-// Taruh dipaling bawah, Soalnya nanti ngaruh ke function yang laen
-let rupiah = document.getElementsByClassName("rupiah");
-for (i = 0; i <= rupiah.length - 1; i++) {
-    let tmp = rupiah[i].innerText.toString();
-    rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
-}
-
 function filterTable() {
     let filterUnitKerja = $("#filter-unit-kerja").val();
 
@@ -1210,3 +1203,67 @@ $(".btn-edit-pelaksana").on("click", function (e) {
     $('#btn-batal').hide();
     $('#modal-edit-pelaksana-label').text('Detail Pelaksana Tugas');
 });
+
+$(".btn-show-bulan").on("click", function (e) {
+    let id = $(this).data("id");
+    $("#edit-id").val(id);
+
+    $.ajax({
+        url: `/ketua-tim/objek-pengawasan/detail/${id}`,
+        type: "GET",
+        success: function (response) {
+            var bulan = {
+                1: "Januari",
+                2: "Februari",
+                3: "Maret",
+                4: "April",
+                5: "Mei",
+                6: "Juni",
+                7: "Juli",
+                8: "Agustus",
+                9: "September",
+                10: "Oktober",
+                11: "November",
+                12: "Desember",
+            };
+            response.data.laporan_objek_pengawasan.forEach((element) => {
+                // iterate bulan
+                for (const [key, value] of Object.entries(bulan)) {
+                    if (element.month == key) {
+                        $(
+                            `input[name="bulan-${value}"][value="${element.status}"]`
+                        ).prop("checked", true);
+                    }
+                }
+            });
+        },
+        error: function (e) {
+            // console.log(e);
+        },
+    });
+});
+
+/* Fungsi formatRupiah */
+function formatRupiah(angka, prefix) {
+    let number_string = angka.replace(/[^,\d]/g, "").toString(),
+        split = number_string.split(","),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+        separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+    }
+
+    rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+    return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+}
+
+// Taruh dipaling bawah, Soalnya nanti ngaruh ke function yang laen
+let rupiah = document.getElementsByClassName("rupiah");
+for (i = 0; i <= rupiah.length - 1; i++) {
+    let tmp = rupiah[i].innerText.toString();
+    rupiah[i].innerText = formatRupiah(tmp, "Rp. ");
+}

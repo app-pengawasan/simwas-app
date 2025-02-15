@@ -292,6 +292,7 @@ class PJKRealisasiJamKerjaController extends Controller
         $this->authorize('pjk');
         
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User::all();
 
         return view('pjk.realisasi-jam-kerja.detail-tugas', [
             'type_menu'     => 'realisasi-jam-kerja',
@@ -304,7 +305,8 @@ class PJKRealisasiJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

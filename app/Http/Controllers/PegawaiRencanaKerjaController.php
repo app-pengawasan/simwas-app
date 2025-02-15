@@ -194,7 +194,7 @@ class PegawaiRencanaKerjaController extends Controller
         // $masterHasil = MasterHasil::all();
 
         $rencanaKerja = RencanaKerja::where('id_rencanakerja', $id)->first();
-
+        $pegawai = User::all();
 
         return view('pegawai.rencana-kinerja.saya.show', [
             'type_menu'     => 'rencana-kinerja',
@@ -211,7 +211,8 @@ class PegawaiRencanaKerjaController extends Controller
             // 'timKerja'      => $timKerja,
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
-            'rencanaKerja'  => $rencanaKerja
+            'rencanaKerja'  => $rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 

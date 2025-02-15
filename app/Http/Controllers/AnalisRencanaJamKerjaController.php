@@ -235,6 +235,7 @@ class AnalisRencanaJamKerjaController extends Controller
         $this->authorize('analis_sdm');
 
         $tugas = PelaksanaTugas::where('id_pelaksana', $id)->first();
+        $pegawai = User::all();
 
         return view('analis-sdm.rencana-jam-kerja.detail-tugas', [
             'type_menu'     => 'rencana-jam-kerja',
@@ -247,7 +248,8 @@ class AnalisRencanaJamKerjaController extends Controller
             'statusTim'     => $this->statusTim,
             'colorText'     => $this->colorText,
             'tugas'         => $tugas,
-            'rencanaKerja'  => $tugas->rencanaKerja
+            'rencanaKerja'  => $tugas->rencanaKerja,
+            'pegawai'       => $pegawai
         ]);
     }
 
