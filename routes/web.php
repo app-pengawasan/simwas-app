@@ -84,6 +84,7 @@ use App\Http\Controllers\AnalisRealisasiJamKerjaController;
 use App\Http\Controllers\InspekturRencanaJamKerjaController;
 use App\Http\Controllers\InspekturPenilaianKinerjaController;
 use App\Http\Controllers\InspekturRealisasiJamKerjaController;
+use App\Http\Controllers\MonitoringPegawaiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,6 +216,9 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Rekap Nilai
         Route::resource('rekap-nilai', AdminRekapNilaiController::class);
+
+        //Monitoring Kinerja Pegawai
+        Route::get('kinerja-pegawai', [MonitoringPegawaiController::class, 'admin']);
     });
 
 
