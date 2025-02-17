@@ -176,7 +176,7 @@
             <li
                 class="{{ Request::is('admin/kinerja-pegawai/*') || Request::is('admin/kinerja-pegawai') ? 'active' : '' }}">
                 <a class="nav-link" href="/admin/kinerja-pegawai">
-                    <i class="fas fa-people-group"></i>
+                    <i class="fas fa-user-gear"></i>
                     <span>Kinerja Pegawai</span>
                 </a>
             </li>

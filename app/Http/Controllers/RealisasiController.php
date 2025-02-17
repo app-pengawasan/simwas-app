@@ -183,6 +183,7 @@ class RealisasiController extends Controller
 
         $realisasiData['id_pelaksana'] = $realisasiData['tugas'];
         $realisasiData['id_laporan_objek'] = $realisasiData['bulan'];
+        $realisasiData['tgl_upload'] = now();
 
         RealisasiKinerja::create($realisasiData);
 
@@ -279,7 +280,9 @@ class RealisasiController extends Controller
         $validateData['hasil_kerja'] = $validateData['edit-link'];
         $validateData['catatan'] = $request->catatan;
 
-        $realisasiEdit = RealisasiKinerja::where('id', $id)->update(Arr::except($validateData, ['edit-link']));
+        $realisasiEdit = RealisasiKinerja::where('id', $id)->first();
+        if ($validateData['hasil_kerja'] != $realisasiEdit->hasil_kerja) $validateData['tgl_upload'] = now();
+        $realisasiEdit->update(Arr::except($validateData, ['edit-link']));
 
         $request->session()->put('status', 'Berhasil memperbarui data realisasi.');
         $request->session()->put('alert-type', 'success');

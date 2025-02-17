@@ -30,23 +30,50 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <form id="yearForm" action="" method="GET" class="px-0">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="yearSelect">Pilih Tahun</label>
-                                        <select name="year" id="yearSelect" class="form-control select2 col-md-1">
-                                            @php
-                                            $currentYear = date('Y');
-                                            $lastThreeYears = range($currentYear, $currentYear - 3);
-                                            @endphp
-
-                                            @foreach ($lastThreeYears as $year)
-                                            <option value="{{ $year }}" {{ request()->query('year') == $year ? 'selected' : '' }}>{{ $year }}
-                                            </option>
-                                            @endforeach
-                                        </select>
+                                <div class="d-flex mb-2 row" style="gap:10px">
+                                    <div class="form-group col" style="margin-bottom: 0;">
+                                        <form id="yearForm" action="" method="GET">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="filter-tahun" style="margin-bottom: 0;">
+                                                    Tahun</label>
+                                                @php
+                                                $currentYear = date('Y');
+                                                $selectedYear = request()->query('year', $currentYear);
+                                                @endphp
+                
+                                                <select name="year" id="yearSelect" class="form-control select2">
+                                                    @foreach ($year as $key => $value)
+                                                    <option value="{{ $value->tahun }}" {{ $selectedYear == $value->tahun ? 'selected' : '' }}>
+                                                        {{ $value->tahun }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($unit == '8000' || $unit == '8010')
+                                                    <input type="hidden" name="unit" id="unitYear">
+                                                @endif
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                    @if ($unit == '8000' || $unit == '8010')
+                                        <div class="form-group col pl-0" style="margin-bottom: 0;">
+                                            <form id="unitForm" action="" method="GET">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <label for="unitSelect" class="mb-0">Pilih Unit Kerja</label>
+                                                    <select name="unit" id="unitSelect" class="form-control select2">
+                                                        <option value="8000" {{ request()->query('unit') == '8000' ? 'selected' : '' }}>Semua</option>
+                                                        <option value="8010" {{ request()->query('unit') == '8010' ? 'selected' : '' }}>Bagian Umum Inspektorat Utama</option>
+                                                        <option value="8100" {{ request()->query('unit') == '8100' ? 'selected' : '' }}>Inspektorat Wilayah I</option>
+                                                        <option value="8200" {{ request()->query('unit') == '8200' ? 'selected' : '' }}>Inspektorat Wilayah II</option>
+                                                        <option value="8300" {{ request()->query('unit') == '8300' ? 'selected' : '' }}>Inspektorat Wilayah III</option>
+                                                    </select>
+                                                    <input type="hidden" name="year" id="yearUnit">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
                                 <table class="table table-bordered display responsive" id="table-inspektur-kinerja" style="background-color: #f6f7f8">
                                     <thead>
                                         <tr>
@@ -58,6 +85,14 @@
                                             <th>Objek Pengawasan</th>
                                             <th>Target Bulan Kinerja</th>
                                             <th>Status Dokumen</th>
+                                            <th class="never">Realisasi Bulan</th>
+                                            <th class="never">Status</th>
+                                            <th class="never">Rencana Jam Kerja</th>
+                                            <th class="never">Realisasi Jam Kerja</th>
+                                            <th class="never">Hasil Kerja Tim</th>
+                                            <th class="never">Sub Unsur</th>
+                                            <th class="never">Unsur</th>
+                                            <th class="never">IKU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,17 +116,59 @@
                                                             <td>{{ $oPengawasan->nama }}</td>
                                                             <td>{{ $bulan[$laporanObjek->month - 1] }}</td>
                                                             <td>
-                                                                @if(isset($realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                                                                ->where('id_laporan_objek', $laporanObjek->id)
-                                                                                ->where('status', 1)->first()->hasil_kerja))
-                                                                    <a href="{{ $realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                                                                ->where('id_laporan_objek', $laporanObjek->id)
-                                                                                ->where('status', 1)->first()->hasil_kerja }}" target="_blank">
-                                                                        <div class="badge badge-success">Sudah Masuk</div>
-                                                                    </a>
-                                                                @else <div class="badge badge-danger">Belum Masuk</div>
+                                                                @if ($realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
+                                                                                ->where('id_laporan_objek', $laporanObjek->id)->first() != null)
+                                                                    @php 
+                                                                        $dokumen = $realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
+                                                                                             ->where('id_laporan_objek', $laporanObjek->id)->first();
+                                                                    @endphp
+                                                                    @if ($dokumen->status == 1)
+                                                                        <a href="{{ $dokumen->hasil_kerja }}" target="_blank">
+                                                                            <div class="badge badge-success">Sudah Masuk</div>
+                                                                        </a>
+                                                                    @elseif ($dokumen->status == 2) <div class="badge badge-danger">Dibatalkan</div>
+                                                                    @else <div class="badge badge-dark">Tidak Selesai</div>
+                                                                    @endif
+                                                                @else 
+                                                                    @php unset($dokumen) @endphp
+                                                                    <div class="badge badge-warning">Belum Masuk</div>
                                                                 @endif
                                                             </td>
+                                                            <td>
+                                                                @if (isset($dokumen) && $dokumen->status == 1)
+                                                                    {{ $bulan[date("n",strtotime($dokumen->tgl_upload)) - 1] }}
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if (isset($dokumen) && $dokumen->status == 1)
+                                                                    @php
+                                                                        $targetthn = request()->query('year') ?? date('Y');
+                                                                        $targetbln = $targetthn.'-'.sprintf('%02d', $laporanObjek->month).'-01';
+                                                                        $realisasibln = date("Y-m",strtotime($dokumen->tgl_upload)).'-01';
+                                                                    @endphp
+                                                                    @if ($realisasibln < $targetbln) Lebih Cepat
+                                                                    @elseif ($realisasibln == $targetbln) Tepat Waktu
+                                                                    @else Terlambat
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $pelaksana->jam_pengawasan }}</td>
+                                                            <td>
+                                                                @php 
+                                                                    $total_jam = 0; 
+                                                                    foreach ($events->where('laporan_opengawasan', $laporanObjek->id)
+                                                                                    ->where('id_pegawai', $pelaksana->id_pegawai) as $event) {
+                                                                        $start = $event->start;
+                                                                        $end = $event->end;
+                                                                        $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                                                                    }
+                                                                @endphp
+                                                                {{ $total_jam }}
+                                                            </td>
+                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
+                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur }}</td>
+                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}</td>
+                                                            <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->iku->iku }}</td>
                                                         </tr>
                                                     @endforeach
                                                 @endforeach
@@ -108,6 +185,14 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td><div class="badge badge-warning">Belum Masuk</div></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{{ $pelaksana->jam_pengawasan }}</td>
+                                                    <td>0</td>
+                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
+                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur }}</td>
+                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}</td>
+                                                    <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->iku->iku }}</td>
                                                 </tr>
                                             @endif
                                         @endforeach
@@ -149,7 +234,6 @@
             responsive: true,
             lengthChange: false,
             autoWidth: false,
-            // scrollX: true,
             rowsGroup: [0, 1, 2, 3, 4, 5],
             buttons: [
                 {
@@ -160,8 +244,21 @@
         });
 
         $('#yearSelect').on('change', function() {
+            let year = $(this).val();
+            let unit = $('#unitSelect').val();
+            $('#unitYear').val(unit);
+            $('#yearForm').attr('action', `?year=${year}&unit=${unit}`);
             $('#yearForm').find('[name="_token"]').remove();
             $('#yearForm').submit();
+        });
+
+        $('#unitSelect').on('change', function() {
+            let unit = $(this).val();
+            let year = $('#yearSelect').val();
+            $('#yearUnit').val(year);
+            $('#unitForm').attr('action', `?unit=${unit}&year=${year}`);
+            $('#unitForm').find('[name="_token"]').remove();
+            $('#unitForm').submit();
         });
     </script>
 @endpush
