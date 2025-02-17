@@ -13,43 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MonitoringPegawaiController extends Controller
 {
-
     public function admin(Request $request)
     {
         $this->authorize('admin');
-
-        $unit = $request->unit;
-        if ($unit == null || $unit == "undefined") {
-            if (auth()->user()->unit_kerja == '8010') $unit = '8000';
-            else $unit = auth()->user()->unit_kerja;
-        } else {
-            if (auth()->user()->unit_kerja != '8010' && auth()->user()->unit_kerja != '8000' && $unit != auth()->user()->unit_kerja)
-                return redirect()->to('/');
-        }
-
-        $year = $request->year;
-        if ($year == null) {
-            $year = date('Y');
-        } 
-
-        if ($unit == '8000') {
-            $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
-                                        $query->where('tahun', $year);
-                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')->get();
-        } else {
-            $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
-                                        $query->where('tahun', $year);
-                                        $query->where('unitkerja', $unit);
-                                })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')->get();
-        }
-
-        $realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                                                $query->where('tahun', $year);
-                                        })->get();
-
-        $events = Event::whereRelation('laporanOPengawasan.objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                                $query->where('tahun', $year);
-                        })->get();
 
         $year = TimKerja::select('tahun')->distinct()->orderBy('tahun', 'desc')->get();
 
@@ -68,12 +34,141 @@ class MonitoringPegawaiController extends Controller
          
         return view('admin.kinerja-pegawai', [
             'type_menu' => 'kinerja-pegawai',
-            'pelaksana_tugas' => $pelaksana_tugas,
-            'realisasi' => $realisasi,
+            // 'pelaksana_tugas' => $pelaksana_tugas,
+            // 'realisasi' => $realisasi,
             'year' => $year,
             'unit' => $unit,
-            'events' => $events
+            // 'events' => $events
         ]);
     }
 
+    public function getData(Request $request)
+    {
+        if ($request->ajax()) {
+            $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                       
+            $unit = $request->unit;
+            if ($unit == null || $unit == "undefined") {
+                if (auth()->user()->unit_kerja == '8010') $unit = '8000';
+                else $unit = auth()->user()->unit_kerja;
+            } else {
+                if (auth()->user()->unit_kerja != '8010' && auth()->user()->unit_kerja != '8000' && $unit != auth()->user()->unit_kerja)
+                    return redirect()->to('/');
+            }
+
+            $year = $request->year;
+            if ($year == null) {
+                $year = date('Y');
+            } 
+
+            if ($unit == '8000') {
+                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
+                                            $query->where('tahun', $year);
+                                    })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')->get();
+            } else {
+                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
+                                            $query->where('tahun', $year);
+                                            $query->where('unitkerja', $unit);
+                                    })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan')->get();
+            }
+
+            $realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                                                    $query->where('tahun', $year);
+                                            })->get();
+
+            $events = Event::whereRelation('laporanOPengawasan.objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                                    $query->where('tahun', $year);
+                            })->get();
+            
+            $data = array(); $count = 0;
+
+            foreach ($pelaksana_tugas as $pelaksana) {
+                if (count($pelaksana->rencanaKerja->objekPengawasan) > 0) {
+                    foreach ($pelaksana->rencanaKerja->objekPengawasan as $oPengawasan) {
+                        foreach ($oPengawasan->laporanObjekPengawasan->where('status', 1) as $laporanObjek) {
+                            $row    = array(); $count++;
+                            $row[]  = $pelaksana->rencanaKerja->proyek->timKerja->nama;
+                            $row[]  = $pelaksana->rencanaKerja->proyek->timKerja->ketua->name;
+                            $row[]  = $pelaksana->rencanaKerja->tugas;
+                            $row[]  = $pelaksana->user->name;
+                            $row[]  = count($pelaksana->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
+                                        $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja;
+                            $row[]  = $oPengawasan->nama;
+                            $row[]  = $bulan[$laporanObjek->month - 1];
+                            if ($realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
+                                            ->where('id_laporan_objek', $laporanObjek->id)->first() != null) {
+                                $dokumen = $realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
+                                                        ->where('id_laporan_objek', $laporanObjek->id)->first();
+                                if ($dokumen->status == 1) {
+                                    $row[] = '<a href="'.$dokumen->hasil_kerja.'" target="_blank">
+                                                <div class="badge badge-success">Sudah Masuk</div>
+                                              </a>';
+                                } elseif ($dokumen->status == 2) {
+                                    $row[] = '<div class="badge badge-danger">Dibatalkan</div>';
+                                } else {
+                                    $row[] = '<div class="badge badge-dark">Tidak Selesai</div>';
+                                }
+                            } else {
+                                unset($dokumen);
+                                $row[] = '<div class="badge badge-warning">Belum Masuk</div>';
+                            }
+                            $row[] = (isset($dokumen) && $dokumen->status == 1) ? $bulan[date("n",strtotime($dokumen->tgl_upload)) - 1] : '';
+                            if (isset($dokumen) && $dokumen->status == 1) {
+                                $targetthn = $year ?? date('Y');
+                                $targetbln = $targetthn.'-'.sprintf('%02d', $laporanObjek->month).'-01';
+                                $realisasibln = date("Y-m",strtotime($dokumen->tgl_upload)).'-01';
+                                if ($realisasibln < $targetbln) $row[] = 'Lebih Cepat';
+                                elseif ($realisasibln == $targetbln) $row[] = 'Tepat Waktu';
+                                else $row[] = 'Terlambat';
+                            } else $row[] = '';
+                            $row[] = $pelaksana->jam_pengawasan;
+                            $total_jam = 0; 
+                            foreach ($events->where('laporan_opengawasan', $laporanObjek->id)
+                                            ->where('id_pegawai', $pelaksana->id_pegawai) as $event) {
+                                $start = $event->start;
+                                $end = $event->end;
+                                $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
+                            }
+                            $row[] = $total_jam;
+                            $row[] = $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja;
+                            $row[] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur;
+                            $row[] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur;
+                            $row[] = $pelaksana->rencanaKerja->proyek->timKerja->iku->iku;
+                            $data[] = $row;
+                        }
+                    }
+                } else {
+                    $row    = array(); $count++;
+                    $row[]  = $pelaksana->rencanaKerja->proyek->timKerja->nama;
+                    $row[]  = $pelaksana->rencanaKerja->proyek->timKerja->ketua->name;
+                    $row[]  = $pelaksana->rencanaKerja->tugas;
+                    $row[]  = $pelaksana->user->name;
+                    $row[]  = count($pelaksana->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
+                                $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja;
+                    $row[]  = '';
+                    $row[]  = '';
+                    $row[]  = '<div class="badge badge-warning">Belum Masuk</div>';
+                    $row[]  = '';
+                    $row[]  = '';
+                    $row[]  = $pelaksana->jam_pengawasan;
+                    $row[]  = 0;
+                    $row[] = $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja;
+                    $row[] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur;
+                    $row[] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur;
+                    $row[] = $pelaksana->rencanaKerja->proyek->timKerja->iku->iku;
+                    $data[] = $row;
+                }
+            }
+            
+            $output = array(
+                "draw"              => $_POST['draw'],
+                "recordsTotal"      => $count,
+                "recordsFiltered"   => $count,
+                "data"              => $data,
+            );
+
+            return $output;
+        }
+    }
 }

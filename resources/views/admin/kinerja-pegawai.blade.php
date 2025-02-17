@@ -85,118 +85,16 @@
                                             <th>Objek Pengawasan</th>
                                             <th>Target Bulan Kinerja</th>
                                             <th>Status Dokumen</th>
-                                            <th class="never">Realisasi Bulan</th>
-                                            <th class="never">Status</th>
-                                            <th class="never">Rencana Jam Kerja</th>
-                                            <th class="never">Realisasi Jam Kerja</th>
-                                            <th class="never">Hasil Kerja Tim</th>
-                                            <th class="never">Sub Unsur</th>
-                                            <th class="never">Unsur</th>
-                                            <th class="never">IKU</th>
+                                            <th>Realisasi Bulan</th>
+                                            <th>Status</th>
+                                            <th>Rencana Jam Kerja</th>
+                                            <th>Realisasi Jam Kerja</th>
+                                            <th>Hasil Kerja Tim</th>
+                                            <th>Sub Unsur</th>
+                                            <th>Unsur</th>
+                                            <th>IKU</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @php
-                                            $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                                                      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                                        @endphp
-                                        @foreach ($pelaksana_tugas as $pelaksana)
-                                            @if (count($pelaksana->rencanaKerja->objekPengawasan) > 0)
-                                                @foreach ($pelaksana->rencanaKerja->objekPengawasan as $oPengawasan)
-                                                    @foreach ($oPengawasan->laporanObjekPengawasan->where('status', 1) as $laporanObjek)
-                                                        <tr class="table-bordered">
-                                                            <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->nama }}</td>
-                                                            <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->ketua->name }}</td>
-                                                            <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
-                                                            <td>{{ $pelaksana->user->name }}</td>
-                                                            <td>{{ 
-                                                                count($pelaksana->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
-                                                                $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja
-                                                            }}</td>
-                                                            <td>{{ $oPengawasan->nama }}</td>
-                                                            <td>{{ $bulan[$laporanObjek->month - 1] }}</td>
-                                                            <td>
-                                                                @if ($realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                                                                ->where('id_laporan_objek', $laporanObjek->id)->first() != null)
-                                                                    @php 
-                                                                        $dokumen = $realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                                                                             ->where('id_laporan_objek', $laporanObjek->id)->first();
-                                                                    @endphp
-                                                                    @if ($dokumen->status == 1)
-                                                                        <a href="{{ $dokumen->hasil_kerja }}" target="_blank">
-                                                                            <div class="badge badge-success">Sudah Masuk</div>
-                                                                        </a>
-                                                                    @elseif ($dokumen->status == 2) <div class="badge badge-danger">Dibatalkan</div>
-                                                                    @else <div class="badge badge-dark">Tidak Selesai</div>
-                                                                    @endif
-                                                                @else 
-                                                                    @php unset($dokumen) @endphp
-                                                                    <div class="badge badge-warning">Belum Masuk</div>
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if (isset($dokumen) && $dokumen->status == 1)
-                                                                    {{ $bulan[date("n",strtotime($dokumen->tgl_upload)) - 1] }}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if (isset($dokumen) && $dokumen->status == 1)
-                                                                    @php
-                                                                        $targetthn = request()->query('year') ?? date('Y');
-                                                                        $targetbln = $targetthn.'-'.sprintf('%02d', $laporanObjek->month).'-01';
-                                                                        $realisasibln = date("Y-m",strtotime($dokumen->tgl_upload)).'-01';
-                                                                    @endphp
-                                                                    @if ($realisasibln < $targetbln) Lebih Cepat
-                                                                    @elseif ($realisasibln == $targetbln) Tepat Waktu
-                                                                    @else Terlambat
-                                                                    @endif
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ $pelaksana->jam_pengawasan }}</td>
-                                                            <td>
-                                                                @php 
-                                                                    $total_jam = 0; 
-                                                                    foreach ($events->where('laporan_opengawasan', $laporanObjek->id)
-                                                                                    ->where('id_pegawai', $pelaksana->id_pegawai) as $event) {
-                                                                        $start = $event->start;
-                                                                        $end = $event->end;
-                                                                        $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                                                                    }
-                                                                @endphp
-                                                                {{ $total_jam }}
-                                                            </td>
-                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
-                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur }}</td>
-                                                            <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}</td>
-                                                            <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->iku->iku }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                @endforeach
-                                            @else
-                                                <tr class="table-bordered">
-                                                    <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->nama }}</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->ketua->name }}</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->tugas }}</td>
-                                                    <td>{{ $pelaksana->user->name }}</td>
-                                                    <td>{{ 
-                                                        count($pelaksana->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
-                                                        $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja
-                                                    }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><div class="badge badge-warning">Belum Masuk</div></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{ $pelaksana->jam_pengawasan }}</td>
-                                                    <td>0</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja }}</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur }}</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur }}</td>
-                                                    <td>{{ $pelaksana->rencanaKerja->proyek->timKerja->iku->iku }}</td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -231,9 +129,10 @@
     <script>
         var datatable = $('#table-inspektur-kinerja').DataTable({
             dom: "Bfrtip",
-            responsive: true,
+            responsive: false,
             lengthChange: false,
             autoWidth: false,
+            scrollX: true,
             rowsGroup: [0, 1, 2, 3, 4, 5],
             buttons: [
                 {
@@ -241,6 +140,13 @@
                     className: "btn-success",
                 }
             ],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                url: `/admin/kinerja-pegawai/data?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`,
+                type: "POST"
+            },
         });
 
         $('#yearSelect').on('change', function() {

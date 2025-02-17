@@ -219,6 +219,7 @@ Route::group(['middleware'=>'auth'], function(){
 
         //Monitoring Kinerja Pegawai
         Route::get('kinerja-pegawai', [MonitoringPegawaiController::class, 'admin']);
+        Route::post('kinerja-pegawai/data', [MonitoringPegawaiController::class, 'getData']);
     });
 
 
