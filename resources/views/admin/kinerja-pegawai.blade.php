@@ -132,7 +132,7 @@
             responsive: false,
             lengthChange: false,
             autoWidth: false,
-            scrollX: true,
+            // scrollX: true,
             rowsGroup: [0, 1, 2, 3, 4, 5],
             buttons: [
                 {
@@ -147,7 +147,74 @@
                 url: `/admin/kinerja-pegawai/data?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`,
                 type: "POST"
             },
+            columns: [{ // mengambil & menampilkan kolom sesuai tabel database
+                        data: 'tim',
+                        name: 'tim'
+                    },
+                    {
+                        data: 'pjk',
+                        name: 'pjk'
+                    },
+                    {
+                        data: 'tugas',
+                        name: 'tugas'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'output',
+                        name: 'output'
+                    },
+                    {
+                        data: 'objek',
+                        name: 'objek'
+                    },
+                    {
+                        data: 'bulanTarget',
+                        name: 'bulanTarget'
+                    },
+                    {
+                        data: 'statusDok',
+                        name: 'statusDok'
+                    },
+                    {
+                        data: 'bulanReal',
+                        name: 'bulanReal'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'rencanaJam',
+                        name: 'rencanaJam'
+                    },
+                    {
+                        data: 'realJam',
+                        name: 'realJam'
+                    },
+                    {
+                        data: 'hasilTim',
+                        name: 'hasilTim'
+                    },
+                    {
+                        data: 'subunsur',
+                        name: 'subunsur'
+                    },
+                    {
+                        data: 'unsur',
+                        name: 'unsur'
+                    },
+                    {
+                        data: 'iku',
+                        name: 'iku'
+                    },
+            ]
         });
+
+        $('#table-inspektur-kinerja_wrapper').css('overflow', 'scroll');
 
         $('#yearSelect').on('change', function() {
             let year = $(this).val();
