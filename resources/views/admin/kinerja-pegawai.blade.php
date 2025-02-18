@@ -143,9 +143,11 @@
             processing: true,
             serverSide: true,
             ajax: {
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: `/admin/kinerja-pegawai/data?year=${$('#yearSelect').val()}&unit=${$('#unitSelect').val()}`,
-                type: "POST"
+                type: "POST",
+                data: {
+                    _token: $("meta[name='csrf-token']").attr("content")
+                }
             },
             columns: [{ // mengambil & menampilkan kolom sesuai tabel database
                         data: 'tim',
@@ -211,8 +213,13 @@
                         data: 'iku',
                         name: 'iku'
                     },
-            ]
+            ],
+            createdRow: function (row, data, dataIndex) {
+                $(row).addClass("table-bordered");
+            }
         });
+
+        datatable.columns([8,9,10,11,12,13,14,15]).visible(false);
 
         $('#table-inspektur-kinerja_wrapper').css('overflow', 'scroll');
 
