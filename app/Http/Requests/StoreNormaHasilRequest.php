@@ -29,7 +29,7 @@ class StoreNormaHasilRequest extends FormRequest
             'bulan_pelaporan' => ['required', 'string', 'max:100'],
             'jenis_norma_hasil' => ['required', 'string', 'max:100'],
             'nama_dokumen' => ['required', 'string', 'max:500'],
-            'url_norma_hasil' => ['required', 'url', 'max:100'],
+            'url_norma_hasil' => ['required', 'url', 'max:500'],
         ];
     }
     public function messages()
