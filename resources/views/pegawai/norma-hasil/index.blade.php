@@ -143,7 +143,7 @@
                                             @endif
                                         </td>
                                         <td>{{ date('d M Y', strtotime($un->tanggal)) }}</td>
-                                        <td>{{ date('d M Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) }}</td>
+                                        <td>{{ isset($un->normaHasilAccepted->tanggal_norma_hasil) ? date('d M Y', strtotime($un->normaHasilAccepted->tanggal_norma_hasil)) : '' }}</td>
                                         <td>{{ $un->nama_dokumen }}</td>
                                         <td>{{ $un->laporanPengawasan->objekPengawasan->nama }}</td>
                                         @if ($un->status_norma_hasil != 'diperiksa' && $un->status_norma_hasil !=
