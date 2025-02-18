@@ -192,7 +192,9 @@
                                                 }
                                             @endphp
                                             <td>{{ $laporan_masuk }}</td>
-                                            <td>{{ round($laporan_masuk / $op->laporanObjekPengawasan->where('status', 1)->count(), 2) * 100 }}%</td>
+                                            @if ($laporan > 0) <td>{{ round(($laporan_masuk / $laporan) * 100, 2) }}%</td>
+                                            @else <td>0%</td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </table>

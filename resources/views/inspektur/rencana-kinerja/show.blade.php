@@ -15,6 +15,7 @@
 @include('components.inspektur-header')
 @include('components.inspektur-sidebar')
 @include('components.pelaksana-tugas.bukan-gugus-tugas.edit')
+@include('components.pelaksana-tugas.objek-pengawasan.bulan')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
@@ -378,7 +379,14 @@
                                                                 <tr>
                                                                     <td>{{ $op->nama }}</td>
                                                                     <td>{{ $op->nama_laporan }}</td>
-                                                                    <td>{{ $op->laporanObjekPengawasan->where('status', 1)->count() }}</td>
+                                                                    <td>
+                                                                        @php $laporan = $op->laporanObjekPengawasan->where('status', 1)->count(); @endphp
+                                                                        {{ $laporan }}
+                                                                        <button class="btn btn-primary btn-sm btn-show-bulan" data-toggle="modal" data-target="#modal-bulan-objek"
+                                                                        data-id="{{ $op->id_opengawasan }}">
+                                                                                <i class="fas fa-eye" style="font-size: 11.8px;"></i>
+                                                                        </button>
+                                                                    </td>
                                                                     @php 
                                                                         $laporan_masuk = 0;
                                                                         foreach ($op->laporanObjekPengawasan->where('status', 1) as $laporanop) {
@@ -391,7 +399,9 @@
                                                                         }
                                                                     @endphp
                                                                     <td>{{ $laporan_masuk }}</td>
-                                                                    <td>{{ round($laporan_masuk / $op->laporanObjekPengawasan->where('status', 1)->count(), 2) * 100 }}%</td>
+                                                                    @if ($laporan > 0) <td>{{ round(($laporan_masuk / $laporan) * 100, 2) }}%</td>
+                                                                    @else <td>0%</td>
+                                                                    @endif
                                                                 </tr>
                                                                 @endforeach
                                                             </table>
