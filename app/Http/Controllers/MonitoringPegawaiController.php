@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MonitoringPegawaiExport;
 use App\Models\Event;
 use App\Models\TimKerja;
 use App\Models\RencanaKerja;
@@ -9,9 +10,12 @@ use Illuminate\Http\Request;
 use App\Models\PelaksanaTugas;
 use App\Models\RealisasiKinerja;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\LaporanObjekPengawasan;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class MonitoringPegawaiController extends Controller
 {
@@ -85,8 +89,6 @@ class MonitoringPegawaiController extends Controller
                                         $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
                                     })->skip($_POST['start'])->take($_POST['length'])->get(); 
             } 
-    
-            // dd($pelaksana_tugas[33]);
     
             $realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                                                     $query->where('tahun', $year);
@@ -194,5 +196,12 @@ class MonitoringPegawaiController extends Controller
 
             return $output;
         }
+    }
+
+    public function export($unit, $year)
+    {
+        $this->authorize('inspektur');
+        
+        return Excel::download(new MonitoringPegawaiExport($unit, $year), 'Monitoring Kinerja Pegawai.xlsx');
     }
 }
