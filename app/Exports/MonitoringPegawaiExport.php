@@ -9,27 +9,43 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithEvents;
 
-class MonitoringPegawaiExport implements FromCollection, WithHeadings, WithEvents
+class MonitoringPegawaiExport implements FromQuery, WithHeadings, WithEvents, WithMapping, ShouldQueue
 {
-    protected $unit, $year;
+    use Exportable;
+    
+    protected $unit, $year, $realisasi, $events;
 
     function __construct($unit, $year) {
-            $this->unit = $unit;
-            $this->year = $year;
+        $this->unit = $unit;
+        $this->year = $year;
+        
+        if ($this->year == null) {
+            $this->year = date('Y');
+        } 
+        $year = $this->year;
+        
+        $this->realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                        $query->where('tahun', $year);
+                    })->get();
+
+        $this->events = Event::whereRelation('laporanOPengawasan.objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+                            $query->where('tahun', $year);
+                        })->get();
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {
-        $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                       
+    // /**
+    // * @return \Illuminate\Support\Collection
+    // */
+    public function query()
+    {                  
         if ($this->unit == null || $this->unit == "undefined") {
             if (auth()->user()->unit_kerja == '8010') $this->unit = '8000';
             else $this->unit = auth()->user()->unit_kerja;
@@ -51,100 +67,101 @@ class MonitoringPegawaiExport implements FromCollection, WithHeadings, WithEvent
                             ->where('status', 1);
 
         if ($this->unit == '8000') {
-            $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
+            $pelaksana_tugas = PelaksanaTugas::query()->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                                         $query->where('tahun', $year);
                                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                 ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                     $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
-                                })->get(); 
+                                }); 
         } else {
-            $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
+            $pelaksana_tugas = PelaksanaTugas::query()->whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
                                         $query->where('tahun', $year);
                                         $query->where('unitkerja', $unit);
                                 })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                 ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                     $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
-                                })->get(); 
+                                }); 
         } 
+                
+        return $pelaksana_tugas;
+    }
 
-        $realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                                            $query->where('tahun', $year);
-                                        })->get();
+    public function chunkSize(): int
+    {
+        return 500;
+    }
 
-        $events = Event::whereRelation('laporanOPengawasan.objekPengawasan.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
-                            $query->where('tahun', $year);
-                        })->get();
-                        
-        $data = collect([]);
+    public function map($row): array
+    {   
+        $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-        foreach ($pelaksana_tugas as $pelaksana) {
-            $row    = array(); 
-            $row['tim']  = $pelaksana->rencanaKerja->proyek->timKerja->nama;
-            $row['pjk']  = $pelaksana->rencanaKerja->proyek->timKerja->ketua->name;
-            $row['tugas']  = $pelaksana->rencanaKerja->tugas;
-            $row['nama']  = $pelaksana->user->name;
-            $row['output']  = count($pelaksana->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
-                            $pelaksana->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $pelaksana->pt_jabatan )->first()->hasil_kerja;
+        if ($row->id_objek_pengawasan == null) {
+            $objek = '';
+            $bulanTarget = '';
+            $statusDok = 'Belum Masuk';
+            $bulanReal  = '';
+            $status  = '';
+            $realJam  = 0;
+        } else {
+            $objek = $row->nama;
+            $bulanTarget = $bulan[$row->month - 1];
 
-            if ($pelaksana->id_objek_pengawasan == null) { //jika tugas belum ditentukan laporannya
-                $row['objek']  = '';
-                $row['bulanTarget']  = '';
-                $row['statusDok']  = 'Belum Masuk';
-                $row['bulanReal']  = '';
-                $row['status']  = '';
-                $row['rencanaJam']  = $pelaksana->jam_pengawasan;
-                $row['realJam']  = 0;
-            } else {
-                $row['objek']  = $pelaksana->nama;
-                $row['bulanTarget']  = $bulan[$pelaksana->month - 1];
-
-                if ($realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                ->where('id_laporan_objek', $pelaksana->id)->first() != null) {
-                    $dokumen = $realisasi->where('id_pelaksana', $pelaksana->id_pelaksana)
-                                            ->where('id_laporan_objek', $pelaksana->id)->first();
-                    if ($dokumen->status == 1) {
-                        $row['statusDok'] = 'Sudah Masuk';
-                    } elseif ($dokumen->status == 2) {
-                        $row['statusDok'] = 'Dibatalkan';
-                    } else {
-                        $row['statusDok'] = 'Tidak Selesai';
-                    }
+            if ($this->realisasi->where('id_pelaksana', $row->id_pelaksana)
+                            ->where('id_laporan_objek', $row->id)->first() != null) {
+                $dokumen = $this->realisasi->where('id_pelaksana', $row->id_pelaksana)
+                                        ->where('id_laporan_objek', $row->id)->first();
+                if ($dokumen->status == 1) {
+                    $statusDok = 'Sudah Masuk';
+                } elseif ($dokumen->status == 2) {
+                    $statusDok = 'Dibatalkan';
                 } else {
-                    unset($dokumen);
-                    $row['statusDok'] = 'Belum Masuk';
+                    $statusDok = 'Tidak Selesai';
                 }
-
-                $row['bulanReal'] = (isset($dokumen) && $dokumen->status == 1) ? $bulan[date("n",strtotime($dokumen->tgl_upload)) - 1] : '';
-
-                if (isset($dokumen) && $dokumen->status == 1) {
-                    $targetthn = $year ?? date('Y');
-                    $targetbln = $targetthn.'-'.sprintf('%02d', $pelaksana->month).'-01';
-                    $realisasibln = date("Y-m",strtotime($dokumen->tgl_upload)).'-01';
-                    if ($realisasibln < $targetbln) $row['status'] = 'Lebih Cepat';
-                    elseif ($realisasibln == $targetbln) $row['status'] = 'Tepat Waktu';
-                    else $row['status'] = 'Terlambat';
-                } else $row['status'] = '';
-
-                $row['rencanaJam'] = $pelaksana->jam_pengawasan;
-
-                $total_jam = 0; 
-                foreach ($events->where('laporan_opengawasan', $pelaksana->id)
-                                ->where('id_pegawai', $pelaksana->id_pegawai) as $event) {
-                    $start = $event->start;
-                    $end = $event->end;
-                    $total_jam += (strtotime($end) - strtotime($start)) / 60 / 60;
-                }
-                $row['realJam'] = $total_jam;
+            } else {
+                unset($dokumen);
+                $statusDok = 'Belum Masuk';
             }
+            
+            $bulanReal  = (isset($dokumen) && $dokumen->status == 1) ? $bulan[date("n",strtotime($dokumen->tgl_upload)) - 1] : '';
 
-            $row['hasilTim'] = $pelaksana->rencanaKerja->hasilKerja->nama_hasil_kerja;
-            $row['subunsur'] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur;
-            $row['unsur'] = $pelaksana->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur;
-            $row['iku'] = $pelaksana->rencanaKerja->proyek->timKerja->iku->iku;
-            $data->push($row);
-        } 
+            if (isset($dokumen) && $dokumen->status == 1) {
+                $targetthn = $year ?? date('Y');
+                $targetbln = $targetthn.'-'.sprintf('%02d', $row->month).'-01';
+                $realisasibln = date("Y-m",strtotime($dokumen->tgl_upload)).'-01';
+                if ($realisasibln < $targetbln) $status = 'Lebih Cepat';
+                elseif ($realisasibln == $targetbln) $status = 'Tepat Waktu';
+                else $status = 'Terlambat';
+            } else $status = '';
+            
+            $realJam = 0; 
+            foreach ($this->events->where('laporan_opengawasan', $row->id)
+                            ->where('id_pegawai', $row->id_pegawai) as $event) {
+                $start = $event->start;
+                $end = $event->end;
+                $realJam += (strtotime($end) - strtotime($start)) / 60 / 60;
+            }
+        }
 
-        return $data;
+        return [
+            $row->rencanaKerja->proyek->timKerja->nama,
+            $row->rencanaKerja->proyek->timKerja->ketua->name,
+            $row->rencanaKerja->tugas,
+            $row->user->name,
+            count($row->rencanaKerja->hasilKerja->masterKinerja) == 0 ? 'Belum diisi' : 
+                $row->rencanaKerja->hasilKerja->masterKinerja[0]->masterKinerjaPegawai->where('pt_jabatan', $row->pt_jabatan )->first()->hasil_kerja,
+            $objek,
+            $bulanTarget,
+            $statusDok,
+            $bulanReal,
+            $status,
+            $row->jam_pengawasan,
+            $realJam,
+            $row->rencanaKerja->hasilKerja->nama_hasil_kerja,
+            $row->rencanaKerja->hasilKerja->masterSubUnsur->nama_sub_unsur,
+            $row->rencanaKerja->hasilKerja->masterSubUnsur->masterUnsur->nama_unsur,
+            $row->rencanaKerja->proyek->timKerja->iku->iku
+        ];
     }
 
     public function headings(): array

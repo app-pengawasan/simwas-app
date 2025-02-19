@@ -200,7 +200,7 @@ class MonitoringPegawaiController extends Controller
 
     public function export($unit, $year)
     {
-        $this->authorize('inspektur');
+        $this->authorize('admin');
         
         return Excel::download(new MonitoringPegawaiExport($unit, $year), 'Monitoring Kinerja Pegawai.xlsx');
     }
