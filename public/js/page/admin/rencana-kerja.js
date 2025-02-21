@@ -5,9 +5,10 @@ $(function () {
         table = $("#tim-kerja")
             .dataTable({
                 dom: "Bfrtip",
-                responsive: true,
+                responsive: false,
                 lengthChange: false,
                 autoWidth: false,
+                scrollX: true,
                 buttons: [
                     {
                         extend: "excel",
@@ -71,6 +72,13 @@ $(function () {
             .each(function (cell, i) {
                 cell.innerHTML = i + 1;
             });
+    });
+    
+    //update ukuran tabel saat ukuran sidebar berubah
+    $('.nav-link').on("click", function () {
+        setTimeout( function () {
+            table.columns.adjust();
+        }, 500);
     });
 
     function filterTable() {
