@@ -74,11 +74,16 @@ class MonitoringPegawaiController extends Controller
                                 ->where('status', 1);
     
             if ($unit == '8000') {
-                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
-                                            $query->where('tahun', $year);
-                                    })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
+                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', 'tahun', $year)
+                                    ->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                     ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                         $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
+                                    })->where(function($query) {
+                                        $query->whereRelation('rencanaKerja.proyek.timKerja', 'nama', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja.proyek.timKerja.ketua', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja', 'tugas', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('user', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhere('t.nama', 'like', '%'.$_POST['search']['value'].'%');
                                     })->skip($_POST['start'])->take($_POST['length'])->get(); 
             } else {
                 $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
@@ -87,8 +92,14 @@ class MonitoringPegawaiController extends Controller
                                     })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                     ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                         $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
+                                    })->where(function($query) {
+                                        $query->whereRelation('rencanaKerja.proyek.timKerja', 'nama', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja.proyek.timKerja.ketua', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja', 'tugas', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('user', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhere('t.nama', 'like', '%'.$_POST['search']['value'].'%');
                                     })->skip($_POST['start'])->take($_POST['length'])->get(); 
-            } 
+            }  
     
             $realisasi = RealisasiKinerja::whereRelation('pelaksana.rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                                                     $query->where('tahun', $year);
@@ -170,11 +181,16 @@ class MonitoringPegawaiController extends Controller
             } 
 
             if ($unit == '8000') {
-                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
-                                            $query->where('tahun', $year);
-                                    })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
+                $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', 'tahun', $year)
+                                    ->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                     ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                         $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
+                                    })->where(function($query) {
+                                        $query->whereRelation('rencanaKerja.proyek.timKerja', 'nama', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja.proyek.timKerja.ketua', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja', 'tugas', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('user', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhere('t.nama', 'like', '%'.$_POST['search']['value'].'%');
                                     }); 
             } else {
                 $pelaksana_tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year, $unit) {
@@ -183,6 +199,12 @@ class MonitoringPegawaiController extends Controller
                                     })->selectRaw('*, jan+feb+mar+apr+mei+jun+jul+agu+sep+okt+nov+des as jam_pengawasan, pelaksana_tugas.id_rencanakerja')
                                     ->leftJoinSub($bulan_objek, 't', function (JoinClause $join) {
                                         $join->on('pelaksana_tugas.id_rencanakerja', '=', 't.id_rencanakerja');
+                                    })->where(function($query) {
+                                        $query->whereRelation('rencanaKerja.proyek.timKerja', 'nama', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja.proyek.timKerja.ketua', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('rencanaKerja', 'tugas', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhereRelation('user', 'name', 'like', '%'.$_POST['search']['value'].'%')
+                                                ->orWhere('t.nama', 'like', '%'.$_POST['search']['value'].'%');
                                     }); 
             } 
             

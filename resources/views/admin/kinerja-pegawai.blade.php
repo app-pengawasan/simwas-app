@@ -223,6 +223,13 @@
 
         $('#table-inspektur-kinerja_wrapper').css('overflow', 'scroll');
 
+        $(".dataTables_filter input").attr(
+            "placeholder",
+            "Cari berdasarkan Tim, PJK, Tugas, Nama Pegawai, atau Objek"
+        );
+
+        $(".dataTables_filter input").css("width", "450px");
+
         $('.unduh').on('click', function() {
             window.location.href = `/admin/kinerja-pegawai/export/${$('#unitSelect').val()}/${$('#yearSelect').val()}`;
         })
