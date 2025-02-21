@@ -122,20 +122,20 @@
                                                     class="btn btn-primary btn-sm">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                @if ($tim->status != 2)
+                                                {{-- @if ($tim->status != 2) --}}
                                                 <button class="btn btn-warning btn-sm btn-edit-timkerja"
                                                     data-id="{{ $tim->id_timkerja }}" data-toggle="modal"
                                                     data-target="#modal-edit-timkerja">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                @endif
+                                                {{-- @endif --}}
                                                 @if ($tim->status == 0)
                                                 <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
                                                     data-id="{{ $tim->id_timkerja }}">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                                 @endif
-                                                @if ($tim->status == 1)
+                                                {{-- @if ($tim->status == 1)
                                                 <form class="button-lock-timkerja"
                                                     id="form-lock-timkerja-{{ $tim->id_timkerja }}"
                                                     data-id="{{ $tim->id_timkerja }}"
@@ -148,7 +148,7 @@
                                                         <i class="fas fa-lock"></i>
                                                     </button>
                                                 </form>
-                                                {{-- @elseif ($tim->status == 2)
+                                                @elseif ($tim->status == 2)
                                                 <form class="button-unlock-timkerja"
                                                     id="form-unlock-timkerja-{{ $tim->id_timkerja }}"
                                                     data-id="{{ $tim->id_timkerja }}"
