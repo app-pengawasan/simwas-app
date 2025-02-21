@@ -148,7 +148,7 @@
                                                         <i class="fas fa-lock"></i>
                                                     </button>
                                                 </form>
-                                                @elseif ($tim->status == 2)
+                                                {{-- @elseif ($tim->status == 2)
                                                 <form class="button-unlock-timkerja"
                                                     id="form-unlock-timkerja-{{ $tim->id_timkerja }}"
                                                     data-id="{{ $tim->id_timkerja }}"
@@ -161,7 +161,7 @@
                                                         <i class="fas fa-lock-open"></i>
                                                     </button>
                                                 </form>
-                                                @endif
+                                                @endif --}}
 
                                             </div>
                                         </td>
