@@ -113,8 +113,8 @@
                     class="bg-danger text-white p-1 segmented-proggress rounded-bar">
                 </div>
                 @endif
-                @if ($timKerjaPercentageDiterima != 0)
-                <div style="width:{{ $timKerjaPercentageDiterima }}%"
+                @if ($timKerjaPercentageDikirim != 0)
+                <div style="width:{{ $timKerjaPercentageDikirim }}%"
                     class="bg-success text-white p-1 segmented-proggress rounded-bar">
                 </div>
                 @endif
@@ -132,14 +132,14 @@
                     </div>
                 </div>
                 @endif
-                @if ($timKerjaDiterimaCount != 0)
+                @if ($timKerjaDikirimCount != 0)
                 <div class="mx-2">
-                    <h6 style="font-size: .9em;" class="font-weight-normal m-0 text-dark h5">Disetujui</h6>
+                    <h6 style="font-size: .9em;" class="font-weight-normal m-0 text-dark h5">Dikirim</h6>
                     <div class="d-flex align-items-center">
                         <div class="bg-success text-white p-1 mr-2 rounded-bar">
                         </div>
                         <div style="font-size: 1.2em;" class="font-weight-bold text-dark">
-                            {{ $timKerjaDiterimaCount }}
+                            {{ $timKerjaDikirimCount }}
                         </div>
                     </div>
                 </div>

@@ -74,9 +74,9 @@ class DashboardController extends Controller
 
             'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
             'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
-            'timKerjaDiterimaCount' => $timKerjaCount['timKerjaDiterimaCount'],
+            'timKerjaDikirimCount' => $timKerjaCount['timKerjaDikirimCount'],
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
-            'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
+            'timKerjaPercentageDikirim' => $timKerjaCount['timKerjaPercentageDikirim'],
         ]);
     }
 
@@ -125,9 +125,9 @@ class DashboardController extends Controller
             // Tim Kerja - Ketua Tim Kerja
             'timKerjaTotalCount' => $timKerjaCount['timKerjaTotalCount'],
             'timKerjaPenyusunanCount' => $timKerjaCount['timKerjaPenyusunanCount'],
-            'timKerjaDiterimaCount' => $timKerjaCount['timKerjaDiterimaCount'],
+            'timKerjaDikirimCount' => $timKerjaCount['timKerjaDikirimCount'],
             'timKerjaPercentagePenyusunan' => $timKerjaCount['timKerjaPercentagePenyusunan'],
-            'timKerjaPercentageDiterima' => $timKerjaCount['timKerjaPercentageDiterima'],
+            'timKerjaPercentageDikirim' => $timKerjaCount['timKerjaPercentageDikirim'],
         ]);
     }
 
@@ -439,20 +439,20 @@ class DashboardController extends Controller
 
     function adminTimKerjaCount($year){
         $timKerjaPenyusunanCount = TimKerja::with('ketua', 'iku')->whereIn('status', [0,1])->where('tahun', $year)->get()->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')->whereIn('status', [2])->where('tahun', $year)->get()->count();
+        $timKerjaDikirimCount = TimKerja::with('ketua', 'iku')->whereNotIn('status', [0,1])->where('tahun', $year)->get()->count();
 
         $timKerjaTotalCount = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get()->count();
 
         $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
-        $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;
+        $timKerjaPercentageDikirim = $timKerjaDikirimCount != 0 ? intval($timKerjaDikirimCount/($timKerjaTotalCount)*100) : 0;
 
 
         return [
             'timKerjaTotalCount' => $timKerjaTotalCount,
             'timKerjaPenyusunanCount' => $timKerjaPenyusunanCount,
-            'timKerjaDiterimaCount' => $timKerjaDiterimaCount,
+            'timKerjaDikirimCount' => $timKerjaDikirimCount,
             'timKerjaPercentagePenyusunan' => $timKerjaPercentagePenyusunan,
-            'timKerjaPercentageDiterima' => $timKerjaPercentageDiterima,
+            'timKerjaPercentageDikirim' => $timKerjaPercentageDikirim,
         ];
     }
 
@@ -498,14 +498,14 @@ class DashboardController extends Controller
             ->whereIn('status', [0, 1])
             ->where('tahun', $year)
             ->count();
-        $timKerjaDiterimaCount = TimKerja::with('ketua', 'iku')
+        $timKerjaDikirimCount = TimKerja::with('ketua', 'iku')
             ->where(function($query) use ($id_pegawai) {
                 $query->where('id_ketua', $id_pegawai)
                     ->orWhereHas('operatorRencanaKinerja', function($query) use ($id_pegawai) {
                         $query->where('operator_id', $id_pegawai);
                     });
             })
-            ->whereIn('status', [2])
+            ->whereNotIn('status', [0,1])
             ->where('tahun', $year)
             ->count();
 
@@ -520,15 +520,15 @@ class DashboardController extends Controller
             ->count();
 
         $timKerjaPercentagePenyusunan = $timKerjaPenyusunanCount != 0 ? intval($timKerjaPenyusunanCount/($timKerjaTotalCount)*100) : 0;
-        $timKerjaPercentageDiterima = $timKerjaDiterimaCount != 0 ? intval($timKerjaDiterimaCount/($timKerjaTotalCount)*100) : 0;
+        $timKerjaPercentageDikirim = $timKerjaDikirimCount != 0 ? intval($timKerjaDikirimCount/($timKerjaTotalCount)*100) : 0;
 
 
         return [
             'timKerjaTotalCount' => $timKerjaTotalCount,
             'timKerjaPenyusunanCount' => $timKerjaPenyusunanCount,
-            'timKerjaDiterimaCount' => $timKerjaDiterimaCount,
+            'timKerjaDikirimCount' => $timKerjaDikirimCount,
             'timKerjaPercentagePenyusunan' => $timKerjaPercentagePenyusunan,
-            'timKerjaPercentageDiterima' => $timKerjaPercentageDiterima,
+            'timKerjaPercentageDikirim' => $timKerjaPercentageDikirim,
         ];
     }
 
