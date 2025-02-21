@@ -39,7 +39,7 @@ class MonitoringPegawaiController extends Controller
         $unit = auth()->user()->unit_kerja;
          
         return view('admin.kinerja-pegawai', [
-            'type_menu' => 'kinerja-pegawai',
+            'type_menu' => 'monitoring',
             // 'pelaksana_tugas' => $pelaksana_tugas,
             // 'realisasi' => $realisasi,
             'year' => $year,

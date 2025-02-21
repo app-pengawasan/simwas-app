@@ -118,7 +118,7 @@ class AdminKinerjaTimController extends Controller
         }
 
         return view('admin.kinerja-tim.index',[
-            'type_menu'     => 'kinerja-tim',
+            'type_menu'     => 'monitoring',
             'months'    => $this->months
         ])->with('data_tim', $data_tim);
     }

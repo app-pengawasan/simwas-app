@@ -166,19 +166,24 @@
                     <span>Rekap Nilai Kinerja Pegawai</span>
                 </a>
             </li>
-            <li
-                class="{{ Request::is('admin/kinerja-tim/*') || Request::is('admin/kinerja-tim') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/kinerja-tim">
-                    <i class="fas fa-people-group"></i>
-                    <span>Kinerja Tim</span>
+            <li class="nav-item dropdown {{ $type_menu === 'monitoring' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-magnifying-glass-chart"></i>
+                    <span>Monitoring</span>
                 </a>
-            </li>
-            <li
-                class="{{ Request::is('admin/kinerja-pegawai/*') || Request::is('admin/kinerja-pegawai') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/kinerja-pegawai">
-                    <i class="fas fa-user-gear"></i>
-                    <span>Kinerja Pegawai</span>
-                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/kinerja-tim/*') || Request::is('admin/kinerja-tim') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/kinerja-tim">
+                            <span>Kinerja Tim</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('admin/kinerja-pegawai/*') || Request::is('admin/kinerja-pegawai') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/kinerja-pegawai">
+                            <span>Kinerja Pegawai</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
         @include('components.footer')
