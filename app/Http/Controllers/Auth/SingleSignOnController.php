@@ -68,24 +68,24 @@ class SingleSignOnController extends Controller
         // get user info
         $pegawai = $this->SingleSignOnProvider->getResourceOwner($token);
         session(['profile_picture' => $pegawai->toArray()['foto']]);
-        $user = User::where('nip', $pegawai->toArray()['nip'])->first();
+        $user = User::where('nip', $pegawai->toArray()['nip'])->where('status', 1)->first();
         if ($user) {
             auth()->login($user);
             return redirect()->route('dashboard');
         } else {
             return redirect()->route('login')
-                ->with('status', 'Akun belum terdaftar, silahkan hubungi admin')
+                ->with('status', 'Akun belum terdaftar atau nonaktif, silahkan hubungi admin')
                 ->with('alert-type', 'danger');
         }
     }
 
     public function logout(Request $request)
     {
-        $url_logout = $this->SingleSignOnProvider->getLogoutUrl();
-        // dd($url_logout);
-        return redirect($url_logout);
-
-
+        if (session('profile_picture')) {
+            $url_logout = $this->SingleSignOnProvider->getLogoutUrl();
+            // dd($url_logout);
+            return redirect($url_logout);
+        }
 
         Auth::logout();
         // remove cache so that the user cannot go back to the previous page

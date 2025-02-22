@@ -118,7 +118,7 @@ class AdminRencanaKerjaController extends Controller
         $masterTujuan = MasterTujuan::all();
         $masterSasaran = MasterSasaran::all();
         $masterIku = MasterIKU::all();
-        $pegawai = User::all();
+        $pegawai = User::where('status', 1)->get();
         //
 
         $timKerja = TimKerja::with('ketua', 'iku')->where('tahun', $year)->get();

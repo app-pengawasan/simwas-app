@@ -115,13 +115,13 @@ class AdminRencanaJamKerjaController extends Controller
         $unit = $request->unit;
 
         if ($unit == null || $unit == '8000') {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->groupBy('id_pegawai')->select('id_pegawai as id')
                     ->selectRaw('sum('.implode('+', $bulans).') as total');
         } else {
-            $pegawai = User::where('unit_kerja', $unit)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', $unit)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->whereRelation('user', function (Builder $query) use ($unit) {
@@ -157,12 +157,12 @@ class AdminRencanaJamKerjaController extends Controller
         $unit = $request->unit;
 
         if ($unit == null || $unit == '8000') {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })->get();
         } else {
-            $pegawai = User::where('unit_kerja', $unit)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', $unit)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })->whereRelation('user', function (Builder $query) use ($unit) {
@@ -255,13 +255,13 @@ class AdminRencanaJamKerjaController extends Controller
         }
 
         if ($unit == null || $unit == '8000') {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->groupBy('id_pegawai')->select('id_pegawai as id')
                     ->selectRaw('sum('.implode('+', $bulans).') as total');
         } else {
-            $pegawai = User::where('unit_kerja', $unit)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', $unit)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->whereRelation('user', function (Builder $query) use ($unit) {

@@ -156,11 +156,19 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if ($user->id != auth()->user()->id)
-                                            <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
-                                                data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top"
-                                                title="Hapus Data Pegawai">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                                @if ($user->status == 1)
+                                                    <a href="javascript:void(0)" class="btn btn-danger delete-btn btn-sm"
+                                                        data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top"
+                                                        title="Nonaktifkan Pegawai">
+                                                        <i class="fas fa-ban"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="javascript:void(0)" class="btn btn-success activate-btn btn-sm"
+                                                        data-id="{{ $user->id }}" data-toggle="tooltip" data-placement="top"
+                                                        title="Aktifkan Pegawai">
+                                                        <i class="fas fa-circle-check"></i>
+                                                    </a>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>

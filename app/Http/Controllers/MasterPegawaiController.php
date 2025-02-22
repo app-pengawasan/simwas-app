@@ -323,10 +323,32 @@ class MasterPegawaiController extends Controller
 
         try {
             $user = User::where('id', $id)->first();
-            $user->delete();
+            $user->update(['status' => 0]);
             return response()->json([
                 'success' => true,
-                'message' => 'Data Berhasil Dihapus!',
+                'message' => 'Pegawai berhasil dinonaktifkan!',
+            ]);
+        } catch (\Throwable $th) {
+            if($th->errorInfo[1] == 1451){
+                return response()->json([
+                    'success' => false,
+                    'message' => "Data masih terhubung dengan data lain!"
+                ], 409);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Gagal Dihapus!',
+            ], 409);
+        }
+    }
+
+    public function activate(Request $request, $id)
+    {
+        try {
+            User::findOrfail($id)->update(['status' => 1]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Pegawai berhasil diaktifkan!',
             ]);
         } catch (\Throwable $th) {
             if($th->errorInfo[1] == 1451){

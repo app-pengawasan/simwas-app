@@ -114,11 +114,11 @@ class InspekturRealisasiJamKerjaController extends Controller
         }
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
                             ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', auth()->user()->unit_kerja)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
                                 $query->where('unit_kerja', auth()->user()->unit_kerja);
                             })->where('status', 1)->whereYear('updated_at', $year)
@@ -172,11 +172,11 @@ class InspekturRealisasiJamKerjaController extends Controller
         }
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
                             ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', auth()->user()->unit_kerja)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query){
                                 $query->where('unit_kerja', auth()->user()->unit_kerja);
                             })->where('status', 1)->whereYear('updated_at', $year)
@@ -302,11 +302,11 @@ class InspekturRealisasiJamKerjaController extends Controller
 
         $unit = auth()->user()->unit_kerja;
         if ($unit == '8000' || $unit == null) {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $realisasiDone = RealisasiKinerja::where('status', 1)
                             ->whereYear('updated_at', $year)->select('id_laporan_objek');
         } else {
-            $pegawai = User::where('unit_kerja', $unit)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', $unit)->get();
             $realisasiDone = RealisasiKinerja::whereRelation('pelaksana.user', function (Builder $query) use ($unit) {
                                 $query->where('unit_kerja', $unit);
                             })->where('status', 1)->whereYear('updated_at', $year)

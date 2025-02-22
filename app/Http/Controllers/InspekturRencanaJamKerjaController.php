@@ -113,13 +113,13 @@ class InspekturRencanaJamKerjaController extends Controller
         }
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })->groupBy('id_pegawai')->select('id_pegawai as id')
                         ->selectRaw('sum('.implode('+', $bulans).') as total');
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', auth()->user()->unit_kerja)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })->whereRelation('user', function (Builder $query){
@@ -153,12 +153,12 @@ class InspekturRencanaJamKerjaController extends Controller
         }
 
         if ((auth()->user()->is_aktif) && (auth()->user()->unit_kerja == '8000') ) {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })->get();
         } else {
-            $pegawai = User::where('unit_kerja', auth()->user()->unit_kerja)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', auth()->user()->unit_kerja)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                             $query->where('tahun', $year);
                         })
@@ -253,13 +253,13 @@ class InspekturRencanaJamKerjaController extends Controller
 
         $unit = auth()->user()->unit_kerja;
         if ($unit == null || $unit == '8000') {
-            $pegawai = User::get();
+            $pegawai = User::where('status', 1)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->groupBy('id_pegawai')->select('id_pegawai as id')
                     ->selectRaw('sum('.implode('+', $bulans).') as total');
         } else {
-            $pegawai = User::where('unit_kerja', $unit)->get();
+            $pegawai = User::where('status', 1)->where('unit_kerja', $unit)->get();
             $tugas = PelaksanaTugas::whereRelation('rencanaKerja.proyek.timKerja', function (Builder $query) use ($year) {
                         $query->where('tahun', $year);
                     })->whereRelation('user', function (Builder $query) use ($unit) {

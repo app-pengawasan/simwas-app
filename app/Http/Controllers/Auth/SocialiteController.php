@@ -23,14 +23,14 @@ class SocialiteController extends Controller
             return redirect()->back();
         }
         // find or create user and send params user get from socialite and provider
-        $authUser = $this->findOrCreateUser($user, $provider);
+        $authUser = $this->findOrCreateUser($user, $provider); 
 
         // login user
         if($authUser !== NULL){
             Auth()->login($authUser, true);
         }else{
             return redirect()->route('login')
-                    ->with('status', 'Akun belum terdaftar, silahkan hubungi admin')
+                    ->with('status', 'Akun belum terdaftar atau nonaktif <br> Silakan hubungi admin')
                     ->with('alert-type', 'danger');
         }
 
@@ -42,7 +42,7 @@ class SocialiteController extends Controller
 
     public function findOrCreateUser($socialUser, $provider)
     {
-        $user = User::where('email', $socialUser->getEmail())->first();
+        $user = User::where('email', $socialUser->getEmail())->where('status', 1)->first();
 
         return $user;
         // Get Social Account

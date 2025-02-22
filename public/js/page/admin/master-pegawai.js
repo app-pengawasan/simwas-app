@@ -150,12 +150,12 @@ $(".delete-btn").on("click", function (e) {
 
     Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Data yang dihapus tidak dapat dipulihkan!",
+        text: "Pegawai yang dinonaktifkan tidak bisa dilibatkan dalam rencana kinerja!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "var(--primary)",
         cancelButtonColor: "var(--danger)",
-        confirmButtonText: "Hapus",
+        confirmButtonText: "Nonaktifkan",
         cancelButtonText: "Batal",
     }).then((result) => {
         if (result.isConfirmed) {
@@ -182,7 +182,7 @@ $(".delete-btn").on("click", function (e) {
                     // redirect to master pegawai page
                     setTimeout(() => {
                         window.location.href = "/admin/master-pegawai";
-                    }, 3000);
+                    }, 300);
                 },
                 error: function (error) {
                     Swal.fire({
@@ -194,6 +194,43 @@ $(".delete-btn").on("click", function (e) {
                 },
             });
         }
+    });
+});
+
+$(".activate-btn").on("click", function (e) {
+    e.preventDefault();
+    let dataId = $(this).attr("data-id");
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    $.ajax({
+        url: `/admin/master-pegawai/activate/${dataId}`,
+        method: "POST",
+        cache: false,
+        data: {
+            _token: token,
+        },
+        success: function (response) {
+            Swal.fire({
+                type: "success",
+                icon: "success",
+                title: "Berhasil!",
+                text: `${response.message}`,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+            // redirect to master pegawai page
+            setTimeout(() => {
+                window.location.href = "/admin/master-pegawai";
+            }, 1000);
+        },
+        error: function (error) {
+            Swal.fire({
+                title: "Gagal!",
+                text: `${error.responseJSON.message}`,
+                icon: "error",
+                confirmButtonColor: "var(--primary)",
+            });
+        },
     });
 });
 
