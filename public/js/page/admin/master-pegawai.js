@@ -202,6 +202,16 @@ $(".activate-btn").on("click", function (e) {
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
+    Swal.fire({
+        title: "Memperbarui Data",
+        html: "Mohon tunggu sebentar",
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    });
+
     $.ajax({
         url: `/admin/master-pegawai/activate/${dataId}`,
         method: "POST",
@@ -210,6 +220,7 @@ $(".activate-btn").on("click", function (e) {
             _token: token,
         },
         success: function (response) {
+            Swal.close();
             Swal.fire({
                 type: "success",
                 icon: "success",
@@ -224,6 +235,7 @@ $(".activate-btn").on("click", function (e) {
             }, 1000);
         },
         error: function (error) {
+            Swal.close();
             Swal.fire({
                 title: "Gagal!",
                 text: `${error.responseJSON.message}`,

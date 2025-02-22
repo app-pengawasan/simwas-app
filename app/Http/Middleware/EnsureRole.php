@@ -27,6 +27,13 @@ class EnsureRole
                 return redirect('/');
             }
         }
+        if ($roleString == 'status'){ //logout jika pegawai dinonaktifkan
+            if (auth()->user()->status == true) {
+                return $next($request);
+            } else {
+                return redirect('/logout');
+            }
+        }
         if (auth()->user()->$roleString == true) {
             return $next($request);
         } else {

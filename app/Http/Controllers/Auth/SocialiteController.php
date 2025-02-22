@@ -30,7 +30,7 @@ class SocialiteController extends Controller
             Auth()->login($authUser, true);
         }else{
             return redirect()->route('login')
-                    ->with('status', 'Akun belum terdaftar atau nonaktif <br> Silakan hubungi admin')
+                    ->with('status', 'Akun belum terdaftar atau nonaktif, silakan hubungi admin')
                     ->with('alert-type', 'danger');
         }
 

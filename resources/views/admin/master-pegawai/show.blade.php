@@ -89,9 +89,15 @@
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                             @if ($user->id != auth()->user()->id)
-                            <a href="javascript:void(0)" class="btn btn-danger delete-btn" data-id="{{ $user->id }}">
-                                <i class="fas fa-trash"></i> Hapus
-                            </a>
+                                @if ($user->status == 1)
+                                    <a href="javascript:void(0)" class="btn btn-danger delete-btn" data-id="{{ $user->id }}">
+                                        <i class="fas fa-ban"></i> Nonaktifkan
+                                    </a>
+                                @else
+                                    <a href="javascript:void(0)" class="btn btn-success activate-btn" data-id="{{ $user->id }}">
+                                        <i class="fas fa-check-circle"></i> Aktifkan
+                                    </a>
+                                @endif
                             @endif
                         </div>
                     </div>

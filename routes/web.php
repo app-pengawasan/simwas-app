@@ -113,6 +113,7 @@ use App\Http\Controllers\MonitoringPegawaiController;
     Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
     Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
     Route::post('sign-out', [SingleSignOnController::class, 'logout'])->middleware('auth')->name('logout');
+    Route::get('logout', [SingleSignOnController::class, 'logout'])->middleware('auth');
     Route::get('/auth-login', function () {
         return view('pages.auth-login', ['type_menu' => 'auth']);
     })->middleware('guest')->name('login');
@@ -127,7 +128,7 @@ use App\Http\Controllers\MonitoringPegawaiController;
      * ---------------------------------------------------------------------------
      * */
 
-Route::group(['middleware'=>'auth'], function(){
+Route::group(['middleware'=>['auth', 'role:status']], function(){
 
 
 
