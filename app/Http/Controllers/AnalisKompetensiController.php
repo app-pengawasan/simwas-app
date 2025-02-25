@@ -190,7 +190,8 @@ class AnalisKompetensiController extends Controller
             $kompetensiEdit = Kompetensi::where('id', $id)->update([
                 'catatan' => $request->catatan,
                 'status' => 2,
-                'approved_by' => auth()->user()->id
+                'approved_by' => auth()->user()->id,
+                'tgl_approve' => null
             ]);
 
             $request->session()->put('status', 'Berhasil menolak data kompetensi.');

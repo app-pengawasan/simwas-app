@@ -430,30 +430,17 @@ $("#table-kompetensi").on("click", '.setuju-btn', function () {
     let dataId = $(this).attr("data-id");
     let token = $("meta[name='csrf-token']").attr("content");
 
-    Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Aksi ini tidak dapat dibatalkan!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "var(--primary)",
-        cancelButtonColor: "var(--danger)",
-        confirmButtonText: "Setujui",
-        cancelButtonText: "Batal",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: `/analis-sdm/kelola-kompetensi/${dataId}`,
-                type: "PUT",
-                cache: false,
-                data: {
-                    _token: token,
-                    terima: true
-                },
-                success: function (response) {
-                    location.reload();
-                },
-            });
-        }
+    $.ajax({
+        url: `/analis-sdm/kelola-kompetensi/${dataId}`,
+        type: "PUT",
+        cache: false,
+        data: {
+            _token: token,
+            terima: true
+        },
+        success: function (response) {
+            location.reload();
+        },
     });
 });
 

@@ -185,6 +185,13 @@
                                                                     <i class="far fa-circle-xmark text-danger mr-2"></i>
                                                                     Tolak
                                                                 </a>
+                                                            @elseif ($k->status == 1)
+                                                                <a href="javascript:void(0)" class="dropdown-item tolak-btn"
+                                                                data-id="{{ $k->id }}" data-toggle="modal"
+                                                                data-target="#staticBackdrop">
+                                                                    <i class="fas fa-ban text-danger mr-2"></i>
+                                                                    Batal Setuju
+                                                                </a>
                                                             @endif
                                                             <a href="javascript:void(0)" class="dropdown-item delete-btn"
                                                             data-id="{{ $k->id }}">

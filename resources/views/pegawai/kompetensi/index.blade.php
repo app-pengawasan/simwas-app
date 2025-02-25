@@ -52,7 +52,7 @@
                                             {{-- <th>Catatan</th> --}}
                                             <th>Status</th>
                                             <th>Tanggal Disetujui</th>
-                                            <th style="width: 15%">Aksi</th>
+                                            <th style="width: 5%">Aksi</th>
                                             <th class="d-none">tanggal mulai</th>
                                             <th class="d-none">tanggal selesai</th>
                                             <th class="d-none">durasi (jam)</th>
@@ -110,7 +110,7 @@
                                                                 <i class="fas fa-circle-info text-primary mr-2"></i>
                                                                 Detail
                                                             </a>
-                                                            @if (!($k->status == 1 && $role == 'pegawai'))
+                                                            @if ($k->status != 1)
                                                                 <a href="javascript:void(0)" class="dropdown-item edit-btn"
                                                                     data-id="{{ $k->id }}"
                                                                     data-toggle="modal" data-target="#modal-edit-kompetensi">
@@ -122,7 +122,7 @@
                                                                     <i class="fas fa-trash text-danger mr-2"></i>
                                                                     Hapus
                                                                 </a>
-                                                            @endif
+                                                            @endif 
                                                         </div>
                                                     </div>
                                                 </td>
