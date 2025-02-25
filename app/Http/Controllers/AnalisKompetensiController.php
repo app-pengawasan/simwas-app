@@ -111,6 +111,7 @@ class AnalisKompetensiController extends Controller
         $validateData['status'] = 1;
         $validateData['approved_by'] = auth()->user()->id;
         $validateData['tgl_upload'] = now();
+        $validateData['tgl_approve'] = now();
         // $validateData['catatan'] = $request->catatan;
 
         // $validateData = $request->validate($rules);
