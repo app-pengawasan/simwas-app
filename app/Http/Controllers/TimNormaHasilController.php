@@ -175,7 +175,7 @@ class TimNormaHasilController extends Controller
             'bulan' => 'required',
             'objek' => 'required_if:jenis,2',
             'nomor' => ['required_if:jenis,1', 'string', 'max:26'],
-            'file' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+            'file' => ['required', 'file', 'mimes:pdf', 'max:10240'],
         ];
 
         $messages = [
