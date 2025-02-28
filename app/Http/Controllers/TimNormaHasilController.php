@@ -182,7 +182,7 @@ class TimNormaHasilController extends Controller
             'required' => ':attribute harus diisi',
             'required_if' => ':attribute harus diisi',
             'max' => 'Jumlah karakter maksimal 26',
-            'file.max' => 'Ukuran file maksimal 1MB',
+            'file.max' => 'Ukuran file maksimal 10MB',
             'mimes' => 'Format file harus pdf'
         ];
 
