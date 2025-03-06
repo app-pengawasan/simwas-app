@@ -185,6 +185,25 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item dropdown {{ $type_menu === 'changelogs' ? 'active active-dropdown' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa-brands fa-stack-exchange"></i>
+                    <span>Changelogs</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/changelogjudul/*') || Request::is('admin/changelogjudul') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/changelogjudul">
+                            <span>Versi Changelogs</span>
+                        </a>
+                    </li>
+                    <li
+                        class="{{ Request::is('admin/changelogisi/*') || Request::is('admin/changelogisi') ? 'active' : '' }}">
+                        <a class="nav-link" href="/admin/changelogisi">
+                            <span>Isi Changelog</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         @include('components.footer')
     </aside>
