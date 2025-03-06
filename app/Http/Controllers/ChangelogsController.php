@@ -18,8 +18,8 @@ class ChangelogsController extends Controller
         $last_version = ChangelogsJudul::orderby('created_at', 'desc')->first();
         $versi = null;
         if ($last_version == null) {
-           $versi == "Belum ada"; 
-        }else{
+            $versi == "Belum ada";
+        } else {
             $versi = $last_version->versi;
         }
 
@@ -201,14 +201,12 @@ class ChangelogsController extends Controller
 
     public function getChangelogs()
     {
-        // $changelog = DB::table('isi_changelog')
-        //     ->join('judul_changelog', 'isi_changelog.id_judulchangelog', '=', 'judul_changelog.id_judulchangelog')            
-        //     ->orderBy('judul_changelog.id_judulchangelog')
-        //     ->get();
-
         $changelog = ChangelogsJudul::with('changelogsisi')->get();
+        $last_version = ChangelogsJudul::orderby('created_at', 'desc')->get();
         return response()->json([
             'changelog' => $changelog,
+            'versi'     => $last_version
         ]);
     }
+
 }

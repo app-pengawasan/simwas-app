@@ -63,36 +63,42 @@
                 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 
                 getChangelogs();
-                
-                function getChangelogs()
-                {
+
+                function getChangelogs() {
                     $.ajax({
                         type: "GET",
                         url: "/getchangelogs",
                         dataType: "json",
-                        success: function (response) {
-                            $.each(response.changelog, function (key, item) {
+                        success: function(response) {
+                            console.log(response.changelog);
+                            $.each(response.changelog, function(key, item) {
                                 $('#footer-changelogs').append('<div class="d-flex flex-column mb-4">\
-                    <div class="d-flex flex-row changelog-list">\
-                        <div style="min-width: 150px" class="d-flex flex-column">\
-                            <div>\
-                                <span class="badge alert-primary mr-2 mb-2">'+item.versi+'</span>\
-                            </div>\
-                            <span>'+item.tgl_changelog+'</span>\
-                        </div>\
-                        <div class="d-flex flex-column flex-grow-1">\
-                            <h5 class="text-dark">'+item.judul+'</h5>\
-                            <p class="mb-0">'+item.keterangan+'</p>\
-                            <ul>\
-                                <li>'+item.changelogsisi.map(c => c.isi).join('<li>')+'</li>\
-                            </ul>\
-                        </div>\
-                    </div>\
-                </div>')
+                                    <div class="d-flex flex-row changelog-list">\
+                                        <div style="min-width: 150px" class="d-flex flex-column">\
+                                            <div>\
+                                                <span class="badge alert-primary mr-2 mb-2">v' + item.versi + '</span>\
+                                            </div>\
+                                            <span>' + item.tgl_changelog + '</span>\
+                                        </div>\
+                                        <div class="d-flex flex-column flex-grow-1">\
+                                            <h5 class="text-dark">' + item.judul + '</h5>\
+                                            <p class="mb-0">' + item.keterangan + '</p>\
+                                            <ul>\
+                                                <li>' + item.changelogsisi.map(c => c.isi).join('<li>') + '</li>\
+                                            </ul>\
+                                        </div>\
+                                    </div>\
+                                </div>')
+                            });
+                            $.each(response.versi, function(key, v) {
+                                $('#versi-changelogs').append(
+                                    '<i class="fa-solid fa-code-compare"></i> v' + v.versi + '')
                             });
                         }
                     })
                 }
+
+
             });
         </script>
 </body>

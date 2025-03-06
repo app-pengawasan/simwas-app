@@ -66,7 +66,7 @@
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td class="text-center">{{ $cl->judul }}</td>
                                         <td>{{ $cl->versi }}</td>
-                                        <td>{{ $cl->tgl_changelog }}</td>
+                                        <td>{{ date('d M Y', strtotime($cl->tgl_changelog))}}</td>
                                         <td>{{ $cl->keterangan }}</td>
                                         <td>
                                             <a href="javascript:void(0)" class="btn btn-warning edit-btn btn-sm"
