@@ -60,7 +60,7 @@ $(function () {
 
         $(".dataTables_filter input").attr(
             "placeholder",
-            "Cari berdasarkan kode atau nama satuan kerja"
+            "Cari"
         );
         // add padding x 10px to .dataTables_filter input
         $(".dataTables_filter input").css("padding", "0 10px");
